@@ -1,0 +1,1 @@
+print('Signed audit generation placeholder')
