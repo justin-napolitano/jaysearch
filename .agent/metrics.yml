@@ -1,0 +1,5 @@
+dq_weight: 0.25
+hed_weight: 0.25
+vpr_weight: 0.20
+sls_weight: 0.15
+bc_weight: 0.15

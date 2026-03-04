@@ -1,0 +1,4 @@
+{{TYPE}}({{SCOPE}}): {{SUMMARY}}
+
+Metadata:
+  ExecPlan: NONE
