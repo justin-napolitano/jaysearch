@@ -1,8 +1,9 @@
+
 # Getting Started
 
-1. Clone repository
+1. Clone the repository
 2. Run bootstrap
-
-Example:
-git checkout -b draft-execplan/my-first-plan-codex-20260304
-bin/run-local-ci
+3. Create ExecPlan
+4. Generate TODOs
+5. Implement tasks
+6. Finalize ExecPlan with signed commit

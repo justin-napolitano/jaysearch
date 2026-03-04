@@ -1,3 +1,10 @@
+
 # Platform Overview
 
-This repository template enforces structured development via ExecPlans, TODO workflows, and ADRs.
+This repository implements a plan‑driven development platform.
+
+Workflow:
+
+ExecPlan → Tasks → TODO → PR → Human Finalization → ADR → Metrics
+
+Agents draft work through ExecPlans. Humans finalize work with signed commits.

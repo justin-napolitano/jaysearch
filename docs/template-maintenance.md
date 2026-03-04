@@ -1,3 +1,6 @@
+
 # Template Maintenance
 
-Changes follow ExecPlan → ADR → Template update.
+Changes to the platform follow:
+
+ExecPlan → ADR → Template Update
