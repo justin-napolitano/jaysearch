@@ -1,0 +1,29 @@
+version: v1
+last_updated: 2026-03-04
+move_set:
+  allowed:
+    - read_repository
+    - draft_execplan
+    - edit_in_scope_files
+    - run_deterministic_validators
+    - emit_machine_readable_reports
+  forbidden:
+    - finalize_execplan
+    - bypass_branch_protection
+    - modify_governance_without_approved_execplan
+    - forge_signature_or_signed_metadata
+    - suppress_required_referee_evidence
+turn_protocol:
+  - declare_active_plan_id
+  - declare_intended_moves
+  - execute_moves
+  - run_required_referee_checks
+  - record_evidence
+  - update_plan_progress_and_logs
+freeze:
+  implementation_blocked_until_ruleset_approved: true
+  approval_requirements:
+    - update_rules_status_to_APPROVED-RULESET
+    - ssh_signed_human_commit
+    - commit_message_contains: "Metadata: Ruleset: agent-game-rules-v1"
+    - commit_message_contains: "Signed-off-by:"

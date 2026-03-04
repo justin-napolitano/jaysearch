@@ -1,0 +1,54 @@
+version: v1
+last_updated: 2026-03-04
+canonical_identity:
+  plan_key_format: "YYYYMMDD-<plan-name>-<owner>-execplan"
+  filename_format: "YYYYMMDD-<plan-name>-<owner>-execplan.md"
+frontmatter:
+  required:
+    - id
+    - title
+    - owner
+    - created
+    - status
+    - base_branch
+    - changes
+    - approve_policy
+    - reviewers
+    - draft_by
+    - draft_branch
+    - draft_created
+    - finalized_by
+    - finalized_at
+    - finalized_in_pr
+  optional:
+    - validation
+    - tasks
+    - depends_on
+sections_required:
+  - Purpose / Big Picture
+  - Progress
+  - Surprises & Discoveries
+  - Decision Log
+  - Outcomes & Retrospective
+  - Context and Orientation
+  - Plan of Work
+  - Concrete Steps
+  - Validation and Acceptance
+  - Idempotence and Recovery
+  - Artifacts and Notes
+  - Interfaces and Dependencies
+constraints:
+  status_allowed:
+    - draft
+    - proposed
+    - approved
+    - executing
+    - completed
+    - archived
+  draft_status_only_for_agents: true
+  max_tasks: 20
+  draft_ttl_days: 14
+  changes_must_be_explicit_paths: true
+identity_validation:
+  filename_stem_must_equal_frontmatter_id: true
+  branch_name_format: "draft-execplan/<plan-id>-<agent>-YYYYMMDD"
