@@ -1,5 +1,16 @@
 # Agent Game Rules v1
 
+## 0. Canonical Identifiers
+
+Canonical ExecPlan id format is:
+
+- `YYYYMMDD-<plan-name>-<owner>-execplan` (example: `20260304-platform-validator-jay-execplan`)
+
+Filename remains:
+
+- `YYYYMMDD-<plan-name>-<owner>-execplan.md`
+
+Validation must treat the canonical plan key as the filename stem in this format. Frontmatter `id` must match the canonical plan key.
 This document defines the game agents must play to execute ExecPlans in this repository.
 
 Status: `DRAFT-RULESET`
@@ -19,10 +30,10 @@ Primary win condition per plan:
 Platform match win condition:
 
 - Required platform plans are completed in required order:
-  1. `platform-validator-20260304`
-  2. `todo-automation-20260304`
-  3. `repo-health-engine-20260304`
-  4. `spec-test-runner-20260304`
+  1. `20260304-platform-validator-jay-execplan`
+  2. `20260304-todo-automation-jay-execplan`
+  3. `20260304-repo-health-engine-jay-execplan`
+  4. `20260304-spec-test-runner-jay-execplan`
 
 ## 2. Players and Roles
 
@@ -180,12 +191,17 @@ Override must be documented in plan `Decision Log` with rationale and date.
 
 To activate the game:
 
-1. Human marks status at top of this document as `APPROVED-RULESET`.
-2. Human confirms referee command set is available.
-3. Agent work resumes under these rules.
+1. Human updates status to `APPROVED-RULESET` in this document.
+2. Human commits that change with SSH signing.
+3. Commit message includes `Metadata: Ruleset: agent-game-rules-v1` and `Signed-off-by:`.
+4. Human confirms referee command set is available.
+5. Agent work resumes under these rules.
 
 ---
 
 Version: `v1`
 Date: `2026-03-04`
 Owner: `github:jay.napolitano`
+
+
+

@@ -33,7 +33,7 @@ These invariants are mandatory:
 ## Execution Surface
 
 - Human/operator entrypoints: `bin/*`
-- Core logic: `tools/*` (or `src/platform_tools/*`, but exactly one canonical implementation location)
+- Core logic: `src/platform_tools/*` (canonical; `tools/*` may only contain thin wrappers)
 - Local orchestration: `bin/run-local-ci`
 
 ## Data Contracts
@@ -79,38 +79,38 @@ A repository qualifies as this template only when all checks pass:
 This map assigns each observed platform gap to the ExecPlan that must close it.
 
 1. Placeholder validator/security/score/diff implementations
-- Gap: `tools/execplan_lint.py`, `tools/security_scan.py`, `tools/agent_score.py`, `tools/diff_analyzer.py` are placeholders.
-- Owner plan: `platform-validator-20260304`
+- Gap: `src/platform_tools/execplan_lint.py`, `src/platform_tools/security_scan.py`, `src/platform_tools/agent_score.py`, `src/platform_tools/diff_analyzer.py` are placeholders.
+- Owner plan: `20260304-platform-validator-jay-execplan`
 - Done when: all four tools return deterministic JSON + documented exit codes.
 
 2. Missing TODO automation command
 - Gap: `bin/sync-todos` missing; TODO generation not implemented as governed behavior.
-- Owner plan: `todo-automation-20260304`
+- Owner plan: `20260304-todo-automation-jay-execplan`
 - Done when: TODO generation is deterministic, deduplicated, and linked to plan IDs.
 
 3. Missing repository health engine implementation
-- Gap: `tools/repo_health.py` and robust `bin/repo-health-check` behavior missing.
-- Owner plan: `repo-health-engine-20260304`
+- Gap: `src/platform_tools/repo_health.py` and robust `bin/repo-health-check` behavior missing.
+- Owner plan: `20260304-repo-health-engine-jay-execplan`
 - Done when: health report + maturity scoring + proper exit behavior implemented.
 
 4. Missing spec test runner
-- Gap: `tools/spec_test_runner.py` and `bin/execplan-test` missing.
-- Owner plan: `spec-test-runner-20260304`
+- Gap: `src/platform_tools/spec_test_runner.py` and `bin/execplan-test` missing.
+- Owner plan: `20260304-spec-test-runner-jay-execplan`
 - Done when: validation tests from ExecPlans execute deterministically with non-zero failure semantics.
 
 5. Command surface drift vs docs
 - Gap: docs reference commands not yet implemented consistently.
-- Owner plans: `platform-validator-20260304`, `todo-automation-20260304`, `repo-health-engine-20260304`, `spec-test-runner-20260304`
+- Owner plans: `20260304-platform-validator-jay-execplan`, `20260304-todo-automation-jay-execplan`, `20260304-repo-health-engine-jay-execplan`, `20260304-spec-test-runner-jay-execplan`
 - Done when: docs and command surface match exactly.
 
 6. Duplicate implementation paths (`tools/` and `src/platform_tools/`)
-- Gap: unclear canonical runtime path causes drift risk.
-- Owner plan: `platform-validator-20260304` (or dedicated follow-up project ExecPlan after platform completion)
-- Done when: one canonical source path is selected and non-canonical path removed or made generated.
+- Gap: duplicate code paths create drift risk.
+- Owner plan: `20260304-platform-validator-jay-execplan`
+- Done when: `src/platform_tools/` is the only source of logic and `tools/` is wrappers-only or removed.
 
 7. Missing audit artifact location
 - Gap: `.agent/audit/` not present.
-- Owner plan: `platform-validator-20260304`
+- Owner plan: `20260304-platform-validator-jay-execplan`
 - Done when: directory exists and artifact creation path is wired.
 
 8. Encoding/formatting inconsistencies in docs
@@ -122,9 +122,11 @@ This map assigns each observed platform gap to the ExecPlan that must close it.
 
 Platform implementation order remains:
 
-1. `platform-validator-20260304`
-2. `todo-automation-20260304`
-3. `repo-health-engine-20260304`
-4. `spec-test-runner-20260304`
+1. `20260304-platform-validator-jay-execplan`
+2. `20260304-todo-automation-jay-execplan`
+3. `20260304-repo-health-engine-jay-execplan`
+4. `20260304-spec-test-runner-jay-execplan`
 
 After these complete and are human-finalized, platform-layer work is considered complete and subsequent ExecPlans should be project-domain work.
+
+
