@@ -1,6 +1,9 @@
+
 # Local Development
 
-Run:
-make install
+Key commands:
+
+uv sync
 make test
 bin/run-local-ci
+bin/execplan-validate
