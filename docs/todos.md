@@ -1,3 +1,10 @@
+
 # TODO Workflow
 
-Tasks are generated from ExecPlans and tracked in TODO.md.
+ExecPlans may define tasks.
+
+Tasks generate entries in TODO.md.
+
+States:
+
+draft → ready → in‑progress → review → blocked → done
