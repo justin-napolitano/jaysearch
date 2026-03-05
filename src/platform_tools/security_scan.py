@@ -7,7 +7,7 @@ from pathlib import Path
 from typing import Any
 
 PATTERNS = {
-    "private_key": re.compile(r"BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY"),
+    "private_key": re.compile(r"-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----"),
     "api_key_assignment": re.compile(
         r"(?i)\bapi[_-]?key\b\s*[:=]\s*[\"']?[A-Za-z0-9_\-\/\+=]{8,}"
     ),
