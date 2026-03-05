@@ -1,0 +1,25 @@
+version: v1
+last_updated: 2026-03-05
+pilot:
+  registry_path: .agent/adoption/pilot-status.yaml
+  required_pilot_fields:
+    - repo
+    - risk_tier
+    - owner
+    - status
+    - baseline_applied
+    - evidence
+    - checks_passed
+  allowed_risk_tiers:
+    - low
+    - medium
+    - high
+promotion_gate:
+  min_pilot_count: 1
+  min_pass_rate: 1.0
+  required_decision_fields:
+    - next_wave
+    - recommendation
+    - decided_by
+    - decided_at
+    - rationale

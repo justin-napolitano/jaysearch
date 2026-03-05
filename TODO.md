@@ -42,7 +42,7 @@
 
 - id: TODO-0006
   title: Apply baseline adoption process and collect evidence
-  state: open
+  state: done
   owner: unassigned
   priority: P1
   execplan: 20260305-platform-adoption-pilot-codex-01-execplan
@@ -50,7 +50,7 @@
 
 - id: TODO-0007
   title: Evaluate promotion criteria and decide next rollout wave
-  state: open
+  state: done
   owner: unassigned
   priority: P1
   execplan: 20260305-platform-adoption-pilot-codex-01-execplan
@@ -58,7 +58,7 @@
 
 - id: TODO-0008
   title: Select pilot repositories and risk tiers
-  state: open
+  state: done
   owner: unassigned
   priority: P1
   execplan: 20260305-platform-adoption-pilot-codex-01-execplan
