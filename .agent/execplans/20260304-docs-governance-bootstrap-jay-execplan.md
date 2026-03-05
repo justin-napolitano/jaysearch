@@ -24,6 +24,10 @@ reviewers:
 - "github:jay.napolitano"
 status: draft
 title: Bootstrap documentation governance
+
+finalized_by: ""
+finalized_at: ""
+finalized_in_pr: ""
 ---
 
 # Purpose / Big Picture
