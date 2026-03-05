@@ -3,12 +3,20 @@ id: 20260305-platform-adoption-pilot-codex-01-execplan
 title: Execute controlled platform adoption pilot and rollout decision gate
 owner: "agent/codex-01"
 created: "2026-03-05T00:00:00Z"
-status: draft
+status: executing
 base_branch: main
 changes:
   - .agent/execplans/20260305-platform-adoption-pilot-codex-01-execplan.md
   - docs/getting-started.md
-  - docs/template-maintenance.md
+  - docs/platform-overview.md
+  - docs/commands.md
+  - spec/adoption.yaml
+  - .agent/adoption/pilot-status.yaml
+  - src/platform_tools/adoption_check.py
+  - src/platform_tools/repo_health.py
+  - src/platform_tools/run_local_ci.py
+  - bin/adoption-check
+  - policy/README.md
 approve_policy: codeowners
 reviewers:
   - "github:jay.napolitano"
@@ -23,6 +31,9 @@ finalized_in_pr: ""
 
 validation:
   tests:
+    - name: adoption_check
+      command: bin/adoption-check
+      expected_exit: 0
     - name: repo_health_check
       command: bin/repo-health-check
       expected_exit: 0
@@ -45,9 +56,9 @@ Run a controlled pilot to validate platform adoption readiness before broad roll
 
 ## Progress
 
-- [ ] Create adoption pilot plan
-- [ ] Run pilot execution and evidence capture
-- [ ] Evaluate promotion criteria
+- [x] Create adoption pilot plan
+- [x] Run pilot execution and evidence capture
+- [x] Evaluate promotion criteria
 - [ ] Human finalize via SSH-signed commit
 
 ## Surprises & Discoveries
@@ -92,13 +103,20 @@ Pilot operations must support rollback to known-good baseline.
 ## Artifacts and Notes
 
 - `.agent/execplans/20260305-platform-adoption-pilot-codex-01-execplan.md`
+- `spec/adoption.yaml`
+- `.agent/adoption/pilot-status.yaml`
+- `src/platform_tools/adoption_check.py`
+- `bin/adoption-check`
 
 ## Interfaces and Dependencies
 
 Interfaces:
 
 - `docs/getting-started.md`
-- `docs/template-maintenance.md`
+- `spec/adoption.yaml`
+- `.agent/adoption/pilot-status.yaml`
+- `src/platform_tools/adoption_check.py`
+- `bin/adoption-check`
 
 Dependencies:
 
