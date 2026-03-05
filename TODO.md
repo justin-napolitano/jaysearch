@@ -114,7 +114,7 @@
 
 - id: TODO-0015
   title: Enforce bypass evidence and renewal requirements
-  state: open
+  state: done
   owner: unassigned
   priority: P1
   execplan: 20260305-platform-governance-enforcement-codex-01-execplan
@@ -122,7 +122,7 @@
 
 - id: TODO-0016
   title: Enforce required-check contracts and naming stability
-  state: open
+  state: done
   owner: unassigned
   priority: P1
   execplan: 20260305-platform-governance-enforcement-codex-01-execplan
@@ -130,7 +130,7 @@
 
 - id: TODO-0017
   title: Implement exception lifecycle contract with expiry and ownership
-  state: open
+  state: done
   owner: unassigned
   priority: P1
   execplan: 20260305-platform-governance-enforcement-codex-01-execplan
