@@ -1,0 +1,371 @@
+{
+  "branch": "draft-execplan/verification-stability-fix-codex-01-20260305",
+  "commands": [
+    {
+      "command": "bin/execplan-validate .agent/execplans/*.md",
+      "exit_code": 0,
+      "name": "execplan_validate",
+      "parsed": {
+        "branch_policy": {
+          "allowed_branch_patterns": [
+            "draft-execplan/*",
+            "feature/*",
+            "docs/*",
+            "hotfix/*",
+            "release/*",
+            "draft-execplan/hostile-review-*"
+          ],
+          "current_branch": "draft-execplan/verification-stability-fix-codex-01-20260305",
+          "findings": [],
+          "forbidden_branches": [
+            "",
+            "main",
+            "master"
+          ],
+          "ok": true
+        },
+        "error_count": 0,
+        "files_checked": 11,
+        "results": [
+          {
+            "errors": [],
+            "id": "agent-and-plans-bootstrap-20260304",
+            "plan": ".agent/execplans/20260304-agent-and-plans-bootstrap-jay-execplan.md",
+            "warnings": [
+              "filename_not_aligned_with_id"
+            ]
+          },
+          {
+            "errors": [],
+            "id": "docs-governance-bootstrap-20260304",
+            "plan": ".agent/execplans/20260304-docs-governance-bootstrap-jay-execplan.md",
+            "warnings": [
+              "filename_not_aligned_with_id"
+            ]
+          },
+          {
+            "errors": [],
+            "id": "platform-validator-20260304",
+            "plan": ".agent/execplans/20260304-platform-validator-jay-execplan.md",
+            "warnings": [
+              "filename_not_aligned_with_id"
+            ]
+          },
+          {
+            "errors": [],
+            "id": "repo-health-engine-20260304",
+            "plan": ".agent/execplans/20260304-repo-health-engine-jay-execplan.md",
+            "warnings": [
+              "filename_not_aligned_with_id"
+            ]
+          },
+          {
+            "errors": [],
+            "id": "spec-test-runner-20260304",
+            "plan": ".agent/execplans/20260304-spec-test-runner-jay-execplan.md",
+            "warnings": [
+              "filename_not_aligned_with_id"
+            ]
+          },
+          {
+            "errors": [],
+            "id": "todo-automation-20260304",
+            "plan": ".agent/execplans/20260304-todo-automation-jay-execplan.md",
+            "warnings": [
+              "filename_not_aligned_with_id"
+            ]
+          },
+          {
+            "errors": [],
+            "id": "20260305-multiagent-review-prompt-jay-execplan",
+            "plan": ".agent/execplans/20260305-multiagent-review-prompt-jay-execplan.md",
+            "warnings": []
+          },
+          {
+            "errors": [],
+            "id": "20260305-platform-hostile-review-sweep-codex-01-execplan",
+            "plan": ".agent/execplans/20260305-platform-hostile-review-sweep-codex-01-execplan.md",
+            "warnings": []
+          },
+          {
+            "errors": [],
+            "id": "20260305-recursion-guard-spec-tests-codex-01-execplan",
+            "plan": ".agent/execplans/20260305-recursion-guard-spec-tests-codex-01-execplan.md",
+            "warnings": []
+          },
+          {
+            "errors": [],
+            "id": "20260305-universal-branching-governance-codex-01-execplan",
+            "plan": ".agent/execplans/20260305-universal-branching-governance-codex-01-execplan.md",
+            "warnings": []
+          },
+          {
+            "errors": [],
+            "id": "20260305-workflow-branch-pattern-enforcement-codex-01-execplan",
+            "plan": ".agent/execplans/20260305-workflow-branch-pattern-enforcement-codex-01-execplan.md",
+            "warnings": []
+          }
+        ],
+        "tool": "execplan_lint",
+        "warning_count": 6
+      },
+      "stderr": "",
+      "timeout_seconds": 90
+    },
+    {
+      "command": "bin/repo-health-check",
+      "exit_code": 0,
+      "name": "repo_health_check",
+      "parsed": {
+        "checks": {
+          "branch_compliance": {
+            "allowed_branch_patterns": [
+              "draft-execplan/*",
+              "feature/*",
+              "docs/*",
+              "hotfix/*",
+              "release/*",
+              "draft-execplan/hostile-review-*"
+            ],
+            "current_branch": "draft-execplan/verification-stability-fix-codex-01-20260305",
+            "findings": [],
+            "forbidden_branches": [
+              "",
+              "main",
+              "master"
+            ],
+            "ok": true
+          },
+          "execplan_structure": {
+            "error_count": 0,
+            "ok": true
+          },
+          "governance_files": {
+            "missing": [],
+            "ok": true
+          },
+          "security": {
+            "finding_count": 0,
+            "ok": true
+          },
+          "todo_integrity": {
+            "expected_task_count": 40,
+            "ok": true,
+            "todo_exists": true,
+            "todo_key_count": 40,
+            "tracked_execplans": 11,
+            "warnings": []
+          }
+        },
+        "maturity": {
+          "level": 4,
+          "score": 100
+        },
+        "tool": "repo_health"
+      },
+      "stderr": "",
+      "timeout_seconds": 90
+    },
+    {
+      "command": "bin/execplan-test",
+      "exit_code": 0,
+      "name": "execplan_test",
+      "parsed": {
+        "fail_count": 0,
+        "pass_count": 15,
+        "results": [
+          {
+            "actual_exit": 0,
+            "command": "bin/execplan-validate .agent/execplans/*.md",
+            "expected_exit": 0,
+            "name": "execplan_validate",
+            "order": 0,
+            "plan_id": "20260305-multiagent-review-prompt-jay-execplan",
+            "status": "PASS"
+          },
+          {
+            "actual_exit": 0,
+            "command": "bin/execplan-validate .agent/execplans/*.md",
+            "expected_exit": 0,
+            "name": "execplan_validate",
+            "order": 0,
+            "plan_id": "20260305-platform-hostile-review-sweep-codex-01-execplan",
+            "reason": "deduplicated_command_execution",
+            "status": "PASS"
+          },
+          {
+            "actual_exit": 0,
+            "command": "bin/repo-health-check",
+            "expected_exit": 0,
+            "name": "repo_health_check",
+            "order": 1,
+            "plan_id": "20260305-platform-hostile-review-sweep-codex-01-execplan",
+            "status": "PASS"
+          },
+          {
+            "actual_exit": 0,
+            "command": "bin/run-local-ci",
+            "expected_exit": 0,
+            "name": "run_local_ci",
+            "order": 2,
+            "plan_id": "20260305-platform-hostile-review-sweep-codex-01-execplan",
+            "status": "PASS"
+          },
+          {
+            "actual_exit": 0,
+            "command": "bin/execplan-validate .agent/execplans/*.md",
+            "expected_exit": 0,
+            "name": "execplan_validate",
+            "order": 0,
+            "plan_id": "20260305-recursion-guard-spec-tests-codex-01-execplan",
+            "reason": "deduplicated_command_execution",
+            "status": "PASS"
+          },
+          {
+            "actual_exit": 0,
+            "command": "bin/execplan-test",
+            "expected_exit": 0,
+            "name": "execplan_spec_tests",
+            "order": 1,
+            "plan_id": "20260305-recursion-guard-spec-tests-codex-01-execplan",
+            "status": "PASS"
+          },
+          {
+            "actual_exit": 0,
+            "command": "bin/run-local-ci",
+            "expected_exit": 0,
+            "name": "run_local_ci",
+            "order": 2,
+            "plan_id": "20260305-recursion-guard-spec-tests-codex-01-execplan",
+            "reason": "deduplicated_command_execution",
+            "status": "PASS"
+          },
+          {
+            "actual_exit": 0,
+            "command": "bin/execplan-validate .agent/execplans/*.md",
+            "expected_exit": 0,
+            "name": "execplan_validate",
+            "order": 0,
+            "plan_id": "20260305-universal-branching-governance-codex-01-execplan",
+            "reason": "deduplicated_command_execution",
+            "status": "PASS"
+          },
+          {
+            "actual_exit": 0,
+            "command": "bin/repo-health-check",
+            "expected_exit": 0,
+            "name": "repo_health_check",
+            "order": 1,
+            "plan_id": "20260305-universal-branching-governance-codex-01-execplan",
+            "reason": "deduplicated_command_execution",
+            "status": "PASS"
+          },
+          {
+            "actual_exit": 0,
+            "command": "bin/execplan-validate .agent/execplans/*.md",
+            "expected_exit": 0,
+            "name": "execplan_validate",
+            "order": 0,
+            "plan_id": "20260305-workflow-branch-pattern-enforcement-codex-01-execplan",
+            "reason": "deduplicated_command_execution",
+            "status": "PASS"
+          },
+          {
+            "actual_exit": 0,
+            "command": "bin/repo-health-check",
+            "expected_exit": 0,
+            "name": "repo_health_check",
+            "order": 1,
+            "plan_id": "20260305-workflow-branch-pattern-enforcement-codex-01-execplan",
+            "reason": "deduplicated_command_execution",
+            "status": "PASS"
+          },
+          {
+            "actual_exit": 0,
+            "command": "bin/run-local-ci",
+            "expected_exit": 0,
+            "name": "run_local_ci",
+            "order": 2,
+            "plan_id": "20260305-workflow-branch-pattern-enforcement-codex-01-execplan",
+            "reason": "deduplicated_command_execution",
+            "status": "PASS"
+          },
+          {
+            "actual_exit": 0,
+            "command": "bin/repo-health-check",
+            "expected_exit": 0,
+            "name": "repo_health_check",
+            "order": 0,
+            "plan_id": "repo-health-engine-20260304",
+            "reason": "deduplicated_command_execution",
+            "status": "PASS"
+          },
+          {
+            "actual_exit": 0,
+            "command": "bin/execplan-test",
+            "expected_exit": 0,
+            "name": "execplan_spec_tests",
+            "order": 0,
+            "plan_id": "spec-test-runner-20260304",
+            "reason": "deduplicated_command_execution",
+            "status": "PASS"
+          },
+          {
+            "actual_exit": 0,
+            "command": "bin/sync-todos",
+            "expected_exit": 0,
+            "name": "sync_todos",
+            "order": 0,
+            "plan_id": "todo-automation-20260304",
+            "status": "PASS"
+          }
+        ],
+        "skip_count": 0,
+        "test_count": 15,
+        "tool": "spec_test_runner"
+      },
+      "stderr": "",
+      "timeout_seconds": 180
+    },
+    {
+      "command": "bin/run-local-ci",
+      "exit_code": 0,
+      "name": "run_local_ci",
+      "parsed": {
+        "commands": [
+          {
+            "command": "bin/execplan-validate .agent/execplans/*.md",
+            "exit_code": 0,
+            "output": "{\n  \"branch_policy\": {\n    \"allowed_branch_patterns\": [\n      \"draft-execplan/*\",\n      \"feature/*\",\n      \"docs/*\",\n      \"hotfix/*\",\n      \"release/*\",\n      \"draft-execplan/hostile-review-*\"\n    ],\n    \"current_branch\": \"draft-execplan/verification-stability-fix-codex-01-20260305\",\n    \"findings\": [],\n    \"forbidden_branches\": [\n      \"\",\n      \"main\",\n      \"master\"\n    ],\n    \"ok\": true\n  },\n  \"error_count\": 0,\n  \"files_checked\": 11,\n  \"results\": [\n    {\n      \"errors\": [],\n      \"id\": \"agent-and-plans-bootstrap-20260304\",\n      \"plan\": \".agent/execplans/20260304-agent-and-plans-bootstrap-jay-execplan.md\",\n      \"warnings\": [\n        \"filename_not_aligned_with_id\"\n      ]\n    },\n    {\n      \"errors\": [],\n      \"id\": \"docs-governance-bootstrap-20260304\",\n      \"plan\": \".agent/execplans/20260304-docs-governance-bootstrap-jay-execplan.md\",\n      \"warnings\": [\n        \"filename_not_aligned_with_id\"\n      ]\n    },\n    {\n      \"errors\": [],\n      \"id\": \"platform-validator-20260304\",\n      \"plan\": \".agent/execplans/20260304-platform-validator-jay-execplan.md\",\n      \"warnings\": [\n        \"filename_not_aligned_with_id\"\n      ]\n    },\n    {\n      \"errors\": [],\n      \"id\": \"repo-health-engine-20260304\",\n      \"plan\": \".agent/execplans/20260304-repo-health-engine-jay-execplan.md\",\n      \"warnings\": [\n        \"filename_not_aligned_with_id\"\n      ]\n    },\n    {\n      \"errors\": [],\n      \"id\": \"spec-test-runner-20260304\",\n      \"plan\": \".agent/execplans/20260304-spec-test-runner-jay-execplan.md\",\n      \"warnings\": [\n        \"filename_not_aligned_with_id\"\n      ]\n    },\n    {\n      \"errors\": [],\n      \"id\": \"todo-automation-20260304\",\n      \"plan\": \".agent/execplans/20260304-todo-automation-jay-execplan.md\",\n      \"warnings\": [\n        \"filename_not_aligned_with_id\"\n      ]\n    },\n    {\n      \"errors\": [],\n      \"id\": \"20260305-multiagent-review-prompt-jay-execplan\",\n      \"plan\": \".agent/execplans/20260305-multiagent-review-prompt-jay-execplan.md\",\n      \"warnings\": []\n    },\n    {\n      \"errors\": [],\n      \"id\": \"20260305-platform-hostile-review-sweep-codex-01-execplan\",\n      \"plan\": \".agent/execplans/20260305-platform-hostile-review-sweep-codex-01-execplan.md\",\n      \"warnings\": []\n    },\n    {\n      \"errors\": [],\n      \"id\": \"20260305-recursion-guard-spec-tests-codex-01-execplan\",\n      \"plan\": \".agent/execplans/20260305-recursion-guard-spec-tests-codex-01-execplan.md\",\n      \"warnings\": []\n    },\n    {\n      \"errors\": [],\n      \"id\": \"20260305-universal-branching-governance-codex-01-execplan\",\n      \"plan\": \".agent/execplans/20260305-universal-branching-governance-codex-01-execplan.md\",\n      \"warnings\": []\n    },\n    {\n      \"errors\": [],\n      \"id\": \"20260305-workflow-branch-pattern-enforcement-codex-01-execplan\",\n      \"plan\": \".agent/execplans/20260305-workflow-branch-pattern-enforcement-codex-01-execplan.md\",\n      \"warnings\": []\n    }\n  ],\n  \"tool\": \"execplan_lint\",\n  \"warning_count\": 6\n}"
+          },
+          {
+            "command": "bin/sync-todos",
+            "exit_code": 0,
+            "output": "{\n  \"changed\": false,\n  \"task_count\": 40,\n  \"todo_path\": \"TODO.md\",\n  \"tool\": \"generate_todos\",\n  \"warnings\": []\n}"
+          },
+          {
+            "command": "bin/repo-health-check",
+            "exit_code": 0,
+            "output": "{\n  \"checks\": {\n    \"branch_compliance\": {\n      \"allowed_branch_patterns\": [\n        \"draft-execplan/*\",\n        \"feature/*\",\n        \"docs/*\",\n        \"hotfix/*\",\n        \"release/*\",\n        \"draft-execplan/hostile-review-*\"\n      ],\n      \"current_branch\": \"draft-execplan/verification-stability-fix-codex-01-20260305\",\n      \"findings\": [],\n      \"forbidden_branches\": [\n        \"\",\n        \"main\",\n        \"master\"\n      ],\n      \"ok\": true\n    },\n    \"execplan_structure\": {\n      \"error_count\": 0,\n      \"ok\": true\n    },\n    \"governance_files\": {\n      \"missing\": [],\n      \"ok\": true\n    },\n    \"security\": {\n      \"finding_count\": 0,\n      \"ok\": true\n    },\n    \"todo_integrity\": {\n      \"expected_task_count\": 40,\n      \"ok\": true,\n      \"todo_exists\": true,\n      \"todo_key_count\": 40,\n      \"tracked_execplans\": 11,\n      \"warnings\": []\n    }\n  },\n  \"maturity\": {\n    \"level\": 4,\n    \"score\": 100\n  },\n  \"tool\": \"repo_health\"\n}"
+          },
+          {
+            "command": "bin/execplan-test",
+            "exit_code": 0,
+            "output": "{\n  \"fail_count\": 0,\n  \"pass_count\": 15,\n  \"results\": [\n    {\n      \"actual_exit\": 0,\n      \"command\": \"bin/execplan-validate .agent/execplans/*.md\",\n      \"expected_exit\": 0,\n      \"name\": \"execplan_validate\",\n      \"order\": 0,\n      \"plan_id\": \"20260305-multiagent-review-prompt-jay-execplan\",\n      \"status\": \"PASS\"\n    },\n    {\n      \"actual_exit\": 0,\n      \"command\": \"bin/execplan-validate .agent/execplans/*.md\",\n      \"expected_exit\": 0,\n      \"name\": \"execplan_validate\",\n      \"order\": 0,\n      \"plan_id\": \"20260305-platform-hostile-review-sweep-codex-01-execplan\",\n      \"reason\": \"deduplicated_command_execution\",\n      \"status\": \"PASS\"\n    },\n    {\n      \"actual_exit\": 0,\n      \"command\": \"bin/repo-health-check\",\n      \"expected_exit\": 0,\n      \"name\": \"repo_health_check\",\n      \"order\": 1,\n      \"plan_id\": \"20260305-platform-hostile-review-sweep-codex-01-execplan\",\n      \"status\": \"PASS\"\n    },\n    {\n      \"actual_exit\": 0,\n      \"command\": \"bin/run-local-ci\",\n      \"expected_exit\": 0,\n      \"name\": \"run_local_ci\",\n      \"order\": 2,\n      \"plan_id\": \"20260305-platform-hostile-review-sweep-codex-01-execplan\",\n      \"status\": \"PASS\"\n    },\n    {\n      \"actual_exit\": 0,\n      \"command\": \"bin/execplan-validate .agent/execplans/*.md\",\n      \"expected_exit\": 0,\n      \"name\": \"execplan_validate\",\n      \"order\": 0,\n      \"plan_id\": \"20260305-recursion-guard-spec-tests-codex-01-execplan\",\n      \"reason\": \"deduplicated_command_execution\",\n      \"status\": \"PASS\"\n    },\n    {\n      \"actual_exit\": 0,\n      \"command\": \"bin/execplan-test\",\n      \"expected_exit\": 0,\n      \"name\": \"execplan_spec_tests\",\n      \"order\": 1,\n      \"plan_id\": \"20260305-recursion-guard-spec-tests-codex-01-execplan\",\n      \"status\": \"PASS\"\n    },\n    {\n      \"actual_exit\": 0,\n      \"command\": \"bin/run-local-ci\",\n      \"expected_exit\": 0,\n      \"name\": \"run_local_ci\",\n      \"order\": 2,\n      \"plan_id\": \"20260305-recursion-guard-spec-tests-codex-01-execplan\",\n      \"reason\": \"deduplicated_command_execution\",\n      \"status\": \"PASS\"\n    },\n    {\n      \"actual_exit\": 0,\n      \"command\": \"bin/execplan-validate .agent/execplans/*.md\",\n      \"expected_exit\": 0,\n      \"name\": \"execplan_validate\",\n      \"order\": 0,\n      \"plan_id\": \"20260305-universal-branching-governance-codex-01-execplan\",\n      \"reason\": \"deduplicated_command_execution\",\n      \"status\": \"PASS\"\n    },\n    {\n      \"actual_exit\": 0,\n      \"command\": \"bin/repo-health-check\",\n      \"expected_exit\": 0,\n      \"name\": \"repo_health_check\",\n      \"order\": 1,\n      \"plan_id\": \"20260305-universal-branching-governance-codex-01-execplan\",\n      \"reason\": \"deduplicated_command_execution\",\n      \"status\": \"PASS\"\n    },\n    {\n      \"actual_exit\": 0,\n      \"command\": \"bin/execplan-validate .agent/execplans/*.md\",\n      \"expected_exit\": 0,\n      \"name\": \"execplan_validate\",\n      \"order\": 0,\n      \"plan_id\": \"20260305-workflow-branch-pattern-enforcement-codex-01-execplan\",\n      \"reason\": \"deduplicated_command_execution\",\n      \"status\": \"PASS\"\n    },\n    {\n      \"actual_exit\": 0,\n      \"command\": \"bin/repo-health-check\",\n      \"expected_exit\": 0,\n      \"name\": \"repo_health_check\",\n      \"order\": 1,\n      \"plan_id\": \"20260305-workflow-branch-pattern-enforcement-codex-01-execplan\",\n      \"reason\": \"deduplicated_command_execution\",\n      \"status\": \"PASS\"\n    },\n    {\n      \"actual_exit\": 0,\n      \"command\": \"bin/run-local-ci\",\n      \"expected_exit\": 0,\n      \"name\": \"run_local_ci\",\n      \"order\": 2,\n      \"plan_id\": \"20260305-workflow-branch-pattern-enforcement-codex-01-execplan\",\n      \"reason\": \"deduplicated_command_execution\",\n      \"status\": \"PASS\"\n    },\n    {\n      \"actual_exit\": 0,\n      \"command\": \"bin/repo-health-check\",\n      \"expected_exit\": 0,\n      \"name\": \"repo_health_check\",\n      \"order\": 0,\n      \"plan_id\": \"repo-health-engine-20260304\",\n      \"reason\": \"deduplicated_command_execution\",\n      \"status\": \"PASS\"\n    },\n    {\n      \"actual_exit\": 0,\n      \"command\": \"bin/execplan-test\",\n      \"expected_exit\": 0,\n      \"name\": \"execplan_spec_tests\",\n      \"order\": 0,\n      \"plan_id\": \"spec-test-runner-20260304\",\n      \"reason\": \"deduplicated_command_execution\",\n      \"status\": \"PASS\"\n    },\n    {\n      \"actual_exit\": 0,\n      \"command\": \"bin/sync-todos\",\n      \"expected_exit\": 0,\n      \"name\": \"sync_todos\",\n      \"order\": 0,\n      \"plan_id\": \"todo-automation-20260304\",\n      \"status\": \"PASS\"\n    }\n  ],\n  \"skip_count\": 0,\n  \"test_count\": 15,\n  \"tool\": \"spec_test_runner\"\n}"
+          }
+        ],
+        "overall_exit": 0,
+        "tool": "run_local_ci"
+      },
+      "stderr": "",
+      "timeout_seconds": 180
+    }
+  ],
+  "overall_ok": true,
+  "timestamp_utc": "2026-03-05T19:26:54Z",
+  "todo": {
+    "done": 40,
+    "open": 0,
+    "total": 40
+  }
+}
