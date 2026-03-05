@@ -18,6 +18,12 @@ execution_constraints:
   execplan_branch_review_required: true
   required_branch_format: "draft-execplan/<plan-id>-<agent>-YYYYMMDD"
   disallow_execplan_changes_on_main: true
+  allowed_branch_patterns:
+    - draft-execplan/*
+    - feature/*
+    - docs/*
+    - hotfix/*
+    - release/*
 agent_commit_identity:
   codex_commit_prefix: "[agent/codex-01]"
   required_trailer_format: "Agent: agent/<agent-name>"

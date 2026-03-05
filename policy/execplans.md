@@ -11,5 +11,6 @@ Normative policy statements:
 - Agents draft; humans finalize.
 - ExecPlan implementation changes must be developed and reviewed on a dedicated ExecPlan branch; direct implementation commits to `main` are prohibited.
 - Universal execution rule: repository actions (read/validate/edit/commit) must occur on a dedicated non-`main` branch.
+- Branch compliance must satisfy workflow-specific branch naming patterns declared in `spec/ruleset.yaml` and `spec/workflow.yaml`.
 
 Validator implementation must consume the schema spec directly instead of duplicating rule constants.

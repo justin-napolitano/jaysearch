@@ -153,6 +153,46 @@
   key: 20260305-universal-branching-governance-codex-01-execplan::Require unique non-main branch for every execution run
 
 - id: TODO-0020
+  title: Add deterministic rule metadata for workflow branch patterns
+  state: done
+  owner: unassigned
+  priority: P1
+  execplan: 20260305-workflow-branch-pattern-enforcement-codex-01-execplan
+  key: 20260305-workflow-branch-pattern-enforcement-codex-01-execplan::Add deterministic rule metadata for workflow branch patterns
+
+- id: TODO-0021
+  title: Enforce workflow-specific branch patterns in branch policy evaluator
+  state: done
+  owner: unassigned
+  priority: P1
+  execplan: 20260305-workflow-branch-pattern-enforcement-codex-01-execplan
+  key: 20260305-workflow-branch-pattern-enforcement-codex-01-execplan::Enforce workflow-specific branch patterns in branch policy evaluator
+
+- id: TODO-0022
+  title: Expose branch-pattern violations in execplan lint report
+  state: done
+  owner: unassigned
+  priority: P1
+  execplan: 20260305-workflow-branch-pattern-enforcement-codex-01-execplan
+  key: 20260305-workflow-branch-pattern-enforcement-codex-01-execplan::Expose branch-pattern violations in execplan lint report
+
+- id: TODO-0023
+  title: Expose branch-pattern violations in repository health report
+  state: done
+  owner: unassigned
+  priority: P1
+  execplan: 20260305-workflow-branch-pattern-enforcement-codex-01-execplan
+  key: 20260305-workflow-branch-pattern-enforcement-codex-01-execplan::Expose branch-pattern violations in repository health report
+
+- id: TODO-0024
+  title: Remove or replace ambiguous git execfinal command documentation
+  state: done
+  owner: unassigned
+  priority: P2
+  execplan: 20260305-workflow-branch-pattern-enforcement-codex-01-execplan
+  key: 20260305-workflow-branch-pattern-enforcement-codex-01-execplan::Remove or replace ambiguous git execfinal command documentation
+
+- id: TODO-0025
   title: Compute maturity score and level
   state: done
   owner: unassigned
@@ -160,7 +200,7 @@
   execplan: repo-health-engine-20260304
   key: repo-health-engine-20260304::Compute maturity score and level
 
-- id: TODO-0021
+- id: TODO-0026
   title: Implement repo-health-check CLI
   state: done
   owner: unassigned
@@ -168,7 +208,7 @@
   execplan: repo-health-engine-20260304
   key: repo-health-engine-20260304::Implement repo-health-check CLI
 
-- id: TODO-0022
+- id: TODO-0027
   title: Run security scanning checks
   state: done
   owner: unassigned
@@ -176,7 +216,7 @@
   execplan: repo-health-engine-20260304
   key: repo-health-engine-20260304::Run security scanning checks
 
-- id: TODO-0023
+- id: TODO-0028
   title: Validate ExecPlan structure
   state: done
   owner: unassigned
@@ -184,7 +224,7 @@
   execplan: repo-health-engine-20260304
   key: repo-health-engine-20260304::Validate ExecPlan structure
 
-- id: TODO-0024
+- id: TODO-0029
   title: Validate TODO integrity
   state: done
   owner: unassigned
@@ -192,7 +232,7 @@
   execplan: repo-health-engine-20260304
   key: repo-health-engine-20260304::Validate TODO integrity
 
-- id: TODO-0025
+- id: TODO-0030
   title: Validate governance file presence
   state: done
   owner: unassigned
@@ -200,7 +240,7 @@
   execplan: repo-health-engine-20260304
   key: repo-health-engine-20260304::Validate governance file presence
 
-- id: TODO-0026
+- id: TODO-0031
   title: Emit deterministic pass/fail summary
   state: done
   owner: unassigned
@@ -208,7 +248,7 @@
   execplan: spec-test-runner-20260304
   key: spec-test-runner-20260304::Emit deterministic pass/fail summary
 
-- id: TODO-0027
+- id: TODO-0032
   title: Execute tests with expected exit assertions
   state: done
   owner: unassigned
@@ -216,7 +256,7 @@
   execplan: spec-test-runner-20260304
   key: spec-test-runner-20260304::Execute tests with expected exit assertions
 
-- id: TODO-0028
+- id: TODO-0033
   title: Implement execplan-test CLI
   state: done
   owner: unassigned
@@ -224,7 +264,7 @@
   execplan: spec-test-runner-20260304
   key: spec-test-runner-20260304::Implement execplan-test CLI
 
-- id: TODO-0029
+- id: TODO-0034
   title: Parse validation blocks from ExecPlans
   state: done
   owner: unassigned
@@ -232,7 +272,7 @@
   execplan: spec-test-runner-20260304
   key: spec-test-runner-20260304::Parse validation blocks from ExecPlans
 
-- id: TODO-0030
+- id: TODO-0035
   title: Return non-zero on failing tests
   state: done
   owner: unassigned
@@ -240,7 +280,7 @@
   execplan: spec-test-runner-20260304
   key: spec-test-runner-20260304::Return non-zero on failing tests
 
-- id: TODO-0031
+- id: TODO-0036
   title: Generate deterministic TODO entries
   state: done
   owner: unassigned
@@ -248,7 +288,7 @@
   execplan: todo-automation-20260304
   key: todo-automation-20260304::Generate deterministic TODO entries
 
-- id: TODO-0032
+- id: TODO-0037
   title: Implement CLI wrappers
   state: done
   owner: unassigned
@@ -256,7 +296,7 @@
   execplan: todo-automation-20260304
   key: todo-automation-20260304::Implement CLI wrappers
 
-- id: TODO-0033
+- id: TODO-0038
   title: Link TODO entries to ExecPlan IDs
   state: done
   owner: unassigned
@@ -264,7 +304,7 @@
   execplan: todo-automation-20260304
   key: todo-automation-20260304::Link TODO entries to ExecPlan IDs
 
-- id: TODO-0034
+- id: TODO-0039
   title: Parse ExecPlan tasks
   state: done
   owner: unassigned
@@ -272,7 +312,7 @@
   execplan: todo-automation-20260304
   key: todo-automation-20260304::Parse ExecPlan tasks
 
-- id: TODO-0035
+- id: TODO-0040
   title: Prevent duplicate TODO entries
   state: done
   owner: unassigned
