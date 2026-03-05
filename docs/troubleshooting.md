@@ -1,3 +1,9 @@
+
 # Troubleshooting
 
-Check validation scripts and commit signatures.
+Common issues:
+
+Validator failure
+Commit signature problems
+Expired draft plans
+ExecPlan dependency conflicts
