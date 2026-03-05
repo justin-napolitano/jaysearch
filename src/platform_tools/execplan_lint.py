@@ -5,6 +5,7 @@ import json
 from pathlib import Path
 from typing import Any
 
+from platform_tools.branch_policy import evaluate_branch_policy, get_current_branch
 from platform_tools.plan_utils import (
     REQUIRED_FRONTMATTER_FIELDS,
     REQUIRED_HEADINGS,
@@ -86,12 +87,16 @@ def run(paths: list[str]) -> tuple[int, dict[str, Any]]:
     results = [validate_execplan(path) for path in file_paths]
     error_count = sum(len(item["errors"]) for item in results)
     warning_count = sum(len(item["warnings"]) for item in results)
+    branch_policy = evaluate_branch_policy(get_current_branch())
+    if not branch_policy["ok"]:
+        error_count += 1
 
     report = {
         "tool": "execplan_lint",
         "files_checked": len(results),
         "error_count": error_count,
         "warning_count": warning_count,
+        "branch_policy": branch_policy,
         "results": results,
     }
     return (1 if error_count else 0), report
