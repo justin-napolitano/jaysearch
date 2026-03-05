@@ -11,6 +11,7 @@ def _command_list() -> list[str]:
     commands = [
         "bin/execplan-validate .agent/execplans/*.md",
         "bin/sync-todos",
+        "bin/bootstrap-profile-check",
         "bin/governance-loader-check",
         "PLATFORM_ENGINE_MODE=managed PLATFORM_GOVERNANCE_SOURCE=test-vectors/governance/managed-profile-pass.yaml bin/governance-loader-check",
         "bin/governance-check",

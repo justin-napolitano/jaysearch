@@ -1,0 +1,18 @@
+version: v1
+last_updated: 2026-03-05
+precedence:
+  order:
+    - external_baseline
+    - local_codex
+    - project_overlay
+project_overlay:
+  source_default: project.rules.yaml
+  tighten_only: true
+  allowed_keys:
+    - required_check_names_add
+    - forbidden_branches_add
+    - allowed_branch_patterns_remove
+  forbidden_keys:
+    - required_check_names_remove
+    - forbidden_branches_remove
+    - allowed_branch_patterns_add
