@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import subprocess
 from pathlib import Path
 from typing import Any
 
@@ -22,8 +23,21 @@ def _check_governance_files() -> tuple[bool, list[str]]:
     return len(missing) == 0, missing
 
 
+def _tracked_execplan_paths() -> list[Path]:
+    proc = subprocess.run(
+        ["git", "ls-files", ".agent/execplans/*.md"],
+        check=False,
+        capture_output=True,
+        text=True,
+    )
+    if proc.returncode != 0:
+        return []
+    return sorted(Path(line.strip()) for line in proc.stdout.splitlines() if line.strip())
+
+
 def _check_todo_integrity(todo_path: str = "TODO.md") -> tuple[bool, dict[str, Any]]:
-    expected_tasks, warnings = collect_tasks()
+    tracked_paths = _tracked_execplan_paths()
+    expected_tasks, warnings = collect_tasks(paths=tracked_paths if tracked_paths else None)
     todo = Path(todo_path)
     text = todo.read_text(encoding="utf-8") if todo.exists() else ""
     key_count = text.count("  key: ")
@@ -33,6 +47,7 @@ def _check_todo_integrity(todo_path: str = "TODO.md") -> tuple[bool, dict[str, A
         "expected_task_count": len(expected_tasks),
         "todo_key_count": key_count,
         "warnings": warnings,
+        "tracked_execplans": len(tracked_paths),
     }
     return ok, details
 
