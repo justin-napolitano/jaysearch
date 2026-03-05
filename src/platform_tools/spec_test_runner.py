@@ -45,6 +45,7 @@ def _collect_tests() -> list[dict[str, Any]]:
 def run_tests() -> tuple[int, dict[str, Any]]:
     tests = _collect_tests()
     results: list[dict[str, Any]] = []
+    command_outcomes: dict[tuple[str, int], dict[str, Any]] = {}
 
     for test in tests:
         cmd = test["command"]
@@ -59,12 +60,27 @@ def run_tests() -> tuple[int, dict[str, Any]]:
             results.append({**test, "status": "SKIP", "actual_exit": 0, "reason": "recursive_self_reference"})
             continue
 
+        key = (cmd, test["expected_exit"])
+        if key in command_outcomes:
+            prior = command_outcomes[key]
+            results.append(
+                {
+                    **test,
+                    "status": prior["status"],
+                    "actual_exit": prior["actual_exit"],
+                    "reason": "deduplicated_command_execution",
+                }
+            )
+            continue
+
         env = dict(os.environ)
         env["EXECPLAN_TEST_RUNNING"] = "1"
         proc = subprocess.run(cmd, shell=True, capture_output=True, text=True, env=env, check=False)
         actual = proc.returncode
         status = "PASS" if actual == test["expected_exit"] else "FAIL"
-        results.append({**test, "status": status, "actual_exit": actual})
+        outcome = {"status": status, "actual_exit": actual}
+        command_outcomes[key] = outcome
+        results.append({**test, **outcome})
 
     fail_count = sum(1 for r in results if r["status"] == "FAIL")
     pass_count = sum(1 for r in results if r["status"] == "PASS")
