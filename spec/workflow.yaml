@@ -1,0 +1,21 @@
+version: v1
+last_updated: 2026-03-04
+lifecycle:
+  - draft
+  - proposed
+  - approved
+  - executing
+  - completed
+stop_conditions:
+  - unresolved_required_check_failure
+  - policy_breach_requires_escalation
+  - draft_ttl_exceeded
+platform_execution_order:
+  - 20260304-platform-validator-jay-execplan
+  - 20260304-todo-automation-jay-execplan
+  - 20260304-repo-health-engine-jay-execplan
+  - 20260304-spec-test-runner-jay-execplan
+human_authority:
+  finalization_is_human_only: true
+  ssh_signed_commit_required: true
+  override_requires_decision_log_entry: true
