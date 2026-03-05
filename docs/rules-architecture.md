@@ -7,3 +7,24 @@ This repository separates rules into three layers:
 3. `docs/` explanatory and onboarding material
 
 If a rule is enforced by code, it must be defined in `spec/`.
+
+## Locked Platform Architecture Contract
+
+Canonical contract file: `spec/platform-architecture.yaml`
+
+Architecture boundaries:
+
+- `platform_core`: implementation logic only in `src/platform_tools/**`
+- `operator_entrypoints`: `bin/**` wrappers only; they delegate to `src/platform_tools/*`
+- `governance_contracts`: `spec/**`, `policy/**`, `.agent/execplans/**`
+- `docs_guidance`: `docs/**` explanation and runbooks
+
+Precedence contract:
+
+- conflict resolution is fixed as `spec > policy > docs`
+- validators and automation must follow `spec` when text conflicts exist
+
+Authority contract:
+
+- bypass approvals are human-only, time-bounded, and owner-attributed
+- execplan finalization is human-only and SSH-signed
