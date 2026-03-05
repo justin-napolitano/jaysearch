@@ -13,6 +13,7 @@ def _command_list() -> list[str]:
         "bin/sync-todos",
         "bin/governance-check",
         "bin/distribution-check",
+        "bin/adoption-check",
         "bin/repo-health-check",
         "bin/kernel-contract-check",
     ]
