@@ -13,6 +13,12 @@ Activation gate:
 
 Referee commands and outputs must be deterministic and machine-readable.
 
+Universal branch-first policy:
+
+- All repository actions must run on a dedicated non-`main` branch.
+- Running execution/validation flows on `main` or `master` is a policy violation.
+- Validators must emit machine-readable branch-policy findings and fail deterministically on violation.
+
 Hostile review policy:
 
 - Hostile review runs must execute on a dedicated branch matching

@@ -5,6 +5,7 @@ import json
 from pathlib import Path
 from typing import Any
 
+from platform_tools.branch_policy import evaluate_branch_policy, get_current_branch
 from platform_tools.execplan_lint import run as run_execplan_lint
 from platform_tools.generate_todos import collect_tasks
 from platform_tools.security_scan import scan_repository
@@ -36,10 +37,16 @@ def _check_todo_integrity(todo_path: str = "TODO.md") -> tuple[bool, dict[str, A
     return ok, details
 
 
-def _calc_score(execplan_ok: bool, todo_ok: bool, security_ok: bool, governance_ok: bool) -> tuple[int, int]:
-    checks = [execplan_ok, todo_ok, security_ok, governance_ok]
+def _calc_score(
+    execplan_ok: bool,
+    todo_ok: bool,
+    security_ok: bool,
+    governance_ok: bool,
+    branch_ok: bool,
+) -> tuple[int, int]:
+    checks = [execplan_ok, todo_ok, security_ok, governance_ok, branch_ok]
     passed = sum(1 for c in checks if c)
-    score = passed * 25
+    score = passed * 20
     level = 1
     if score >= 50:
         level = 2
@@ -59,7 +66,9 @@ def check_repository_health(root: str = ".") -> tuple[int, dict[str, Any]]:
     security_ok = security_report["finding_count"] == 0
 
     governance_ok, missing_gov = _check_governance_files()
-    score, level = _calc_score(execplan_ok, todo_ok, security_ok, governance_ok)
+    branch_policy = evaluate_branch_policy(get_current_branch())
+    branch_ok = branch_policy["ok"]
+    score, level = _calc_score(execplan_ok, todo_ok, security_ok, governance_ok, branch_ok)
 
     report = {
         "tool": "repo_health",
@@ -80,13 +89,14 @@ def check_repository_health(root: str = ".") -> tuple[int, dict[str, Any]]:
                 "ok": governance_ok,
                 "missing": missing_gov,
             },
+            "branch_compliance": branch_policy,
         },
         "maturity": {"level": level, "score": score},
     }
 
     if not security_ok:
         return 2, report
-    if not (execplan_ok and todo_ok and governance_ok):
+    if not (execplan_ok and todo_ok and governance_ok and branch_ok):
         return 1, report
     return 0, report
 

@@ -10,5 +10,6 @@ Normative policy statements:
 - Task limit is 20 and draft TTL is 14 days.
 - Agents draft; humans finalize.
 - ExecPlan implementation changes must be developed and reviewed on a dedicated ExecPlan branch; direct implementation commits to `main` are prohibited.
+- Universal execution rule: repository actions (read/validate/edit/commit) must occur on a dedicated non-`main` branch.
 
 Validator implementation must consume the schema spec directly instead of duplicating rule constants.
