@@ -1,0 +1,22 @@
+{
+  "profile": "full",
+  "schema_version": "v1",
+  "tool": "bootstrap_project",
+  "included_paths": [
+    ".agent",
+    "Makefile",
+    "README.md",
+    "TODO.md",
+    "bin",
+    "docs",
+    "examples",
+    "main.py",
+    "platform.engine.yaml",
+    "policy",
+    "prompts",
+    "project.rules.yaml",
+    "pyproject.toml",
+    "spec",
+    "src"
+  ]
+}
