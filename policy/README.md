@@ -15,6 +15,7 @@ Rule source files:
 - `spec/execplan.schema.yaml`
 - `spec/governance.yaml`
 - `spec/distribution.yaml`
+- `spec/adoption.yaml`
 - `spec/platform-architecture.yaml`
 - `spec/ruleset.yaml`
 - `spec/exit-codes.yaml`

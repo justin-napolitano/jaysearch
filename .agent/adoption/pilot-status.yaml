@@ -1,0 +1,19 @@
+version: v1
+last_updated: 2026-03-05
+pilots:
+  - repo: platform-template-bootstrap
+    risk_tier: low
+    owner: github:jay.napolitano
+    status: completed
+    baseline_applied: true
+    evidence:
+      - TODO.md
+      - docs/getting-started.md
+    checks_passed: 5
+    checks_total: 5
+decision:
+  next_wave: 1
+  recommendation: go
+  decided_by: github:jay.napolitano
+  decided_at: 2026-03-05T00:00:00Z
+  rationale: "Pilot repo passed all required checks with deterministic outputs."
