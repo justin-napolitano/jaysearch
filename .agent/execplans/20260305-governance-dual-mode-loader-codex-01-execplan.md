@@ -3,16 +3,24 @@ id: 20260305-governance-dual-mode-loader-codex-01-execplan
 title: Add dual-mode governance loader for standalone and managed operation
 owner: "agent/codex-01"
 created: "2026-03-05T00:00:00Z"
-status: draft
+status: executing
 base_branch: main
 changes:
   - .agent/execplans/20260305-governance-dual-mode-loader-codex-01-execplan.md
   - prompts/20260305-execute-governance-dual-mode-loader-codex-01.md
-  - spec/
-  - src/platform_tools/
-  - bin/
-  - docs/
-  - policy/
+  - spec/engine-runtime.yaml
+  - platform.engine.yaml
+  - src/platform_tools/governance_loader.py
+  - src/platform_tools/branch_policy.py
+  - src/platform_tools/governance_check.py
+  - src/platform_tools/run_local_ci.py
+  - bin/governance-loader-check
+  - docs/governance-loader.md
+  - docs/commands.md
+  - docs/local-dev.md
+  - policy/README.md
+  - test-vectors/governance/managed-profile-pass.yaml
+  - test-vectors/governance/managed-profile-fail.yaml
 approve_policy: codeowners
 reviewers:
   - "github:jay.napolitano"
@@ -27,6 +35,12 @@ finalized_in_pr: ""
 
 validation:
   tests:
+    - name: governance_loader_standalone
+      command: bin/governance-loader-check
+      expected_exit: 0
+    - name: governance_loader_managed
+      command: PLATFORM_ENGINE_MODE=managed PLATFORM_GOVERNANCE_SOURCE=test-vectors/governance/managed-profile-pass.yaml bin/governance-loader-check
+      expected_exit: 0
     - name: execplan_validate
       command: bin/execplan-validate .agent/execplans/*.md
       expected_exit: 0
@@ -62,11 +76,11 @@ Enable this platform engine to run in two explicit modes without policy drift:
 
 ## Progress
 
-- [ ] Create dual-mode loader plan
-- [ ] Define mode contract and precedence model
-- [ ] Implement loader and validator integration
-- [ ] Add regression coverage for both modes
-- [ ] Validate deterministic outputs and exit codes
+- [x] Create dual-mode loader plan
+- [x] Define mode contract and precedence model
+- [x] Implement loader and validator integration
+- [x] Add regression coverage for both modes
+- [x] Validate deterministic outputs and exit codes
 - [ ] Human finalize via SSH-signed commit
 
 ## Surprises & Discoveries
@@ -130,16 +144,25 @@ Loader and merge logic are pure read/normalize operations. Re-running checks is 
 
 - `.agent/execplans/20260305-governance-dual-mode-loader-codex-01-execplan.md`
 - `prompts/20260305-execute-governance-dual-mode-loader-codex-01.md`
+- `spec/engine-runtime.yaml`
+- `platform.engine.yaml`
+- `src/platform_tools/governance_loader.py`
+- `bin/governance-loader-check`
+- `docs/governance-loader.md`
 
 ## Interfaces and Dependencies
 
 Interfaces:
 
-- `spec/*`
-- `src/platform_tools/*`
-- `bin/*`
-- `docs/*`
-- `policy/*`
+- `spec/engine-runtime.yaml`
+- `platform.engine.yaml`
+- `src/platform_tools/governance_loader.py`
+- `src/platform_tools/branch_policy.py`
+- `src/platform_tools/governance_check.py`
+- `src/platform_tools/run_local_ci.py`
+- `bin/governance-loader-check`
+- `docs/governance-loader.md`
+- `policy/README.md`
 
 Dependencies:
 
