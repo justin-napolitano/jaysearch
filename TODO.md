@@ -90,7 +90,7 @@
 
 - id: TODO-0012
   title: Define and validate packaged core version contract
-  state: open
+  state: done
   owner: unassigned
   priority: P1
   execplan: 20260305-platform-distribution-codex-01-execplan
@@ -98,7 +98,7 @@
 
 - id: TODO-0013
   title: Define deterministic template sync and drift controls
-  state: open
+  state: done
   owner: unassigned
   priority: P1
   execplan: 20260305-platform-distribution-codex-01-execplan
@@ -106,7 +106,7 @@
 
 - id: TODO-0014
   title: Define manual update mechanics for enterprise-safe adoption
-  state: open
+  state: done
   owner: unassigned
   priority: P1
   execplan: 20260305-platform-distribution-codex-01-execplan
