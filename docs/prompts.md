@@ -64,3 +64,22 @@ Expected outputs:
 - Prompts must align with canonical plan key format.
 - Canonical implementation logic is `src/platform_tools/*`.
 - Human SSH-signed commits remain required for authoritative finalization.
+
+## Hostile Review Runbook
+
+Use this runbook with `prompts/20260305-multiagent-review-prompt-jay.md`.
+
+1. Create a dedicated branch:
+   - `draft-execplan/hostile-review-<agent>-YYYYMMDD`
+2. Execute hostile review only on that branch.
+3. Generate auditable artifacts in `artifacts/review/`:
+   - `hostile-review-report.json`
+   - `hostile-review-summary.md`
+   - `validation-evidence.json`
+4. Run deterministic checks in this order:
+   - `bin/execplan-validate .agent/execplans/*.md`
+   - `bin/sync-todos`
+   - `bin/repo-health-check`
+   - `bin/execplan-test`
+   - `bin/run-local-ci`
+5. Commit artifacts and findings on the hostile-review branch and open a PR.
