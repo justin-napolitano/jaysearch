@@ -3,12 +3,14 @@ id: 20260305-platform-kernel-implementation-codex-01-execplan
 title: Implement platform kernel command contracts and runtime stability
 owner: "agent/codex-01"
 created: "2026-03-05T00:00:00Z"
-status: draft
+status: executing
 base_branch: main
 changes:
   - .agent/execplans/20260305-platform-kernel-implementation-codex-01-execplan.md
-  - src/platform_tools/
-  - bin/
+  - src/platform_tools/run_local_ci.py
+  - src/platform_tools/kernel_contracts.py
+  - bin/run-local-ci
+  - bin/kernel-contract-check
 approve_policy: codeowners
 reviewers:
   - "github:jay.napolitano"
@@ -23,6 +25,9 @@ finalized_in_pr: ""
 
 validation:
   tests:
+    - name: kernel_contract_check
+      command: bin/kernel-contract-check
+      expected_exit: 0
     - name: run_local_ci
       command: bin/run-local-ci
       expected_exit: 0
@@ -45,9 +50,9 @@ Deliver the platform kernel implementation baseline with deterministic command b
 
 ## Progress
 
-- [ ] Create kernel plan
-- [ ] Implement kernel scope
-- [ ] Validate deterministic behavior
+- [x] Create kernel plan
+- [x] Implement kernel scope
+- [x] Validate deterministic behavior
 - [ ] Human finalize via SSH-signed commit
 
 ## Surprises & Discoveries
@@ -91,13 +96,19 @@ Kernel checks are rerunnable and should not mutate policy state.
 ## Artifacts and Notes
 
 - `.agent/execplans/20260305-platform-kernel-implementation-codex-01-execplan.md`
+- `src/platform_tools/run_local_ci.py`
+- `src/platform_tools/kernel_contracts.py`
+- `bin/run-local-ci`
+- `bin/kernel-contract-check`
 
 ## Interfaces and Dependencies
 
 Interfaces:
 
-- `src/platform_tools/*`
-- `bin/*`
+- `src/platform_tools/run_local_ci.py`
+- `src/platform_tools/kernel_contracts.py`
+- `bin/run-local-ci`
+- `bin/kernel-contract-check`
 
 Dependencies:
 
