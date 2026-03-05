@@ -18,6 +18,20 @@ execution_constraints:
   execplan_branch_review_required: true
   required_branch_format: "draft-execplan/<plan-id>-<agent>-YYYYMMDD"
   disallow_execplan_changes_on_main: true
+hostile_review:
+  branch_format: "draft-execplan/hostile-review-<agent>-YYYYMMDD"
+  artifacts_required:
+    - artifacts/review/hostile-review-report.json
+    - artifacts/review/hostile-review-summary.md
+    - artifacts/review/validation-evidence.json
+  required_command_order:
+    - bin/execplan-validate .agent/execplans/*.md
+    - bin/sync-todos
+    - bin/repo-health-check
+    - bin/execplan-test
+    - bin/run-local-ci
+  reject_if_missing_artifacts: true
+  reject_if_order_violated: true
 turn_protocol:
   - declare_active_plan_id
   - declare_intended_moves
