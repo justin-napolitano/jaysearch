@@ -16,6 +16,7 @@ Rule source files:
 - `spec/governance.yaml`
 - `spec/distribution.yaml`
 - `spec/adoption.yaml`
+- `spec/engine-runtime.yaml`
 - `spec/platform-architecture.yaml`
 - `spec/ruleset.yaml`
 - `spec/exit-codes.yaml`

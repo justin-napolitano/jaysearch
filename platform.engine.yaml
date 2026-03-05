@@ -1,0 +1,5 @@
+version: v1
+last_updated: 2026-03-05
+runtime:
+  mode: standalone
+  governance_source: ""

@@ -1,0 +1,16 @@
+version: v1
+last_updated: 2026-03-05
+runtime:
+  mode_values:
+    - standalone
+    - managed
+  default_mode: standalone
+  config_path: platform.engine.yaml
+  env_overrides:
+    mode: PLATFORM_ENGINE_MODE
+    governance_source: PLATFORM_GOVERNANCE_SOURCE
+merge_contract:
+  managed_mode:
+    baseline_authoritative: true
+    local_may_tighten_only: true
+    local_may_not_weaken_required_checks: true
