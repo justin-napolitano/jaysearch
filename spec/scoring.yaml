@@ -1,0 +1,23 @@
+version: v1
+last_updated: 2026-03-04
+formula: "S = 100 * (DQ*w_dq + HED*w_hed + VPR*w_vpr + SLS*w_sls + BC*w_bc) - P"
+weights_source: ".agent/metrics.yml"
+weights:
+  dq_weight: 0.25
+  hed_weight: 0.25
+  vpr_weight: 0.20
+  sls_weight: 0.15
+  bc_weight: 0.15
+metrics:
+  DQ: "Draft Quality: schema + section completeness + clarity checks"
+  HED: "Human Edit Distance: 1 - normalized post-agent human rewrite size"
+  VPR: "Validation Pass Rate: passing required checks / total required checks"
+  SLS: "Security Lint Score: starts at 1.0, decays by severity"
+  BC: "Behavioral Correctness: workflow and move-set compliance"
+penalties:
+  critical_policy_breach: 100
+  nondeterministic_required_output: 40
+  missing_required_fields_or_sections: 30
+  out_of_scope_edits: 25
+  missing_required_evidence: 20
+  command_docs_mismatch: 15
