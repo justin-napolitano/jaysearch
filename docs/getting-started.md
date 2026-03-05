@@ -2,7 +2,7 @@
 # Getting Started
 
 1. Clone the repository
-2. Run bootstrap
+2. Run bootstrap: `bin/bootstrap-project /tmp --name my-codex-project`
 3. Create ExecPlan
 4. Generate TODOs
 5. Implement tasks
