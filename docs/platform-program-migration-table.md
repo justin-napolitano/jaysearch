@@ -42,3 +42,16 @@ A plan is eligible for execution only if all are true:
 3. Merge governance plans into one `platform-governance-enforcement` plan with explicit sub-scopes.
 4. Merge distribution plans into one `platform-distribution` plan (core package + template sync).
 5. Execute `platform-adoption-pilot` only after previous four are accepted.
+
+
+## Source Draft Preservation Note
+
+The pre-consolidation platform program drafts were checkpointed for later revision in:
+
+- branch: `draft-execplan/platform-program-drafts-codex-01-20260305`
+- commit: `d254c1e`
+
+Execution-prep action:
+
+- keep only the target 5-plan set active on `main`
+- treat checkpointed source drafts as superseded planning material unless explicitly revived

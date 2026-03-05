@@ -89,6 +89,46 @@
   key: 20260305-platform-hostile-review-sweep-codex-01-execplan::Review validator determinism and stable exit semantics
 
 - id: TODO-0012
+  title: Define final 5-plan execution model for platform program
+  state: open
+  owner: unassigned
+  priority: P1
+  execplan: 20260305-platform-program-consolidation-codex-01-execplan
+  key: 20260305-platform-program-consolidation-codex-01-execplan::Define final 5-plan execution model for platform program
+
+- id: TODO-0013
+  title: Define hard admission gates for any plan before execution
+  state: open
+  owner: unassigned
+  priority: P1
+  execplan: 20260305-platform-program-consolidation-codex-01-execplan
+  key: 20260305-platform-program-consolidation-codex-01-execplan::Define hard admission gates for any plan before execution
+
+- id: TODO-0014
+  title: Define strict dependency order with no draft predecessors
+  state: open
+  owner: unassigned
+  priority: P1
+  execplan: 20260305-platform-program-consolidation-codex-01-execplan
+  key: 20260305-platform-program-consolidation-codex-01-execplan::Define strict dependency order with no draft predecessors
+
+- id: TODO-0015
+  title: Map existing draft plans into merge split archive actions
+  state: open
+  owner: unassigned
+  priority: P1
+  execplan: 20260305-platform-program-consolidation-codex-01-execplan
+  key: 20260305-platform-program-consolidation-codex-01-execplan::Map existing draft plans into merge split archive actions
+
+- id: TODO-0016
+  title: Publish migration table artifact for operators
+  state: open
+  owner: unassigned
+  priority: P1
+  execplan: 20260305-platform-program-consolidation-codex-01-execplan
+  key: 20260305-platform-program-consolidation-codex-01-execplan::Publish migration table artifact for operators
+
+- id: TODO-0017
   title: Add recursion guard for run-local-ci in spec_test_runner
   state: done
   owner: unassigned
@@ -96,7 +136,7 @@
   execplan: 20260305-recursion-guard-spec-tests-codex-01-execplan
   key: 20260305-recursion-guard-spec-tests-codex-01-execplan::Add recursion guard for run-local-ci in spec_test_runner
 
-- id: TODO-0013
+- id: TODO-0018
   title: Preserve deterministic pass/fail/skip semantics
   state: done
   owner: unassigned
@@ -104,7 +144,7 @@
   execplan: 20260305-recursion-guard-spec-tests-codex-01-execplan
   key: 20260305-recursion-guard-spec-tests-codex-01-execplan::Preserve deterministic pass/fail/skip semantics
 
-- id: TODO-0014
+- id: TODO-0019
   title: Validate no timeout loops in execplan-test and run-local-ci
   state: done
   owner: unassigned
@@ -112,7 +152,7 @@
   execplan: 20260305-recursion-guard-spec-tests-codex-01-execplan
   key: 20260305-recursion-guard-spec-tests-codex-01-execplan::Validate no timeout loops in execplan-test and run-local-ci
 
-- id: TODO-0015
+- id: TODO-0020
   title: Add deterministic branch-policy checks to validators
   state: done
   owner: unassigned
@@ -120,7 +160,7 @@
   execplan: 20260305-universal-branching-governance-codex-01-execplan
   key: 20260305-universal-branching-governance-codex-01-execplan::Add deterministic branch-policy checks to validators
 
-- id: TODO-0016
+- id: TODO-0021
   title: Add deterministic failure semantics for branch-policy violations
   state: done
   owner: unassigned
@@ -128,7 +168,7 @@
   execplan: 20260305-universal-branching-governance-codex-01-execplan
   key: 20260305-universal-branching-governance-codex-01-execplan::Add deterministic failure semantics for branch-policy violations
 
-- id: TODO-0017
+- id: TODO-0022
   title: Define hostile-review branch contract and artifact paths
   state: done
   owner: unassigned
@@ -136,7 +176,7 @@
   execplan: 20260305-universal-branching-governance-codex-01-execplan
   key: 20260305-universal-branching-governance-codex-01-execplan::Define hostile-review branch contract and artifact paths
 
-- id: TODO-0018
+- id: TODO-0023
   title: Publish operator guidance for branch-first workflow
   state: done
   owner: unassigned
@@ -144,7 +184,7 @@
   execplan: 20260305-universal-branching-governance-codex-01-execplan
   key: 20260305-universal-branching-governance-codex-01-execplan::Publish operator guidance for branch-first workflow
 
-- id: TODO-0019
+- id: TODO-0024
   title: Require unique non-main branch for every execution run
   state: done
   owner: unassigned
@@ -152,7 +192,7 @@
   execplan: 20260305-universal-branching-governance-codex-01-execplan
   key: 20260305-universal-branching-governance-codex-01-execplan::Require unique non-main branch for every execution run
 
-- id: TODO-0020
+- id: TODO-0025
   title: Add deterministic rule metadata for workflow branch patterns
   state: done
   owner: unassigned
@@ -160,7 +200,7 @@
   execplan: 20260305-workflow-branch-pattern-enforcement-codex-01-execplan
   key: 20260305-workflow-branch-pattern-enforcement-codex-01-execplan::Add deterministic rule metadata for workflow branch patterns
 
-- id: TODO-0021
+- id: TODO-0026
   title: Enforce workflow-specific branch patterns in branch policy evaluator
   state: done
   owner: unassigned
@@ -168,7 +208,7 @@
   execplan: 20260305-workflow-branch-pattern-enforcement-codex-01-execplan
   key: 20260305-workflow-branch-pattern-enforcement-codex-01-execplan::Enforce workflow-specific branch patterns in branch policy evaluator
 
-- id: TODO-0022
+- id: TODO-0027
   title: Expose branch-pattern violations in execplan lint report
   state: done
   owner: unassigned
@@ -176,7 +216,7 @@
   execplan: 20260305-workflow-branch-pattern-enforcement-codex-01-execplan
   key: 20260305-workflow-branch-pattern-enforcement-codex-01-execplan::Expose branch-pattern violations in execplan lint report
 
-- id: TODO-0023
+- id: TODO-0028
   title: Expose branch-pattern violations in repository health report
   state: done
   owner: unassigned
@@ -184,7 +224,7 @@
   execplan: 20260305-workflow-branch-pattern-enforcement-codex-01-execplan
   key: 20260305-workflow-branch-pattern-enforcement-codex-01-execplan::Expose branch-pattern violations in repository health report
 
-- id: TODO-0024
+- id: TODO-0029
   title: Remove or replace ambiguous git execfinal command documentation
   state: done
   owner: unassigned
@@ -192,7 +232,7 @@
   execplan: 20260305-workflow-branch-pattern-enforcement-codex-01-execplan
   key: 20260305-workflow-branch-pattern-enforcement-codex-01-execplan::Remove or replace ambiguous git execfinal command documentation
 
-- id: TODO-0025
+- id: TODO-0030
   title: Compute maturity score and level
   state: done
   owner: unassigned
@@ -200,7 +240,7 @@
   execplan: repo-health-engine-20260304
   key: repo-health-engine-20260304::Compute maturity score and level
 
-- id: TODO-0026
+- id: TODO-0031
   title: Implement repo-health-check CLI
   state: done
   owner: unassigned
@@ -208,7 +248,7 @@
   execplan: repo-health-engine-20260304
   key: repo-health-engine-20260304::Implement repo-health-check CLI
 
-- id: TODO-0027
+- id: TODO-0032
   title: Run security scanning checks
   state: done
   owner: unassigned
@@ -216,7 +256,7 @@
   execplan: repo-health-engine-20260304
   key: repo-health-engine-20260304::Run security scanning checks
 
-- id: TODO-0028
+- id: TODO-0033
   title: Validate ExecPlan structure
   state: done
   owner: unassigned
@@ -224,7 +264,7 @@
   execplan: repo-health-engine-20260304
   key: repo-health-engine-20260304::Validate ExecPlan structure
 
-- id: TODO-0029
+- id: TODO-0034
   title: Validate TODO integrity
   state: done
   owner: unassigned
@@ -232,7 +272,7 @@
   execplan: repo-health-engine-20260304
   key: repo-health-engine-20260304::Validate TODO integrity
 
-- id: TODO-0030
+- id: TODO-0035
   title: Validate governance file presence
   state: done
   owner: unassigned
@@ -240,7 +280,7 @@
   execplan: repo-health-engine-20260304
   key: repo-health-engine-20260304::Validate governance file presence
 
-- id: TODO-0031
+- id: TODO-0036
   title: Emit deterministic pass/fail summary
   state: done
   owner: unassigned
@@ -248,7 +288,7 @@
   execplan: spec-test-runner-20260304
   key: spec-test-runner-20260304::Emit deterministic pass/fail summary
 
-- id: TODO-0032
+- id: TODO-0037
   title: Execute tests with expected exit assertions
   state: done
   owner: unassigned
@@ -256,7 +296,7 @@
   execplan: spec-test-runner-20260304
   key: spec-test-runner-20260304::Execute tests with expected exit assertions
 
-- id: TODO-0033
+- id: TODO-0038
   title: Implement execplan-test CLI
   state: done
   owner: unassigned
@@ -264,7 +304,7 @@
   execplan: spec-test-runner-20260304
   key: spec-test-runner-20260304::Implement execplan-test CLI
 
-- id: TODO-0034
+- id: TODO-0039
   title: Parse validation blocks from ExecPlans
   state: done
   owner: unassigned
@@ -272,7 +312,7 @@
   execplan: spec-test-runner-20260304
   key: spec-test-runner-20260304::Parse validation blocks from ExecPlans
 
-- id: TODO-0035
+- id: TODO-0040
   title: Return non-zero on failing tests
   state: done
   owner: unassigned
@@ -280,7 +320,7 @@
   execplan: spec-test-runner-20260304
   key: spec-test-runner-20260304::Return non-zero on failing tests
 
-- id: TODO-0036
+- id: TODO-0041
   title: Generate deterministic TODO entries
   state: done
   owner: unassigned
@@ -288,7 +328,7 @@
   execplan: todo-automation-20260304
   key: todo-automation-20260304::Generate deterministic TODO entries
 
-- id: TODO-0037
+- id: TODO-0042
   title: Implement CLI wrappers
   state: done
   owner: unassigned
@@ -296,7 +336,7 @@
   execplan: todo-automation-20260304
   key: todo-automation-20260304::Implement CLI wrappers
 
-- id: TODO-0038
+- id: TODO-0043
   title: Link TODO entries to ExecPlan IDs
   state: done
   owner: unassigned
@@ -304,7 +344,7 @@
   execplan: todo-automation-20260304
   key: todo-automation-20260304::Link TODO entries to ExecPlan IDs
 
-- id: TODO-0039
+- id: TODO-0044
   title: Parse ExecPlan tasks
   state: done
   owner: unassigned
@@ -312,7 +352,7 @@
   execplan: todo-automation-20260304
   key: todo-automation-20260304::Parse ExecPlan tasks
 
-- id: TODO-0040
+- id: TODO-0045
   title: Prevent duplicate TODO entries
   state: done
   owner: unassigned
