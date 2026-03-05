@@ -51,17 +51,51 @@ def collect_tasks(execplans_glob: str = ".agent/execplans/*.md") -> tuple[list[d
     return normalized, sorted(set(warnings))
 
 
-def render_todo(tasks: list[dict[str, str]]) -> str:
+def parse_existing_state(todo_path: str) -> dict[str, dict[str, str]]:
+    path = Path(todo_path)
+    if not path.exists():
+        return {}
+    entries: dict[str, dict[str, str]] = {}
+    current_key = ""
+    current_state = ""
+    current_owner = ""
+    for raw in path.read_text(encoding="utf-8").splitlines():
+        line = raw.strip()
+        if line.startswith("- id: "):
+            if current_key:
+                entries[current_key] = {"state": current_state or "open", "owner": current_owner or "unassigned"}
+            current_key = ""
+            current_state = ""
+            current_owner = ""
+            continue
+        if line.startswith("state: "):
+            current_state = line.split(":", 1)[1].strip()
+            continue
+        if line.startswith("owner: "):
+            current_owner = line.split(":", 1)[1].strip()
+            continue
+        if line.startswith("key: "):
+            current_key = line.split(":", 1)[1].strip()
+            continue
+    if current_key:
+        entries[current_key] = {"state": current_state or "open", "owner": current_owner or "unassigned"}
+    return entries
+
+
+def render_todo(tasks: list[dict[str, str]], existing_state: dict[str, dict[str, str]]) -> str:
     lines = [TODO_HEADER.rstrip("\n")]
     for idx, task in enumerate(tasks, start=1):
         todo_id = f"TODO-{idx:04d}"
+        state_owner = existing_state.get(task["key"], {})
+        state = state_owner.get("state", "open")
+        owner = state_owner.get("owner", "unassigned")
         lines.extend(
             [
                 "",
                 f"- id: {todo_id}",
                 f"  title: {task['title']}",
-                "  state: open",
-                "  owner: unassigned",
+                f"  state: {state}",
+                f"  owner: {owner}",
                 f"  priority: {task['priority']}",
                 f"  execplan: {task['plan_id']}",
                 f"  key: {task['key']}",
@@ -73,7 +107,8 @@ def render_todo(tasks: list[dict[str, str]]) -> str:
 
 def generate_todos(todo_path: str = "TODO.md") -> dict[str, Any]:
     tasks, warnings = collect_tasks()
-    rendered = render_todo(tasks)
+    existing_state = parse_existing_state(todo_path)
+    rendered = render_todo(tasks, existing_state)
     target = Path(todo_path)
     old = target.read_text(encoding="utf-8") if target.exists() else ""
     changed = old != rendered
