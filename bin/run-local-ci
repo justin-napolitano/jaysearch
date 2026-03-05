@@ -5,8 +5,11 @@ commands=(
   "bin/execplan-validate .agent/execplans/*.md"
   "bin/sync-todos"
   "bin/repo-health-check"
-  "bin/execplan-test"
 )
+
+if [[ "${EXECPLAN_TEST_RUNNING:-}" != "1" ]]; then
+  commands+=("bin/execplan-test")
+fi
 
 tmp="$(mktemp)"
 trap 'rm -f "$tmp"' EXIT

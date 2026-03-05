@@ -9,6 +9,8 @@ from typing import Any
 
 from platform_tools.plan_utils import list_execplans, parse_plan
 
+RECURSIVE_COMMAND_MARKERS = ("bin/execplan-test", "bin/run-local-ci")
+
 
 def _collect_tests() -> list[dict[str, Any]]:
     tests: list[dict[str, Any]] = []
@@ -50,8 +52,10 @@ def run_tests() -> tuple[int, dict[str, Any]]:
             results.append({**test, "status": "FAIL", "actual_exit": None, "reason": "empty_command"})
             continue
 
-        # Avoid infinite recursion for self-referential plan tests.
-        if "bin/execplan-test" in cmd and os.environ.get("EXECPLAN_TEST_RUNNING") == "1":
+        # Avoid infinite recursion for self-referential or reentrant CI/test commands.
+        if os.environ.get("EXECPLAN_TEST_RUNNING") == "1" and any(
+            marker in cmd for marker in RECURSIVE_COMMAND_MARKERS
+        ):
             results.append({**test, "status": "SKIP", "actual_exit": 0, "reason": "recursive_self_reference"})
             continue
 
