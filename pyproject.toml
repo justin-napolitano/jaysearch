@@ -27,6 +27,18 @@ line-length = 100
 
 
 [project.scripts]
+bootstrap-project = "platform_tools.bootstrap_project:main"
 execplan-lint = "platform_tools.execplan_lint:main"
+execplan-test = "platform_tools.spec_test_runner:main"
+execplan-validate = "platform_tools.execplan_lint:main"
+sync-todos = "platform_tools.sync_todos:main"
+repo-health-check = "platform_tools.repo_health:main"
+run-local-ci = "platform_tools.run_local_ci:main"
+governance-loader-check = "platform_tools.governance_loader:main"
+governance-check = "platform_tools.governance_check:main"
+distribution-check = "platform_tools.distribution_check:main"
+adoption-check = "platform_tools.adoption_check:main"
+kernel-contract-check = "platform_tools.kernel_contracts:main"
+finalize-execplan = "platform_tools.finalize_execplan:main"
 security-scan = "platform_tools.security_scan:main"
 agent-score = "platform_tools.agent_score:main"
