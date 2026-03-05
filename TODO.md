@@ -186,7 +186,7 @@
 
 - id: TODO-0024
   title: Add deterministic regression checks for runtime stability
-  state: open
+  state: done
   owner: unassigned
   priority: P1
   execplan: 20260305-platform-kernel-implementation-codex-01-execplan
@@ -194,7 +194,7 @@
 
 - id: TODO-0025
   title: Lock machine-readable output contracts for kernel commands
-  state: open
+  state: done
   owner: unassigned
   priority: P1
   execplan: 20260305-platform-kernel-implementation-codex-01-execplan
@@ -202,7 +202,7 @@
 
 - id: TODO-0026
   title: Stabilize command execution model and exit semantics
-  state: open
+  state: done
   owner: unassigned
   priority: P1
   execplan: 20260305-platform-kernel-implementation-codex-01-execplan
