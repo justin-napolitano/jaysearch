@@ -1,0 +1,12 @@
+version: v1
+last_updated: 2026-03-05
+releases:
+  - version: 0.1.0
+    status: active
+    channel: stable
+    published_at: 2026-03-05T00:00:00Z
+    template_paths:
+      - docs/commands.md
+      - docs/local-dev.md
+      - docs/template-maintenance.md
+      - spec/distribution.yaml

@@ -1,0 +1,25 @@
+version: v1
+last_updated: 2026-03-05
+core_package:
+  manifest_path: pyproject.toml
+  version_key: project.version
+  version_regex: "^\\d+\\.\\d+\\.\\d+$"
+  release_registry_path: .agent/distribution/releases.yaml
+template_sync:
+  required_template_paths:
+    - docs/commands.md
+    - docs/local-dev.md
+    - docs/template-maintenance.md
+    - spec/distribution.yaml
+  drift_controls:
+    deterministic_path_order: true
+    require_explicit_registry_release: true
+manual_update:
+  allowed_mode: pull_request_only
+  required_steps:
+    - create_dedicated_branch
+    - update_release_registry
+    - run_distribution_check
+    - run_run_local_ci
+    - open_reviewable_pr
+    - human_merge

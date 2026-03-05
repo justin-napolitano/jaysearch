@@ -12,6 +12,7 @@ def _command_list() -> list[str]:
         "bin/execplan-validate .agent/execplans/*.md",
         "bin/sync-todos",
         "bin/governance-check",
+        "bin/distribution-check",
         "bin/repo-health-check",
         "bin/kernel-contract-check",
     ]

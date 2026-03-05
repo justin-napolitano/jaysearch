@@ -7,6 +7,7 @@ from pathlib import Path
 from typing import Any
 
 from platform_tools.branch_policy import evaluate_branch_policy, get_current_branch
+from platform_tools.distribution_check import check_distribution
 from platform_tools.execplan_lint import run as run_execplan_lint
 from platform_tools.generate_todos import collect_tasks
 from platform_tools.governance_check import check_governance
@@ -59,9 +60,18 @@ def _calc_score(
     security_ok: bool,
     governance_ok: bool,
     governance_contract_ok: bool,
+    distribution_contract_ok: bool,
     branch_ok: bool,
 ) -> tuple[int, int]:
-    checks = [execplan_ok, todo_ok, security_ok, governance_ok, governance_contract_ok, branch_ok]
+    checks = [
+        execplan_ok,
+        todo_ok,
+        security_ok,
+        governance_ok,
+        governance_contract_ok,
+        distribution_contract_ok,
+        branch_ok,
+    ]
     passed = sum(1 for c in checks if c)
     score = round((passed / len(checks)) * 100)
     level = 1
@@ -85,6 +95,8 @@ def check_repository_health(root: str = ".") -> tuple[int, dict[str, Any]]:
     governance_ok, missing_gov = _check_governance_files()
     governance_code, governance_report = check_governance()
     governance_contract_ok = governance_code == 0
+    distribution_code, distribution_report = check_distribution()
+    distribution_contract_ok = distribution_code == 0
     branch_policy = evaluate_branch_policy(get_current_branch())
     branch_ok = branch_policy["ok"]
     score, level = _calc_score(
@@ -93,6 +105,7 @@ def check_repository_health(root: str = ".") -> tuple[int, dict[str, Any]]:
         security_ok,
         governance_ok,
         governance_contract_ok,
+        distribution_contract_ok,
         branch_ok,
     )
 
@@ -120,6 +133,11 @@ def check_repository_health(root: str = ".") -> tuple[int, dict[str, Any]]:
                 "finding_count": governance_report["finding_count"],
                 "findings": governance_report["findings"],
             },
+            "distribution_contracts": {
+                "ok": distribution_contract_ok,
+                "finding_count": distribution_report["finding_count"],
+                "findings": distribution_report["findings"],
+            },
             "branch_compliance": branch_policy,
         },
         "maturity": {"level": level, "score": score},
@@ -127,7 +145,14 @@ def check_repository_health(root: str = ".") -> tuple[int, dict[str, Any]]:
 
     if not security_ok:
         return 2, report
-    if not (execplan_ok and todo_ok and governance_ok and governance_contract_ok and branch_ok):
+    if not (
+        execplan_ok
+        and todo_ok
+        and governance_ok
+        and governance_contract_ok
+        and distribution_contract_ok
+        and branch_ok
+    ):
         return 1, report
     return 0, report
 
