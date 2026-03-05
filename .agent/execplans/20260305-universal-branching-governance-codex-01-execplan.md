@@ -1,56 +1,51 @@
 ---
 id: 20260305-universal-branching-governance-codex-01-execplan
 title: Enforce universal branch-first execution governance
-owner: "agent/codex-01"
-created: "2026-03-05T00:00:00Z"
-status: draft
+owner: agent/codex-01
+created: '2026-03-05T00:00:00Z'
+status: approved
 base_branch: main
 changes:
-  - .agent/execplans/20260305-universal-branching-governance-codex-01-execplan.md
-  - prompts/20260305-execute-universal-branching-governance-codex-01.md
-  - spec/ruleset.yaml
-  - spec/workflow.yaml
-  - policy/agents.md
-  - policy/execplans.md
-  - policy/game-rules.md
-  - src/platform_tools/execplan_lint.py
-  - src/platform_tools/repo_health.py
-  - bin/repo-health-check
+- .agent/execplans/20260305-universal-branching-governance-codex-01-execplan.md
+- prompts/20260305-execute-universal-branching-governance-codex-01.md
+- spec/ruleset.yaml
+- spec/workflow.yaml
+- policy/agents.md
+- policy/execplans.md
+- policy/game-rules.md
+- src/platform_tools/execplan_lint.py
+- src/platform_tools/repo_health.py
+- bin/repo-health-check
 approve_policy: codeowners
 reviewers:
-  - "github:jay.napolitano"
-
-draft_by: "agent/codex-01"
-draft_branch: "draft-execplan/universal-branching-governance-codex-01-20260305"
-draft_created: "2026-03-05T00:00:00Z"
-
-finalized_by: ""
-finalized_at: ""
-finalized_in_pr: ""
-
+- github:jay.napolitano
+draft_by: agent/codex-01
+draft_branch: draft-execplan/universal-branching-governance-codex-01-20260305
+draft_created: '2026-03-05T00:00:00Z'
+finalized_by: github:jay.napolitano
+finalized_at: '2026-03-05T17:00:00Z'
+finalized_in_pr: '17'
 validation:
   tests:
-    - name: execplan_validate
-      command: bin/execplan-validate .agent/execplans/*.md
-      expected_exit: 0
-    - name: repo_health_check
-      command: bin/repo-health-check
-      expected_exit: 0
-
+  - name: execplan_validate
+    command: bin/execplan-validate .agent/execplans/*.md
+    expected_exit: 0
+  - name: repo_health_check
+    command: bin/repo-health-check
+    expected_exit: 0
 tasks:
-  - title: Require unique non-main branch for every execution run
-    priority: P1
-  - title: Define hostile-review branch contract and artifact paths
-    priority: P1
-  - title: Add deterministic branch-policy checks to validators
-    priority: P1
-  - title: Add deterministic failure semantics for branch-policy violations
-    priority: P1
-  - title: Publish operator guidance for branch-first workflow
-    priority: P2
-
+- title: Require unique non-main branch for every execution run
+  priority: P1
+- title: Define hostile-review branch contract and artifact paths
+  priority: P1
+- title: Add deterministic branch-policy checks to validators
+  priority: P1
+- title: Add deterministic failure semantics for branch-policy violations
+  priority: P1
+- title: Publish operator guidance for branch-first workflow
+  priority: P2
 depends_on:
-  - 20260305-multiagent-review-prompt-jay-execplan
+- 20260305-multiagent-review-prompt-jay-execplan
 ---
 
 # Purpose / Big Picture
