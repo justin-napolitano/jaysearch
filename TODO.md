@@ -42,7 +42,7 @@
 
 - id: TODO-0006
   title: Add deterministic branch-policy checks to validators
-  state: open
+  state: done
   owner: unassigned
   priority: P1
   execplan: 20260305-universal-branching-governance-codex-01-execplan
@@ -50,7 +50,7 @@
 
 - id: TODO-0007
   title: Add deterministic failure semantics for branch-policy violations
-  state: open
+  state: done
   owner: unassigned
   priority: P1
   execplan: 20260305-universal-branching-governance-codex-01-execplan
@@ -58,7 +58,7 @@
 
 - id: TODO-0008
   title: Define hostile-review branch contract and artifact paths
-  state: open
+  state: done
   owner: unassigned
   priority: P1
   execplan: 20260305-universal-branching-governance-codex-01-execplan
@@ -66,7 +66,7 @@
 
 - id: TODO-0009
   title: Publish operator guidance for branch-first workflow
-  state: open
+  state: done
   owner: unassigned
   priority: P2
   execplan: 20260305-universal-branching-governance-codex-01-execplan
@@ -74,7 +74,7 @@
 
 - id: TODO-0010
   title: Require unique non-main branch for every execution run
-  state: open
+  state: done
   owner: unassigned
   priority: P1
   execplan: 20260305-universal-branching-governance-codex-01-execplan
