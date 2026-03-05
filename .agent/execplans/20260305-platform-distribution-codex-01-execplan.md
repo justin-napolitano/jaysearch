@@ -3,14 +3,20 @@ id: 20260305-platform-distribution-codex-01-execplan
 title: Implement platform distribution model for core package and template sync
 owner: "agent/codex-01"
 created: "2026-03-05T00:00:00Z"
-status: draft
+status: executing
 base_branch: main
 changes:
   - .agent/execplans/20260305-platform-distribution-codex-01-execplan.md
-  - pyproject.toml
-  - src/platform_tools/
+  - spec/distribution.yaml
+  - .agent/distribution/releases.yaml
+  - src/platform_tools/distribution_check.py
+  - src/platform_tools/repo_health.py
+  - src/platform_tools/run_local_ci.py
+  - bin/distribution-check
   - docs/template-maintenance.md
   - docs/local-dev.md
+  - docs/commands.md
+  - policy/README.md
 approve_policy: codeowners
 reviewers:
   - "github:jay.napolitano"
@@ -25,6 +31,9 @@ finalized_in_pr: ""
 
 validation:
   tests:
+    - name: distribution_check
+      command: bin/distribution-check
+      expected_exit: 0
     - name: run_local_ci
       command: bin/run-local-ci
       expected_exit: 0
@@ -47,9 +56,9 @@ Deliver distribution mechanics for platform core and template updates with deter
 
 ## Progress
 
-- [ ] Create distribution plan
-- [ ] Implement packaging and sync scope
-- [ ] Validate update mechanics
+- [x] Create distribution plan
+- [x] Implement packaging and sync scope
+- [x] Validate update mechanics
 - [ ] Human finalize via SSH-signed commit
 
 ## Surprises & Discoveries
@@ -94,13 +103,19 @@ Distribution operations must allow rollback to known-good versions.
 ## Artifacts and Notes
 
 - `.agent/execplans/20260305-platform-distribution-codex-01-execplan.md`
+- `spec/distribution.yaml`
+- `.agent/distribution/releases.yaml`
+- `src/platform_tools/distribution_check.py`
+- `bin/distribution-check`
 
 ## Interfaces and Dependencies
 
 Interfaces:
 
-- `pyproject.toml`
-- `src/platform_tools/*`
+- `spec/distribution.yaml`
+- `.agent/distribution/releases.yaml`
+- `src/platform_tools/distribution_check.py`
+- `bin/distribution-check`
 - `docs/template-maintenance.md`
 
 Dependencies:
