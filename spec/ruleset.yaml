@@ -18,6 +18,10 @@ execution_constraints:
   execplan_branch_review_required: true
   required_branch_format: "draft-execplan/<plan-id>-<agent>-YYYYMMDD"
   disallow_execplan_changes_on_main: true
+agent_commit_identity:
+  codex_commit_prefix: "[agent/codex-01]"
+  required_trailer_format: "Agent: agent/<agent-name>"
+  codex_commit_command: "bin/codex-commit"
 hostile_review:
   branch_format: "draft-execplan/hostile-review-<agent>-YYYYMMDD"
   artifacts_required:
