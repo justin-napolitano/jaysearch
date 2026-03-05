@@ -1,0 +1,15 @@
+profile_version: 1
+controls:
+  - id: branch.protection
+    enabled: true
+    details:
+      protected_branch: main
+  - id: checks.required
+    enabled: true
+    details:
+      checks:
+        - execplan_validate
+        - sync_todos
+        - repo_health_check
+        - execplan_spec_tests
+        - run_local_ci

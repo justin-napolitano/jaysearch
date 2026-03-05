@@ -2,10 +2,9 @@ from __future__ import annotations
 
 import fnmatch
 import subprocess
-from pathlib import Path
 from typing import Any
 
-import yaml
+from platform_tools.governance_loader import build_effective_policy
 
 
 def get_current_branch() -> str:
@@ -20,42 +19,23 @@ def get_current_branch() -> str:
     return proc.stdout.strip()
 
 
-def _load_allowed_patterns() -> list[str]:
-    patterns: list[str] = []
-    ruleset_path = Path("spec/ruleset.yaml")
-    workflow_path = Path("spec/workflow.yaml")
-
-    if ruleset_path.exists():
-        data = yaml.safe_load(ruleset_path.read_text(encoding="utf-8")) or {}
-        exec_constraints = data.get("execution_constraints", {})
-        for p in exec_constraints.get("allowed_branch_patterns", []) or []:
-            if isinstance(p, str) and p.strip():
-                patterns.append(p.strip())
-
-    if workflow_path.exists():
-        data = yaml.safe_load(workflow_path.read_text(encoding="utf-8")) or {}
-        exec_requirements = data.get("execution_requirements", {})
-        workflow_patterns = exec_requirements.get("workflow_branch_patterns", {}) or {}
-        if isinstance(workflow_patterns, dict):
-            for value in workflow_patterns.values():
-                if isinstance(value, str) and value.strip():
-                    patterns.append(value.strip())
-
-    dedup: list[str] = []
-    seen = set()
-    for p in patterns:
-        if p not in seen:
-            dedup.append(p)
-            seen.add(p)
-    return dedup
+def _load_effective_branch_policy() -> tuple[list[str], list[str], list[str]]:
+    _, report = build_effective_policy()
+    findings = list(report.get("findings", []))
+    effective = report.get("effective_policy", {}) if isinstance(report.get("effective_policy"), dict) else {}
+    allowed = effective.get("allowed_branch_patterns", [])
+    forbidden = effective.get("forbidden_branches", [])
+    allowed_patterns = [str(p).strip() for p in allowed if str(p).strip()]
+    forbidden_branches = [str(b).strip() for b in forbidden if str(b).strip() or b == ""]
+    return allowed_patterns, sorted(set(forbidden_branches)), findings
 
 
 def evaluate_branch_policy(branch: str) -> dict[str, Any]:
     # Universal governance requirement: all actions run on a dedicated non-protected branch.
-    forbidden = {"main", "master", ""}
-    allowed_patterns = _load_allowed_patterns()
-    ok = branch not in forbidden
-    findings: list[str] = []
+    allowed_patterns, forbidden_branches, loader_findings = _load_effective_branch_policy()
+    forbidden = set(forbidden_branches) if forbidden_branches else {"main", "master", ""}
+    ok = branch not in forbidden and not loader_findings
+    findings: list[str] = list(loader_findings)
     if branch in forbidden:
         findings.append("branch_policy_violation:execution_on_protected_branch")
     if branch and allowed_patterns:
