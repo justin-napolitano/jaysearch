@@ -1,3 +1,31 @@
+---
+id: platform-validator-20260304
+title: Implement platform validation engine
+owner: "github:jay.napolitano"
+created: "2026-03-04T00:00:00Z"
+status: draft
+base_branch: main
+changes:
+  - .agent/execplans/20260304-platform-validator-jay-execplan.md
+  - src/platform_tools/execplan_lint.py
+  - src/platform_tools/security_scan.py
+  - src/platform_tools/agent_score.py
+  - src/platform_tools/diff_analyzer.py
+  - bin/execplan-validate
+  - bin/run-local-ci
+approve_policy: codeowners
+reviewers:
+  - "github:jay.napolitano"
+
+draft_by: "github:jay.napolitano"
+draft_branch: draft-execplan/platform-validator-jay-20260304
+draft_created: "2026-03-04T00:00:00Z"
+
+finalized_by: ""
+finalized_at: ""
+finalized_in_pr: ""
+---
+
 # Implement platform validation engine
 
 This ExecPlan is a living document. The sections Progress, Surprises &
@@ -291,4 +319,3 @@ Validation output should be JSON structured for machine consumption.
 
     bin/execplan-validate
     bin/run-local-ci
-
