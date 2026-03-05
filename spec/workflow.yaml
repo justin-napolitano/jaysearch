@@ -17,6 +17,13 @@ execution_requirements:
     - main
     - master
   execution_branch_must_be_non_main: true
+  workflow_branch_patterns:
+    execplan: "draft-execplan/*"
+    hostile_review: "draft-execplan/hostile-review-*"
+    docs: "docs/*"
+    feature: "feature/*"
+    hotfix: "hotfix/*"
+    release: "release/*"
 platform_execution_order:
   - 20260304-platform-validator-jay-execplan
   - 20260304-todo-automation-jay-execplan
