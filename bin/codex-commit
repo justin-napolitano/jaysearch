@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+if [[ $# -lt 1 ]]; then
+  echo "usage: bin/codex-commit <commit message>"
+  exit 1
+fi
+
+branch="$(git branch --show-current)"
+if [[ "$branch" == "main" ]]; then
+  echo "refusing commit on main; use a dedicated draft-execplan/* branch"
+  exit 1
+fi
+
+agent="${CODEX_AGENT_ID:-agent/codex-01}"
+msg="$*"
+
+git commit -m "[${agent}] ${msg}" -m "Agent: ${agent}"

@@ -12,3 +12,30 @@ Agents may NOT:
 • Finalize plans
 • Push changes to protected branches
 • Modify governance without ExecPlan approval
+
+## Persona to Agent ID Mapping
+
+Use a concrete `agent/<name>` identity for each operating persona.
+
+- `agent/codex-01`: primary Codex implementation persona
+- `agent/local-runner`: local validation and execution persona
+- `agent/test-bot-01`: test/referee persona
+
+If you introduce a new persona, add a new governed `agent/<name>` identity through an ExecPlan first.
+
+## Audit Conventions
+
+Every agent run must be traceable through:
+
+- Branch name:
+  - `draft-execplan/<plan-id>-<agent>-YYYYMMDD`
+- ExecPlan frontmatter:
+  - `owner: "agent/<name>"`
+  - `draft_by: "agent/<name>"`
+  - `draft_branch: "draft-execplan/..."`
+- Commit metadata:
+  - Use `bin/codex-commit "message"` for Codex-authored commits
+  - Commit subject prefix includes agent identity (example: `[agent/codex-01]`)
+  - Commit trailer includes `Agent: agent/<name>`
+
+These conventions ensure persona-level actions are auditable across plans, branches, commits, and artifacts.

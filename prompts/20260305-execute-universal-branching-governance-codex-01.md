@@ -8,7 +8,7 @@ Your task is to execute ExecPlan `20260305-universal-branching-governance-codex-
 
 ## Mandatory Precondition
 
-Before any file changes, create/switch to a dedicated branch matching:
+Before any repository action (including reads, validation commands, or edits), create/switch to a dedicated branch matching:
 
 `draft-execplan/<plan-id>-<agent>-YYYYMMDD`
 
