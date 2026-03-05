@@ -3,12 +3,19 @@ id: 20260305-platform-governance-enforcement-codex-01-execplan
 title: Implement governance enforcement for required checks and exceptions
 owner: "agent/codex-01"
 created: "2026-03-05T00:00:00Z"
-status: draft
+status: executing
 base_branch: main
 changes:
   - .agent/execplans/20260305-platform-governance-enforcement-codex-01-execplan.md
-  - spec/
-  - policy/
+  - spec/governance.yaml
+  - .agent/governance/exceptions.yaml
+  - src/platform_tools/governance_check.py
+  - src/platform_tools/repo_health.py
+  - src/platform_tools/run_local_ci.py
+  - bin/governance-check
+  - policy/README.md
+  - policy/agents.md
+  - docs/commands.md
   - docs/governance.md
 approve_policy: codeowners
 reviewers:
@@ -24,6 +31,9 @@ finalized_in_pr: ""
 
 validation:
   tests:
+    - name: governance_check
+      command: bin/governance-check
+      expected_exit: 0
     - name: execplan_validate
       command: bin/execplan-validate .agent/execplans/*.md
       expected_exit: 0
@@ -49,9 +59,9 @@ Implement enforceable governance controls for required checks, bypasses, and exc
 
 ## Progress
 
-- [ ] Create governance plan
-- [ ] Implement governance controls
-- [ ] Validate governance checks
+- [x] Create governance plan
+- [x] Implement governance controls
+- [x] Validate governance checks
 - [ ] Human finalize via SSH-signed commit
 
 ## Surprises & Discoveries
@@ -95,12 +105,19 @@ Governance checks are rerunnable and policy-state consistent.
 ## Artifacts and Notes
 
 - `.agent/execplans/20260305-platform-governance-enforcement-codex-01-execplan.md`
+- `spec/governance.yaml`
+- `.agent/governance/exceptions.yaml`
+- `src/platform_tools/governance_check.py`
+- `bin/governance-check`
 
 ## Interfaces and Dependencies
 
 Interfaces:
 
-- `spec/*`
+- `spec/governance.yaml`
+- `.agent/governance/exceptions.yaml`
+- `src/platform_tools/governance_check.py`
+- `bin/governance-check`
 - `policy/*`
 - `docs/governance.md`
 
