@@ -13,7 +13,7 @@ Filename remains:
 Validation must treat the canonical plan key as the filename stem in this format. Frontmatter `id` must match the canonical plan key.
 This document defines the game agents must play to execute ExecPlans in this repository.
 
-Status: `DRAFT-RULESET`
+Status: `APPROVED-RULESET`
 
 Implementation freeze: no platform or project implementation work may begin until this document is marked `APPROVED-RULESET` by a human maintainer.
 
