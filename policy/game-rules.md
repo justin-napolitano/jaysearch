@@ -18,6 +18,7 @@ Universal branch-first policy:
 - All repository actions must run on a dedicated non-`main` branch.
 - Running execution/validation flows on `main` or `master` is a policy violation.
 - Validators must emit machine-readable branch-policy findings and fail deterministically on violation.
+- Branch names must also match an allowed workflow-specific pattern from canonical spec metadata.
 
 Hostile review policy:
 
