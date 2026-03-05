@@ -1,48 +1,43 @@
 ---
 id: 20260305-recursion-guard-spec-tests-codex-01-execplan
 title: Prevent recursive execution between spec-test runner and local CI
-owner: "agent/codex-01"
-created: "2026-03-05T00:00:00Z"
-status: draft
+owner: agent/codex-01
+created: '2026-03-05T00:00:00Z'
+status: approved
 base_branch: main
 changes:
-  - .agent/execplans/20260305-recursion-guard-spec-tests-codex-01-execplan.md
-  - src/platform_tools/spec_test_runner.py
-  - bin/run-local-ci
+- .agent/execplans/20260305-recursion-guard-spec-tests-codex-01-execplan.md
+- src/platform_tools/spec_test_runner.py
+- bin/run-local-ci
 approve_policy: codeowners
 reviewers:
-  - "github:jay.napolitano"
-
-draft_by: "agent/codex-01"
-draft_branch: "draft-execplan/recursion-guard-spec-tests-codex-01-20260305"
-draft_created: "2026-03-05T00:00:00Z"
-
-finalized_by: ""
-finalized_at: ""
-finalized_in_pr: ""
-
+- github:jay.napolitano
+draft_by: agent/codex-01
+draft_branch: draft-execplan/recursion-guard-spec-tests-codex-01-20260305
+draft_created: '2026-03-05T00:00:00Z'
+finalized_by: github:jay.napolitano
+finalized_at: '2026-03-05T17:20:00Z'
+finalized_in_pr: '21'
 validation:
   tests:
-    - name: execplan_validate
-      command: bin/execplan-validate .agent/execplans/*.md
-      expected_exit: 0
-    - name: execplan_spec_tests
-      command: bin/execplan-test
-      expected_exit: 0
-    - name: run_local_ci
-      command: bin/run-local-ci
-      expected_exit: 0
-
+  - name: execplan_validate
+    command: bin/execplan-validate .agent/execplans/*.md
+    expected_exit: 0
+  - name: execplan_spec_tests
+    command: bin/execplan-test
+    expected_exit: 0
+  - name: run_local_ci
+    command: bin/run-local-ci
+    expected_exit: 0
 tasks:
-  - title: Add recursion guard for run-local-ci in spec_test_runner
-    priority: P1
-  - title: Preserve deterministic pass/fail/skip semantics
-    priority: P1
-  - title: Validate no timeout loops in execplan-test and run-local-ci
-    priority: P1
-
+- title: Add recursion guard for run-local-ci in spec_test_runner
+  priority: P1
+- title: Preserve deterministic pass/fail/skip semantics
+  priority: P1
+- title: Validate no timeout loops in execplan-test and run-local-ci
+  priority: P1
 depends_on:
-  - 20260305-platform-hostile-review-sweep-codex-01-execplan
+- 20260305-platform-hostile-review-sweep-codex-01-execplan
 ---
 
 # Purpose / Big Picture

@@ -42,7 +42,7 @@
 
 - id: TODO-0006
   title: Produce hostile review artifacts with machine-readable evidence
-  state: open
+  state: done
   owner: unassigned
   priority: P1
   execplan: 20260305-platform-hostile-review-sweep-codex-01-execplan
@@ -50,7 +50,7 @@
 
 - id: TODO-0007
   title: Review TODO automation integrity and idempotence
-  state: open
+  state: done
   owner: unassigned
   priority: P1
   execplan: 20260305-platform-hostile-review-sweep-codex-01-execplan
@@ -58,7 +58,7 @@
 
 - id: TODO-0008
   title: Review branch policy enforcement and branch naming contracts
-  state: open
+  state: done
   owner: unassigned
   priority: P1
   execplan: 20260305-platform-hostile-review-sweep-codex-01-execplan
@@ -66,7 +66,7 @@
 
 - id: TODO-0009
   title: Review commit identity and commit metadata enforcement
-  state: open
+  state: done
   owner: unassigned
   priority: P1
   execplan: 20260305-platform-hostile-review-sweep-codex-01-execplan
@@ -74,7 +74,7 @@
 
 - id: TODO-0010
   title: Review operator UX and documentation clarity
-  state: open
+  state: done
   owner: unassigned
   priority: P2
   execplan: 20260305-platform-hostile-review-sweep-codex-01-execplan
@@ -82,7 +82,7 @@
 
 - id: TODO-0011
   title: Review validator determinism and stable exit semantics
-  state: open
+  state: done
   owner: unassigned
   priority: P1
   execplan: 20260305-platform-hostile-review-sweep-codex-01-execplan
@@ -90,7 +90,7 @@
 
 - id: TODO-0012
   title: Add recursion guard for run-local-ci in spec_test_runner
-  state: open
+  state: done
   owner: unassigned
   priority: P1
   execplan: 20260305-recursion-guard-spec-tests-codex-01-execplan
@@ -98,7 +98,7 @@
 
 - id: TODO-0013
   title: Preserve deterministic pass/fail/skip semantics
-  state: open
+  state: done
   owner: unassigned
   priority: P1
   execplan: 20260305-recursion-guard-spec-tests-codex-01-execplan
@@ -106,7 +106,7 @@
 
 - id: TODO-0014
   title: Validate no timeout loops in execplan-test and run-local-ci
-  state: open
+  state: done
   owner: unassigned
   priority: P1
   execplan: 20260305-recursion-guard-spec-tests-codex-01-execplan
