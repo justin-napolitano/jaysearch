@@ -24,10 +24,15 @@ def _normalize_task(plan_id: str, task: dict[str, Any]) -> dict[str, str]:
 def collect_tasks(
     execplans_glob: str = ".agent/execplans/*.md",
     paths: list[Path] | None = None,
+    tracked_only: bool = True,
 ) -> tuple[list[dict[str, str]], list[str]]:
     tasks: list[dict[str, str]] = []
     warnings: list[str] = []
-    plan_paths = sorted(paths) if paths is not None else list_execplans(execplans_glob)
+    plan_paths = (
+        sorted(paths)
+        if paths is not None
+        else list_execplans(execplans_glob, tracked_only=tracked_only)
+    )
     for path in plan_paths:
         parsed = parse_plan(path)
         fm = parsed.frontmatter
