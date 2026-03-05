@@ -3,6 +3,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
+import subprocess
 from typing import Any
 
 import yaml
@@ -82,8 +83,22 @@ def parse_plan(path: Path) -> ParsedPlan:
     return ParsedPlan(path=path, text=text, frontmatter=frontmatter, body=body)
 
 
-def list_execplans(execplans_glob: str = ".agent/execplans/*.md") -> list[Path]:
-    return sorted(Path(".").glob(execplans_glob))
+def list_execplans(
+    execplans_glob: str = ".agent/execplans/*.md",
+    tracked_only: bool = False,
+) -> list[Path]:
+    if not tracked_only:
+        return sorted(Path(".").glob(execplans_glob))
+
+    proc = subprocess.run(
+        ["git", "ls-files", execplans_glob],
+        check=False,
+        capture_output=True,
+        text=True,
+    )
+    if proc.returncode != 0:
+        return []
+    return sorted(Path(line.strip()) for line in proc.stdout.splitlines() if line.strip())
 
 
 def timestamp_in_future(value: str, now: datetime | None = None) -> bool:
@@ -95,4 +110,3 @@ def timestamp_in_future(value: str, now: datetime | None = None) -> bool:
     except ValueError:
         return False
     return parsed > now + timedelta(hours=1)
-
