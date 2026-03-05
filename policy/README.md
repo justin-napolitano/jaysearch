@@ -13,6 +13,7 @@ Policy files:
 Rule source files:
 
 - `spec/execplan.schema.yaml`
+- `spec/platform-architecture.yaml`
 - `spec/ruleset.yaml`
 - `spec/exit-codes.yaml`
 - `spec/scoring.yaml`
