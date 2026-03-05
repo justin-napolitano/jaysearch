@@ -1,0 +1,54 @@
+version: v1
+last_updated: 2026-03-05
+layers:
+  - id: platform_core
+    description: Canonical implementation logic for the platform.
+    writable_paths:
+      - src/platform_tools/**
+    forbidden_paths:
+      - bin/**
+      - .agent/**
+  - id: operator_entrypoints
+    description: Thin wrappers only; no business logic duplication.
+    writable_paths:
+      - bin/**
+    constraints:
+      - wrappers_only
+      - must_delegate_to_src_platform_tools
+  - id: governance_contracts
+    description: Machine-enforced contracts for workflow and policy.
+    writable_paths:
+      - spec/**
+      - policy/**
+      - .agent/execplans/**
+  - id: docs_guidance
+    description: Explanatory guidance that must not conflict with spec/policy.
+    writable_paths:
+      - docs/**
+precedence:
+  order:
+    - spec
+    - policy
+    - docs
+  on_conflict: higher_layer_wins
+authority:
+  bypass_approvals:
+    human_only: true
+    approval_requirements:
+      - explicit_decision_log_entry
+      - time_bounded_expiry
+      - accountable_owner
+  execplan_finalization:
+    human_only: true
+    requires_ssh_signed_commit: true
+exceptions:
+  required_fields:
+    - id
+    - scope
+    - rationale
+    - owner
+    - expires_at
+    - approved_by
+validation_contract:
+  deterministic_outputs_required: true
+  stable_exit_codes_required: true

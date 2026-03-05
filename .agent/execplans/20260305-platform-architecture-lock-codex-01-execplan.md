@@ -3,11 +3,16 @@ id: 20260305-platform-architecture-lock-codex-01-execplan
 title: Lock platform architecture contract before implementation
 owner: "agent/codex-01"
 created: "2026-03-05T00:00:00Z"
-status: draft
+status: executing
 base_branch: main
 changes:
   - .agent/execplans/20260305-platform-architecture-lock-codex-01-execplan.md
-  - docs/platform-program-migration-table.md
+  - spec/platform-architecture.yaml
+  - policy/README.md
+  - policy/execplans.md
+  - policy/agents.md
+  - docs/rules-architecture.md
+  - docs/governance.md
 approve_policy: codeowners
 reviewers:
   - "github:jay.napolitano"
@@ -41,9 +46,9 @@ Lock the authoritative architecture contract so all follow-on implementation pla
 
 ## Progress
 
-- [ ] Create architecture-lock plan
-- [ ] Freeze architecture contracts
-- [ ] Validate plan compliance
+- [x] Create architecture-lock plan
+- [x] Freeze architecture contracts
+- [x] Validate plan compliance
 - [ ] Human finalize via SSH-signed commit
 
 ## Surprises & Discoveries
@@ -87,12 +92,18 @@ Architecture updates are documentation-level and safe to rerun.
 ## Artifacts and Notes
 
 - `.agent/execplans/20260305-platform-architecture-lock-codex-01-execplan.md`
+- `spec/platform-architecture.yaml`
+- `docs/rules-architecture.md`
+- `docs/governance.md`
 
 ## Interfaces and Dependencies
 
 Interfaces:
 
-- `docs/platform-program-migration-table.md`
+- `spec/platform-architecture.yaml`
+- `policy/execplans.md`
+- `policy/agents.md`
+- `docs/rules-architecture.md`
 
 Dependencies:
 
