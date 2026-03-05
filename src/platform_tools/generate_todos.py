@@ -21,10 +21,14 @@ def _normalize_task(plan_id: str, task: dict[str, Any]) -> dict[str, str]:
     }
 
 
-def collect_tasks(execplans_glob: str = ".agent/execplans/*.md") -> tuple[list[dict[str, str]], list[str]]:
+def collect_tasks(
+    execplans_glob: str = ".agent/execplans/*.md",
+    paths: list[Path] | None = None,
+) -> tuple[list[dict[str, str]], list[str]]:
     tasks: list[dict[str, str]] = []
     warnings: list[str] = []
-    for path in list_execplans(execplans_glob):
+    plan_paths = sorted(paths) if paths is not None else list_execplans(execplans_glob)
+    for path in plan_paths:
         parsed = parse_plan(path)
         fm = parsed.frontmatter
         if not fm:
