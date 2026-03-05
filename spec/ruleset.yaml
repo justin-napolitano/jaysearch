@@ -1,5 +1,5 @@
 version: v1
-last_updated: 2026-03-04
+last_updated: 2026-03-05
 move_set:
   allowed:
     - read_repository
@@ -10,9 +10,14 @@ move_set:
   forbidden:
     - finalize_execplan
     - bypass_branch_protection
+    - commit_execplan_implementation_directly_to_main
     - modify_governance_without_approved_execplan
     - forge_signature_or_signed_metadata
     - suppress_required_referee_evidence
+execution_constraints:
+  execplan_branch_review_required: true
+  required_branch_format: "draft-execplan/<plan-id>-<agent>-YYYYMMDD"
+  disallow_execplan_changes_on_main: true
 turn_protocol:
   - declare_active_plan_id
   - declare_intended_moves
