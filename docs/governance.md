@@ -30,6 +30,21 @@ Implementation slice validation rule:
 - The smoke-test command should exercise the primary path for that implementation slice in one invocation.
 - A slice is not merge-ready until its smoke-test command passes.
 
+Commit structuring rule:
+
+- Codex-authored work must be committed in procedural order when the slice naturally spans multiple artifact types.
+- Preferred order is:
+  1. active ExecPlan
+  2. canonical spec or schema
+  3. implementation or runtime code
+  4. tests and smoke-test scripts
+  5. docs and runbooks
+  6. research, claim-registry, or bibliography updates
+  7. governance rule updates
+- A commit should usually contain one artifact class from this sequence unless the slice is too small to justify separation.
+- If a slice omits a class, Codex should skip it rather than collapsing unrelated classes together.
+- Merge review should preserve this order so reviewers can inspect contract, implementation, and evidence in sequence.
+
 Exception lifecycle contract:
 
 - Exception registry file: `.agent/governance/exceptions.yaml`.

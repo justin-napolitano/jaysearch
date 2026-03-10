@@ -1,0 +1,81 @@
+version: v1
+last_updated: 2026-03-10
+orchestrator:
+  id: codex
+  mode: machine_governed
+  authority:
+    allowed:
+      - inspect_state
+      - select_ready_work
+      - apply_legal_moves
+      - run_validators
+      - draft_governed_artifacts
+      - prepare_merge_readiness_evidence
+    forbidden:
+      - bypass_validators
+      - bypass_rule_graph
+      - treat_external_systems_as_canonical
+      - finalize_human_only_approvals
+      - rely_on_hidden_state
+      - mutate_canonical_state_outside_governed_paths
+    escalate_when:
+      - authority_boundary_requires_human
+      - policy_exception_is_required
+      - deterministic_conflict_resolution_is_unavailable
+      - required_canonical_state_is_missing
+commands:
+  required_families:
+    - planner
+    - citation_check
+    - planner_score
+    - rule_graph_check
+  output_contract:
+    preferred_mode: json
+    required_fields:
+      - command
+      - status
+      - blockers
+      - next_validations
+    optional_fields:
+      - graph_id
+      - session_id
+      - execplan_id
+      - evidence_refs
+      - recommendations
+execution_loop:
+  stages:
+    - inspect
+    - select
+    - execute
+    - validate
+    - review
+    - recover_or_escalate
+    - merge_check
+  invariants:
+    - no_hidden_state
+    - no_skipped_validators
+    - no_unsupported_readiness_claims
+    - no_human_authority_bypass
+merge_readiness:
+  required_conditions:
+    - execplan_validations_pass
+    - slice_smoke_test_passes
+    - focused_tests_pass
+    - generated_artifacts_are_committed_removed_or_stashed
+    - rule_graph_validation_passes
+    - citation_validation_passes_when_required
+    - commit_size_rules_hold_or_are_justified
+    - no_unresolved_scope_blockers
+    - no_human_only_approval_bypass
+  report_fields:
+    - branch
+    - execplan_id
+    - readiness
+    - failing_checks
+    - blockers
+    - dirty_artifacts
+    - human_approvals
+    - next_action
+notes:
+  - Codex orchestrator contract supplements existing rule graph and workflow rules
+  - human finalization requirements remain authoritative
