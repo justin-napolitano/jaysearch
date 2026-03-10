@@ -1,0 +1,147 @@
+version: v1
+last_updated: 2026-03-10
+canonical_root: artifacts/planner/graphs/
+graph:
+  required_fields:
+    - graph_id
+    - session_id
+    - created_at
+    - updated_at
+    - nodes
+    - edges
+node:
+  required_fields:
+    - node_id
+    - node_type
+    - title
+    - summary
+    - status
+    - priority
+    - owner
+    - created_at
+    - updated_at
+    - provenance
+    - evidence_refs
+    - external_refs
+  node_type_allowed:
+    - goal
+    - decision
+    - question
+    - constraint
+    - task
+    - validation
+    - artifact
+    - risk
+    - tool_run
+    - handoff
+  status_allowed:
+    - draft
+    - ready
+    - blocked
+    - in_progress
+    - in_review
+    - validated
+    - recovery_required
+    - done
+    - rejected
+    - archived
+  priority_allowed:
+    - P0
+    - P1
+    - P2
+    - P3
+edge:
+  required_fields:
+    - edge_id
+    - from
+    - to
+    - edge_type
+  edge_type_allowed:
+    - depends_on
+    - blocks
+    - proves
+    - produces
+    - invalidates
+    - refines
+    - requires_decision
+    - answers
+    - mitigates
+    - implements
+provenance:
+  required_fields:
+    - source_session
+    - source_artifact
+    - recorded_at
+    - commit_refs
+typed_node_requirements:
+  goal:
+    required_fields:
+      - success_criteria
+      - scope
+  decision:
+    required_fields:
+      - decision
+      - rationale
+      - alternatives_considered
+  question:
+    required_fields:
+      - question
+      - blocking
+  constraint:
+    required_fields:
+      - constraint
+      - constraint_type
+  task:
+    required_fields:
+      - description
+      - ready_definition
+      - done_definition
+  validation:
+    required_fields:
+      - validation_type
+      - command
+      - expected_result
+  artifact:
+    required_fields:
+      - artifact_type
+      - path
+  risk:
+    required_fields:
+      - risk
+      - impact
+      - mitigation
+  tool_run:
+    required_fields:
+      - tool_name
+      - inputs
+      - expected_outputs
+  handoff:
+    required_fields:
+      - handoff_to
+      - entry_criteria
+      - exit_criteria
+external_refs:
+  allowed_fields:
+    - system
+    - external_id
+    - external_url
+    - sync_state
+    - last_synced_at
+    - field_map_version
+invariants:
+  - local_graph_is_canonical
+  - provider_state_is_projection_only
+  - nodes_must_reference_local_provenance
+  - unresolved_sync_conflicts_default_to_local_state
+  - provider_specific_status_values_must_not_replace_canonical_status
+  - graph_nodes_must_be_sufficient_for_ready_and_blocked_views
+  - graph_nodes_must_be_sufficient_for_review_validation_and_recovery_views
+  - contract_projection_must_reference_session_and_graph_ids
+provider_placeholders:
+  supported_by_contract:
+    - github_projects
+    - jira
+    - microsoft_lists
+notes:
+  - GitHub Projects is the only named scaffold target in the current design phase.
+  - Jira and Microsoft Lists remain placeholders until later ExecPlans define implementation scope.

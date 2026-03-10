@@ -1,6 +1,9 @@
 version: v1
-last_updated: 2026-03-04
+last_updated: 2026-03-10
 formula: "S = 100 * (DQ*w_dq + HED*w_hed + VPR*w_vpr + SLS*w_sls + BC*w_bc) - P"
+scoring_stance: source_informed_policy
+references_doc: docs/references.md
+scoring_rationale_doc: docs/game-scoring-model.md
 weights_source: ".agent/metrics.yml"
 weights:
   dq_weight: 0.25
@@ -21,3 +24,46 @@ penalties:
   out_of_scope_edits: 25
   missing_required_evidence: 20
   command_docs_mismatch: 15
+planner_game:
+  formula: "PG = 100 * (TLS*w_tls + PCS*w_pcs + BRS*w_brs + ECS*w_ecs + BPS*w_bps) - Pp"
+  weights:
+    tls_weight: 0.30
+    pcs_weight: 0.20
+    brs_weight: 0.20
+    ecs_weight: 0.15
+    bps_weight: 0.15
+  metrics:
+    TLS: "Transition Legality Score: legal planner moves / attempted planner moves"
+    PCS: "Provenance Completeness Score: planner artifacts with session, graph, and commit linkage / required provenance links"
+    BRS: "Bounded Readiness Score: ready-or-validated planner nodes / planner nodes eligible for commitment review"
+    ECS: "Evidence Coverage Score: planner nodes with required evidence / planner nodes requiring evidence"
+    BPS: "Blocker Pressure Score: 1 - normalized unresolved blocker and contradiction burden"
+  penalties:
+    hidden_state_detected: 100
+    illegal_commit_attempt: 40
+    missing_session_or_graph_reference: 25
+    unreconciled_contract_drift: 20
+implementation_game:
+  formula: "IG = 100 * (TLS*w_tls + SCS*w_scs + VPR*w_vpr + RCS*w_rcs + RDS*w_rds + PCS*w_pcs) - Pi"
+  weights:
+    tls_weight: 0.20
+    scs_weight: 0.20
+    vpr_weight: 0.20
+    rcs_weight: 0.15
+    rds_weight: 0.10
+    pcs_weight: 0.15
+  metrics:
+    TLS: "Transition Legality Score: legal implementation moves / attempted implementation moves"
+    SCS: "Scope Compliance Score: in-scope implementation actions / total implementation actions"
+    VPR: "Validation Pass Rate: passing required checks / total required checks"
+    RCS: "Review Coverage Score: completed hostile reviews / required hostile reviews"
+    RDS: "Recovery Discipline Score: explicit recovery handling events / recovery-required events"
+    PCS: "Provenance Completeness Score: implementation artifacts and commits linked to session, graph, and contract provenance / required links"
+  penalties:
+    out_of_scope_implementation: 35
+    unreviewed_completion_claim: 25
+    missing_commit_provenance: 20
+    recovery_required_presented_as_done: 20
+notes:
+  - scoring dimensions are informed by cited sources in docs/references.md
+  - exact weights are platform policy choices, not direct outputs of the cited literature
