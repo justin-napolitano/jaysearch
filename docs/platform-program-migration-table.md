@@ -18,7 +18,7 @@ Execution rule:
 | Source Draft Plan ID | Target Plan | Disposition | Notes |
 |---|---|---|---|
 | `20260305-platform-program-architecture-codex-01-execplan` | `platform-architecture-lock` | Keep | Becomes authoritative architecture contract. |
-| `20260305-platform-core-packageization-codex-01-execplan` | `platform-distribution` | Merge | Package/CLI contract belongs to distribution lane. |
+| `20260305-platform-core-packageization-codex-01-execplan` | `platform-distribution` | Merge | Distribution lane should now be read as template distribution and maintenance, not package-first productization. |
 | `20260305-platform-template-extraction-sync-codex-01-execplan` | `platform-distribution` | Merge | Template sync and drift controls belong to distribution lane. |
 | `20260305-platform-governance-required-checks-codex-01-execplan` | `platform-governance-enforcement` | Keep | Required checks and protection contracts. |
 | `20260305-platform-exception-lifecycle-enforcement-codex-01-execplan` | `platform-governance-enforcement` | Merge | Exception model is governance subdomain. |
@@ -40,9 +40,8 @@ A plan is eligible for execution only if all are true:
 1. Finalize `platform-architecture-lock`.
 2. Create `platform-kernel-implementation` plan by extracting currently scattered validator/runtime hardening work.
 3. Merge governance plans into one `platform-governance-enforcement` plan with explicit sub-scopes.
-4. Merge distribution plans into one `platform-distribution` plan (core package + template sync).
+4. Merge distribution plans into one `platform-distribution` plan focused on template sync, release tracking, and maintenance.
 5. Execute `platform-adoption-pilot` only after previous four are accepted.
-
 
 ## Source Draft Preservation Note
 
