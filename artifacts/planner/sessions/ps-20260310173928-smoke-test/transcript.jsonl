@@ -1,0 +1,5 @@
+{"timestamp": "2026-03-10T17:40:31Z", "speaker": "operator", "text": "test test test"}
+{"timestamp": "2026-03-10T17:40:40Z", "speaker": "operator", "text": "goal: build a smoke-testable planner"}
+{"timestamp": "2026-03-10T17:40:40Z", "speaker": "operator", "text": "constraint: no ui"}
+{"timestamp": "2026-03-10T17:40:40Z", "speaker": "operator", "text": "decision: use explicit reconciliation"}
+{"timestamp": "2026-03-10T17:40:40Z", "speaker": "operator", "text": "Add a ready task for CLI work"}

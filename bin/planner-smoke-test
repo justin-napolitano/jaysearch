@@ -1,0 +1,106 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+ROOT="$(pwd)"
+
+echo "[1/7] research validation"
+bin/planner validate --research-only
+
+echo "[2/7] create session"
+SESSION_JSON="$(bin/planner session start --title "Smoke Test" --objective "verify move engine")"
+echo "$SESSION_JSON"
+SESSION_ID="$(printf '%s\n' "$SESSION_JSON" | python3 -c 'import json,sys; print(json.load(sys.stdin)["session_id"])')"
+
+SESSION_DIR="$ROOT/artifacts/planner/sessions/$SESSION_ID"
+
+echo "[3/7] seed deterministic extracted state"
+python3 - "$SESSION_DIR" <<'PY'
+import json
+import pathlib
+import sys
+
+session_dir = pathlib.Path(sys.argv[1])
+path = session_dir / "extracted-state.json"
+data = {
+    "goals": [
+        {
+            "title": "Smoke-test planner runtime",
+            "success_criteria": "commands succeed",
+            "scope": "move engine",
+            "status": "validated",
+        }
+    ],
+    "constraints": [
+        {
+            "title": "No UI",
+            "constraint": "No UI",
+            "constraint_type": "platform",
+        }
+    ],
+    "assumptions": [],
+    "decisions": [],
+    "questions": [],
+    "tasks": [
+        {
+            "title": "Refine CLI task",
+            "description": "Refine CLI task",
+            "ready_definition": "",
+            "done_definition": "",
+            "status": "draft",
+            "changes": ["src/platform_tools/planner_cli.py"],
+        }
+    ],
+    "risks": [],
+    "evidence": [
+        {
+            "title": "Planner runtime file",
+            "artifact_type": "file",
+            "path": "src/platform_tools/planner_runtime.py",
+        }
+    ],
+}
+path.write_text(json.dumps(data, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+PY
+
+echo "[4/7] build graph"
+GRAPH_JSON="$(bin/planner graph build --session-id "$SESSION_ID")"
+echo "$GRAPH_JSON"
+GRAPH_ID="$(printf '%s\n' "$GRAPH_JSON" | python3 -c 'import json,sys; print(json.load(sys.stdin)["graph_id"])')"
+
+echo "[5/7] validate graph and moves"
+bin/planner graph validate --graph-id "$GRAPH_ID"
+bin/planner move validate \
+  --graph-id "$GRAPH_ID" \
+  --node-id task-1 \
+  --phase planner \
+  --move refine \
+  --to-status ready \
+  --evidence-json '{"change_summary":"smoke test refinement"}'
+bin/planner move apply \
+  --graph-id "$GRAPH_ID" \
+  --node-id task-1 \
+  --phase planner \
+  --move refine \
+  --to-status ready \
+  --evidence-json '{"change_summary":"smoke test refinement"}'
+if bin/planner move validate \
+  --graph-id "$GRAPH_ID" \
+  --node-id task-1 \
+  --phase planner \
+  --move commit \
+  --to-status in_review \
+  --evidence-json '{}'
+then
+  echo "illegal move unexpectedly passed" >&2
+  exit 1
+else
+  echo "illegal move correctly rejected"
+fi
+
+echo "[6/7] draft contract"
+bin/planner contract draft-execplan --graph-id "$GRAPH_ID" --title "Smoke Draft Contract"
+
+echo "[7/7] run focused pytest"
+uv run pytest tests/test_planner_cli.py
+
+echo "planner smoke test completed"
