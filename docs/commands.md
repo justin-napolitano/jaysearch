@@ -1,7 +1,9 @@
-
 # Command Reference
 
+These are repository-local platform commands expected to exist inside projects created from this template.
+
 bin/bootstrap-project
+bin/bootstrap-profile-check
 bin/run-local-ci
 bin/governance-loader-check
 bin/kernel-contract-check

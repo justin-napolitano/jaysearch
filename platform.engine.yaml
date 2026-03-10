@@ -3,3 +3,4 @@ last_updated: 2026-03-05
 runtime:
   mode: standalone
   governance_source: ""
+  project_rules_source: project.rules.yaml

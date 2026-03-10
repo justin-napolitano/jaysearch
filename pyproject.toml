@@ -28,6 +28,7 @@ line-length = 100
 
 [project.scripts]
 bootstrap-project = "platform_tools.bootstrap_project:main"
+bootstrap-profile-check = "platform_tools.bootstrap_profile_check:main"
 execplan-lint = "platform_tools.execplan_lint:main"
 execplan-test = "platform_tools.spec_test_runner:main"
 execplan-validate = "platform_tools.execplan_lint:main"
