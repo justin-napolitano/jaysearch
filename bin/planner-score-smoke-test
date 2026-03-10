@@ -1,0 +1,47 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+echo "[1/3] planner smoke setup"
+SESSION_JSON="$(bin/planner session start --title "Scoring Smoke" --objective "verify scoring engine")"
+SESSION_ID="$(printf '%s\n' "$SESSION_JSON" | python3 -c 'import json,sys; print(json.load(sys.stdin)["session_id"])')"
+SESSION_DIR="$(pwd)/artifacts/planner/sessions/$SESSION_ID"
+
+python3 - "$SESSION_DIR" <<'PY'
+import json
+import pathlib
+import sys
+
+session_dir = pathlib.Path(sys.argv[1])
+data = {
+    "goals": [
+        {"title": "Score planner", "success_criteria": "emit score", "scope": "scoring", "status": "validated"}
+    ],
+    "constraints": [{"title": "No UI", "constraint": "No UI", "constraint_type": "platform"}],
+    "assumptions": [],
+    "decisions": [],
+    "questions": [],
+    "tasks": [
+        {
+            "title": "Score runtime task",
+            "description": "Score runtime task",
+            "ready_definition": "",
+            "done_definition": "",
+            "status": "ready",
+            "changes": ["src/platform_tools/planner_score.py"],
+            "evidence_refs": [{"kind": "note", "ref": "score"}]
+        }
+    ],
+    "risks": [],
+    "evidence": [{"title": "Score file", "artifact_type": "file", "path": "src/platform_tools/planner_score.py"}]
+}
+(session_dir / "extracted-state.json").write_text(json.dumps(data, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+PY
+
+echo "[2/3] build graph"
+GRAPH_JSON="$(bin/planner graph build --session-id "$SESSION_ID")"
+GRAPH_ID="$(printf '%s\n' "$GRAPH_JSON" | python3 -c 'import json,sys; print(json.load(sys.stdin)["graph_id"])')"
+
+echo "[3/3] score graph"
+bin/planner-score --graph-id "$GRAPH_ID"
+
+echo "planner score smoke test completed"
