@@ -1,0 +1,188 @@
+{
+  "graph_id": "planner-bibliography-graph-20260310",
+  "created_at": "2026-03-10T00:00:00Z",
+  "nodes": [
+    {
+      "id": "src-nash-1950",
+      "type": "source",
+      "label": "Nash 1950",
+      "title": "Equilibrium Points in N-Person Games",
+      "link": "https://pubmed.ncbi.nlm.nih.gov/16588946/"
+    },
+    {
+      "id": "src-simon-1955",
+      "type": "source",
+      "label": "Simon 1955",
+      "title": "A Behavioral Model of Rational Choice",
+      "link": "https://academic.oup.com/qje/article/69/1/99/1919737"
+    },
+    {
+      "id": "src-maskin-2007",
+      "type": "source",
+      "label": "Maskin 2007",
+      "title": "Mechanism Design: How to Implement Social Goals",
+      "link": "https://www.nobelprize.org/prizes/economic-sciences/2007/maskin/lecture/"
+    },
+    {
+      "id": "src-myerson-2007",
+      "type": "source",
+      "label": "Myerson 2007",
+      "title": "Perspectives on Mechanism Design in Economic Theory",
+      "link": "https://www.nobelprize.org/prizes/economic-sciences/2007/myerson/lecture/"
+    },
+    {
+      "id": "src-prov-overview",
+      "type": "source",
+      "label": "W3C PROV",
+      "title": "PROV-Overview",
+      "link": "https://www.w3.org/TR/2013/NOTE-prov-overview-20130430/"
+    },
+    {
+      "id": "src-git-trailers",
+      "type": "source",
+      "label": "Git Trailers",
+      "title": "git-interpret-trailers Documentation",
+      "link": "https://git-scm.com/docs/git-interpret-trailers.html"
+    },
+    {
+      "id": "src-harel-1987",
+      "type": "source",
+      "label": "Harel 1987",
+      "title": "Statecharts: a visual formalism for complex systems",
+      "link": "https://www.sciencedirect.com/science/article/pii/0167642387900359"
+    },
+    {
+      "id": "src-fagan-1986",
+      "type": "source",
+      "label": "Fagan 1986",
+      "title": "Advances in Software Inspections",
+      "link": "https://research.ibm.com/publications/advances-in-software-inspections"
+    },
+    {
+      "id": "src-myers-1978",
+      "type": "source",
+      "label": "Myers 1978",
+      "title": "A Controlled Experiment in Program Testing and Code Walkthroughs/Inspections",
+      "link": "https://research.ibm.com/publications/a-controlled-experiment-in-program-testing-and-code-walkthroughsinspections"
+    },
+    {
+      "id": "src-prov-dm",
+      "type": "source",
+      "label": "PROV-DM",
+      "title": "PROV-DM: The PROV Data Model",
+      "link": "https://dvcs.w3.org/hg/prov/raw-file/default/model/prov-dm.html"
+    },
+    {
+      "id": "src-nobel-summary-2007",
+      "type": "source",
+      "label": "Nobel Summary 2007",
+      "title": "The Sveriges Riksbank Prize in Economic Sciences in Memory of Alfred Nobel 2007",
+      "link": "https://www.nobelprize.org/prizes/economic-sciences/2007/summary/"
+    },
+    {
+      "id": "concept-mechanism-design",
+      "type": "concept",
+      "label": "Mechanism Design",
+      "title": "Rule design to shape incentives and legal moves"
+    },
+    {
+      "id": "concept-bounded-rationality",
+      "type": "concept",
+      "label": "Bounded Rationality",
+      "title": "Limited-information decision pressure"
+    },
+    {
+      "id": "concept-provenance",
+      "type": "concept",
+      "label": "Provenance",
+      "title": "Traceable state and attributable updates"
+    },
+    {
+      "id": "concept-state-transitions",
+      "type": "concept",
+      "label": "State Transitions",
+      "title": "Formal legal move and state model"
+    },
+    {
+      "id": "concept-inspection",
+      "type": "concept",
+      "label": "Inspection",
+      "title": "Adversarial review and verification discipline"
+    },
+    {
+      "id": "claim-planning-implementation-game",
+      "type": "claim",
+      "label": "Unified Game",
+      "title": "Planning and implementation are two phases of one governed game"
+    },
+    {
+      "id": "claim-canonical-graph",
+      "type": "claim",
+      "label": "Canonical Graph",
+      "title": "Local graph state is the shared board and canonical source of truth"
+    },
+    {
+      "id": "claim-explicit-reconciliation",
+      "type": "claim",
+      "label": "Explicit Reconciliation",
+      "title": "Contract edits require explicit import rather than implicit reverse-sync"
+    },
+    {
+      "id": "artifact-planner-game-model",
+      "type": "artifact",
+      "label": "Planner Game Model",
+      "title": "docs/planner-game-model.md"
+    },
+    {
+      "id": "artifact-implementation-game-model",
+      "type": "artifact",
+      "label": "Implementation Game Model",
+      "title": "docs/implementation-game-model.md"
+    },
+    {
+      "id": "artifact-scoring-spec",
+      "type": "artifact",
+      "label": "Scoring Spec",
+      "title": "spec/scoring.yaml"
+    },
+    {
+      "id": "artifact-transition-spec",
+      "type": "artifact",
+      "label": "Transition Spec",
+      "title": "spec/game-transitions.yaml"
+    },
+    {
+      "id": "artifact-assumptions-doc",
+      "type": "artifact",
+      "label": "Assumptions Doc",
+      "title": "docs/research-assumptions.md"
+    }
+  ],
+  "edges": [
+    { "from": "src-maskin-2007", "to": "concept-mechanism-design", "relation": "supports" },
+    { "from": "src-myerson-2007", "to": "concept-mechanism-design", "relation": "supports" },
+    { "from": "src-nobel-summary-2007", "to": "concept-mechanism-design", "relation": "supports" },
+    { "from": "src-nash-1950", "to": "concept-mechanism-design", "relation": "informs" },
+    { "from": "src-simon-1955", "to": "concept-bounded-rationality", "relation": "supports" },
+    { "from": "src-prov-overview", "to": "concept-provenance", "relation": "supports" },
+    { "from": "src-prov-dm", "to": "concept-provenance", "relation": "supports" },
+    { "from": "src-git-trailers", "to": "concept-provenance", "relation": "implemented_by" },
+    { "from": "src-harel-1987", "to": "concept-state-transitions", "relation": "supports" },
+    { "from": "src-fagan-1986", "to": "concept-inspection", "relation": "supports" },
+    { "from": "src-myers-1978", "to": "concept-inspection", "relation": "supports" },
+    { "from": "concept-mechanism-design", "to": "claim-planning-implementation-game", "relation": "supports" },
+    { "from": "concept-bounded-rationality", "to": "claim-planning-implementation-game", "relation": "informs" },
+    { "from": "concept-provenance", "to": "claim-canonical-graph", "relation": "supports" },
+    { "from": "concept-state-transitions", "to": "claim-canonical-graph", "relation": "supports" },
+    { "from": "concept-provenance", "to": "claim-explicit-reconciliation", "relation": "supports" },
+    { "from": "claim-planning-implementation-game", "to": "artifact-planner-game-model", "relation": "cited_in" },
+    { "from": "claim-planning-implementation-game", "to": "artifact-implementation-game-model", "relation": "cited_in" },
+    { "from": "claim-canonical-graph", "to": "artifact-transition-spec", "relation": "cited_in" },
+    { "from": "claim-explicit-reconciliation", "to": "artifact-assumptions-doc", "relation": "cited_in" },
+    { "from": "concept-mechanism-design", "to": "artifact-scoring-spec", "relation": "informs" },
+    { "from": "concept-inspection", "to": "artifact-scoring-spec", "relation": "informs" },
+    { "from": "artifact-assumptions-doc", "to": "claim-planning-implementation-game", "relation": "classified_as" },
+    { "from": "artifact-assumptions-doc", "to": "claim-canonical-graph", "relation": "classified_as" },
+    { "from": "artifact-assumptions-doc", "to": "claim-explicit-reconciliation", "relation": "classified_as" }
+  ]
+}

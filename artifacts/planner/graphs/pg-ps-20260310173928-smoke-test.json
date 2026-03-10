@@ -1,0 +1,119 @@
+{
+  "created_at": "2026-03-10T17:41:21Z",
+  "edges": [],
+  "graph_id": "pg-ps-20260310173928-smoke-test",
+  "nodes": [
+    {
+      "created_at": "2026-03-10T17:41:21Z",
+      "evidence_refs": [],
+      "external_refs": [],
+      "node_id": "goal-1",
+      "node_type": "goal",
+      "owner": "agent/codex-01",
+      "priority": "P2",
+      "provenance": {
+        "commit_refs": [],
+        "recorded_at": "2026-03-10T17:41:21Z",
+        "source_artifact": "extracted-state.json",
+        "source_session": "ps-20260310173928-smoke-test"
+      },
+      "scope": "",
+      "status": "draft",
+      "success_criteria": "",
+      "summary": "build a smoke-testable planner",
+      "title": "build a smoke-testable planner",
+      "updated_at": "2026-03-10T17:41:21Z"
+    },
+    {
+      "constraint": "no ui",
+      "constraint_type": "platform",
+      "created_at": "2026-03-10T17:41:21Z",
+      "evidence_refs": [],
+      "external_refs": [],
+      "node_id": "constraint-1",
+      "node_type": "constraint",
+      "owner": "agent/codex-01",
+      "priority": "P2",
+      "provenance": {
+        "commit_refs": [],
+        "recorded_at": "2026-03-10T17:41:21Z",
+        "source_artifact": "extracted-state.json",
+        "source_session": "ps-20260310173928-smoke-test"
+      },
+      "status": "draft",
+      "summary": "no ui",
+      "title": "no ui",
+      "updated_at": "2026-03-10T17:41:21Z"
+    },
+    {
+      "alternatives_considered": [],
+      "created_at": "2026-03-10T17:41:21Z",
+      "decision": "use explicit reconciliation",
+      "evidence_refs": [],
+      "external_refs": [],
+      "node_id": "decision-1",
+      "node_type": "decision",
+      "owner": "agent/codex-01",
+      "priority": "P2",
+      "provenance": {
+        "commit_refs": [],
+        "recorded_at": "2026-03-10T17:41:21Z",
+        "source_artifact": "extracted-state.json",
+        "source_session": "ps-20260310173928-smoke-test"
+      },
+      "rationale": "",
+      "status": "draft",
+      "summary": "use explicit reconciliation",
+      "title": "use explicit reconciliation",
+      "updated_at": "2026-03-10T17:41:21Z"
+    },
+    {
+      "changes": [],
+      "created_at": "2026-03-10T17:41:21Z",
+      "description": "test test test",
+      "done_definition": "",
+      "evidence_refs": [],
+      "external_refs": [],
+      "node_id": "task-1",
+      "node_type": "task",
+      "owner": "agent/codex-01",
+      "priority": "P2",
+      "provenance": {
+        "commit_refs": [],
+        "recorded_at": "2026-03-10T17:41:21Z",
+        "source_artifact": "extracted-state.json",
+        "source_session": "ps-20260310173928-smoke-test"
+      },
+      "ready_definition": "",
+      "status": "draft",
+      "summary": "test test test",
+      "title": "test test test",
+      "updated_at": "2026-03-10T17:41:21Z"
+    },
+    {
+      "changes": [],
+      "created_at": "2026-03-10T17:41:21Z",
+      "description": "Add a ready task for CLI work",
+      "done_definition": "",
+      "evidence_refs": [],
+      "external_refs": [],
+      "node_id": "task-2",
+      "node_type": "task",
+      "owner": "agent/codex-01",
+      "priority": "P2",
+      "provenance": {
+        "commit_refs": [],
+        "recorded_at": "2026-03-10T17:41:21Z",
+        "source_artifact": "extracted-state.json",
+        "source_session": "ps-20260310173928-smoke-test"
+      },
+      "ready_definition": "",
+      "status": "draft",
+      "summary": "Add a ready task for CLI work",
+      "title": "Add a ready task for CLI work",
+      "updated_at": "2026-03-10T17:41:21Z"
+    }
+  ],
+  "session_id": "ps-20260310173928-smoke-test",
+  "updated_at": "2026-03-10T17:41:21Z"
+}

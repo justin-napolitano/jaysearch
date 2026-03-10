@@ -1,0 +1,44 @@
+{
+  "assumptions": [],
+  "constraints": [
+    {
+      "constraint": "no ui",
+      "constraint_type": "platform",
+      "title": "no ui"
+    }
+  ],
+  "decisions": [
+    {
+      "alternatives_considered": [],
+      "decision": "use explicit reconciliation",
+      "rationale": "",
+      "title": "use explicit reconciliation"
+    }
+  ],
+  "evidence": [],
+  "goals": [
+    {
+      "scope": "",
+      "success_criteria": "",
+      "title": "build a smoke-testable planner"
+    }
+  ],
+  "questions": [],
+  "risks": [],
+  "tasks": [
+    {
+      "changes": [],
+      "description": "test test test",
+      "done_definition": "",
+      "ready_definition": "",
+      "title": "test test test"
+    },
+    {
+      "changes": [],
+      "description": "Add a ready task for CLI work",
+      "done_definition": "",
+      "ready_definition": "",
+      "title": "Add a ready task for CLI work"
+    }
+  ]
+}

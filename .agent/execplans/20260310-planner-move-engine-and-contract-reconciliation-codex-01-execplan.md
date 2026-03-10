@@ -7,9 +7,18 @@ status: draft
 base_branch: main
 changes:
   - .agent/execplans/20260310-planner-move-engine-and-contract-reconciliation-codex-01-execplan.md
+  - artifacts/planner/research/bibliography-graph.json
   - bin/planner
+  - bin/planner-smoke-test
+  - docs/references.md
+  - docs/research-assumptions.md
   - src/platform_tools/planner_cli.py
   - src/platform_tools/planner_runtime.py
+  - spec/bibliography-graph.schema.yaml
+  - spec/game-transitions.yaml
+  - spec/planner-contract-import.yaml
+  - spec/task-graph.schema.yaml
+  - pyproject.toml
   - tests/test_planner_cli.py
 approve_policy: codeowners
 reviewers:
@@ -88,6 +97,7 @@ Expected outcomes:
 - stronger graph views aligned with the game states
 - working draft ExecPlan projection from canonical graph state
 - working reconciliation report generation for contract import
+- one-shot smoke test script for pre-PR verification
 - focused tests proving illegal transitions are rejected and legal ones succeed
 
 ## Context and Orientation
@@ -119,21 +129,22 @@ Primary governing inputs:
    - `bin/planner move validate`
    - `bin/planner contract draft-execplan`
    - `bin/planner contract import-execplan`
-3. Add graph views for:
+3. Add `bin/planner-smoke-test` so the runtime slice can be validated without manual command copy/paste.
+4. Add graph views for:
    - `ready`
    - `blocked`
    - `in_review`
    - `validated`
    - `recovery_required`
-4. Implement contract drafting using canonical graph state and the existing ExecPlan template and governance rules.
-5. Implement reconciliation report generation that conforms to `spec/planner-contract-import.yaml`.
-6. Add tests for:
+5. Implement contract drafting using canonical graph state and the existing ExecPlan template and governance rules.
+6. Implement reconciliation report generation that conforms to `spec/planner-contract-import.yaml`.
+7. Add tests for:
    - legal move success
    - illegal move rejection
    - missing evidence rejection
    - contract draft success/failure
    - contract import reconciliation output
-7. Run `bin/execplan-validate` and `uv run pytest tests/test_planner_cli.py`.
+8. Run `bin/execplan-validate`, `bin/planner-smoke-test`, and `uv run pytest tests/test_planner_cli.py`.
 
 ## Validation and Acceptance
 
