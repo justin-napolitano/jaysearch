@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+echo "[1/2] citation registry validation"
+bin/citation-check
+
+echo "[2/2] focused citation tests"
+uv run pytest tests/test_citation_check.py
+
+echo "citation smoke test completed"

@@ -24,6 +24,12 @@ Required check contract:
 - Check names must be stable snake_case and map to one deterministic command.
 - Current required checks: `execplan_validate`, `sync_todos`, `repo_health_check`, `execplan_spec_tests`, `run_local_ci`.
 
+Implementation slice validation rule:
+
+- Every implementation ExecPlan must include at least one dedicated smoke-test command in its validation section.
+- The smoke-test command should exercise the primary path for that implementation slice in one invocation.
+- A slice is not merge-ready until its smoke-test command passes.
+
 Exception lifecycle contract:
 
 - Exception registry file: `.agent/governance/exceptions.yaml`.
