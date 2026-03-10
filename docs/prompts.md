@@ -59,6 +59,43 @@ Expected outputs:
 - deterministic JSON execution report
 - concise summary (<= 12 lines)
 
+## 4) Design Planner Control Plane Prompt
+
+File:
+
+- `prompts/20260310-design-planner-control-plane-codex-01.md`
+
+Use when:
+
+- defining the planner control plane architecture
+- defining session artifacts, graph schema, and contract projection rules
+- defining players, moves, referee logic, and commitment stages for the planner game
+- producing design-phase specs before implementation work begins
+
+Expected outputs:
+
+- architecture decisions with rationale
+- explicit schema and contract proposals
+- open questions with recommended disposition
+
+## 5) Review Planner Control Plane Prompt
+
+File:
+
+- `prompts/20260310-review-planner-control-plane-codex-01.md`
+
+Use when:
+
+- hostile-reviewing planner design artifacts
+- checking for hidden state, weak authority boundaries, or vague command semantics
+- verifying that provider sync remains downstream from canonical local state
+- checking that game roles, illegal moves, and referee semantics remain coherent
+
+Expected outputs:
+
+- ordered findings with file references
+- explicit assumptions and residual risks
+
 ## Governance Notes
 
 - Prompts must align with canonical plan key format.
