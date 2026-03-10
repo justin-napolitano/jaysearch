@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+echo "[1/2] rule graph validation"
+bin/rule-graph-check
+
+echo "[2/2] focused rule graph tests"
+uv run pytest tests/test_rule_graph_check.py
+
+echo "rule graph smoke test completed"
