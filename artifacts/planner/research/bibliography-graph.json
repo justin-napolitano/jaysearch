@@ -128,6 +128,12 @@
       "title": "Contract edits require explicit import rather than implicit reverse-sync"
     },
     {
+      "id": "claim-codex-orchestration",
+      "type": "claim",
+      "label": "Codex Orchestration",
+      "title": "Codex should operate through machine-readable governed control surfaces with explicit merge readiness"
+    },
+    {
       "id": "artifact-planner-game-model",
       "type": "artifact",
       "label": "Planner Game Model",
@@ -162,6 +168,24 @@
       "type": "artifact",
       "label": "Task Graph Spec",
       "title": "spec/task-graph.schema.yaml"
+    },
+    {
+      "id": "artifact-codex-orchestrator-contract",
+      "type": "artifact",
+      "label": "Orchestrator Contract",
+      "title": "docs/codex-orchestrator-contract.md"
+    },
+    {
+      "id": "artifact-codex-orchestrator-execution-loop",
+      "type": "artifact",
+      "label": "Orchestrator Execution Loop",
+      "title": "docs/codex-orchestrator-execution-loop.md"
+    },
+    {
+      "id": "artifact-merge-readiness-contract",
+      "type": "artifact",
+      "label": "Merge Readiness Contract",
+      "title": "docs/merge-readiness-contract.md"
     }
   ],
   "edges": [
@@ -181,15 +205,23 @@
     { "from": "concept-provenance", "to": "claim-canonical-graph", "relation": "supports" },
     { "from": "concept-state-transitions", "to": "claim-canonical-graph", "relation": "supports" },
     { "from": "concept-provenance", "to": "claim-explicit-reconciliation", "relation": "supports" },
+    { "from": "concept-mechanism-design", "to": "claim-codex-orchestration", "relation": "supports" },
+    { "from": "concept-provenance", "to": "claim-codex-orchestration", "relation": "supports" },
+    { "from": "concept-state-transitions", "to": "claim-codex-orchestration", "relation": "supports" },
+    { "from": "concept-inspection", "to": "claim-codex-orchestration", "relation": "supports" },
     { "from": "claim-planning-implementation-game", "to": "artifact-planner-game-model", "relation": "cited_in" },
     { "from": "claim-planning-implementation-game", "to": "artifact-implementation-game-model", "relation": "cited_in" },
     { "from": "claim-canonical-graph", "to": "artifact-transition-spec", "relation": "cited_in" },
     { "from": "claim-explicit-reconciliation", "to": "artifact-assumptions-doc", "relation": "cited_in" },
     { "from": "claim-canonical-graph", "to": "artifact-task-graph-spec", "relation": "cited_in" },
+    { "from": "claim-codex-orchestration", "to": "artifact-codex-orchestrator-contract", "relation": "cited_in" },
+    { "from": "claim-codex-orchestration", "to": "artifact-codex-orchestrator-execution-loop", "relation": "cited_in" },
+    { "from": "claim-codex-orchestration", "to": "artifact-merge-readiness-contract", "relation": "cited_in" },
     { "from": "concept-mechanism-design", "to": "artifact-scoring-spec", "relation": "informs" },
     { "from": "concept-inspection", "to": "artifact-scoring-spec", "relation": "informs" },
     { "from": "artifact-assumptions-doc", "to": "claim-planning-implementation-game", "relation": "classified_as" },
     { "from": "artifact-assumptions-doc", "to": "claim-canonical-graph", "relation": "classified_as" },
-    { "from": "artifact-assumptions-doc", "to": "claim-explicit-reconciliation", "relation": "classified_as" }
+    { "from": "artifact-assumptions-doc", "to": "claim-explicit-reconciliation", "relation": "classified_as" },
+    { "from": "artifact-assumptions-doc", "to": "claim-codex-orchestration", "relation": "classified_as" }
   ]
 }
