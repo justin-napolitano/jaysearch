@@ -156,6 +156,12 @@
       "type": "artifact",
       "label": "Assumptions Doc",
       "title": "docs/research-assumptions.md"
+    },
+    {
+      "id": "artifact-task-graph-spec",
+      "type": "artifact",
+      "label": "Task Graph Spec",
+      "title": "spec/task-graph.schema.yaml"
     }
   ],
   "edges": [
@@ -179,6 +185,7 @@
     { "from": "claim-planning-implementation-game", "to": "artifact-implementation-game-model", "relation": "cited_in" },
     { "from": "claim-canonical-graph", "to": "artifact-transition-spec", "relation": "cited_in" },
     { "from": "claim-explicit-reconciliation", "to": "artifact-assumptions-doc", "relation": "cited_in" },
+    { "from": "claim-canonical-graph", "to": "artifact-task-graph-spec", "relation": "cited_in" },
     { "from": "concept-mechanism-design", "to": "artifact-scoring-spec", "relation": "informs" },
     { "from": "concept-inspection", "to": "artifact-scoring-spec", "relation": "informs" },
     { "from": "artifact-assumptions-doc", "to": "claim-planning-implementation-game", "relation": "classified_as" },

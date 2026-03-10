@@ -1,0 +1,74 @@
+{
+  "registry_id": "planner-claim-registry-20260310",
+  "created_at": "2026-03-10T00:00:00Z",
+  "artifacts": [
+    {
+      "artifact_path": "docs/planner-game-model.md",
+      "artifact_node_id": "artifact-planner-game-model",
+      "required": true,
+      "claims": [
+        {
+          "claim_id": "plg-001",
+          "summary": "The planner is framed as a mechanism-designed sequential coordination game.",
+          "category": "design-inference",
+          "source_ids": ["src-maskin-2007", "src-myerson-2007", "src-nash-1950"],
+          "bibliography_claim_ids": ["claim-planning-implementation-game"]
+        }
+      ]
+    },
+    {
+      "artifact_path": "docs/implementation-game-model.md",
+      "artifact_node_id": "artifact-implementation-game-model",
+      "required": true,
+      "claims": [
+        {
+          "claim_id": "img-001",
+          "summary": "Implementation is treated as a governed continuation of the planner game.",
+          "category": "design-inference",
+          "source_ids": ["src-maskin-2007", "src-fagan-1986", "src-harel-1987"],
+          "bibliography_claim_ids": ["claim-planning-implementation-game"]
+        }
+      ]
+    },
+    {
+      "artifact_path": "docs/game-scoring-model.md",
+      "artifact_node_id": "artifact-scoring-spec",
+      "required": true,
+      "claims": [
+        {
+          "claim_id": "gsm-001",
+          "summary": "The scoring model is source-informed rather than mathematically derived from literature.",
+          "category": "policy-choice",
+          "rationale": "Weights are platform policy choices."
+        }
+      ]
+    },
+    {
+      "artifact_path": "docs/research-assumptions.md",
+      "artifact_node_id": "artifact-assumptions-doc",
+      "required": true,
+      "claims": [
+        {
+          "claim_id": "ras-001",
+          "summary": "Source-backed, design-inference, policy-choice, and open-assumption are the governed provenance categories.",
+          "category": "policy-choice",
+          "rationale": "These categories are a platform governance convention."
+        }
+      ]
+    },
+    {
+      "artifact_path": "spec/task-graph.schema.yaml",
+      "artifact_node_id": "artifact-transition-spec",
+      "required": true,
+      "claims": [
+        {
+          "claim_id": "tgs-001",
+          "summary": "The canonical graph is the shared board and source of truth.",
+          "category": "design-inference",
+          "source_ids": ["src-prov-overview", "src-prov-dm", "src-harel-1987"],
+          "bibliography_claim_ids": ["claim-canonical-graph"]
+        }
+      ]
+    }
+  ]
+}
