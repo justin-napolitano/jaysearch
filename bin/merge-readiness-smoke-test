@@ -1,0 +1,141 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+echo "[1/2] merge readiness unit tests"
+uv run pytest tests/test_merge_readiness.py
+
+echo "[2/2] merge readiness smoke fixture"
+PYTHONPATH="$(pwd)/src${PYTHONPATH:+:$PYTHONPATH}" python3 - <<'PY'
+import json
+import subprocess
+import tempfile
+from pathlib import Path
+
+from platform_tools.merge_readiness import check_merge_readiness
+
+
+def write(path: Path, text: str) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(text, encoding="utf-8")
+
+
+with tempfile.TemporaryDirectory() as tmp:
+    root = Path(tmp)
+    subprocess.run(["git", "init", "-b", "main"], cwd=root, check=True, capture_output=True)
+    subprocess.run(["git", "config", "user.name", "Smoke"], cwd=root, check=True)
+    subprocess.run(["git", "config", "user.email", "smoke@example.com"], cwd=root, check=True)
+
+    write(root / "README.md", "base\n")
+    subprocess.run(["git", "add", "README.md"], cwd=root, check=True)
+    subprocess.run(["git", "commit", "--no-gpg-sign", "-m", "docs: base"], cwd=root, check=True, capture_output=True)
+    subprocess.run(["git", "checkout", "-b", "feature/merge-readiness-smoke"], cwd=root, check=True, capture_output=True)
+
+    write(
+        root / ".agent" / "execplans" / "20260310-smoke-plan-codex-01-execplan.md",
+        """---
+id: "20260310-smoke-plan-codex-01-execplan"
+title: "Smoke plan"
+owner: "agent/codex-01"
+created: "2026-03-10T00:00:00Z"
+status: draft
+base_branch: main
+changes:
+  - .agent/execplans/20260310-smoke-plan-codex-01-execplan.md
+approve_policy: codeowners
+reviewers:
+  - "github:justin-napolitano"
+draft_by: "agent/codex-01"
+draft_branch: "draft-execplan/smoke"
+draft_created: "2026-03-10T00:00:00Z"
+finalized_by: ""
+finalized_at: ""
+finalized_in_pr: ""
+validation:
+  tests:
+    - name: "execplan-validate"
+      command: "bin/execplan-validate .agent/execplans/20260310-smoke-plan-codex-01-execplan.md"
+      expected_exit: 0
+    - name: "smoke"
+      command: "bin/smoke-pass"
+      expected_exit: 0
+tasks:
+  - title: "Smoke"
+    priority: "P1"
+depends_on: []
+---
+
+# Purpose / Big Picture
+
+Smoke.
+
+## Progress
+
+- [ ] Smoke
+
+## Surprises & Discoveries
+
+None.
+
+## Decision Log
+
+None.
+
+## Outcomes & Retrospective
+
+Smoke.
+
+## Context and Orientation
+
+Smoke.
+
+## Plan of Work
+
+Smoke.
+
+## Concrete Steps
+
+1. Smoke.
+
+## Validation and Acceptance
+
+Smoke.
+
+## Idempotence and Recovery
+
+Smoke.
+
+## Artifacts and Notes
+
+Smoke.
+
+## Interfaces and Dependencies
+
+Smoke.
+""",
+    )
+    write(root / "spec" / "slice.yaml", "slice: true\n")
+    write(root / "docs" / "note.md", "note\n")
+    write(root / "bin" / "execplan-validate", "#!/usr/bin/env bash\nexit 0\n")
+    write(root / "bin" / "smoke-pass", "#!/usr/bin/env bash\nexit 0\n")
+    write(root / "bin" / "rule-graph-check", "#!/usr/bin/env bash\nexit 0\n")
+    write(root / "bin" / "citation-check", "#!/usr/bin/env bash\nexit 0\n")
+    for script in ["execplan-validate", "smoke-pass", "rule-graph-check", "citation-check"]:
+        subprocess.run(["chmod", "+x", str(root / "bin" / script)], check=True)
+
+    subprocess.run(["git", "add", ".agent/execplans/20260310-smoke-plan-codex-01-execplan.md"], cwd=root, check=True)
+    subprocess.run(["git", "commit", "--no-gpg-sign", "-m", "docs(execplan): add smoke plan"], cwd=root, check=True, capture_output=True)
+    subprocess.run(["git", "add", "spec/slice.yaml"], cwd=root, check=True)
+    subprocess.run(["git", "commit", "--no-gpg-sign", "-m", "spec(smoke): add slice spec"], cwd=root, check=True, capture_output=True)
+    subprocess.run(["git", "add", "docs/note.md"], cwd=root, check=True)
+    subprocess.run(["git", "commit", "--no-gpg-sign", "-m", "docs(smoke): add note"], cwd=root, check=True, capture_output=True)
+
+    code, report = check_merge_readiness(
+        root=root.as_posix(),
+        execplan_path=(root / ".agent" / "execplans" / "20260310-smoke-plan-codex-01-execplan.md").as_posix(),
+        base_ref="main",
+    )
+    if code != 0:
+        raise SystemExit(json.dumps(report, indent=2, sort_keys=True))
+PY
+
+echo "merge readiness smoke test completed"
