@@ -69,6 +69,48 @@
           "bibliography_claim_ids": ["claim-canonical-graph"]
         }
       ]
+    },
+    {
+      "artifact_path": "docs/codex-orchestrator-contract.md",
+      "artifact_node_id": "artifact-codex-orchestrator-contract",
+      "required": true,
+      "claims": [
+        {
+          "claim_id": "coc-001",
+          "summary": "Codex should operate as a governed orchestrator through machine-readable control surfaces rather than richer human-facing UX.",
+          "category": "design-inference",
+          "source_ids": ["src-maskin-2007", "src-myerson-2007", "src-prov-overview", "src-harel-1987"],
+          "bibliography_claim_ids": ["claim-codex-orchestration"]
+        }
+      ]
+    },
+    {
+      "artifact_path": "docs/codex-orchestrator-execution-loop.md",
+      "artifact_node_id": "artifact-codex-orchestrator-execution-loop",
+      "required": true,
+      "claims": [
+        {
+          "claim_id": "coe-001",
+          "summary": "Codex should follow a deterministic inspect-select-execute-validate-review-recover-merge loop.",
+          "category": "design-inference",
+          "source_ids": ["src-harel-1987", "src-fagan-1986", "src-myers-1978"],
+          "bibliography_claim_ids": ["claim-codex-orchestration"]
+        }
+      ]
+    },
+    {
+      "artifact_path": "docs/merge-readiness-contract.md",
+      "artifact_node_id": "artifact-merge-readiness-contract",
+      "required": true,
+      "claims": [
+        {
+          "claim_id": "mrc-001",
+          "summary": "Merge readiness should be treated as a machine-readable governed contract rather than informal reviewer memory.",
+          "category": "design-inference",
+          "source_ids": ["src-prov-overview", "src-prov-dm", "src-fagan-1986"],
+          "bibliography_claim_ids": ["claim-codex-orchestration"]
+        }
+      ]
     }
   ]
 }
