@@ -12,6 +12,7 @@ REQUIRED_RULES = {
     "rule-smoke-test-required",
     "rule-clean-merge-state",
     "rule-human-sized-commits",
+    "rule-procedural-commit-order",
     "rule-execplan-validation",
     "rule-human-finalization",
 }
