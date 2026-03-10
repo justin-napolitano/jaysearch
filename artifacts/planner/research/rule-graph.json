@@ -21,6 +21,12 @@
       "title": "Implementation commits must remain human-sized and mapped to one reviewable task."
     },
     {
+      "id": "rule-procedural-commit-order",
+      "type": "rule",
+      "label": "Procedural Commit Order",
+      "title": "Codex-authored slices should be committed in procedural order from ExecPlan through governance updates."
+    },
+    {
       "id": "rule-execplan-validation",
       "type": "rule",
       "label": "ExecPlan Validation",
@@ -104,6 +110,10 @@
     { "from": "rule-human-sized-commits", "to": "phase-merge-readiness", "relation": "applies_to" },
     { "from": "rule-human-sized-commits", "to": "artifact-agent-game-rules", "relation": "satisfied_by" },
     { "from": "rule-human-sized-commits", "to": "artifact-governance-doc", "relation": "satisfied_by" },
+    { "from": "rule-procedural-commit-order", "to": "phase-merge-readiness", "relation": "applies_to" },
+    { "from": "rule-procedural-commit-order", "to": "artifact-agent-game-rules", "relation": "satisfied_by" },
+    { "from": "rule-procedural-commit-order", "to": "artifact-governance-doc", "relation": "satisfied_by" },
+    { "from": "rule-procedural-commit-order", "to": "rule-human-sized-commits", "relation": "depends_on" },
     { "from": "rule-execplan-validation", "to": "phase-merge-readiness", "relation": "applies_to" },
     { "from": "rule-execplan-validation", "to": "validator-execplan-validate", "relation": "enforced_by" },
     { "from": "rule-execplan-validation", "to": "artifact-governance-spec", "relation": "satisfied_by" },

@@ -166,6 +166,20 @@ Implementation-slice smoke-test rule:
 - The smoke-test command must pass before the slice is considered merge-ready.
 - Smoke-test scripts should live under `bin/` when practical.
 
+Procedural commit-order rule:
+
+- Codex-authored slices should be committed in procedural order when multiple artifact classes are involved.
+- Preferred order is:
+  1. active ExecPlan
+  2. canonical spec or schema
+  3. implementation/runtime changes
+  4. focused tests and smoke-test scripts
+  5. docs and runbooks
+  6. research provenance updates
+  7. governance rule changes
+- A slice may skip unused classes, but it should not collapse distant classes together without justification.
+- Reviewers should be able to inspect the stack from contract to enforcement to explanatory material without reconstructing the intended sequence by hand.
+
 ## 10. Match Flow and Stop Conditions
 
 Lifecycle flow:
