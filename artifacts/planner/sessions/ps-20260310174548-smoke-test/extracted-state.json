@@ -1,0 +1,40 @@
+{
+  "assumptions": [],
+  "constraints": [
+    {
+      "constraint": "No UI",
+      "constraint_type": "platform",
+      "title": "No UI"
+    }
+  ],
+  "decisions": [],
+  "evidence": [
+    {
+      "artifact_type": "file",
+      "path": "src/platform_tools/planner_runtime.py",
+      "title": "Planner runtime file"
+    }
+  ],
+  "goals": [
+    {
+      "scope": "move engine",
+      "status": "validated",
+      "success_criteria": "commands succeed",
+      "title": "Smoke-test planner runtime"
+    }
+  ],
+  "questions": [],
+  "risks": [],
+  "tasks": [
+    {
+      "changes": [
+        "src/platform_tools/planner_cli.py"
+      ],
+      "description": "Refine CLI task",
+      "done_definition": "",
+      "ready_definition": "",
+      "status": "draft",
+      "title": "Refine CLI task"
+    }
+  ]
+}

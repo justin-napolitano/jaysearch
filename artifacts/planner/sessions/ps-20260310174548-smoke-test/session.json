@@ -1,0 +1,14 @@
+{
+  "commit_refs": [],
+  "created_at": "2026-03-10T17:45:48Z",
+  "mode": "adversarial",
+  "objective": "verify move engine",
+  "related_execplans": [],
+  "related_graph_ids": [
+    "pg-ps-20260310174548-smoke-test"
+  ],
+  "session_id": "ps-20260310174548-smoke-test",
+  "status": "active",
+  "title": "Smoke Test",
+  "updated_at": "2026-03-10T17:45:49Z"
+}

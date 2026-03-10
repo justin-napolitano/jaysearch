@@ -7,18 +7,27 @@ import sys
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
 from platform_tools.planner_runtime import (
+    apply_move,
     build_graph,
     create_session,
+    draft_execplan,
+    import_execplan,
     load_session,
     summarize_session,
     validate_all,
     validate_graph,
+    validate_move,
 )
 
 
 def _write_json(path: Path, data: object) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(data, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+
+
+def _write_text(path: Path, text: str) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(text, encoding="utf-8")
 
 
 def _seed_runtime_specs(root: Path) -> None:
@@ -41,22 +50,83 @@ def _seed_runtime_specs(root: Path) -> None:
             "edges": [],
         },
     )
-    (root / "docs" / "references.md").write_text(
-        "# References\n\nhttps://example.com/source\n", encoding="utf-8"
-    )
-    (root / "docs" / "research-assumptions.md").write_text(
+    _write_text(root / "docs" / "references.md", "# References\n\nhttps://example.com/source\n")
+    _write_text(
+        root / "docs" / "research-assumptions.md",
         "source-backed\ndesign-inference\npolicy-choice\nopen-assumption\n",
-        encoding="utf-8",
     )
-    (root / "spec" / "bibliography-graph.schema.yaml").write_text(
+    _write_text(
+        root / "spec" / "bibliography-graph.schema.yaml",
         "version: v1\ngraph:\n  required_fields:\n    - graph_id\n    - created_at\n    - nodes\n    - edges\n",
-        encoding="utf-8",
     )
-    (root / "spec" / "game-transitions.yaml").write_text(
-        "version: v1\nshared_statuses:\n  - draft\n  - ready\n  - blocked\n  - in_progress\n  - in_review\n  - validated\n  - recovery_required\n  - done\n  - rejected\n  - archived\n",
-        encoding="utf-8",
+    _write_text(
+        root / "spec" / "planner-contract-import.yaml",
+        "\n".join(
+            [
+                "version: v1",
+                "report:",
+                "  required_fields:",
+                "    - report_id",
+                "    - session_id",
+                "    - graph_id",
+                "    - execplan_id",
+                "    - source_execplan_path",
+                "    - original_projection_hash",
+                "    - edited_execplan_hash",
+                "    - created_at",
+                "    - status",
+                "    - accepted_changes",
+                "    - rejected_changes",
+                "    - unresolved_changes",
+                "    - canonical_updates",
+                "    - authority",
+                "    - operator_notes",
+            ]
+        )
+        + "\n",
     )
-    (root / "spec" / "task-graph.schema.yaml").write_text(
+    _write_text(
+        root / "spec" / "game-transitions.yaml",
+        "\n".join(
+            [
+                "version: v1",
+                "shared_statuses:",
+                "  - draft",
+                "  - ready",
+                "  - blocked",
+                "  - in_progress",
+                "  - in_review",
+                "  - validated",
+                "  - recovery_required",
+                "  - done",
+                "  - rejected",
+                "  - archived",
+                "moves:",
+                "  planner:",
+                "    refine:",
+                "      allowed_from:",
+                "        - draft",
+                "        - blocked",
+                "      allowed_to:",
+                "        - draft",
+                "        - ready",
+                "      referee_required: false",
+                "      required_evidence:",
+                "        - change_summary",
+                "    commit:",
+                "      allowed_from:",
+                "        - validated",
+                "      allowed_to:",
+                "        - in_review",
+                "      referee_required: true",
+                "      required_evidence:",
+                "        - readiness_report",
+            ]
+        )
+        + "\n",
+    )
+    _write_text(
+        root / "spec" / "task-graph.schema.yaml",
         "\n".join(
             [
                 "version: v1",
@@ -159,8 +229,8 @@ def _seed_runtime_specs(root: Path) -> None:
             ]
         )
         + "\n",
-        encoding="utf-8",
     )
+    _write_text(root / "examples" / "execplan-template.md", "template\n")
 
 
 def test_session_start_and_show(tmp_path: Path) -> None:
@@ -174,27 +244,112 @@ def test_session_start_and_show(tmp_path: Path) -> None:
     assert summary["counts"]["goals"] == 0
 
 
-def test_graph_build_and_validate(tmp_path: Path) -> None:
+def test_graph_build_validate_and_move_apply(tmp_path: Path) -> None:
     _seed_runtime_specs(tmp_path)
     started = create_session(root=tmp_path.as_posix(), title="Graph Test")
     session_id = started["session_id"]
     session_dir = tmp_path / "artifacts" / "planner" / "sessions" / session_id
     extracted = {
-        "goals": [{"title": "Build planner", "success_criteria": "Works", "scope": "runtime"}],
+        "goals": [{"title": "Build planner", "success_criteria": "Works", "scope": "runtime", "status": "validated"}],
         "constraints": [{"constraint": "No UI", "constraint_type": "platform", "title": "No UI"}],
         "assumptions": [],
         "decisions": [],
-        "questions": [{"title": "How strict?", "question": "How strict?", "blocking": True}],
-        "tasks": [{"title": "Add CLI", "description": "Add CLI", "ready_definition": "", "done_definition": ""}],
+        "questions": [],
+        "tasks": [
+            {
+                "title": "Add CLI",
+                "description": "Add CLI",
+                "ready_definition": "",
+                "done_definition": "",
+                "status": "draft",
+                "changes": ["src/platform_tools/planner_cli.py"],
+            }
+        ],
         "risks": [],
-        "evidence": [],
+        "evidence": [{"title": "CLI evidence", "artifact_type": "note", "path": "docs/references.md"}],
     }
     _write_json(session_dir / "extracted-state.json", extracted)
     built = build_graph(root=tmp_path.as_posix(), session_id=session_id)
     code, report = validate_graph(root=tmp_path.as_posix(), graph_id=built["graph_id"])
     assert code == 0
-    assert report["ok"] is True
-    assert built["node_count"] == 4
+    move_code, move_report = validate_move(
+        root=tmp_path.as_posix(),
+        graph_id=built["graph_id"],
+        node_id="task-1",
+        phase="planner",
+        move="refine",
+        target_status="ready",
+        evidence={"change_summary": "clarified task"},
+    )
+    assert move_code == 0
+    apply_code, _ = apply_move(
+        root=tmp_path.as_posix(),
+        graph_id=built["graph_id"],
+        node_id="task-1",
+        phase="planner",
+        move="refine",
+        target_status="ready",
+        evidence={"change_summary": "clarified task"},
+    )
+    assert apply_code == 0
+    illegal_code, illegal_report = validate_move(
+        root=tmp_path.as_posix(),
+        graph_id=built["graph_id"],
+        node_id="task-1",
+        phase="planner",
+        move="commit",
+        target_status="in_review",
+        evidence={},
+    )
+    assert illegal_code == 1
+    assert illegal_report["errors"]
+
+
+def test_contract_draft_and_import(tmp_path: Path) -> None:
+    _seed_runtime_specs(tmp_path)
+    started = create_session(root=tmp_path.as_posix(), title="Contract Test")
+    session_id = started["session_id"]
+    session_dir = tmp_path / "artifacts" / "planner" / "sessions" / session_id
+    extracted = {
+        "goals": [{"title": "Build contract", "success_criteria": "draft", "scope": "runtime", "status": "validated"}],
+        "constraints": [],
+        "assumptions": [],
+        "decisions": [],
+        "questions": [],
+        "tasks": [
+            {
+                "title": "Generate plan",
+                "description": "Generate plan",
+                "ready_definition": "",
+                "done_definition": "",
+                "status": "ready",
+                "changes": ["src/platform_tools/planner_runtime.py"],
+            }
+        ],
+        "risks": [],
+        "evidence": [{"title": "Artifact", "artifact_type": "file", "path": "src/platform_tools/planner_runtime.py"}],
+    }
+    _write_json(session_dir / "extracted-state.json", extracted)
+    built = build_graph(root=tmp_path.as_posix(), session_id=session_id)
+    draft_code, draft_report = draft_execplan(
+        root=tmp_path.as_posix(), graph_id=built["graph_id"], title="Generated Contract"
+    )
+    assert draft_code == 0
+    original = Path(draft_report["path"])
+    edited = original.with_name("edited.md")
+    edited.write_text(original.read_text(encoding="utf-8") + "\nEdited\n", encoding="utf-8")
+    import_code, import_report = import_execplan(
+        root=tmp_path.as_posix(),
+        session_id=session_id,
+        graph_id=built["graph_id"],
+        execplan_id=draft_report["execplan_id"],
+        original_path=str(original.relative_to(tmp_path)),
+        edited_path=str(edited.relative_to(tmp_path)),
+        operator="operator/test",
+        referee="referee/test",
+    )
+    assert import_code == 1
+    assert Path(import_report["report_path"]).exists()
 
 
 def test_validate_all_checks_research_artifacts(tmp_path: Path) -> None:

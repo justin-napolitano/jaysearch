@@ -1,0 +1,114 @@
+{
+  "created_at": "2026-03-10T17:46:36Z",
+  "edges": [],
+  "graph_id": "pg-ps-20260310174635-smoke-test",
+  "nodes": [
+    {
+      "created_at": "2026-03-10T17:46:36Z",
+      "evidence_refs": [],
+      "external_refs": [],
+      "node_id": "goal-1",
+      "node_type": "goal",
+      "owner": "agent/codex-01",
+      "priority": "P2",
+      "provenance": {
+        "commit_refs": [],
+        "recorded_at": "2026-03-10T17:46:36Z",
+        "source_artifact": "extracted-state.json",
+        "source_session": "ps-20260310174635-smoke-test"
+      },
+      "scope": "move engine",
+      "status": "validated",
+      "success_criteria": "commands succeed",
+      "summary": "Smoke-test planner runtime",
+      "title": "Smoke-test planner runtime",
+      "updated_at": "2026-03-10T17:46:36Z"
+    },
+    {
+      "constraint": "No UI",
+      "constraint_type": "platform",
+      "created_at": "2026-03-10T17:46:36Z",
+      "evidence_refs": [],
+      "external_refs": [],
+      "node_id": "constraint-1",
+      "node_type": "constraint",
+      "owner": "agent/codex-01",
+      "priority": "P2",
+      "provenance": {
+        "commit_refs": [],
+        "recorded_at": "2026-03-10T17:46:36Z",
+        "source_artifact": "extracted-state.json",
+        "source_session": "ps-20260310174635-smoke-test"
+      },
+      "status": "draft",
+      "summary": "No UI",
+      "title": "No UI",
+      "updated_at": "2026-03-10T17:46:36Z"
+    },
+    {
+      "changes": [
+        "src/platform_tools/planner_cli.py"
+      ],
+      "created_at": "2026-03-10T17:46:36Z",
+      "description": "Refine CLI task",
+      "done_definition": "",
+      "evidence_refs": [
+        {
+          "move": "refine",
+          "payload": {
+            "change_summary": "smoke test refinement"
+          },
+          "recorded_at": "2026-03-10T17:46:36Z"
+        }
+      ],
+      "external_refs": [],
+      "last_move": {
+        "evidence": {
+          "change_summary": "smoke test refinement"
+        },
+        "move": "refine",
+        "phase": "planner",
+        "recorded_at": "2026-03-10T17:46:36Z",
+        "target_status": "ready"
+      },
+      "node_id": "task-1",
+      "node_type": "task",
+      "owner": "agent/codex-01",
+      "priority": "P2",
+      "provenance": {
+        "commit_refs": [],
+        "recorded_at": "2026-03-10T17:46:36Z",
+        "source_artifact": "extracted-state.json",
+        "source_session": "ps-20260310174635-smoke-test"
+      },
+      "ready_definition": "",
+      "status": "ready",
+      "summary": "Refine CLI task",
+      "title": "Refine CLI task",
+      "updated_at": "2026-03-10T17:46:36Z"
+    },
+    {
+      "artifact_type": "file",
+      "created_at": "2026-03-10T17:46:36Z",
+      "evidence_refs": [],
+      "external_refs": [],
+      "node_id": "artifact-1",
+      "node_type": "artifact",
+      "owner": "agent/codex-01",
+      "path": "src/platform_tools/planner_runtime.py",
+      "priority": "P2",
+      "provenance": {
+        "commit_refs": [],
+        "recorded_at": "2026-03-10T17:46:36Z",
+        "source_artifact": "extracted-state.json",
+        "source_session": "ps-20260310174635-smoke-test"
+      },
+      "status": "draft",
+      "summary": "Planner runtime file",
+      "title": "Planner runtime file",
+      "updated_at": "2026-03-10T17:46:36Z"
+    }
+  ],
+  "session_id": "ps-20260310174635-smoke-test",
+  "updated_at": "2026-03-10T17:46:36Z"
+}
