@@ -1,0 +1,55 @@
+version: v1
+last_updated: 2026-03-10
+canonical_artifacts:
+  root: artifacts/planner/sessions/
+  required_files:
+    - session.json
+    - transcript.jsonl
+    - extracted-state.json
+session:
+  required_fields:
+    - session_id
+    - title
+    - created_at
+    - updated_at
+    - status
+    - mode
+  status_allowed:
+    - draft
+    - active
+    - paused
+    - closed
+  mode_allowed:
+    - direct
+    - adversarial
+    - friendly
+  optional_fields:
+    - objective
+    - related_graph_ids
+    - related_execplans
+    - commit_refs
+extracted_state:
+  required_collections:
+    - goals
+    - constraints
+    - assumptions
+    - decisions
+    - questions
+    - tasks
+    - risks
+    - evidence
+invariants:
+  - no_hidden_state
+  - local_artifacts_required
+  - transcript_and_extracted_state_must_share_session_id
+  - graph_build_inputs_must_be_reproducible_from_session_artifacts
+  - session_selection_must_be_explicit
+provenance:
+  commit_ref_fields:
+    - commit_sha
+    - branch
+    - trailer_key
+    - trailer_value
+notes:
+  - session chat is interactive terminal behavior
+  - friendly mode exists for explicit opt-in only and is not the default operating stance

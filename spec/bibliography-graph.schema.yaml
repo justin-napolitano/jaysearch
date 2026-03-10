@@ -1,0 +1,40 @@
+version: v1
+last_updated: 2026-03-10
+artifact:
+  path: artifacts/planner/research/bibliography-graph.json
+graph:
+  required_fields:
+    - graph_id
+    - created_at
+    - nodes
+    - edges
+node:
+  required_fields:
+    - id
+    - type
+    - title
+    - label
+  type_allowed:
+    - source
+    - concept
+    - artifact
+    - claim
+edge:
+  required_fields:
+    - from
+    - to
+    - relation
+  relation_allowed:
+    - informs
+    - supports
+    - constrains
+    - implemented_by
+    - cited_in
+    - classified_as
+invariants:
+  - sources_must_have_reference_links
+  - claims_must_connect_to_source_or_inference_category
+  - artifacts_must_connect_to_at_least_one_claim_or_concept
+notes:
+  - bibliography graph exists for machine-readable research provenance
+  - graph supplements docs/references.md rather than replacing human-readable references

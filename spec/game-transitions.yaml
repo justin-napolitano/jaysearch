@@ -1,0 +1,184 @@
+version: v1
+last_updated: 2026-03-10
+phases:
+  - planner
+  - implementation
+shared_statuses:
+  - draft
+  - ready
+  - blocked
+  - in_progress
+  - in_review
+  - validated
+  - recovery_required
+  - done
+  - rejected
+  - archived
+moves:
+  planner:
+    propose:
+      allowed_from:
+        - draft
+      allowed_to:
+        - draft
+        - ready
+      referee_required: false
+      required_evidence: []
+    challenge:
+      allowed_from:
+        - draft
+        - ready
+        - in_review
+      allowed_to:
+        - blocked
+        - draft
+      referee_required: false
+      required_evidence:
+        - rationale
+    refine:
+      allowed_from:
+        - draft
+        - blocked
+      allowed_to:
+        - draft
+        - ready
+      referee_required: false
+      required_evidence:
+        - change_summary
+    answer:
+      allowed_from:
+        - blocked
+      allowed_to:
+        - draft
+        - ready
+      referee_required: false
+      required_evidence:
+        - evidence_ref
+    constrain:
+      allowed_from:
+        - draft
+      allowed_to:
+        - draft
+        - ready
+      referee_required: false
+      required_evidence:
+        - rationale
+    decompose:
+      allowed_from:
+        - draft
+        - ready
+      allowed_to:
+        - ready
+      referee_required: false
+      required_evidence:
+        - created_node_refs
+    validate:
+      allowed_from:
+        - ready
+        - in_review
+      allowed_to:
+        - validated
+        - blocked
+      referee_required: true
+      required_evidence:
+        - validation_result
+    commit:
+      allowed_from:
+        - validated
+      allowed_to:
+        - in_review
+      referee_required: true
+      required_evidence:
+        - readiness_report
+    import:
+      allowed_from:
+        - in_review
+      allowed_to:
+        - draft
+        - ready
+        - blocked
+      referee_required: true
+      required_evidence:
+        - reconciliation_report
+    project:
+      allowed_from:
+        - ready
+        - validated
+        - done
+      allowed_to:
+        - ready
+        - validated
+        - done
+      referee_required: false
+      required_evidence:
+        - sync_report
+  implementation:
+    select:
+      allowed_from:
+        - ready
+      allowed_to:
+        - in_progress
+      referee_required: false
+      required_evidence:
+        - selection_ref
+    implement:
+      allowed_from:
+        - in_progress
+      allowed_to:
+        - in_progress
+        - in_review
+      referee_required: false
+      required_evidence:
+        - commit_ref
+    verify:
+      allowed_from:
+        - in_progress
+        - in_review
+      allowed_to:
+        - validated
+        - recovery_required
+      referee_required: true
+      required_evidence:
+        - validation_result
+    review:
+      allowed_from:
+        - validated
+        - in_review
+      allowed_to:
+        - done
+        - recovery_required
+      referee_required: true
+      required_evidence:
+        - review_report
+    recover:
+      allowed_from:
+        - recovery_required
+      allowed_to:
+        - in_progress
+        - blocked
+      referee_required: false
+      required_evidence:
+        - recovery_note
+    escalate:
+      allowed_from:
+        - blocked
+        - recovery_required
+        - in_review
+      allowed_to:
+        - blocked
+      referee_required: true
+      required_evidence:
+        - escalation_reason
+    finalize:
+      allowed_from:
+        - done
+      allowed_to:
+        - archived
+      referee_required: true
+      required_evidence:
+        - finalization_ref
+invariants:
+  - every_move_must_define_allowed_from_and_allowed_to
+  - referee_required_moves_must_emit_evidence
+  - illegal_transitions_must_be_rejected
+  - planning_and_implementation_share_the_same_board
