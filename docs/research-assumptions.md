@@ -51,3 +51,5 @@ Use these categories for future design and implementation artifacts:
 ## Usage Requirement
 
 Future design and implementation documents should label major claims using these categories when the provenance would otherwise be ambiguous.
+
+Deterministic enforcement should be recorded in `artifacts/planner/research/claim-registry.json` rather than inferred from prose alone.

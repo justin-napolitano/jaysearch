@@ -1,0 +1,36 @@
+version: v1
+last_updated: 2026-03-10
+artifact:
+  path: artifacts/planner/research/claim-registry.json
+registry:
+  required_fields:
+    - registry_id
+    - created_at
+    - artifacts
+artifact_entry:
+  required_fields:
+    - artifact_path
+    - artifact_node_id
+    - required
+    - claims
+claim_entry:
+  required_fields:
+    - claim_id
+    - summary
+    - category
+  category_allowed:
+    - source-backed
+    - design-inference
+    - policy-choice
+    - open-assumption
+  optional_fields:
+    - source_ids
+    - bibliography_claim_ids
+    - rationale
+invariants:
+  - required_artifacts_must_exist
+  - source_backed_claims_must_reference_source_nodes
+  - design_inference_claims_must_reference_source_or_claim_nodes
+  - artifact_entries_must_reference_bibliography_artifact_nodes
+notes:
+  - claim registry exists to make citation and inference enforcement deterministic

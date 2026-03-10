@@ -159,6 +159,13 @@ Referee output must include:
 - deterministic machine-readable result
 - concise human summary
 
+Implementation-slice smoke-test rule:
+
+- Every implementation ExecPlan must define at least one dedicated smoke-test command.
+- The smoke-test command should validate the primary path for that slice in one invocation.
+- The smoke-test command must pass before the slice is considered merge-ready.
+- Smoke-test scripts should live under `bin/` when practical.
+
 ## 10. Match Flow and Stop Conditions
 
 Lifecycle flow:
