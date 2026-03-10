@@ -1,0 +1,92 @@
+version: v1
+last_updated: 2026-03-10
+artifacts:
+  root: artifacts/planner/imports/
+  required_files:
+    - reconciliation-report.json
+report:
+  required_fields:
+    - report_id
+    - session_id
+    - graph_id
+    - execplan_id
+    - source_execplan_path
+    - original_projection_hash
+    - edited_execplan_hash
+    - created_at
+    - status
+    - accepted_changes
+    - rejected_changes
+    - unresolved_changes
+    - canonical_updates
+    - authority
+    - operator_notes
+  status_allowed:
+    - accepted
+    - partially_accepted
+    - rejected
+    - unresolved
+change_entry:
+  required_fields:
+    - change_id
+    - target_type
+    - target_ref
+    - classification
+    - impact_type
+    - disposition
+    - decided_by
+    - decision_rationale
+  target_type_allowed:
+    - frontmatter
+    - section
+    - task
+    - validation
+    - dependency
+    - metadata
+  classification_allowed:
+    - add
+    - remove
+    - modify
+    - reorder
+  impact_type_allowed:
+    - intent
+    - scope
+    - validation
+    - dependency
+    - metadata_only
+  disposition_allowed:
+    - accepted
+    - rejected
+    - unresolved
+canonical_update:
+  required_fields:
+    - update_id
+    - target_graph_node
+    - update_type
+    - evidence_ref
+    - recorded_at
+    - authorized_by
+  update_type_allowed:
+    - create_node
+    - update_node
+    - create_edge
+    - update_edge
+    - no_change
+authority:
+  required_fields:
+    - operator
+    - referee
+    - decision_mode
+  decision_mode_allowed:
+    - operator_only
+    - operator_plus_referee
+    - human_override
+invariants:
+  - direct_reverse_sync_forbidden
+  - reconciliation_report_required_for_import
+  - canonical_updates_must_reference_report_and_execplan
+  - unresolved_changes_must_block_silent_state_mutation
+  - accepted_changes_must_have_decision_authority
+notes:
+  - contract import is explicit reconciliation, not markdown authority
+  - local canonical state remains authoritative when import conflicts are unresolved
