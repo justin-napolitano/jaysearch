@@ -16,8 +16,10 @@ Rule source files:
 - `spec/governance.yaml`
 - `spec/distribution.yaml`
 - `spec/adoption.yaml`
+- `spec/bootstrap-profiles.yaml`
 - `spec/engine-runtime.yaml`
 - `spec/platform-architecture.yaml`
+- `spec/rule-layering.yaml`
 - `spec/ruleset.yaml`
 - `spec/exit-codes.yaml`
 - `spec/scoring.yaml`

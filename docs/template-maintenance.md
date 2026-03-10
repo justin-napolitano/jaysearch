@@ -1,23 +1,42 @@
-
 # Template Maintenance
 
-Changes to the platform follow:
+This repository is the canonical template for new Codex-operated projects.
 
-ExecPlan → ADR → Template Update
+Changes to the template follow:
 
-Distribution contracts:
+ExecPlan -> ADR -> Template Update
+
+## Operating Model
+
+- New repositories start from this template as snapshots.
+- Spawned repositories do not receive upstream changes automatically.
+- Template improvements are synced intentionally into existing projects when they are worth adopting.
+- Shared packages should only be introduced for stable, repeated logic that no longer belongs at the repo-template layer.
+
+## Ownership Guidance
+
+Treat these areas as template-first in most repositories:
+
+- `.agent/`
+- `bin/`
+- `spec/`
+- `policy/`
+- core platform docs
+- core platform tooling under `src/platform_tools/`
+
+Treat product code, content, assets, and deployment specifics as project-owned unless a project explicitly chooses to keep them aligned with the template.
+
+## Distribution Contracts
 
 - Version contract source: `pyproject.toml` (`project.version`).
 - Release registry: `.agent/distribution/releases.yaml`.
 - Distribution validation: `bin/distribution-check`.
 
-Deterministic template sync and drift controls:
+## Sync Policy
 
-- Required template paths are declared in `spec/distribution.yaml`.
-- Active release entry must include exact template path set.
-- Drift is detected when required template paths differ from active release registry paths.
+Template improvements should be pulled into existing projects intentionally. Do not assume automatic updates between this repository and spawned repositories.
 
-Manual enterprise-safe update mechanics:
+## Manual Update Mechanics
 
 1. Create a dedicated non-`main` branch.
 2. Update template files and `.agent/distribution/releases.yaml`.

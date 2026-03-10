@@ -1,0 +1,34 @@
+version: v1
+last_updated: 2026-03-05
+default_profile: full
+profiles:
+  full:
+    include:
+      - .agent
+      - bin
+      - docs
+      - examples
+      - policy
+      - prompts
+      - spec
+      - src
+      - Makefile
+      - README.md
+      - TODO.md
+      - main.py
+      - pyproject.toml
+      - platform.engine.yaml
+      - project.rules.yaml
+  governance-core:
+    include:
+      - .agent
+      - bin
+      - docs
+      - policy
+      - spec
+      - src
+      - README.md
+      - TODO.md
+      - pyproject.toml
+      - platform.engine.yaml
+      - project.rules.yaml
