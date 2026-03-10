@@ -59,6 +59,27 @@
       "link": "https://research.ibm.com/publications/advances-in-software-inspections"
     },
     {
+      "id": "src-myers-1978",
+      "type": "source",
+      "label": "Myers 1978",
+      "title": "A Controlled Experiment in Program Testing and Code Walkthroughs/Inspections",
+      "link": "https://research.ibm.com/publications/a-controlled-experiment-in-program-testing-and-code-walkthroughsinspections"
+    },
+    {
+      "id": "src-prov-dm",
+      "type": "source",
+      "label": "PROV-DM",
+      "title": "PROV-DM: The PROV Data Model",
+      "link": "https://dvcs.w3.org/hg/prov/raw-file/default/model/prov-dm.html"
+    },
+    {
+      "id": "src-nobel-summary-2007",
+      "type": "source",
+      "label": "Nobel Summary 2007",
+      "title": "The Sveriges Riksbank Prize in Economic Sciences in Memory of Alfred Nobel 2007",
+      "link": "https://www.nobelprize.org/prizes/economic-sciences/2007/summary/"
+    },
+    {
       "id": "concept-mechanism-design",
       "type": "concept",
       "label": "Mechanism Design",
@@ -140,12 +161,15 @@
   "edges": [
     { "from": "src-maskin-2007", "to": "concept-mechanism-design", "relation": "supports" },
     { "from": "src-myerson-2007", "to": "concept-mechanism-design", "relation": "supports" },
+    { "from": "src-nobel-summary-2007", "to": "concept-mechanism-design", "relation": "supports" },
     { "from": "src-nash-1950", "to": "concept-mechanism-design", "relation": "informs" },
     { "from": "src-simon-1955", "to": "concept-bounded-rationality", "relation": "supports" },
     { "from": "src-prov-overview", "to": "concept-provenance", "relation": "supports" },
+    { "from": "src-prov-dm", "to": "concept-provenance", "relation": "supports" },
     { "from": "src-git-trailers", "to": "concept-provenance", "relation": "implemented_by" },
     { "from": "src-harel-1987", "to": "concept-state-transitions", "relation": "supports" },
     { "from": "src-fagan-1986", "to": "concept-inspection", "relation": "supports" },
+    { "from": "src-myers-1978", "to": "concept-inspection", "relation": "supports" },
     { "from": "concept-mechanism-design", "to": "claim-planning-implementation-game", "relation": "supports" },
     { "from": "concept-bounded-rationality", "to": "claim-planning-implementation-game", "relation": "informs" },
     { "from": "concept-provenance", "to": "claim-canonical-graph", "relation": "supports" },
