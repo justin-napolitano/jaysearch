@@ -1,11 +1,12 @@
-
 # Platform Overview
 
-This repository implements a plan‑driven development platform.
+This repository is a plan-driven development platform template.
+
+Its purpose is to serve as the canonical repository shape for Codex-operated projects so work stays auditable, reviewable, and deterministic across repositories.
 
 Workflow:
 
-ExecPlan → Tasks → TODO → PR → Human Finalization → ADR → Metrics
+ExecPlan -> Tasks -> TODO -> PR -> Human Finalization -> ADR -> Metrics
 
 Agents draft work through ExecPlans. Humans finalize work with signed commits.
 

@@ -1,5 +1,6 @@
-
 # Command Reference
+
+These are repository-local platform commands expected to exist inside projects created from this template.
 
 bin/bootstrap-project
 bin/bootstrap-profile-check
