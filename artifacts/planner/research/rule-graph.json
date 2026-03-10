@@ -1,0 +1,115 @@
+{
+  "graph_id": "planner-rule-graph-20260310",
+  "created_at": "2026-03-10T00:00:00Z",
+  "nodes": [
+    {
+      "id": "rule-smoke-test-required",
+      "type": "rule",
+      "label": "Smoke Test Required",
+      "title": "Every implementation slice must define and pass a smoke-test command."
+    },
+    {
+      "id": "rule-clean-merge-state",
+      "type": "rule",
+      "label": "Clean Merge State",
+      "title": "Generated smoke artifacts must be removed, committed intentionally, or stashed before merge."
+    },
+    {
+      "id": "rule-human-sized-commits",
+      "type": "rule",
+      "label": "Human-Sized Commits",
+      "title": "Implementation commits must remain human-sized and mapped to one reviewable task."
+    },
+    {
+      "id": "rule-execplan-validation",
+      "type": "rule",
+      "label": "ExecPlan Validation",
+      "title": "ExecPlans must validate before merge readiness is claimed."
+    },
+    {
+      "id": "rule-human-finalization",
+      "type": "rule",
+      "label": "Human Finalization",
+      "title": "Human authority is required for finalization and overrides."
+    },
+    {
+      "id": "artifact-agent-game-rules",
+      "type": "artifact",
+      "label": "Agent Game Rules",
+      "title": "docs/agent-game-rules-v1.md"
+    },
+    {
+      "id": "artifact-governance-doc",
+      "type": "artifact",
+      "label": "Governance Doc",
+      "title": "docs/governance.md"
+    },
+    {
+      "id": "artifact-governance-spec",
+      "type": "artifact",
+      "label": "Governance Spec",
+      "title": "spec/governance.yaml"
+    },
+    {
+      "id": "artifact-ruleset-spec",
+      "type": "artifact",
+      "label": "Ruleset Spec",
+      "title": "spec/ruleset.yaml"
+    },
+    {
+      "id": "artifact-workflow-spec",
+      "type": "artifact",
+      "label": "Workflow Spec",
+      "title": "spec/workflow.yaml"
+    },
+    {
+      "id": "validator-execplan-validate",
+      "type": "validator",
+      "label": "ExecPlan Validate",
+      "title": "bin/execplan-validate"
+    },
+    {
+      "id": "validator-run-local-ci",
+      "type": "validator",
+      "label": "Run Local CI",
+      "title": "bin/run-local-ci"
+    },
+    {
+      "id": "validator-smoke-test",
+      "type": "validator",
+      "label": "Smoke Test",
+      "title": "Implementation slice smoke-test command"
+    },
+    {
+      "id": "phase-merge-readiness",
+      "type": "phase",
+      "label": "Merge Readiness",
+      "title": "Pre-merge readiness state"
+    },
+    {
+      "id": "authority-human",
+      "type": "authority",
+      "label": "Human Authority",
+      "title": "Human maintainer authority"
+    }
+  ],
+  "edges": [
+    { "from": "rule-smoke-test-required", "to": "phase-merge-readiness", "relation": "applies_to" },
+    { "from": "rule-smoke-test-required", "to": "validator-smoke-test", "relation": "enforced_by" },
+    { "from": "rule-smoke-test-required", "to": "artifact-agent-game-rules", "relation": "satisfied_by" },
+    { "from": "rule-smoke-test-required", "to": "artifact-governance-doc", "relation": "satisfied_by" },
+    { "from": "rule-clean-merge-state", "to": "phase-merge-readiness", "relation": "applies_to" },
+    { "from": "rule-clean-merge-state", "to": "artifact-agent-game-rules", "relation": "satisfied_by" },
+    { "from": "rule-clean-merge-state", "to": "artifact-governance-doc", "relation": "satisfied_by" },
+    { "from": "rule-human-sized-commits", "to": "phase-merge-readiness", "relation": "applies_to" },
+    { "from": "rule-human-sized-commits", "to": "artifact-agent-game-rules", "relation": "satisfied_by" },
+    { "from": "rule-human-sized-commits", "to": "artifact-governance-doc", "relation": "satisfied_by" },
+    { "from": "rule-execplan-validation", "to": "phase-merge-readiness", "relation": "applies_to" },
+    { "from": "rule-execplan-validation", "to": "validator-execplan-validate", "relation": "enforced_by" },
+    { "from": "rule-execplan-validation", "to": "artifact-governance-spec", "relation": "satisfied_by" },
+    { "from": "rule-human-finalization", "to": "authority-human", "relation": "requires" },
+    { "from": "rule-human-finalization", "to": "artifact-ruleset-spec", "relation": "satisfied_by" },
+    { "from": "rule-human-finalization", "to": "artifact-workflow-spec", "relation": "satisfied_by" },
+    { "from": "phase-merge-readiness", "to": "validator-run-local-ci", "relation": "depends_on" }
+  ]
+}

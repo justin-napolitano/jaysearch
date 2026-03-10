@@ -1,0 +1,43 @@
+version: v1
+last_updated: 2026-03-10
+artifact:
+  path: artifacts/planner/research/rule-graph.json
+graph:
+  required_fields:
+    - graph_id
+    - created_at
+    - nodes
+    - edges
+node:
+  required_fields:
+    - id
+    - type
+    - label
+    - title
+  type_allowed:
+    - rule
+    - artifact
+    - validator
+    - phase
+    - authority
+    - exception
+edge:
+  required_fields:
+    - from
+    - to
+    - relation
+  relation_allowed:
+    - applies_to
+    - enforced_by
+    - requires
+    - blocks
+    - overrides
+    - depends_on
+    - satisfied_by
+    - exception_for
+invariants:
+  - required_rules_must_reference_artifacts_or_phases
+  - merge_rules_must_reference_validators_or_authorities
+  - validators_must_reference_existing_commands
+notes:
+  - rule graph exists to make governance relationships machine-readable
