@@ -1,0 +1,14 @@
+game_id: implementation-merge-readiness-game
+type: merge_readiness
+title: Implementation Merge-Readiness Game
+parent_game: implementation-game
+objective: prove branch readiness for merge review
+board: branch-proof-state
+players:
+  - codex_orchestrator
+  - human_operator
+referees:
+  - bin/run-local-ci
+  - bin/merge-readiness-check
+win_condition: branch is machine-checkably ready for review
+loss_condition: readiness depends on informal memory or missing evidence

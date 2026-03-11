@@ -1,0 +1,14 @@
+game_id: planning-merge-readiness-game
+type: merge_readiness
+title: Planning Merge-Readiness Game
+parent_game: planning-game
+objective: prove planning outputs are ready for contract or downstream execution
+board: planning-proof-state
+players:
+  - codex_orchestrator
+  - human_operator
+referees:
+  - bin/execplan-validate
+  - bin/citation-check
+win_condition: planning outputs are explicit and evidence-backed
+loss_condition: planning still depends on hidden assumptions

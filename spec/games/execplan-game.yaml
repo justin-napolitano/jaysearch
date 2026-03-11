@@ -1,0 +1,13 @@
+game_id: execplan-game
+type: execplan
+title: ExecPlan Game
+parent_game: platform-game
+objective: convert intent into governed contract state
+board: execplan-artifacts
+players:
+  - human_authority
+  - codex_orchestrator
+referees:
+  - bin/execplan-validate
+win_condition: plan is specific enough to govern work
+loss_condition: plan still relies on hidden assumptions
