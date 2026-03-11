@@ -17,6 +17,7 @@ REQUIRED_RULES = {
     "rule-execplan-validation",
     "rule-human-finalization",
 }
+COMMAND = "rule-graph-check"
 
 
 def _load_json(path: Path) -> Any:
@@ -28,15 +29,59 @@ def _load_yaml(path: Path) -> dict[str, Any]:
     return loaded if isinstance(loaded, dict) else {}
 
 
+def _report(
+    *,
+    ok: bool,
+    graph_id: str | None,
+    graph_path: str,
+    node_count: int,
+    edge_count: int,
+    blockers: list[str],
+    evidence_refs: list[str] | None = None,
+) -> dict[str, Any]:
+    ordered_blockers = sorted(blockers)
+    return {
+        "command": COMMAND,
+        "graph_id": graph_id,
+        "status": "ok" if ok else "blocked",
+        "blockers": ordered_blockers,
+        "next_validations": [],
+        "ok": ok,
+        "graph_path": graph_path,
+        "node_count": node_count,
+        "edge_count": edge_count,
+        "error_count": len(ordered_blockers),
+        "errors": ordered_blockers,
+        "evidence_refs": sorted(evidence_refs or []),
+    }
+
+
 def check_rule_graph(root: str = ".") -> tuple[int, dict[str, Any]]:
     base = Path(root)
     graph_path = base / "artifacts" / "planner" / "research" / "rule-graph.json"
     schema_path = base / "spec" / "rule-graph.schema.yaml"
     errors: list[str] = []
+    evidence_refs = [path.as_posix() for path in (graph_path, schema_path) if path.exists()]
     if not graph_path.exists():
-        return 1, {"tool": "rule_graph_check", "ok": False, "errors": ["missing_rule_graph"]}
+        return 1, _report(
+            ok=False,
+            graph_id=None,
+            graph_path=graph_path.as_posix(),
+            node_count=0,
+            edge_count=0,
+            blockers=["missing_rule_graph"],
+            evidence_refs=evidence_refs,
+        )
     if not schema_path.exists():
-        return 1, {"tool": "rule_graph_check", "ok": False, "errors": ["missing_rule_graph_schema"]}
+        return 1, _report(
+            ok=False,
+            graph_id=None,
+            graph_path=graph_path.as_posix(),
+            node_count=0,
+            edge_count=0,
+            blockers=["missing_rule_graph_schema"],
+            evidence_refs=evidence_refs,
+        )
 
     graph = _load_json(graph_path)
     schema = _load_yaml(schema_path)
@@ -115,15 +160,15 @@ def check_rule_graph(root: str = ".") -> tuple[int, dict[str, Any]]:
     if not merge_rule_edges:
         errors.append("merge_rules_missing_validator_links")
 
-    report = {
-        "tool": "rule_graph_check",
-        "ok": not errors,
-        "graph_path": graph_path.as_posix(),
-        "node_count": len(nodes),
-        "edge_count": len(edges),
-        "error_count": len(errors),
-        "errors": errors,
-    }
+    report = _report(
+        ok=not errors,
+        graph_id=str(graph.get("graph_id")) if graph.get("graph_id") is not None else None,
+        graph_path=graph_path.as_posix(),
+        node_count=len(nodes),
+        edge_count=len(edges),
+        blockers=errors,
+        evidence_refs=evidence_refs,
+    )
     return (1 if errors else 0), report
 
 
@@ -131,7 +176,19 @@ def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--root", default=".")
     args = parser.parse_args()
-    code, report = check_rule_graph(args.root)
+    try:
+        code, report = check_rule_graph(args.root)
+    except (FileNotFoundError, PermissionError, ValueError, yaml.YAMLError, json.JSONDecodeError) as exc:
+        code = 1
+        report = _report(
+            ok=False,
+            graph_id=None,
+            graph_path=(Path(args.root) / "artifacts" / "planner" / "research" / "rule-graph.json").as_posix(),
+            node_count=0,
+            edge_count=0,
+            blockers=[f"{exc.__class__.__name__}:{exc}"],
+            evidence_refs=[],
+        )
     print(json.dumps(report, indent=2, sort_keys=True))
     return code
 
