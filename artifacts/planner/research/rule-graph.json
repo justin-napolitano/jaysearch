@@ -27,6 +27,12 @@
       "title": "Codex-authored slices should be committed in procedural order from ExecPlan through governance updates."
     },
     {
+      "id": "rule-latest-main-branching",
+      "type": "rule",
+      "label": "Latest Main Branching",
+      "title": "New work branches must be created from the latest main unless a human explicitly states otherwise."
+    },
+    {
       "id": "rule-execplan-validation",
       "type": "rule",
       "label": "ExecPlan Validation",
@@ -114,6 +120,9 @@
     { "from": "rule-procedural-commit-order", "to": "artifact-agent-game-rules", "relation": "satisfied_by" },
     { "from": "rule-procedural-commit-order", "to": "artifact-governance-doc", "relation": "satisfied_by" },
     { "from": "rule-procedural-commit-order", "to": "rule-human-sized-commits", "relation": "depends_on" },
+    { "from": "rule-latest-main-branching", "to": "phase-merge-readiness", "relation": "applies_to" },
+    { "from": "rule-latest-main-branching", "to": "artifact-agent-game-rules", "relation": "satisfied_by" },
+    { "from": "rule-latest-main-branching", "to": "artifact-governance-doc", "relation": "satisfied_by" },
     { "from": "rule-execplan-validation", "to": "phase-merge-readiness", "relation": "applies_to" },
     { "from": "rule-execplan-validation", "to": "validator-execplan-validate", "relation": "enforced_by" },
     { "from": "rule-execplan-validation", "to": "artifact-governance-spec", "relation": "satisfied_by" },
