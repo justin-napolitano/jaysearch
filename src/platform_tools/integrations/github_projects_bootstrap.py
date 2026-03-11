@@ -36,8 +36,17 @@ def _bootstrap_contract_blockers(mapping: dict[str, Any]) -> list[str]:
     return blockers
 
 
+def _provider_managed_fields(mapping: dict[str, Any]) -> set[str]:
+    bootstrap = mapping.get("bootstrap", {}) if isinstance(mapping.get("bootstrap"), dict) else {}
+    fields = bootstrap.get("provider_managed_fields", [])
+    if not isinstance(fields, list):
+        return set()
+    return {str(item).strip() for item in fields if str(item).strip()}
+
+
 def _build_field_blueprints(mapping: dict[str, Any]) -> list[dict[str, Any]]:
     field_types = mapping.get("field_map", {}) if isinstance(mapping.get("field_map"), dict) else {}
+    provider_managed = _provider_managed_fields(mapping)
     fields: list[dict[str, Any]] = []
     for field_name, field_type_value in field_types.items():
         field_type = str(field_type_value).strip()
@@ -46,6 +55,7 @@ def _build_field_blueprints(mapping: dict[str, Any]) -> list[dict[str, Any]]:
         field_entry = {
             "field_name": str(field_name).strip(),
             "data_type": field_type,
+            "provider_managed": str(field_name).strip() in provider_managed,
         }
         if field_type == "single_select":
             field_entry["options"] = _single_select_options(mapping, field_entry["field_name"])
@@ -65,6 +75,8 @@ def _field_map_preview(fields: list[dict[str, Any]], output_path: str) -> dict[s
             "field_id": f"pending:{field['field_name']}",
             "data_type": field["data_type"],
         }
+        if field.get("provider_managed", False):
+            field_entry["provider_managed"] = True
         if field["data_type"] == "single_select":
             field_entry["options"] = {name: f"pending:{field['field_name']}:{name}" for name in field.get("options", [])}
         preview_fields[field["field_name"]] = field_entry
@@ -165,6 +177,8 @@ def _build_field_map_from_listing(
             "field_id": str(listed.get("id", "")).strip(),
             "data_type": data_type,
         }
+        if field_name in _provider_managed_fields(mapping):
+            field_entry["provider_managed"] = True
         if data_type == "single_select":
             options = listed.get("options", [])
             option_map = {}
@@ -246,6 +260,15 @@ def execute_bootstrap(
         }
     ]
     for field in plan["field_creates"]:
+        if field.get("provider_managed", False):
+            execution_results.append(
+                {
+                    "action": "discover_field",
+                    "field_name": field["field_name"],
+                    "provider_managed": True,
+                }
+            )
+            continue
         graphql_type = _graphql_field_type(str(field["data_type"]).strip())
         if not graphql_type:
             plan["status"] = "blocked"
