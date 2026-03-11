@@ -186,6 +186,20 @@ Latest-main branching rule:
 - Agents should prefer `origin/main` as the source of truth when local `main` is stale.
 - Starting a new slice from a stale base is a governance failure unless the deviation is deliberate and documented.
 
+Implementation-branch split rule:
+
+- `draft-execplan/*` branches are for drafting and review of ExecPlan artifacts.
+- `impl-execplan/*` branches are the canonical execution branches for individual implementation slices.
+- Each parallel implementation ExecPlan must run on its own `impl-execplan/*` branch.
+- `queue-execplan/*` branches are optional integration-only branches and do not replace slice-local implementation branches.
+- Running multiple active implementation slices only on a shared queue branch is a governance failure unless a human documents an explicit exception.
+
+Governed finalization authority rule:
+
+- Signed merge commits on `main` are the canonical finalization event for governed ExecPlans.
+- Intermediate draft or implementation commits may provide evidence, but they do not replace signed merge authority.
+- Deterministic finalization automation should derive `finalized_by`, `finalized_at`, and `finalized_in_pr` from the signed merge event where feasible.
+
 ## 10. Match Flow and Stop Conditions
 
 Lifecycle flow:

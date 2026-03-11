@@ -49,27 +49,31 @@ This change should tighten governance around parallel work without forbidding de
 
 ## Progress
 
-- [ ] Draft governing rule changes
-- [ ] Update canonical branch-pattern specs
-- [ ] Update governance and agent docs
-- [ ] Validate the governing ExecPlan
+- [x] Draft governing rule changes
+- [x] Update canonical branch-pattern specs
+- [x] Update governance and agent docs
+- [x] Validate the governing ExecPlan
 
 ## Surprises & Discoveries
 
 - the current governance docs distinguish protected vs non-protected branches, but they do not yet distinguish draft-plan branches from implementation branches
 - queue branches are useful for stacked integration, but they should not be treated as the canonical execution branch for an individual ExecPlan slice
 - human finalization remains too manual; the better follow-on is a deterministic `finalize-execplan` flow that derives metadata from repo history and keeps the human at the signing boundary
+- signed merge commits on `main` are a better finalization authority signal than intermediate implementation commits because they capture the human acceptance event directly
 
 ## Decision Log
 
 - 2026-03-11 / agent-codex-01 / A governing ExecPlan is required before changing governance-controlled branch policy files.
 - 2026-03-11 / agent-codex-01 / The governance switch should also record a follow-on design target for one-command human finalization driven by commit history and signer identity.
+- 2026-03-11 / agent-codex-01 / Governed ExecPlan finalization should standardize on signed merge commits rather than intermediate commits as the canonical authority event.
 
 ## Outcomes & Retrospective
 
 On completion, the repository should explicitly require one implementation branch per active ExecPlan workflow while allowing optional queue branches for deliberate stacking.
 
 This slice should also leave a clear follow-on governance/runtime direction: automate ExecPlan finalization preparation, derive finalization metadata from commit history where possible, and preserve human authority through a single signed finalization command.
+
+The implemented policy now treats signed merge commits on `main` as the preferred authority boundary for governed ExecPlan finalization.
 
 ## Context and Orientation
 

@@ -29,6 +29,8 @@ Every agent run must be traceable through:
 
 - Branch name:
   - `draft-execplan/<plan-id>-<agent>-YYYYMMDD`
+  - `impl-execplan/<plan-id>-<agent>-YYYYMMDD`
+  - `queue-execplan/<queue-name>-<agent>-YYYYMMDD`
 - ExecPlan frontmatter:
   - `owner: "agent/<name>"`
   - `draft_by: "agent/<name>"`
@@ -39,3 +41,14 @@ Every agent run must be traceable through:
   - Commit trailer includes `Agent: agent/<name>`
 
 These conventions ensure persona-level actions are auditable across plans, branches, commits, and artifacts.
+
+## Branch Roles
+
+- `draft-execplan/*` is for plan drafting and review.
+- `impl-execplan/*` is for one implementation ExecPlan slice.
+- Parallel implementation slices should not share one implementation branch.
+- `queue-execplan/*` is optional and should be treated as an integration branch, not as the sole execution branch for multiple slices.
+
+## Finalization Direction
+
+Governed ExecPlans should treat the signed merge commit on `main` as the canonical finalization event. A future `finalize-execplan` flow should derive finalization metadata from that merge event while preserving human signing authority.
