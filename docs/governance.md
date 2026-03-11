@@ -51,6 +51,20 @@ Latest-main branching rule:
 - In practice this means Codex should refresh from `origin/main` before cutting a new branch rather than branching from a stale local base.
 - If a branch is intentionally cut from some other base, that exception should be stated in the user request or the active ExecPlan.
 
+Implementation-branch split rule:
+
+- `draft-execplan/*` branches exist to draft and review ExecPlan artifacts.
+- `impl-execplan/*` branches are the canonical execution branches for individual implementation ExecPlans.
+- Parallel implementation ExecPlans must not share one implementation branch.
+- `queue-execplan/*` branches are optional integration branches for deliberate stacking after slice-local implementation exists.
+- A queue branch must not be the only execution branch for multiple active implementation slices.
+
+Governed finalization authority rule:
+
+- Governed ExecPlan finalization should be keyed to the signed merge commit on `main`, not to an intermediate draft or implementation commit.
+- The signed merge commit is the canonical authority event for `finalized_by`, `finalized_at`, and merge-backed `finalized_in_pr` metadata.
+- Future automation should derive finalization metadata from the signed merge event wherever possible.
+
 Exception lifecycle contract:
 
 - Exception registry file: `.agent/governance/exceptions.yaml`.

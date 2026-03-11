@@ -1,5 +1,5 @@
 version: v1
-last_updated: 2026-03-05
+last_updated: 2026-03-11
 lifecycle:
   - draft
   - proposed
@@ -17,13 +17,30 @@ execution_requirements:
     - main
     - master
   execution_branch_must_be_non_main: true
+  parallel_execplans_require_distinct_implementation_branches: true
+  queue_branches_are_integration_only: true
   workflow_branch_patterns:
-    execplan: "draft-execplan/*"
+    draft_execplan: "draft-execplan/*"
+    implementation_execplan: "impl-execplan/*"
+    queue_execplan: "queue-execplan/*"
     hostile_review: "draft-execplan/hostile-review-*"
     docs: "docs/*"
     feature: "feature/*"
     hotfix: "hotfix/*"
     release: "release/*"
+  execution_branch_roles:
+    draft_execplan:
+      purpose: "draft and review the ExecPlan artifact"
+      not_canonical_for_slice_execution: true
+    implementation_execplan:
+      purpose: "execute one approved implementation ExecPlan slice"
+      required_for_parallel_slice_execution: true
+    queue_execplan:
+      purpose: "stack already-executed slices for deliberate integration"
+      not_canonical_for_individual_slice_execution: true
+  finalization_requirements:
+    governed_execplans_require_signed_merge_commit_on_main: true
+    governed_execplans_merge_commit_is_canonical_finalization_event: true
 platform_execution_order:
   - 20260304-platform-validator-jay-execplan
   - 20260304-todo-automation-jay-execplan

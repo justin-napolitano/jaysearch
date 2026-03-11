@@ -127,6 +127,20 @@ changes
 
 Agents must populate `changes` with explicit paths.
 
+Implementation Workflow
+
+Approved implementation work should execute on branches matching:
+
+impl-execplan/`<plan-id>`{=html}-`<agent>`{=html}-YYYYMMDD
+
+Parallel implementation ExecPlans must not share one implementation branch.
+
+Optional queue branches may be used for deliberate integration stacking:
+
+queue-execplan/`<queue-name>`{=html}-`<agent>`{=html}-YYYYMMDD
+
+Queue branches do not replace the requirement for one implementation branch per active implementation ExecPlan.
+
 ------------------------------------------------------------------------
 
 # Human Finalization Rules
@@ -148,6 +162,8 @@ Metadata: ExecPlan: `<id>`{=html}
 Signed-off-by: `<github-user>`{=html}
 
 Signature verification must succeed.
+
+Governed ExecPlan finalization should treat the signed merge commit on `main` as the canonical authority event. Future automation may prepare finalization metadata, but human authority remains at the signed merge boundary.
 
 ------------------------------------------------------------------------
 
@@ -290,4 +306,3 @@ changes.
 
 Initial policy created to establish governance for plan-driven agent
 execution and SSH-signed human authority.
-
