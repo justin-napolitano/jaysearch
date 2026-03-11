@@ -1,0 +1,60 @@
+version: 1
+title: "Remaining Work Graph Schema"
+type: object
+required:
+  - graph_id
+  - created_at
+  - nodes
+  - edges
+properties:
+  graph_id:
+    type: string
+  created_at:
+    type: string
+  nodes:
+    type: array
+    items:
+      type: object
+      required:
+        - node_id
+        - title
+        - status
+        - gating_class
+        - conflict_domains
+        - target_execplan_id
+      properties:
+        node_id:
+          type: string
+        title:
+          type: string
+        status:
+          enum: ["ready", "blocked", "review_gated", "decision_gated"]
+        gating_class:
+          enum: ["auto_runnable", "review_gated", "decision_gated"]
+        conflict_domains:
+          type: array
+          items:
+            type: string
+        target_execplan_id:
+          type: string
+        goal_area:
+          type: string
+        expected_artifacts:
+          type: array
+          items:
+            type: string
+  edges:
+    type: array
+    items:
+      type: object
+      required:
+        - from
+        - to
+        - relation
+      properties:
+        from:
+          type: string
+        to:
+          type: string
+        relation:
+          enum: ["depends_on", "conflicts_with", "informed_by", "gated_by"]
