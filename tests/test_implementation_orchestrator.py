@@ -90,7 +90,7 @@ def _seed_remaining_work(root: Path, branch: str) -> None:
                 {
                     "node_id": "rwg-004",
                     "title": "Implementation orchestrator runtime",
-                    "status": "blocked",
+                    "status": "ready",
                     "gating_class": "auto_runnable",
                     "conflict_domains": ["planner-cli", "orchestrator-status", "merge-readiness"],
                     "target_execplan_id": "20260311-implementation-orchestrator-runtime-codex-01-execplan",
@@ -207,6 +207,24 @@ def _stub_governed_checks(monkeypatch, execplan_path: Path, branch: str) -> None
         ),
     )
     monkeypatch.setattr(
+        "platform_tools.implementation_orchestrator.check_remaining_work_graph",
+        lambda **kwargs: (
+            0,
+            {
+                "ok": True,
+                "errors": [],
+                "active_node": {
+                    "node_id": "rwg-004",
+                    "title": "Implementation orchestrator runtime",
+                    "status": "ready",
+                    "target_execplan_id": "20260311-implementation-orchestrator-runtime-codex-01-execplan",
+                    "implementation_branch": branch,
+                    "eligible_now": True,
+                },
+            },
+        ),
+    )
+    monkeypatch.setattr(
         "platform_tools.implementation_orchestrator.get_orchestrator_status",
         lambda **kwargs: (
             0,
@@ -301,6 +319,24 @@ def test_implementation_orchestrator_blocks_when_game_is_not_implementation(monk
     monkeypatch.setattr(
         "platform_tools.implementation_orchestrator.check_merge_readiness",
         lambda **kwargs: (0, {"readiness": True, "failing_checks": []}),
+    )
+    monkeypatch.setattr(
+        "platform_tools.implementation_orchestrator.check_remaining_work_graph",
+        lambda **kwargs: (
+            0,
+            {
+                "ok": True,
+                "errors": [],
+                "active_node": {
+                    "node_id": "rwg-004",
+                    "title": "Implementation orchestrator runtime",
+                    "status": "ready",
+                    "target_execplan_id": "20260311-implementation-orchestrator-runtime-codex-01-execplan",
+                    "implementation_branch": branch,
+                    "eligible_now": True,
+                },
+            },
+        ),
     )
     monkeypatch.setattr(
         "platform_tools.implementation_orchestrator.get_orchestrator_status",
