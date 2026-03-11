@@ -63,6 +63,7 @@ This slice should turn the existing projection scaffold into a deterministic run
 - PR and merge-finalization state should be projected from canonical branch/merge evidence rather than inferred from mutable board edits
 - locally supplied item ids and field ids are the cleanest first runtime boundary; the command can update mapped items and create draft items without relying on live schema discovery
 - dry-run mode is enough to prove deterministic outbound intent in tests and smoke coverage while keeping network side effects out of the validation path
+- GitHub's built-in `Status` field uses provider-owned option names, so canonical values like `ready` and `completed` must be translated before sync
 
 ## Decision Log
 
@@ -75,6 +76,13 @@ This slice should turn the existing projection scaffold into a deterministic run
 ## Outcomes & Retrospective
 
 This slice now provides the first live external projection runtime for the game: canonical local state in, deterministic GitHub Projects updates out, no authority drift back in.
+
+Implemented:
+
+- deterministic `bin/github-projects-sync` planning and execute mode
+- canonical-to-provider `Status` translation using the provider schema and bootstrap field-map artifact
+- draft-item creation plus field updates with item ids persisted back into `item_ids_by_node_id`
+- focused tests and a smoke path proving the outbound payload contract
 
 ## Context and Orientation
 
