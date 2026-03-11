@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+EXECPLAN_PATH=".agent/execplans/20260311-provider-sync-scaffold-codex-01-execplan.md"
+
+echo "[1/2] github projects projection contract"
+PROJECTION_JSON="$(PYTHONPATH="$(pwd)/src${PYTHONPATH:+:$PYTHONPATH}" python3 -m platform_tools.integrations.provider_adapter --provider github_projects --execplan "$EXECPLAN_PATH")"
+echo "$PROJECTION_JSON"
+printf '%s\n' "$PROJECTION_JSON" | python3 -c 'import json,sys; data=json.load(sys.stdin); assert data["command"]=="provider-projection"; assert data["provider"]=="github_projects"; assert data["authority_mode"]=="projection_only"; assert data["board_model"]["board_scope"]=="remaining_work_graph"; assert any(item["fields"]["target_execplan_id"]=="20260311-provider-sync-scaffold-codex-01-execplan" for item in data["items"])'
+
+echo "[2/2] focused pytest"
+uv run pytest tests/test_provider_adapter_contract.py
+
+echo "provider sync smoke test completed"

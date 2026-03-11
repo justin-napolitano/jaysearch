@@ -1,0 +1,38 @@
+version: v1
+last_updated: 2026-03-11
+provider_adapter:
+  required_fields:
+    - provider
+    - projection_kind
+    - authority_mode
+    - identity_field
+    - supported_entities
+    - exported_fields
+    - conflict_policy
+    - human_portable
+    - agent_portable
+  authority_mode_allowed:
+    - projection_only
+  projection_kind_allowed:
+    - remaining_work_board
+  supported_entities_allowed:
+    - remaining_work_node
+  required_exported_fields:
+    - node_id
+    - title
+    - target_execplan_id
+    - status
+    - gating_class
+    - implementation_branch
+  conflict_policy:
+    required_fields:
+      - unresolved_conflict_resolution
+      - remote_authority
+    unresolved_conflict_resolution_allowed:
+      - local_wins
+invariants:
+  - local_graph_is_canonical
+  - provider_projection_is_downstream_only
+  - provider_identity_must_be_stable
+  - projected_items_must_be_human_and_agent_portable
+  - provider_mappings_must_not_replace_canonical_status
