@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+EXECPLAN_PATH=".agent/execplans/20260311-game-graph-validator-and-status-codex-01-execplan.md"
+
+echo "[1/3] validate game graph"
+GRAPH_JSON="$(bin/game-graph-check)"
+echo "$GRAPH_JSON"
+printf '%s\n' "$GRAPH_JSON" | python3 -c 'import json,sys; data=json.load(sys.stdin); assert data["ok"] is True; assert data["tool"]=="game_graph_check"'
+
+echo "[2/3] report active game status"
+STATUS_JSON="$(bin/game-status --execplan "$EXECPLAN_PATH")"
+echo "$STATUS_JSON"
+printf '%s\n' "$STATUS_JSON" | python3 -c 'import json,sys; data=json.load(sys.stdin); assert data["ok"] is True; assert data["active_game"]["id"]=="game-implementation"; assert data["active_execplan"]["path"].endswith("20260311-game-graph-validator-and-status-codex-01-execplan.md")'
+
+echo "[3/3] run focused pytest"
+uv run pytest tests/test_game_graph_check.py tests/test_game_status.py
+
+echo "game graph smoke test completed"
