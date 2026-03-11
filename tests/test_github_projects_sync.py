@@ -148,6 +148,11 @@ def _seed_specs(root: Path) -> None:
                 "      review_gated: In Progress",
                 "      decision_gated: In Progress",
                 "      completed: Done",
+                "  field_value_map:",
+                "    goal_area:",
+                "      orchestrator-status: orchestrator-runtime",
+                "      implementation-orchestrator: orchestrator-runtime",
+                "      game-graph: runtime-governance",
             ]
         )
         + "\n",
@@ -329,3 +334,33 @@ def test_execute_sync_updates_field_map_with_created_item_ids(tmp_path: Path, mo
     updated_field_map = json.loads(field_map_path.read_text(encoding="utf-8"))
     assert updated_field_map["item_ids_by_node_id"]["rwg-005"] == "ITEM_Provider_sync_runtime"
     assert updated_field_map["item_ids_by_node_id"]["rwg-004"] == "ITEM_Bootstrap_runtime"
+
+
+def test_build_sync_plan_maps_goal_area_to_existing_provider_options(tmp_path: Path) -> None:
+    _seed_specs(tmp_path)
+    _seed_remaining_work(tmp_path)
+    execplan = _seed_execplan(tmp_path)
+    field_map_path = _seed_field_map(tmp_path)
+
+    data = json.loads((tmp_path / "artifacts" / "planner" / "research" / "remaining-work-graph.json").read_text(encoding="utf-8"))
+    data["nodes"][0]["goal_area"] = "implementation-orchestrator"
+    (tmp_path / "artifacts" / "planner" / "research" / "remaining-work-graph.json").write_text(
+        json.dumps(data, indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
+    field_map = json.loads(field_map_path.read_text(encoding="utf-8"))
+    field_map["fields"]["goal_area"]["options"]["orchestrator-runtime"] = "OPT_ORCH"
+    field_map_path.write_text(json.dumps(field_map, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+
+    code, report = sync.build_github_projects_sync_plan(
+        root=tmp_path.as_posix(),
+        field_map_path=field_map_path.as_posix(),
+        branch="impl-execplan/provider-sync",
+        execplan_path=execplan.as_posix(),
+    )
+
+    assert code == 0
+    operation = next(item for item in report["operations"] if item["node_id"] == "rwg-005")
+    goal_area = next(item for item in operation["field_updates"] if item["field_name"] == "goal_area")
+    assert goal_area["provider_value"] == "orchestrator-runtime"
+    assert goal_area["option_id"] == "OPT_ORCH"

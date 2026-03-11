@@ -26,6 +26,14 @@ def _provider_status_name(*, mapping: dict[str, Any], canonical_value: str) -> s
     return mapped or canonical_value
 
 
+def _mapped_field_value(*, mapping: dict[str, Any], field_name: str, canonical_value: str) -> str:
+    sync = mapping.get("sync", {}) if isinstance(mapping.get("sync"), dict) else {}
+    field_value_map = sync.get("field_value_map", {}) if isinstance(sync.get("field_value_map"), dict) else {}
+    per_field = field_value_map.get(field_name, {}) if isinstance(field_value_map.get(field_name), dict) else {}
+    mapped = str(per_field.get(canonical_value, "")).strip()
+    return mapped or canonical_value
+
+
 def _field_entry(field_map: dict[str, Any], field_name: str) -> dict[str, Any]:
     fields = field_map.get("fields", {}) if isinstance(field_map.get("fields"), dict) else {}
     entry = fields.get(field_name, {})
@@ -41,7 +49,7 @@ def _resolve_single_select_value(
 ) -> tuple[str, str]:
     entry = _field_entry(field_map, field_name)
     options = entry.get("options", {}) if isinstance(entry.get("options"), dict) else {}
-    provider_value = canonical_value
+    provider_value = _mapped_field_value(mapping=mapping, field_name=field_name, canonical_value=canonical_value)
     if field_name == "status" and entry.get("provider_managed", False):
         provider_value = _provider_status_name(mapping=mapping, canonical_value=canonical_value)
     option_id = str(options.get(provider_value, "")).strip()
