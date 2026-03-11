@@ -96,6 +96,14 @@ def _save_graph(*, root: str = ".", graph: dict[str, Any]) -> None:
     _write_json(path, graph)
 
 
+def load_graph(*, root: str = ".", graph_id: str) -> dict[str, Any]:
+    return _load_graph(root=root, graph_id=graph_id)
+
+
+def save_graph(*, root: str = ".", graph: dict[str, Any]) -> None:
+    _save_graph(root=root, graph=graph)
+
+
 def _normalize_item(node_type: str, item: Any, index: int, session_id: str) -> dict[str, Any]:
     if isinstance(item, str):
         item = {"title": item}
