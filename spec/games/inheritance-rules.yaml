@@ -1,0 +1,20 @@
+version: v1
+last_updated: 2026-03-11
+inheritance:
+  inherited_by_default:
+    - authority_boundaries
+    - evidence_requirements
+    - referee_identities
+    - canonical_board_identity
+    - source_of_truth_boundaries
+  locally_overridable:
+    - legal_move_subsets
+    - scoring_emphasis
+    - local_win_conditions
+    - local_loss_conditions
+    - handoff_criteria
+  forbidden_overrides:
+    - human_only_finalization_authority
+    - canonical_source_of_truth_ownership
+    - validator_authority_to_reject_illegal_moves
+    - no_hidden_state_requirement

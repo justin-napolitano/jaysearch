@@ -1,0 +1,22 @@
+version: v1
+last_updated: 2026-03-11
+game_spec:
+  required_fields:
+    - game_id
+    - title
+    - parent_game
+    - objective
+    - board
+    - players
+    - referees
+    - win_condition
+    - loss_condition
+  allowed_types:
+    - platform
+    - execplan
+    - planning
+    - implementation
+    - merge_readiness
+notes:
+  - spec/games.schema.yaml is the shared contract for all per-game specs
+  - spec/games/*.yaml are constrained game instances, not independent schemas

@@ -1,0 +1,15 @@
+game_id: implementation-game
+type: implementation
+title: Implementation Game
+parent_game: execplan-game
+objective: execute scoped work with evidence and review
+board: canonical-graph-plus-implementation-state
+players:
+  - human_operator
+  - implementation_orchestrator
+  - hostile_reviewer
+referees:
+  - bin/run-local-ci
+  - bin/execplan-validate
+win_condition: scoped work is validated and reviewed
+loss_condition: unvalidated or out-of-scope work is treated as complete
