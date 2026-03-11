@@ -111,6 +111,62 @@
           "bibliography_claim_ids": ["claim-codex-orchestration"]
         }
       ]
+    },
+    {
+      "artifact_path": "docs/games/README.md",
+      "artifact_node_id": "artifact-games-readme",
+      "required": true,
+      "claims": [
+        {
+          "claim_id": "ngr-001",
+          "summary": "The platform should be modeled as a nested game system with parent-child game relations.",
+          "category": "design-inference",
+          "source_ids": ["src-maskin-2007", "src-myerson-2007", "src-harel-1987"],
+          "bibliography_claim_ids": ["claim-nested-game-system"]
+        }
+      ]
+    },
+    {
+      "artifact_path": "docs/games/game-inheritance.md",
+      "artifact_node_id": "artifact-game-inheritance",
+      "required": true,
+      "claims": [
+        {
+          "claim_id": "gin-001",
+          "summary": "Child games should inherit authority, evidence, and referee semantics by default unless explicitly narrowed.",
+          "category": "design-inference",
+          "source_ids": ["src-prov-overview", "src-harel-1987"],
+          "bibliography_claim_ids": ["claim-nested-game-system"]
+        }
+      ]
+    },
+    {
+      "artifact_path": "docs/games/planning-merge-readiness-game.md",
+      "artifact_node_id": "artifact-planning-proof-game",
+      "required": true,
+      "claims": [
+        {
+          "claim_id": "pmr-001",
+          "summary": "Planning merge readiness should be modeled as a distinct proof game attached to the planning phase.",
+          "category": "design-inference",
+          "source_ids": ["src-fagan-1986", "src-harel-1987"],
+          "bibliography_claim_ids": ["claim-nested-game-system"]
+        }
+      ]
+    },
+    {
+      "artifact_path": "docs/games/implementation-merge-readiness-game.md",
+      "artifact_node_id": "artifact-implementation-proof-game",
+      "required": true,
+      "claims": [
+        {
+          "claim_id": "imr-001",
+          "summary": "Implementation merge readiness should be modeled as a distinct proof game attached to the implementation phase.",
+          "category": "design-inference",
+          "source_ids": ["src-fagan-1986", "src-prov-overview", "src-harel-1987"],
+          "bibliography_claim_ids": ["claim-nested-game-system"]
+        }
+      ]
     }
   ]
 }

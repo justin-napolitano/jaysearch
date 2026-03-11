@@ -1,0 +1,15 @@
+game_id: planning-game
+type: planning
+title: Planning Game
+parent_game: execplan-game
+objective: reduce ambiguity into explicit graph state
+board: canonical-graph-plus-planner-sessions
+players:
+  - human_operator
+  - planner_facilitator
+  - planner_critic
+referees:
+  - bin/planner
+  - bin/citation-check
+win_condition: bounded intent and explicit blockers
+loss_condition: ambiguity or contradiction remains hidden

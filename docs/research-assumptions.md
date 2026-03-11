@@ -30,10 +30,12 @@ Use these categories for future design and implementation artifacts:
 ### Design Inferences
 
 - planning and implementation should be treated as two phases of one governed game
+- the platform should be modeled as a nested game system rather than a single undifferentiated workflow
 - the canonical graph should serve as the shared board across both phases
 - `ExecPlan` should function as a commitment artifact rather than as the planning system
 - project-manager systems should remain observer surfaces rather than authorities
 - explicit contract import is preferable to implicit reverse-sync
+- planning merge readiness and implementation merge readiness should be treated as distinct proof games
 
 ### Policy Choices
 
@@ -47,6 +49,7 @@ Use these categories for future design and implementation artifacts:
 - exact readiness threshold for contract drafting
 - exact scoring thresholds for planner and implementation phases
 - exact reviewer/referee automation boundaries for future implementation tools
+- exact runtime validator contract for the game graph itself
 
 ## Usage Requirement
 
