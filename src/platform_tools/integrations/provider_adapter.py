@@ -87,6 +87,7 @@ def _project_item(node: dict[str, Any], *, provider: str) -> dict[str, Any]:
         "local_provenance": {
             "graph_node_id": str(node.get("node_id", "")).strip(),
             "target_execplan_id": str(node.get("target_execplan_id", "")).strip(),
+            "completion_ref": str(node.get("completion_ref", "")).strip(),
         },
     }
 

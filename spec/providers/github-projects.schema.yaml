@@ -30,6 +30,15 @@ field_map:
   validation_status: single_select
   smoke_status: single_select
   merge_readiness: single_select
+  finalization_state: single_select
+runtime_inputs:
+  required:
+    - project_id
+    - field_map_path
+  optional:
+    - item_ids_by_node_id
+    - dry_run
+    - pr_url
 status_options:
   - ready
   - blocked
@@ -41,6 +50,9 @@ human_review_state_options:
   - ready_for_review
   - in_review
   - merged
+finalization_state_options:
+  - not_finalized
+  - merged_to_main
 invariants:
   - one_board_per_remaining_work_graph_projection
   - not_one_board_per_execplan
