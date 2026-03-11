@@ -53,23 +53,27 @@ This slice is blocked on both the composite orchestrator status surface and the 
 
 ## Progress
 
-- [ ] Implement implementation task selection
-- [ ] Implement legal move execution
-- [ ] Integrate merge-readiness and game-state constraints
-- [ ] Add focused tests and smoke coverage
+- [x] Implement implementation task selection
+- [x] Implement legal move execution
+- [x] Integrate merge-readiness and game-state constraints
+- [x] Add focused tests and smoke coverage
 
 ## Surprises & Discoveries
 
 - implementation task selection may force refinement of active-game or merge-readiness contracts
 - stop conditions may need to be stricter than the planner-phase defaults
+- the remaining-work graph can lag the branch-local implementation sequence, so the runtime now derives current-slice eligibility from dependency completion instead of trusting the raw node status alone
+- move validation depends on `spec/game-transitions.yaml`, so the smoke path seeds the real transition spec rather than bypassing the shared referee logic
 
 ## Decision Log
 
 - 2026-03-11 / agent-codex-01 / Implementation orchestration must obey the same governed board and evidence model as the planner phase.
+- 2026-03-11 / agent-codex-01 / The implementation runtime should expose deterministic `inspect`, `select`, and `implement` actions instead of a broad autonomous loop so each bounded move remains machine-checkable.
+- 2026-03-11 / agent-codex-01 / Current-slice eligibility should be computed from remaining-work dependencies and gating class, even when the canonical backlog artifact still marks the slice as blocked.
 
 ## Outcomes & Retrospective
 
-On completion, this slice should provide the runtime that selects implementation work, applies legal moves, and stops when merge-readiness or game-state constraints require it.
+This slice now provides the runtime that selects implementation work, applies legal moves against planner graphs, and stops when merge-readiness or game-state constraints require it.
 
 ## Context and Orientation
 
