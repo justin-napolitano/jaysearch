@@ -6,6 +6,7 @@
       "node_id": "rwg-001",
       "title": "Machine-readable output hardening",
       "status": "completed",
+      "completion_ref": "merged:machine-readable-output-hardening",
       "gating_class": "auto_runnable",
       "conflict_domains": ["planner-cli", "orchestrator-status"],
       "target_execplan_id": "20260311-machine-readable-output-hardening-codex-01-execplan",
@@ -15,7 +16,8 @@
     {
       "node_id": "rwg-002",
       "title": "Composite orchestrator status command",
-      "status": "ready",
+      "status": "completed",
+      "completion_ref": "merged:composite-orchestrator-status",
       "gating_class": "auto_runnable",
       "conflict_domains": ["orchestrator-status", "merge-readiness"],
       "target_execplan_id": "20260311-composite-orchestrator-status-codex-01-execplan",
@@ -27,6 +29,7 @@
       "node_id": "rwg-003",
       "title": "Game-graph validator and active-game status surface",
       "status": "completed",
+      "completion_ref": "merged:game-graph-validator-and-status",
       "gating_class": "auto_runnable",
       "conflict_domains": ["game-graph"],
       "target_execplan_id": "20260311-game-graph-validator-and-status-codex-01-execplan",
@@ -36,22 +39,36 @@
     {
       "node_id": "rwg-004",
       "title": "Implementation orchestrator runtime",
-      "status": "blocked",
+      "status": "completed",
+      "completion_ref": "merged:implementation-orchestrator-runtime",
       "gating_class": "auto_runnable",
       "conflict_domains": ["planner-cli", "orchestrator-status", "merge-readiness"],
       "target_execplan_id": "20260311-implementation-orchestrator-runtime-codex-01-execplan",
       "goal_area": "implementation-orchestrator",
-      "expected_artifacts": ["src/platform_tools/implementation_orchestrator.py", "bin/implementation-orchestrator"]
+      "expected_artifacts": ["src/platform_tools/implementation_orchestrator.py", "bin/implementation-orchestrator"],
+      "implementation_branch": "impl-execplan/20260311-implementation-orchestrator-runtime-codex-01-execplan-codex-01-20260311"
     },
     {
       "node_id": "rwg-005",
       "title": "Provider sync scaffolding",
       "status": "review_gated",
+      "status_reason": "human_review_required_before_external_sync",
       "gating_class": "review_gated",
       "conflict_domains": ["provider-sync"],
       "target_execplan_id": "20260311-provider-sync-scaffold-codex-01-execplan",
       "goal_area": "provider-sync",
       "expected_artifacts": ["src/platform_tools/integrations/", "spec/provider-adapter.schema.yaml"]
+    },
+    {
+      "node_id": "rwg-006",
+      "title": "Runtime constraint canonicalization",
+      "status": "ready",
+      "gating_class": "auto_runnable",
+      "conflict_domains": ["orchestrator-status", "implementation-orchestrator", "remaining-work-graph"],
+      "target_execplan_id": "20260311-runtime-constraint-canonicalization-codex-01-execplan",
+      "goal_area": "runtime-governance",
+      "expected_artifacts": ["bin/remaining-work-graph-check", "src/platform_tools/remaining_work_graph_check.py", "bin/runtime-constraint-smoke-test"],
+      "implementation_branch": "impl-execplan/20260311-runtime-constraint-canonicalization-codex-01-execplan-codex-01-20260311"
     },
     {
       "node_id": "artifact-orchestrator-contract",
@@ -78,13 +95,18 @@
     { "from": "rwg-002", "to": "rwg-001", "relation": "depends_on" },
     { "from": "rwg-004", "to": "rwg-002", "relation": "depends_on" },
     { "from": "rwg-004", "to": "rwg-003", "relation": "depends_on" },
-    { "from": "rwg-005", "to": "rwg-004", "relation": "gated_by" },
+    { "from": "rwg-006", "to": "rwg-004", "relation": "depends_on" },
+    { "from": "rwg-006", "to": "rwg-002", "relation": "depends_on" },
+    { "from": "rwg-005", "to": "rwg-006", "relation": "gated_by" },
     { "from": "rwg-001", "to": "rwg-002", "relation": "conflicts_with" },
     { "from": "rwg-002", "to": "rwg-004", "relation": "conflicts_with" },
+    { "from": "rwg-006", "to": "rwg-005", "relation": "conflicts_with" },
     { "from": "rwg-001", "to": "artifact-orchestrator-contract", "relation": "informed_by" },
     { "from": "rwg-002", "to": "artifact-orchestrator-contract", "relation": "informed_by" },
     { "from": "rwg-004", "to": "artifact-orchestrator-contract", "relation": "informed_by" },
+    { "from": "rwg-006", "to": "artifact-orchestrator-contract", "relation": "informed_by" },
     { "from": "rwg-002", "to": "artifact-merge-readiness-contract", "relation": "informed_by" },
-    { "from": "rwg-004", "to": "artifact-merge-readiness-contract", "relation": "informed_by" }
+    { "from": "rwg-004", "to": "artifact-merge-readiness-contract", "relation": "informed_by" },
+    { "from": "rwg-006", "to": "artifact-merge-readiness-contract", "relation": "informed_by" }
   ]
 }
