@@ -145,6 +145,24 @@ Agents must populate the `changes` field with explicit paths.
 
 ------------------------------------------------------------------------
 
+# Implementation Workflow
+
+Implementation execution should occur on branches named:
+
+impl-execplan/`<plan-id>`{=html}-`<agent>`{=html}-YYYYMMDD
+
+Parallel implementation ExecPlans must use distinct implementation branches.
+
+Optional integration branches may be named:
+
+queue-execplan/`<queue-name>`{=html}-`<agent>`{=html}-YYYYMMDD
+
+Queue branches are for deliberate stacking and integration only. They do
+not replace the canonical implementation branch for an individual
+ExecPlan slice.
+
+------------------------------------------------------------------------
+
 # Human Finalization
 
 An ExecPlan becomes authoritative only after human finalization.
@@ -163,6 +181,11 @@ Signed-off-by: `<github-user>`{=html}
 
 Validators must confirm the commit signature matches the finalizer
 identity.
+
+For governed ExecPlans, the signed merge commit on `main` is the
+canonical finalization event. Future automation should derive
+`finalized_by`, `finalized_at`, and `finalized_in_pr` from that merge
+event where feasible.
 
 ------------------------------------------------------------------------
 
@@ -308,4 +331,3 @@ can change.
 # Initial Version
 
 This document establishes the ExecPlan system used by this repository.
-
