@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+EXECPLAN_PATH=".agent/execplans/20260311-github-projects-provider-sync-runtime-codex-01-execplan.md"
+FIELD_MAP="$(mktemp)"
+trap 'rm -f "$FIELD_MAP"' EXIT
+
+cat > "$FIELD_MAP" <<'JSON'
+{
+  "project_id": "PVT_smoke",
+  "item_ids_by_node_id": {
+    "rwg-006": "PVT_item_runtime"
+  },
+  "fields": {
+    "node_id": {"field_id": "F1", "data_type": "text"},
+    "target_execplan_id": {"field_id": "F2", "data_type": "text"},
+    "status": {"field_id": "F3", "data_type": "single_select", "options": {"ready": "O_ready", "completed": "O_completed", "review_gated": "O_review"}},
+    "gating_class": {"field_id": "F4", "data_type": "single_select", "options": {"auto_runnable": "O_auto", "review_gated": "O_rg"}},
+    "implementation_branch": {"field_id": "F5", "data_type": "text"},
+    "goal_area": {"field_id": "F6", "data_type": "single_select", "options": {"runtime-governance": "O_runtime", "provider-sync": "O_provider", "orchestrator-status": "O_orch", "game-graph": "O_game", "implementation-orchestrator": "O_impl"}},
+    "dependency_summary": {"field_id": "F7", "data_type": "text"},
+    "human_review_state": {"field_id": "F8", "data_type": "single_select", "options": {"ready_for_review": "O_rfr", "merged": "O_merged", "not_requested": "O_nr"}},
+    "pr_url": {"field_id": "F9", "data_type": "text"},
+    "validation_status": {"field_id": "F10", "data_type": "single_select", "options": {"passed": "O_passed", "pending": "O_pending"}},
+    "smoke_status": {"field_id": "F11", "data_type": "single_select", "options": {"passed": "O_sp", "pending": "O_pen"}},
+    "merge_readiness": {"field_id": "F12", "data_type": "single_select", "options": {"local_only": "O_local"}},
+    "finalization_state": {"field_id": "F13", "data_type": "single_select", "options": {"not_finalized": "O_not", "merged_to_main": "O_fin"}}
+  }
+}
+JSON
+
+echo "[1/2] github projects sync dry-run contract"
+SYNC_JSON="$(bin/github-projects-sync --execplan "$EXECPLAN_PATH" --field-map-path "$FIELD_MAP" --pr-url "https://github.com/example/repo/pull/123")"
+echo "$SYNC_JSON"
+printf '%s\n' "$SYNC_JSON" | python3 -c 'import json,sys; data=json.load(sys.stdin); assert data["command"]=="github-projects-sync"; assert data["status"]=="ok"; assert data["dry_run"] is True; assert data["operation_count"] >= 1; assert any(op["node_id"]=="rwg-005" for op in data["operations"])'
+
+echo "[2/2] focused pytest"
+uv run pytest tests/test_github_projects_sync.py
+
+echo "github projects sync smoke test completed"
