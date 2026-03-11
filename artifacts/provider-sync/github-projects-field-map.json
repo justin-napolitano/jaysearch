@@ -100,6 +100,13 @@
       }
     }
   },
-  "item_ids_by_node_id": {},
+  "item_ids_by_node_id": {
+    "rwg-001": "PVTI_lAHODxnPG84BReuczgnPCT8",
+    "rwg-002": "PVTI_lAHODxnPG84BReuczgnPCVU",
+    "rwg-003": "PVTI_lAHODxnPG84BReuczgnPCWU",
+    "rwg-004": "PVTI_lAHODxnPG84BReuczgnPCXo",
+    "rwg-005": "PVTI_lAHODxnPG84BReuczgnPCYs",
+    "rwg-006": "PVTI_lAHODxnPG84BReuczgnPCaM"
+  },
   "project_id": "PVT_kwHODxnPG84BReuc"
 }

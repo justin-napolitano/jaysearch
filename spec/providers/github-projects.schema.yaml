@@ -80,3 +80,17 @@ bootstrap:
   default_field_map_output_path: artifacts/provider-sync/github-projects-field-map.json
   provider_managed_fields:
     - status
+sync:
+  field_map_contract: github_projects_sync_v1
+  provider_managed_value_map:
+    status:
+      ready: Todo
+      blocked: In Progress
+      review_gated: In Progress
+      decision_gated: In Progress
+      completed: Done
+  field_value_map:
+    goal_area:
+      orchestrator-status: orchestrator-runtime
+      implementation-orchestrator: orchestrator-runtime
+      game-graph: runtime-governance
