@@ -13,6 +13,7 @@ REQUIRED_RULES = {
     "rule-clean-merge-state",
     "rule-human-sized-commits",
     "rule-procedural-commit-order",
+    "rule-latest-main-branching",
     "rule-execplan-validation",
     "rule-human-finalization",
 }
