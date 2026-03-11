@@ -54,23 +54,28 @@ This slice is blocked on machine-readable output hardening because it should con
 
 ## Progress
 
-- [ ] Implement orchestrator-status command
-- [ ] Aggregate readiness, rule, citation, and score surfaces
-- [ ] Expose blockers and next actions
-- [ ] Add focused tests and smoke coverage
+- [x] Implement orchestrator-status command
+- [x] Aggregate readiness, rule, citation, and score surfaces
+- [x] Expose blockers and next actions
+- [x] Add focused tests and smoke coverage
 
 ## Surprises & Discoveries
 
 - status aggregation may expose gaps in one or more existing machine-readable contracts
 - next-action recommendations may need a small policy layer rather than simple sorting
+- merge-readiness aggregation must avoid recursively executing the orchestrator-status smoke test, so the status surface uses a non-recursive merge-readiness summary path
+- the remaining-work graph needed to be the canonical source for ready and blocked slices, with reference artifacts filtered out of executable work lists
 
 ## Decision Log
 
 - 2026-03-11 / agent-codex-01 / Composite orchestrator status should consume stable command contracts rather than normalize inconsistent outputs internally.
+- 2026-03-11 / agent-codex-01 / The orchestrator status surface should summarize merge readiness without re-running plan validations so smoke-test validation does not recurse through itself.
 
 ## Outcomes & Retrospective
 
 On completion, this slice should provide one machine-readable command that tells Codex what is ready, what is blocked, and what should happen next.
+
+The implemented status surface now identifies the active slice from the canonical remaining-work graph, reports authority constraints and blockers, and recommends the next orchestration action in a deterministic JSON envelope.
 
 ## Context and Orientation
 

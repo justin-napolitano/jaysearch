@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+EXECPLAN_PATH=".agent/execplans/20260311-composite-orchestrator-status-codex-01-execplan.md"
+
+echo "[1/2] orchestrator status contract"
+STATUS_JSON="$(bin/orchestrator-status --execplan "$EXECPLAN_PATH")"
+echo "$STATUS_JSON"
+printf '%s\n' "$STATUS_JSON" | python3 -c 'import json,sys; data=json.load(sys.stdin); assert data["command"]=="orchestrator-status"; assert data["status"]=="ok"; assert data["active_work"]["target_execplan_id"]=="20260311-composite-orchestrator-status-codex-01-execplan"; assert data["next_actions"][0]["action"]=="continue_active_slice"'
+
+echo "[2/2] focused pytest"
+uv run pytest tests/test_orchestrator_status.py
+
+echo "orchestrator status smoke test completed"
