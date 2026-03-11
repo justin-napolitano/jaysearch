@@ -1,0 +1,78 @@
+{
+  "graph_id": "nested-game-system-20260311",
+  "created_at": "2026-03-11T00:00:00Z",
+  "nodes": [
+    {
+      "id": "game-platform",
+      "type": "game",
+      "label": "Platform Game",
+      "title": "Top-level governed platform game"
+    },
+    {
+      "id": "game-execplan",
+      "type": "game",
+      "label": "ExecPlan Game",
+      "title": "Contract game"
+    },
+    {
+      "id": "game-planning",
+      "type": "game",
+      "label": "Planning Game",
+      "title": "Ambiguity-reduction game"
+    },
+    {
+      "id": "game-implementation",
+      "type": "game",
+      "label": "Implementation Game",
+      "title": "Validated execution game"
+    },
+    {
+      "id": "game-planning-proof",
+      "type": "game",
+      "label": "Planning Merge Readiness",
+      "title": "Planning proof game"
+    },
+    {
+      "id": "game-implementation-proof",
+      "type": "game",
+      "label": "Implementation Merge Readiness",
+      "title": "Implementation proof game"
+    },
+    {
+      "id": "artifact-rule-graph",
+      "type": "artifact",
+      "label": "Rule Graph",
+      "title": "artifacts/planner/research/rule-graph.json"
+    },
+    {
+      "id": "artifact-bibliography-graph",
+      "type": "artifact",
+      "label": "Bibliography Graph",
+      "title": "artifacts/planner/research/bibliography-graph.json"
+    },
+    {
+      "id": "artifact-claim-registry",
+      "type": "artifact",
+      "label": "Claim Registry",
+      "title": "artifacts/planner/research/claim-registry.json"
+    },
+    {
+      "id": "artifact-games-readme",
+      "type": "artifact",
+      "label": "Games README",
+      "title": "docs/games/README.md"
+    }
+  ],
+  "edges": [
+    { "from": "game-platform", "to": "game-execplan", "relation": "contains" },
+    { "from": "game-execplan", "to": "game-planning", "relation": "contains" },
+    { "from": "game-execplan", "to": "game-implementation", "relation": "contains" },
+    { "from": "game-planning", "to": "game-planning-proof", "relation": "terminates_in" },
+    { "from": "game-implementation", "to": "game-implementation-proof", "relation": "terminates_in" },
+    { "from": "game-platform", "to": "artifact-rule-graph", "relation": "links_to" },
+    { "from": "game-platform", "to": "artifact-bibliography-graph", "relation": "links_to" },
+    { "from": "game-platform", "to": "artifact-claim-registry", "relation": "links_to" },
+    { "from": "game-platform", "to": "artifact-games-readme", "relation": "documented_in" },
+    { "from": "game-planning", "to": "game-implementation", "relation": "hands_off_to" }
+  ]
+}

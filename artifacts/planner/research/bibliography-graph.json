@@ -134,6 +134,12 @@
       "title": "Codex should operate through machine-readable governed control surfaces with explicit merge readiness"
     },
     {
+      "id": "claim-nested-game-system",
+      "type": "claim",
+      "label": "Nested Game System",
+      "title": "The platform should be modeled as a nested system of parent-child games with explicit proof subgames"
+    },
+    {
       "id": "artifact-planner-game-model",
       "type": "artifact",
       "label": "Planner Game Model",
@@ -186,6 +192,30 @@
       "type": "artifact",
       "label": "Merge Readiness Contract",
       "title": "docs/merge-readiness-contract.md"
+    },
+    {
+      "id": "artifact-games-readme",
+      "type": "artifact",
+      "label": "Games README",
+      "title": "docs/games/README.md"
+    },
+    {
+      "id": "artifact-game-inheritance",
+      "type": "artifact",
+      "label": "Game Inheritance",
+      "title": "docs/games/game-inheritance.md"
+    },
+    {
+      "id": "artifact-planning-proof-game",
+      "type": "artifact",
+      "label": "Planning Proof Game",
+      "title": "docs/games/planning-merge-readiness-game.md"
+    },
+    {
+      "id": "artifact-implementation-proof-game",
+      "type": "artifact",
+      "label": "Implementation Proof Game",
+      "title": "docs/games/implementation-merge-readiness-game.md"
     }
   ],
   "edges": [
@@ -209,6 +239,10 @@
     { "from": "concept-provenance", "to": "claim-codex-orchestration", "relation": "supports" },
     { "from": "concept-state-transitions", "to": "claim-codex-orchestration", "relation": "supports" },
     { "from": "concept-inspection", "to": "claim-codex-orchestration", "relation": "supports" },
+    { "from": "concept-mechanism-design", "to": "claim-nested-game-system", "relation": "supports" },
+    { "from": "concept-provenance", "to": "claim-nested-game-system", "relation": "supports" },
+    { "from": "concept-state-transitions", "to": "claim-nested-game-system", "relation": "supports" },
+    { "from": "concept-inspection", "to": "claim-nested-game-system", "relation": "supports" },
     { "from": "claim-planning-implementation-game", "to": "artifact-planner-game-model", "relation": "cited_in" },
     { "from": "claim-planning-implementation-game", "to": "artifact-implementation-game-model", "relation": "cited_in" },
     { "from": "claim-canonical-graph", "to": "artifact-transition-spec", "relation": "cited_in" },
@@ -217,11 +251,16 @@
     { "from": "claim-codex-orchestration", "to": "artifact-codex-orchestrator-contract", "relation": "cited_in" },
     { "from": "claim-codex-orchestration", "to": "artifact-codex-orchestrator-execution-loop", "relation": "cited_in" },
     { "from": "claim-codex-orchestration", "to": "artifact-merge-readiness-contract", "relation": "cited_in" },
+    { "from": "claim-nested-game-system", "to": "artifact-games-readme", "relation": "cited_in" },
+    { "from": "claim-nested-game-system", "to": "artifact-game-inheritance", "relation": "cited_in" },
+    { "from": "claim-nested-game-system", "to": "artifact-planning-proof-game", "relation": "cited_in" },
+    { "from": "claim-nested-game-system", "to": "artifact-implementation-proof-game", "relation": "cited_in" },
     { "from": "concept-mechanism-design", "to": "artifact-scoring-spec", "relation": "informs" },
     { "from": "concept-inspection", "to": "artifact-scoring-spec", "relation": "informs" },
     { "from": "artifact-assumptions-doc", "to": "claim-planning-implementation-game", "relation": "classified_as" },
     { "from": "artifact-assumptions-doc", "to": "claim-canonical-graph", "relation": "classified_as" },
     { "from": "artifact-assumptions-doc", "to": "claim-explicit-reconciliation", "relation": "classified_as" },
-    { "from": "artifact-assumptions-doc", "to": "claim-codex-orchestration", "relation": "classified_as" }
+    { "from": "artifact-assumptions-doc", "to": "claim-codex-orchestration", "relation": "classified_as" },
+    { "from": "artifact-assumptions-doc", "to": "claim-nested-game-system", "relation": "classified_as" }
   ]
 }
