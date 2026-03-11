@@ -60,28 +60,26 @@ This phase is design and artifact definition only. It does not implement the que
 
 ## Progress
 
-- [ ] Define canonical remaining-work graph
-- [ ] Define parallel-execution policy
-- [ ] Define queued ExecPlan backlog
-- [ ] Define dependency and conflict edges
-- [ ] Link remaining-work graph to existing governance and orchestration artifacts
-- [ ] Register claims and assumptions
+- [x] Define canonical remaining-work graph
+- [x] Define parallel-execution policy
+- [x] Define queued ExecPlan backlog
+- [x] Define dependency and conflict edges
+- [x] Link remaining-work graph to existing governance and orchestration artifacts
+- [x] Register claims and assumptions
 
 ## Surprises & Discoveries
-
-Expected discoveries to capture during execution:
 
 - some remaining slices are dependency-blocked rather than merely unstarted
 - some slices may be executable in parallel only if conflict domains are explicit
 - chained execution requires stronger queue semantics than existing phase backlogs provide
+- after the governance update, queue branches should be treated as integration-only and the next ready slice should point to its own `impl-execplan/*` branch
 
 ## Decision Log
-
-Planned foundational decisions to record during execution:
 
 - 2026-03-11 / agent-codex-01 / Remaining platform work should be modeled as a canonical backlog graph rather than as prose-only backlog lists
 - 2026-03-11 / agent-codex-01 / Parallel execution requires both dependency edges and explicit conflict domains
 - 2026-03-11 / agent-codex-01 / Not every queued ExecPlan should be auto-runnable; some remain review-gated or human-decision-gated
+- 2026-03-11 / agent-codex-01 / Once machine-readable output hardening and game-graph status land, the next ready slice is composite orchestrator status on a dedicated implementation branch.
 
 ## Outcomes & Retrospective
 
@@ -91,6 +89,8 @@ On completion, this plan should yield:
 - a written parallel-execution policy
 - a queued ExecPlan backlog for the next slices
 - explicit graph linkage to orchestration, merge-readiness, and governance artifacts
+
+This slice now also records that queue branches are integration-only and that ready implementation work should move onto dedicated `impl-execplan/*` branches.
 
 ## Context and Orientation
 
