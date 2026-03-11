@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+EXECPLAN_PATH=".agent/execplans/20260311-runtime-constraint-canonicalization-codex-01-execplan.md"
+
+echo "[1/3] remaining work graph contract"
+GRAPH_JSON="$(bin/remaining-work-graph-check --execplan "$EXECPLAN_PATH")"
+echo "$GRAPH_JSON"
+printf '%s\n' "$GRAPH_JSON" | python3 -c 'import json,sys; data=json.load(sys.stdin); assert data["command"]=="remaining-work-graph-check"; assert data["status"]=="ok"; assert data["active_node"]["target_execplan_id"]=="20260311-runtime-constraint-canonicalization-codex-01-execplan"; assert any(node["target_execplan_id"]=="20260311-provider-sync-scaffold-codex-01-execplan" for node in data["blocked_nodes"])'
+
+echo "[2/3] orchestrator status contract"
+STATUS_JSON="$(bin/orchestrator-status --execplan "$EXECPLAN_PATH")"
+echo "$STATUS_JSON"
+printf '%s\n' "$STATUS_JSON" | python3 -c 'import json,sys; data=json.load(sys.stdin); assert data["command"]=="orchestrator-status"; assert data["status"]=="ok"; assert data["active_work"]["target_execplan_id"]=="20260311-runtime-constraint-canonicalization-codex-01-execplan"; assert data["checks"]["remaining_work_graph"]["status"]=="ok"'
+
+echo "[3/3] focused pytest"
+uv run pytest tests/test_remaining_work_graph_check.py tests/test_orchestrator_status.py tests/test_implementation_orchestrator.py
+
+echo "runtime constraint smoke test completed"
