@@ -10,10 +10,10 @@ from platform_tools.merge_readiness import check_merge_readiness
 from platform_tools.orchestrator_status import get_orchestrator_status
 from platform_tools.plan_utils import parse_plan
 from platform_tools.planner_runtime import apply_move, load_graph, validate_move
+from platform_tools.remaining_work_graph_check import check_remaining_work_graph
 
 
 COMMAND = "implementation-orchestrator"
-COMPLETE_SLICE_STATUSES = {"completed", "done", "validated", "archived"}
 IMPLEMENTABLE_NODE_TYPES = {"task", "artifact", "validation", "handoff"}
 PRIORITY_ORDER = {
     "P0": 0,
@@ -22,23 +22,6 @@ PRIORITY_ORDER = {
     "P3": 3,
     "P4": 4,
 }
-
-
-def _load_json(path: Path) -> Any:
-    return json.loads(path.read_text(encoding="utf-8"))
-
-
-def _remaining_work_graph(root: Path) -> dict[str, Any]:
-    return _load_json(root / "artifacts" / "planner" / "research" / "remaining-work-graph.json")
-
-
-def _dependency_map(edges: list[dict[str, Any]]) -> dict[str, list[str]]:
-    mapping: dict[str, list[str]] = {}
-    for edge in edges:
-        if not isinstance(edge, dict) or edge.get("relation") != "depends_on":
-            continue
-        mapping.setdefault(str(edge.get("from", "")).strip(), []).append(str(edge.get("to", "")).strip())
-    return {key: sorted(set(value for value in values if value)) for key, values in mapping.items()}
 
 
 def _node_projection(node: dict[str, Any]) -> dict[str, Any]:
@@ -51,65 +34,6 @@ def _node_projection(node: dict[str, Any]) -> dict[str, Any]:
         "changes": sorted(str(item).strip() for item in node.get("changes", []) if str(item).strip()),
         "path": str(node.get("path", "")).strip(),
     }
-
-
-def _slice_summary(
-    *,
-    root: Path,
-    execplan_id: str,
-    branch: str,
-) -> tuple[dict[str, Any] | None, list[str]]:
-    graph = _remaining_work_graph(root)
-    nodes = {
-        str(node.get("node_id", "")).strip(): node
-        for node in graph.get("nodes", [])
-        if isinstance(node, dict) and str(node.get("node_id", "")).strip()
-    }
-    dependency_map = _dependency_map([edge for edge in graph.get("edges", []) if isinstance(edge, dict)])
-
-    current = None
-    for node in nodes.values():
-        if str(node.get("target_execplan_id", "")).strip() == execplan_id:
-            current = node
-            break
-    if current is None:
-        return None, [f"current_execplan_not_registered:{execplan_id}"]
-
-    node_id = str(current.get("node_id", "")).strip()
-    blockers: list[str] = []
-    if str(current.get("gating_class", "")).strip() != "auto_runnable":
-        blockers.append(f"slice_not_auto_runnable:{node_id}:{current.get('gating_class', '')}")
-    registered_status = str(current.get("status", "")).strip()
-    if registered_status in {"review_gated", "decision_gated"}:
-        blockers.append(f"slice_gated:{node_id}:{registered_status}")
-    if registered_status in COMPLETE_SLICE_STATUSES:
-        blockers.append(f"slice_already_complete:{node_id}:{registered_status}")
-
-    expected_branch = str(current.get("implementation_branch", "")).strip()
-    if expected_branch and expected_branch != branch:
-        blockers.append(f"slice_branch_mismatch:{node_id}:{expected_branch}")
-
-    dependency_states: list[dict[str, str]] = []
-    for dependency_id in dependency_map.get(node_id, []):
-        dependency = nodes.get(dependency_id, {})
-        dep_status = str(dependency.get("status", "")).strip()
-        dependency_states.append({"node_id": dependency_id, "status": dep_status})
-        if dep_status not in COMPLETE_SLICE_STATUSES:
-            blockers.append(f"slice_dependency_incomplete:{node_id}:{dependency_id}:{dep_status or 'missing'}")
-
-    summary = {
-        "node_id": node_id,
-        "title": str(current.get("title", "")).strip(),
-        "registered_status": registered_status,
-        "goal_area": str(current.get("goal_area", "")).strip(),
-        "gating_class": str(current.get("gating_class", "")).strip(),
-        "target_execplan_id": str(current.get("target_execplan_id", "")).strip(),
-        "implementation_branch": expected_branch,
-        "dependency_states": dependency_states,
-        "eligible_now": not blockers,
-    }
-    return summary, blockers
-
 
 def _priority_rank(value: str) -> tuple[int, str]:
     cleaned = (value or "").strip()
@@ -211,7 +135,6 @@ def run_implementation_orchestrator(
     commit_ref: str | None = None,
     target_status: str = "in_review",
 ) -> tuple[int, dict[str, Any]]:
-    cwd = Path(root)
     game_code, game_report = get_game_status(
         root=root,
         branch=branch,
@@ -244,6 +167,11 @@ def run_implementation_orchestrator(
         base_ref=base_ref,
         include_validation_runs=False,
     )
+    remaining_work_code, remaining_work_report = check_remaining_work_graph(
+        root=root,
+        branch=branch_name or None,
+        execplan_path=resolved_execplan_path or execplan_path,
+    )
     _, status_report = get_orchestrator_status(
         root=root,
         branch=branch_name or None,
@@ -263,10 +191,15 @@ def run_implementation_orchestrator(
     if merge_code != 0:
         blockers.extend(f"merge_readiness:{item}" for item in merge_report.get("failing_checks", []))
 
-    slice_summary = None
-    if execplan_id:
-        slice_summary, slice_blockers = _slice_summary(root=cwd, execplan_id=execplan_id, branch=branch_name)
-        blockers.extend(slice_blockers)
+    if remaining_work_code != 0:
+        blockers.extend(f"remaining_work_graph:{item}" for item in remaining_work_report.get("errors", []))
+    slice_summary = remaining_work_report.get("active_node")
+    if execplan_id and slice_summary is None:
+        blockers.append(f"current_execplan_not_registered:{execplan_id}")
+    elif slice_summary and str(slice_summary.get("target_execplan_id", "")).strip() != execplan_id:
+        blockers.append(f"active_slice_execplan_mismatch:{slice_summary.get('target_execplan_id', '')}")
+    elif slice_summary and str(slice_summary.get("status", "")).strip() != "ready":
+        blockers.append(f"active_slice_not_ready:{slice_summary.get('node_id', '')}:{slice_summary.get('status', '')}")
 
     graph = None
     selected_node = None

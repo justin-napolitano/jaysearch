@@ -19,42 +19,6 @@ def _write_text(path: Path, text: str) -> None:
     path.write_text(text, encoding="utf-8")
 
 
-def _seed_remaining_work(root: Path) -> None:
-    _write_json(
-        root / "artifacts" / "planner" / "research" / "remaining-work-graph.json",
-        {
-            "graph_id": "remaining-work-graph-20260311",
-            "created_at": "2026-03-11T00:00:00Z",
-            "nodes": [
-                {
-                    "node_id": "rwg-002",
-                    "title": "Composite orchestrator status command",
-                    "status": "ready",
-                    "gating_class": "auto_runnable",
-                    "conflict_domains": ["orchestrator-status", "merge-readiness"],
-                    "target_execplan_id": "20260311-composite-orchestrator-status-codex-01-execplan",
-                    "goal_area": "orchestrator-status",
-                    "expected_artifacts": ["bin/orchestrator-status"],
-                    "implementation_branch": "impl-execplan/20260311-composite-orchestrator-status-codex-01-execplan-codex-01-20260311",
-                },
-                {
-                    "node_id": "rwg-004",
-                    "title": "Implementation orchestrator runtime",
-                    "status": "blocked",
-                    "gating_class": "auto_runnable",
-                    "conflict_domains": ["orchestrator-status"],
-                    "target_execplan_id": "20260311-implementation-orchestrator-runtime-codex-01-execplan",
-                    "goal_area": "implementation-orchestrator",
-                    "expected_artifacts": ["bin/implementation-orchestrator"],
-                },
-            ],
-            "edges": [
-                {"from": "rwg-004", "to": "rwg-002", "relation": "depends_on"},
-            ],
-        },
-    )
-
-
 def _seed_execplan(root: Path, branch: str) -> Path:
     path = root / ".agent" / "execplans" / "20260311-composite-orchestrator-status-codex-01-execplan.md"
     _write_text(
@@ -98,7 +62,6 @@ def _seed_execplan(root: Path, branch: str) -> Path:
 
 def test_orchestrator_status_reports_active_ready_slice(monkeypatch, tmp_path: Path) -> None:
     branch = "impl-execplan/20260311-composite-orchestrator-status-codex-01-execplan-codex-01-20260311"
-    _seed_remaining_work(tmp_path)
     execplan_path = _seed_execplan(tmp_path, branch)
 
     monkeypatch.setattr(
@@ -125,6 +88,33 @@ def test_orchestrator_status_reports_active_ready_slice(monkeypatch, tmp_path: P
         ),
     )
     monkeypatch.setattr(
+        "platform_tools.orchestrator_status.check_remaining_work_graph",
+        lambda **kwargs: (
+            0,
+            {
+                "ok": True,
+                "errors": [],
+                "active_node": {
+                    "node_id": "rwg-002",
+                    "title": "Composite orchestrator status command",
+                    "status": "ready",
+                    "target_execplan_id": "20260311-composite-orchestrator-status-codex-01-execplan",
+                    "implementation_branch": branch,
+                },
+                "ready_nodes": [
+                    {
+                        "node_id": "rwg-002",
+                        "title": "Composite orchestrator status command",
+                        "status": "ready",
+                        "target_execplan_id": "20260311-composite-orchestrator-status-codex-01-execplan",
+                        "implementation_branch": branch,
+                    }
+                ],
+                "blocked_nodes": [],
+            },
+        ),
+    )
+    monkeypatch.setattr(
         "platform_tools.orchestrator_status.check_merge_readiness",
         lambda **kwargs: (
             0,
@@ -147,11 +137,10 @@ def test_orchestrator_status_reports_active_ready_slice(monkeypatch, tmp_path: P
     assert report["active_work"]["node_id"] == "rwg-002"
     assert report["next_actions"][0]["action"] == "continue_active_slice"
     assert report["checks"]["planner_score"]["status"] == "deferred"
+    assert report["checks"]["remaining_work_graph"]["status"] == "ok"
 
 
 def test_orchestrator_status_recommends_starting_ready_slice(monkeypatch, tmp_path: Path) -> None:
-    _seed_remaining_work(tmp_path)
-
     monkeypatch.setattr(
         "platform_tools.orchestrator_status.check_rule_graph",
         lambda root=".": (0, {"ok": True, "blockers": [], "command": "rule-graph-check"}),
@@ -169,6 +158,35 @@ def test_orchestrator_status_recommends_starting_ready_slice(monkeypatch, tmp_pa
                 "blockers": [],
                 "active_execplan": None,
                 "active_game": {"id": "game-platform", "lineage": ["game-platform"]},
+            },
+        ),
+    )
+    monkeypatch.setattr(
+        "platform_tools.orchestrator_status.check_remaining_work_graph",
+        lambda **kwargs: (
+            0,
+            {
+                "ok": True,
+                "errors": [],
+                "active_node": None,
+                "ready_nodes": [
+                    {
+                        "node_id": "rwg-002",
+                        "title": "Composite orchestrator status command",
+                        "status": "ready",
+                        "target_execplan_id": "20260311-composite-orchestrator-status-codex-01-execplan",
+                        "implementation_branch": "impl-execplan/20260311-composite-orchestrator-status-codex-01-execplan-codex-01-20260311",
+                    }
+                ],
+                "blocked_nodes": [
+                    {
+                        "node_id": "rwg-005",
+                        "title": "Provider sync scaffolding",
+                        "status": "review_gated",
+                        "target_execplan_id": "20260311-provider-sync-scaffold-codex-01-execplan",
+                        "implementation_branch": "",
+                    }
+                ],
             },
         ),
     )

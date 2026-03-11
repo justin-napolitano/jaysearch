@@ -29,6 +29,8 @@ properties:
           type: string
         status:
           enum: ["ready", "blocked", "review_gated", "decision_gated", "completed"]
+        status_reason:
+          type: string
         gating_class:
           enum: ["auto_runnable", "review_gated", "decision_gated"]
         conflict_domains:
@@ -45,6 +47,8 @@ properties:
           type: array
           items:
             type: string
+        completion_ref:
+          type: string
   edges:
     type: array
     items:

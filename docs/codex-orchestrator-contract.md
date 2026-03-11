@@ -44,11 +44,13 @@ Primary command families:
 - `bin/citation-check`
 - `bin/planner-score`
 - `bin/rule-graph-check`
+- `bin/remaining-work-graph-check`
 
 Primary artifact families:
 
 - planner session artifacts
 - canonical graph artifacts
+- remaining-work runtime state artifacts
 - ExecPlan artifacts
 - bibliography and claim registry artifacts
 - rule graph artifacts
