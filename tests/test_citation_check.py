@@ -127,6 +127,11 @@ def test_citation_check_passes_for_valid_registry(tmp_path: Path) -> None:
     _seed_repo(tmp_path)
     code, report = check_citations(tmp_path.as_posix())
     assert code == 0
+    assert report["command"] == "citation-check"
+    assert report["artifact_id"] == "planner-research-citations"
+    assert report["status"] == "ok"
+    assert report["blockers"] == []
+    assert report["next_validations"] == []
     assert report["ok"] is True
 
 
@@ -134,4 +139,7 @@ def test_citation_check_fails_for_missing_source_reference(tmp_path: Path) -> No
     _seed_repo(tmp_path, invalid_design_inference=True)
     code, report = check_citations(tmp_path.as_posix())
     assert code == 1
-    assert report["errors"]
+    assert report["command"] == "citation-check"
+    assert report["status"] == "blocked"
+    assert report["blockers"]
+    assert report["errors"] == report["blockers"]

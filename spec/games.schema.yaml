@@ -1,5 +1,32 @@
 version: v1
 last_updated: 2026-03-11
+graph:
+  required_fields:
+    - graph_id
+    - created_at
+    - nodes
+    - edges
+node:
+  required_fields:
+    - id
+    - type
+    - label
+    - title
+  type_allowed:
+    - game
+    - artifact
+edge:
+  required_fields:
+    - from
+    - to
+    - relation
+  relation_allowed:
+    - contains
+    - terminates_in
+    - hands_off_to
+    - links_to
+    - documented_in
+    - inherits
 game_spec:
   required_fields:
     - game_id
@@ -17,6 +44,34 @@ game_spec:
     - planning
     - implementation
     - merge_readiness
+game_graph:
+  required_game_ids:
+    - game-platform
+    - game-execplan
+    - game-planning
+    - game-implementation
+    - game-planning-proof
+    - game-implementation-proof
+  root_game_id: game-platform
+  required_edges:
+    - from: game-platform
+      to: game-execplan
+      relation: contains
+    - from: game-execplan
+      to: game-planning
+      relation: contains
+    - from: game-execplan
+      to: game-implementation
+      relation: contains
+    - from: game-planning
+      to: game-planning-proof
+      relation: terminates_in
+    - from: game-implementation
+      to: game-implementation-proof
+      relation: terminates_in
+    - from: game-planning
+      to: game-implementation
+      relation: hands_off_to
 notes:
   - spec/games.schema.yaml is the shared contract for all per-game specs
   - spec/games/*.yaml are constrained game instances, not independent schemas
