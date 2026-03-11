@@ -45,6 +45,12 @@ Commit structuring rule:
 - If a slice omits a class, Codex should skip it rather than collapsing unrelated classes together.
 - Merge review should preserve this order so reviewers can inspect contract, implementation, and evidence in sequence.
 
+Latest-main branching rule:
+
+- Unless a human explicitly states otherwise, every new work branch must be created from the latest `main`.
+- In practice this means Codex should refresh from `origin/main` before cutting a new branch rather than branching from a stale local base.
+- If a branch is intentionally cut from some other base, that exception should be stated in the user request or the active ExecPlan.
+
 Exception lifecycle contract:
 
 - Exception registry file: `.agent/governance/exceptions.yaml`.
