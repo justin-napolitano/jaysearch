@@ -10,36 +10,11 @@ from platform_tools.game_status import get_game_status
 from platform_tools.merge_readiness import check_merge_readiness
 from platform_tools.plan_utils import parse_plan
 from platform_tools.planner_score import score_graph
+from platform_tools.remaining_work_graph_check import check_remaining_work_graph
 from platform_tools.rule_graph_check import check_rule_graph
 
 
 COMMAND = "orchestrator-status"
-
-
-def _load_json(path: Path) -> Any:
-    return json.loads(path.read_text(encoding="utf-8"))
-
-
-def _remaining_work_graph(root: Path) -> dict[str, Any]:
-    return _load_json(root / "artifacts" / "planner" / "research" / "remaining-work-graph.json")
-
-
-def _dependency_map(edges: list[dict[str, Any]]) -> dict[str, list[str]]:
-    mapping: dict[str, list[str]] = {}
-    for edge in edges:
-        if not isinstance(edge, dict) or edge.get("relation") != "depends_on":
-            continue
-        mapping.setdefault(str(edge.get("from", "")), []).append(str(edge.get("to", "")))
-    return {key: sorted(set(values)) for key, values in mapping.items()}
-
-
-def _gating_map(edges: list[dict[str, Any]]) -> dict[str, list[str]]:
-    mapping: dict[str, list[str]] = {}
-    for edge in edges:
-        if not isinstance(edge, dict) or edge.get("relation") != "gated_by":
-            continue
-        mapping.setdefault(str(edge.get("from", "")), []).append(str(edge.get("to", "")))
-    return {key: sorted(set(values)) for key, values in mapping.items()}
 
 
 def _adapt_contract(
@@ -91,49 +66,6 @@ def _planner_score_surface(root: Path, graph_id: str | None) -> dict[str, Any]:
         }
 
 
-def _active_work_node(
-    nodes: list[dict[str, Any]],
-    *,
-    branch: str,
-    execplan_id: str | None,
-) -> dict[str, Any] | None:
-    for node in nodes:
-        if not isinstance(node, dict):
-            continue
-        implementation_branch = str(node.get("implementation_branch", "")).strip()
-        target_execplan_id = str(node.get("target_execplan_id", "")).strip()
-        if implementation_branch and implementation_branch == branch:
-            return node
-        if execplan_id and execplan_id == target_execplan_id:
-            return node
-    return None
-
-
-def _work_projection(
-    node: dict[str, Any],
-    dependency_map: dict[str, list[str]],
-    gating_map: dict[str, list[str]],
-) -> dict[str, Any]:
-    node_id = str(node.get("node_id", "")).strip()
-    return {
-        "node_id": node_id,
-        "title": str(node.get("title", "")).strip(),
-        "status": str(node.get("status", "")).strip(),
-        "gating_class": str(node.get("gating_class", "")).strip(),
-        "goal_area": str(node.get("goal_area", "")).strip(),
-        "target_execplan_id": str(node.get("target_execplan_id", "")).strip(),
-        "implementation_branch": str(node.get("implementation_branch", "")).strip(),
-        "conflict_domains": sorted(str(item).strip() for item in node.get("conflict_domains", []) if str(item).strip()),
-        "depends_on": dependency_map.get(node_id, []),
-        "gated_by": gating_map.get(node_id, []),
-    }
-
-
-def _is_slice_node(node: dict[str, Any]) -> bool:
-    goal_area = str(node.get("goal_area", "")).strip()
-    return bool(goal_area) and goal_area != "reference"
-
-
 def get_orchestrator_status(
     *,
     root: str = ".",
@@ -143,20 +75,6 @@ def get_orchestrator_status(
     planner_graph_id: str | None = None,
 ) -> tuple[int, dict[str, Any]]:
     cwd = Path(root)
-    graph = _remaining_work_graph(cwd)
-    nodes = [
-        node
-        for node in graph.get("nodes", [])
-        if isinstance(node, dict) and str(node.get("node_id", "")).strip()
-    ]
-    edges = [edge for edge in graph.get("edges", []) if isinstance(edge, dict)]
-    dependency_map = _dependency_map(edges)
-    gating_map = _gating_map(edges)
-
-    execplan_id = None
-    if execplan_path:
-        execplan_id = str(parse_plan(Path(execplan_path)).frontmatter.get("id", "")).strip()
-
     current_branch = branch or ""
     game_code, game_report = get_game_status(
         root=root,
@@ -165,32 +83,14 @@ def get_orchestrator_status(
         base_ref=base_ref,
     )
     current_branch = str(game_report.get("branch", current_branch)).strip()
-
-    active_node = _active_work_node(nodes, branch=current_branch, execplan_id=execplan_id)
-    active_work = (
-        _work_projection(active_node, dependency_map, gating_map)
-        if active_node
-        else None
+    remaining_work_code, remaining_work_report = check_remaining_work_graph(
+        root=root,
+        branch=current_branch or None,
+        execplan_path=execplan_path,
     )
-
-    ready_work = sorted(
-        (
-            _work_projection(node, dependency_map, gating_map)
-            for node in nodes
-            if str(node.get("status", "")).strip() == "ready"
-            and _is_slice_node(node)
-        ),
-        key=lambda item: (item["target_execplan_id"], item["node_id"]),
-    )
-    blocked_work = sorted(
-        (
-            _work_projection(node, dependency_map, gating_map)
-            for node in nodes
-            if str(node.get("status", "")).strip() in {"blocked", "review_gated", "decision_gated"}
-            and _is_slice_node(node)
-        ),
-        key=lambda item: (item["target_execplan_id"], item["node_id"]),
-    )
+    active_work = remaining_work_report.get("active_node")
+    ready_work = remaining_work_report.get("ready_nodes", [])
+    blocked_work = remaining_work_report.get("blocked_nodes", [])
 
     _, rule_report = check_rule_graph(root)
     _, citation_report = check_citations(root)
@@ -203,6 +103,12 @@ def get_orchestrator_status(
     score_surface = _planner_score_surface(cwd, planner_graph_id)
 
     checks = {
+        "remaining_work_graph": _adapt_contract(
+            command="remaining-work-graph-check",
+            ok=remaining_work_code == 0,
+            blockers=[str(item) for item in remaining_work_report.get("errors", [])],
+            payload=remaining_work_report,
+        ),
         "rule_graph": _adapt_contract(
             command="rule-graph-check",
             ok=bool(rule_report.get("ok", False)),
@@ -239,7 +145,7 @@ def get_orchestrator_status(
     for check_name, check_report in checks.items():
         if check_report["status"] == "blocked":
             blockers.extend(f"{check_name}:{item}" for item in check_report["blockers"])
-    if active_work and active_work["status"] != "ready":
+    if active_work and str(active_work.get("status", "")).strip() != "ready":
         blockers.append(f"active_work_not_ready:{active_work['node_id']}:{active_work['status']}")
 
     next_validations = [
