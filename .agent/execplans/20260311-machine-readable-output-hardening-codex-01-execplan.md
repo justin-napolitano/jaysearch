@@ -59,24 +59,29 @@ This slice should normalize the output contracts for `bin/planner`, `bin/citatio
 
 ## Progress
 
-- [ ] Normalize planner output contract
-- [ ] Normalize citation-check output contract
-- [ ] Normalize planner-score output contract
-- [ ] Normalize rule-graph-check output contract
-- [ ] Add smoke coverage
+- [x] Normalize planner output contract
+- [x] Normalize citation-check output contract
+- [x] Normalize planner-score output contract
+- [x] Normalize rule-graph-check output contract
+- [x] Add smoke coverage
 
 ## Surprises & Discoveries
 
 - output shapes may already be close enough that this slice is mostly normalization and test hardening
 - some commands may need explicit `--json` support even if they already print JSON today
+- the four target command families already emit JSON, so this slice can stay focused on a stable top-level envelope and deterministic failure paths
 
 ## Decision Log
 
 - 2026-03-11 / agent-codex-01 / Orchestrator-facing commands must prefer stable machine-readable outputs over ad hoc human formatting.
+- 2026-03-11 / agent-codex-01 / Normalize the target commands around a shared top-level envelope with `command`, `status`, `blockers`, and `next_validations` while preserving command-specific payload fields needed by current tests and callers.
 
 ## Outcomes & Retrospective
 
 On completion, this slice should leave the key orchestration commands with stable JSON surfaces and one smoke test that verifies they can be consumed together.
+
+- `bin/orchestrator-output-smoke-test` now exercises the four orchestrator-facing command families in one deterministic pass.
+- Focused contract tests cover the normalized top-level envelope and non-zero failure path behavior.
 
 ## Context and Orientation
 
