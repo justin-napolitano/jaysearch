@@ -13,6 +13,8 @@ The remaining-work graph is canonical for:
 - conflict domains
 - queued ExecPlan readiness classification
 - chaining posture for future orchestration
+- implementation-branch targeting for ready slices
+- machine-checkable active-slice and ready-slice derivation when paired with `bin/remaining-work-graph-check`
 
 It is not canonical for:
 
@@ -34,6 +36,8 @@ Each remaining-work node should define:
 - gating class
 - expected artifact outputs
 - target ExecPlan id
+- implementation branch when the slice is runnable now
+- explicit `status_reason` whenever the node is blocked or review/decision gated
 
 ## Gating Classes
 
@@ -67,4 +71,4 @@ The initial queued areas captured by this graph are:
 4. implementation orchestrator runtime
 5. provider-sync scaffolding
 
-These areas are not equivalent in readiness. The graph artifact defines which are already completed, which are ready for a dedicated `impl-execplan/*` branch now, and which remain blocked or gated.
+These areas are not equivalent in readiness. The graph artifact and `bin/remaining-work-graph-check` define which are already completed, which are ready for a dedicated `impl-execplan/*` branch now, and which remain blocked or gated.

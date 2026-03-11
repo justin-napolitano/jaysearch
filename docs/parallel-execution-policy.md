@@ -38,6 +38,8 @@ Queued work should be classified as:
 
 The next orchestration layer should prefer `auto_runnable` work but must still stop when merge-readiness cannot be satisfied deterministically.
 
+Runtime legality and ready-slice determination should be taken from `artifacts/planner/research/remaining-work-graph.json` as validated by `bin/remaining-work-graph-check`, not from prose queue summaries.
+
 `queue-execplan/*` branches remain optional integration branches. They may stack already-executed slices deliberately, but they do not replace slice-local implementation branches.
 
 ## Expected Near-Term Parallelism
