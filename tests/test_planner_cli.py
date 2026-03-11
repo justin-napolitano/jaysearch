@@ -3,9 +3,11 @@ from __future__ import annotations
 import json
 from pathlib import Path
 import sys
+from typing import Any
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
+from platform_tools import planner_cli
 from platform_tools.planner_runtime import (
     apply_move,
     build_graph,
@@ -28,6 +30,11 @@ def _write_json(path: Path, data: object) -> None:
 def _write_text(path: Path, text: str) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(text, encoding="utf-8")
+
+
+def _read_cli_report(captured: str) -> dict[str, Any]:
+    lines = [line for line in captured.splitlines() if line.strip()]
+    return json.loads("\n".join(lines))
 
 
 def _seed_runtime_specs(root: Path) -> None:
@@ -357,3 +364,70 @@ def test_validate_all_checks_research_artifacts(tmp_path: Path) -> None:
     code, report = validate_all(root=tmp_path.as_posix())
     assert code == 0
     assert report["research"]["ok"] is True
+
+
+def test_planner_cli_wraps_graph_validation_in_orchestrator_contract(
+    tmp_path: Path,
+    monkeypatch,
+    capsys,
+) -> None:
+    _seed_runtime_specs(tmp_path)
+    started = create_session(root=tmp_path.as_posix(), title="CLI Contract")
+    session_id = started["session_id"]
+    session_dir = tmp_path / "artifacts" / "planner" / "sessions" / session_id
+    _write_json(
+        session_dir / "extracted-state.json",
+        {
+            "goals": [{"title": "Validate graph", "success_criteria": "valid", "scope": "cli", "status": "validated"}],
+            "constraints": [],
+            "assumptions": [],
+            "decisions": [],
+            "questions": [],
+            "tasks": [],
+            "risks": [],
+            "evidence": [],
+        },
+    )
+    built = build_graph(root=tmp_path.as_posix(), session_id=session_id)
+
+    monkeypatch.chdir(tmp_path)
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        ["planner_cli.py", "graph", "validate", "--graph-id", built["graph_id"]],
+    )
+    exit_code = planner_cli.main()
+    report = _read_cli_report(capsys.readouterr().out)
+
+    assert exit_code == 0
+    assert report["command"] == "planner"
+    assert report["operation"] == "graph.validate"
+    assert report["status"] == "ok"
+    assert report["blockers"] == []
+    assert report["graph_id"] == built["graph_id"]
+    assert report["next_validations"] == []
+    assert report["ok"] is True
+
+
+def test_planner_cli_reports_machine_readable_precondition_failures(
+    tmp_path: Path,
+    monkeypatch,
+    capsys,
+) -> None:
+    _seed_runtime_specs(tmp_path)
+
+    monkeypatch.chdir(tmp_path)
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        ["planner_cli.py", "graph", "validate", "--graph-id", "missing-graph"],
+    )
+    exit_code = planner_cli.main()
+    report = _read_cli_report(capsys.readouterr().out)
+
+    assert exit_code == 1
+    assert report["command"] == "planner"
+    assert report["operation"] == "graph.validate"
+    assert report["status"] == "blocked"
+    assert report["blockers"]
+    assert report["ok"] is False

@@ -8,6 +8,9 @@ from typing import Any
 import yaml
 
 
+COMMAND = "planner-score"
+
+
 def _read_json(path: Path) -> Any:
     return json.loads(path.read_text(encoding="utf-8"))
 
@@ -33,6 +36,41 @@ def _load_graph(root: str, graph_id: str) -> dict[str, Any]:
 
 def _load_scoring(root: str) -> dict[str, Any]:
     return _read_yaml(Path(root) / "spec" / "scoring.yaml")
+
+
+def _blocked_node_refs(graph: dict[str, Any]) -> list[str]:
+    blockers: list[str] = []
+    for node in graph.get("nodes", []):
+        node_id = str(node.get("node_id", "?"))
+        if node.get("status") == "blocked":
+            blockers.append(f"graph_blocked:{node_id}")
+        if node.get("node_type") == "question" and node.get("blocking") is True:
+            blockers.append(f"graph_blocking_question:{node_id}")
+        if node.get("status") == "recovery_required":
+            blockers.append(f"graph_recovery_required:{node_id}")
+    return sorted(blockers)
+
+
+def _report(
+    *,
+    graph_id: str,
+    graph_path: str,
+    blockers: list[str],
+    planner_game: dict[str, Any] | None = None,
+    implementation_game: dict[str, Any] | None = None,
+    ok: bool = True,
+) -> dict[str, Any]:
+    return {
+        "command": COMMAND,
+        "graph_id": graph_id,
+        "status": "ok" if ok else "blocked",
+        "blockers": sorted(blockers),
+        "next_validations": [],
+        "evidence_refs": [graph_path, "spec/scoring.yaml"],
+        "ok": ok,
+        "planner_game": planner_game or {},
+        "implementation_game": implementation_game or {},
+    }
 
 
 def _planner_scores(graph: dict[str, Any]) -> dict[str, float]:
@@ -122,18 +160,20 @@ def score_graph(root: str = ".", graph_id: str = "") -> dict[str, Any]:
     implementation_score = _weighted_score(
         implementation_metrics, scoring.get("implementation_game", {}).get("weights", {})
     )
-    return {
-        "tool": "planner_score",
-        "graph_id": graph_id,
-        "planner_game": {
+    return _report(
+        ok=True,
+        graph_id=graph_id,
+        graph_path=(Path(root) / "artifacts" / "planner" / "graphs" / f"{graph_id}.json").as_posix(),
+        blockers=_blocked_node_refs(graph),
+        planner_game={
             "score": planner_score,
             "metrics": planner_metrics,
         },
-        "implementation_game": {
+        implementation_game={
             "score": implementation_score,
             "metrics": implementation_metrics,
         },
-    }
+    )
 
 
 def main() -> int:
@@ -141,9 +181,19 @@ def main() -> int:
     parser.add_argument("--root", default=".")
     parser.add_argument("--graph-id", required=True)
     args = parser.parse_args()
-    report = score_graph(root=args.root, graph_id=args.graph_id)
+    try:
+        report = score_graph(root=args.root, graph_id=args.graph_id)
+        code = 0
+    except (FileNotFoundError, PermissionError, ValueError, yaml.YAMLError, json.JSONDecodeError) as exc:
+        report = _report(
+            ok=False,
+            graph_id=args.graph_id,
+            graph_path=(Path(args.root) / "artifacts" / "planner" / "graphs" / f"{args.graph_id}.json").as_posix(),
+            blockers=[f"{exc.__class__.__name__}:{exc}"],
+        )
+        code = 1
     print(json.dumps(report, indent=2, sort_keys=True))
-    return 0
+    return code
 
 
 if __name__ == "__main__":
