@@ -28,7 +28,7 @@ properties:
         title:
           type: string
         status:
-          enum: ["ready", "blocked", "review_gated", "decision_gated"]
+          enum: ["ready", "blocked", "review_gated", "decision_gated", "completed"]
         gating_class:
           enum: ["auto_runnable", "review_gated", "decision_gated"]
         conflict_domains:
@@ -38,6 +38,8 @@ properties:
         target_execplan_id:
           type: string
         goal_area:
+          type: string
+        implementation_branch:
           type: string
         expected_artifacts:
           type: array

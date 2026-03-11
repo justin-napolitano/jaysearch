@@ -59,7 +59,7 @@ Parallel execution is legal only when nodes do not collide on conflict domains. 
 
 ## Initial Remaining Work Areas
 
-The first queued areas after this slice are:
+The initial queued areas captured by this graph are:
 
 1. machine-readable output hardening
 2. composite orchestrator status surface
@@ -67,4 +67,4 @@ The first queued areas after this slice are:
 4. implementation orchestrator runtime
 5. provider-sync scaffolding
 
-These areas are not equivalent in readiness. The graph artifact defines which are safe to start first and which remain blocked.
+These areas are not equivalent in readiness. The graph artifact defines which are already completed, which are ready for a dedicated `impl-execplan/*` branch now, and which remain blocked or gated.

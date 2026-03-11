@@ -5,7 +5,7 @@
     {
       "node_id": "rwg-001",
       "title": "Machine-readable output hardening",
-      "status": "ready",
+      "status": "completed",
       "gating_class": "auto_runnable",
       "conflict_domains": ["planner-cli", "orchestrator-status"],
       "target_execplan_id": "20260311-machine-readable-output-hardening-codex-01-execplan",
@@ -15,17 +15,18 @@
     {
       "node_id": "rwg-002",
       "title": "Composite orchestrator status command",
-      "status": "blocked",
+      "status": "ready",
       "gating_class": "auto_runnable",
       "conflict_domains": ["orchestrator-status", "merge-readiness"],
       "target_execplan_id": "20260311-composite-orchestrator-status-codex-01-execplan",
       "goal_area": "orchestrator-status",
-      "expected_artifacts": ["bin/orchestrator-status", "src/platform_tools/orchestrator_status.py"]
+      "expected_artifacts": ["bin/orchestrator-status", "src/platform_tools/orchestrator_status.py"],
+      "implementation_branch": "impl-execplan/20260311-composite-orchestrator-status-codex-01-execplan-codex-01-20260311"
     },
     {
       "node_id": "rwg-003",
       "title": "Game-graph validator and active-game status surface",
-      "status": "ready",
+      "status": "completed",
       "gating_class": "auto_runnable",
       "conflict_domains": ["game-graph"],
       "target_execplan_id": "20260311-game-graph-validator-and-status-codex-01-execplan",
@@ -36,7 +37,7 @@
       "node_id": "rwg-004",
       "title": "Implementation orchestrator runtime",
       "status": "blocked",
-      "gating_class": "review_gated",
+      "gating_class": "auto_runnable",
       "conflict_domains": ["planner-cli", "orchestrator-status", "merge-readiness"],
       "target_execplan_id": "20260311-implementation-orchestrator-runtime-codex-01-execplan",
       "goal_area": "implementation-orchestrator",

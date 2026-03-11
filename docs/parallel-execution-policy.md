@@ -13,6 +13,7 @@ Two queued slices may run in parallel only if all of the following are true:
 - the nodes do not share a conflict domain
 - both nodes have active ExecPlans
 - both nodes retain their own merge-readiness path
+- each slice executes on its own `impl-execplan/*` branch
 
 ## Forbidden Parallelism
 
@@ -22,6 +23,7 @@ Parallel execution is forbidden when:
 - two slices redefine the same validator or command contract
 - one slice changes a graph/schema that the other slice consumes
 - one slice is review-gated and that review has not happened
+- multiple active slices are executed only on a shared `queue-execplan/*` branch
 
 ## Chaining Policy
 
@@ -36,6 +38,8 @@ Queued work should be classified as:
 
 The next orchestration layer should prefer `auto_runnable` work but must still stop when merge-readiness cannot be satisfied deterministically.
 
+`queue-execplan/*` branches remain optional integration branches. They may stack already-executed slices deliberately, but they do not replace slice-local implementation branches.
+
 ## Expected Near-Term Parallelism
 
 Initial safe parallelism is narrow:
@@ -49,3 +53,7 @@ Initial unsafe parallelism includes:
 - merge-readiness engine changes alongside orchestration aggregation changes
 
 These should remain serialized until the remaining-work graph says otherwise.
+
+## Current Next Action
+
+With machine-readable output hardening and game-graph status work completed, the next ready slice is the composite orchestrator status surface on its own `impl-execplan/*` branch.

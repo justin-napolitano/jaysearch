@@ -263,17 +263,14 @@
     { "from": "concept-provenance", "to": "claim-codex-orchestration", "relation": "supports" },
     { "from": "concept-state-transitions", "to": "claim-codex-orchestration", "relation": "supports" },
     { "from": "concept-inspection", "to": "claim-codex-orchestration", "relation": "supports" },
-<<<<<<< HEAD
     { "from": "concept-mechanism-design", "to": "claim-nested-game-system", "relation": "supports" },
     { "from": "concept-provenance", "to": "claim-nested-game-system", "relation": "supports" },
     { "from": "concept-state-transitions", "to": "claim-nested-game-system", "relation": "supports" },
     { "from": "concept-inspection", "to": "claim-nested-game-system", "relation": "supports" },
-=======
     { "from": "concept-mechanism-design", "to": "claim-remaining-work-graph", "relation": "supports" },
     { "from": "concept-provenance", "to": "claim-remaining-work-graph", "relation": "supports" },
     { "from": "concept-state-transitions", "to": "claim-remaining-work-graph", "relation": "supports" },
     { "from": "concept-inspection", "to": "claim-remaining-work-graph", "relation": "informs" },
->>>>>>> 9dd25a6 (docs(research): register remaining work graph)
     { "from": "claim-planning-implementation-game", "to": "artifact-planner-game-model", "relation": "cited_in" },
     { "from": "claim-planning-implementation-game", "to": "artifact-implementation-game-model", "relation": "cited_in" },
     { "from": "claim-canonical-graph", "to": "artifact-transition-spec", "relation": "cited_in" },
@@ -282,26 +279,20 @@
     { "from": "claim-codex-orchestration", "to": "artifact-codex-orchestrator-contract", "relation": "cited_in" },
     { "from": "claim-codex-orchestration", "to": "artifact-codex-orchestrator-execution-loop", "relation": "cited_in" },
     { "from": "claim-codex-orchestration", "to": "artifact-merge-readiness-contract", "relation": "cited_in" },
-<<<<<<< HEAD
     { "from": "claim-nested-game-system", "to": "artifact-games-readme", "relation": "cited_in" },
     { "from": "claim-nested-game-system", "to": "artifact-game-inheritance", "relation": "cited_in" },
     { "from": "claim-nested-game-system", "to": "artifact-planning-proof-game", "relation": "cited_in" },
     { "from": "claim-nested-game-system", "to": "artifact-implementation-proof-game", "relation": "cited_in" },
-=======
     { "from": "claim-remaining-work-graph", "to": "artifact-remaining-work-graph-doc", "relation": "cited_in" },
     { "from": "claim-remaining-work-graph", "to": "artifact-parallel-execution-policy", "relation": "cited_in" },
     { "from": "claim-remaining-work-graph", "to": "artifact-queued-execplans", "relation": "cited_in" },
->>>>>>> 9dd25a6 (docs(research): register remaining work graph)
     { "from": "concept-mechanism-design", "to": "artifact-scoring-spec", "relation": "informs" },
     { "from": "concept-inspection", "to": "artifact-scoring-spec", "relation": "informs" },
     { "from": "artifact-assumptions-doc", "to": "claim-planning-implementation-game", "relation": "classified_as" },
     { "from": "artifact-assumptions-doc", "to": "claim-canonical-graph", "relation": "classified_as" },
     { "from": "artifact-assumptions-doc", "to": "claim-explicit-reconciliation", "relation": "classified_as" },
     { "from": "artifact-assumptions-doc", "to": "claim-codex-orchestration", "relation": "classified_as" },
-<<<<<<< HEAD
-    { "from": "artifact-assumptions-doc", "to": "claim-nested-game-system", "relation": "classified_as" }
-=======
+    { "from": "artifact-assumptions-doc", "to": "claim-nested-game-system", "relation": "classified_as" },
     { "from": "artifact-assumptions-doc", "to": "claim-remaining-work-graph", "relation": "classified_as" }
->>>>>>> 9dd25a6 (docs(research): register remaining work graph)
   ]
 }
