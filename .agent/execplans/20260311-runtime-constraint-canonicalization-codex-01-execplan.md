@@ -64,24 +64,28 @@ This slice should move the remaining runtime-critical queue and readiness rules 
 
 ## Progress
 
-- [ ] Define the remaining-work graph validator contract
-- [ ] Canonicalize runtime-ready and active-slice derivation
-- [ ] Remove prose-only runtime constraints from operational paths
-- [ ] Add focused tests and smoke coverage
+- [x] Define the remaining-work graph validator contract
+- [x] Canonicalize runtime-ready and active-slice derivation
+- [x] Remove prose-only runtime constraints from operational paths
+- [x] Add focused tests and smoke coverage
 
 ## Surprises & Discoveries
 
 - the current remaining-work graph still lags merged implementation state, which proves the need for a canonical validator and refresh discipline
 - `docs/queued-execplans.md` is still useful for humans, but the runtime must not depend on it for legality or next-step selection
+- the cleanest repair was to make the remaining-work artifact itself current again and reject stale blocked states, rather than teaching runtimes to keep overriding canonical state heuristically
+- a single validated remaining-work projection can serve both `orchestrator-status` and `implementation-orchestrator`, which removes duplicated readiness logic
 
 ## Decision Log
 
 - 2026-03-11 / agent-codex-01 / Runtime-critical queue and readiness constraints should be enforced from canonical graph artifacts and validators, not from prose mirrors.
 - 2026-03-11 / agent-codex-01 / Human-readable queue documents may remain, but only as explanatory projections whose mismatch against canonical state is treated as drift.
+- 2026-03-11 / agent-codex-01 / The remaining-work graph validator should reject stale blocked nodes whose dependencies are already complete, forcing canonical backlog state to stay current.
+- 2026-03-11 / agent-codex-01 / `orchestrator-status` and `implementation-orchestrator` should both consume the `remaining-work-graph-check` projection rather than maintaining separate readiness derivations.
 
 ## Outcomes & Retrospective
 
-On completion, the orchestrator and implementation runtime should be able to prove their next legal move and stop conditions from machine-checkable state without depending on prose queue descriptions or contract summaries.
+The orchestrator and implementation runtime now prove their next legal move and stop conditions from `remaining-work-graph.json` as validated by `bin/remaining-work-graph-check`, without depending on prose queue descriptions or contract summaries.
 
 ## Context and Orientation
 
