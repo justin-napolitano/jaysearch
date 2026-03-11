@@ -6,7 +6,7 @@ import sys
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
-from platform_tools.integrations.github_projects_runtime import build_github_projects_sync_plan
+from platform_tools.integrations import github_projects_sync as sync
 
 
 def _write_json(path: Path, data: object) -> None:
@@ -19,41 +19,37 @@ def _write_text(path: Path, text: str) -> None:
     path.write_text(text, encoding="utf-8")
 
 
+def _seed_execplan(root: Path) -> Path:
+    execplan = root / ".agent" / "execplans" / "github-projects-sync.md"
+    _write_text(
+        execplan,
+        "\n".join(
+            [
+                "---",
+                'id: "20260311-github-projects-provider-sync-runtime-codex-01-execplan"',
+                "---",
+                "",
+                "# Purpose / Big Picture",
+            ]
+        )
+        + "\n",
+    )
+    return execplan
+
+
 def _seed_specs(root: Path) -> None:
     _write_text(
         root / "spec" / "remaining-work-graph.schema.yaml",
         "\n".join(
             [
                 "version: 1",
+                'title: "Remaining Work Graph Schema"',
+                "type: object",
                 "required:",
                 "  - graph_id",
                 "  - created_at",
                 "  - nodes",
                 "  - edges",
-                "properties:",
-                "  nodes:",
-                "    items:",
-                "      required:",
-                "        - node_id",
-                "        - title",
-                "        - status",
-                "        - gating_class",
-                "        - conflict_domains",
-                "        - target_execplan_id",
-                "      properties:",
-                "        status:",
-                '          enum: ["ready", "blocked", "review_gated", "decision_gated", "completed"]',
-                "        gating_class:",
-                '          enum: ["auto_runnable", "review_gated", "decision_gated"]',
-                "  edges:",
-                "    items:",
-                "      required:",
-                "        - from",
-                "        - to",
-                "        - relation",
-                "      properties:",
-                "        relation:",
-                '          enum: ["depends_on", "conflicts_with", "informed_by", "gated_by"]',
             ]
         )
         + "\n",
@@ -92,23 +88,10 @@ def _seed_specs(root: Path) -> None:
                 "board_model:",
                 "  board_scope: remaining_work_graph",
                 "  item_identity_field: node_id",
-                "required_board_fields:",
-                "  - node_id",
-                "  - title",
-                "  - target_execplan_id",
-                "  - status",
-                "  - gating_class",
-                "  - implementation_branch",
-                "  - goal_area",
-                "  - dependency_summary",
-                "  - human_review_state",
-                "runtime_inputs:",
-                "  required:",
-                "    - project_id",
-                "    - field_map_path",
+                "  item_type: slice_node",
                 "field_map:",
-                "  title: title",
                 "  node_id: text",
+                "  title: title",
                 "  target_execplan_id: text",
                 "  status: single_select",
                 "  gating_class: single_select",
@@ -121,18 +104,57 @@ def _seed_specs(root: Path) -> None:
                 "  smoke_status: single_select",
                 "  merge_readiness: single_select",
                 "  finalization_state: single_select",
+                "status_options:",
+                "  - ready",
+                "  - blocked",
+                "  - review_gated",
+                "  - decision_gated",
+                "  - completed",
+                "gating_class_options:",
+                "  - auto_runnable",
+                "  - review_gated",
+                "  - decision_gated",
+                "goal_area_options:",
+                "  - provider-sync",
+                "  - governance",
+                "human_review_state_options:",
+                "  - not_requested",
+                "  - ready_for_review",
+                "  - in_review",
+                "  - merged",
+                "validation_status_options:",
+                "  - pending",
+                "  - passed",
+                "  - failed",
+                "smoke_status_options:",
+                "  - pending",
+                "  - passed",
+                "  - failed",
+                "merge_readiness_options:",
+                "  - local_only",
+                "  - ready",
+                "  - blocked",
                 "finalization_state_options:",
                 "  - not_finalized",
                 "  - merged_to_main",
+                "bootstrap:",
+                "  provider_managed_fields:",
+                "    - status",
+                "sync:",
+                "  provider_managed_value_map:",
+                "    status:",
+                "      ready: Todo",
+                "      blocked: In Progress",
+                "      review_gated: In Progress",
+                "      decision_gated: In Progress",
+                "      completed: Done",
             ]
         )
         + "\n",
     )
 
 
-def _seed_graph(root: Path) -> Path:
-    execplan = root / ".agent" / "execplans" / "provider.md"
-    _write_text(execplan, "\n".join(["---", 'id: "20260311-provider-sync-scaffold-codex-01-execplan"', "---", "", "# Purpose / Big Picture"]) + "\n")
+def _seed_remaining_work(root: Path) -> None:
     _write_json(
         root / "artifacts" / "planner" / "research" / "remaining-work-graph.json",
         {
@@ -140,86 +162,170 @@ def _seed_graph(root: Path) -> Path:
             "created_at": "2026-03-11T00:00:00Z",
             "nodes": [
                 {
-                    "node_id": "rwg-004",
-                    "title": "Implementation orchestrator runtime",
-                    "status": "completed",
-                    "completion_ref": "merged:implementation-orchestrator-runtime",
+                    "node_id": "rwg-005",
+                    "title": "Provider sync runtime",
+                    "status": "ready",
                     "gating_class": "auto_runnable",
-                    "conflict_domains": ["orchestrator-status"],
-                    "target_execplan_id": "20260311-implementation-orchestrator-runtime-codex-01-execplan",
-                    "goal_area": "implementation-orchestrator",
+                    "conflict_domains": ["provider-sync"],
+                    "target_execplan_id": "20260311-github-projects-provider-sync-runtime-codex-01-execplan",
+                    "goal_area": "provider-sync",
+                    "implementation_branch": "impl-execplan/provider-sync",
                 },
                 {
-                    "node_id": "rwg-005",
-                    "title": "Provider sync scaffolding",
-                    "status": "review_gated",
-                    "status_reason": "human_review_required_before_external_sync",
-                    "gating_class": "review_gated",
+                    "node_id": "rwg-004",
+                    "title": "Bootstrap runtime",
+                    "status": "completed",
+                    "completion_ref": "merged:bootstrap",
+                    "gating_class": "auto_runnable",
                     "conflict_domains": ["provider-sync"],
-                    "target_execplan_id": "20260311-provider-sync-scaffold-codex-01-execplan",
+                    "target_execplan_id": "20260311-github-projects-bootstrap-runtime-codex-01-execplan",
                     "goal_area": "provider-sync",
+                    "implementation_branch": "impl-execplan/bootstrap",
                 },
             ],
-            "edges": [],
+            "edges": [
+                {"from": "rwg-005", "to": "rwg-004", "relation": "depends_on"},
+            ],
         },
     )
-    return execplan
 
 
-def test_github_projects_sync_plan_builds_dry_run_operations(tmp_path: Path) -> None:
-    _seed_specs(tmp_path)
-    execplan = _seed_graph(tmp_path)
-    field_map_path = tmp_path / "field-map.json"
+def _seed_field_map(root: Path) -> Path:
+    path = root / "artifacts" / "provider-sync" / "github-projects-field-map.json"
     _write_json(
-        field_map_path,
+        path,
         {
-            "project_id": "PVT_project",
-            "item_ids_by_node_id": {"rwg-004": "PVT_item_004"},
+            "project_id": "PVT_123",
             "fields": {
-                "node_id": {"field_id": "F1", "data_type": "text"},
-                "target_execplan_id": {"field_id": "F2", "data_type": "text"},
-                "status": {"field_id": "F3", "data_type": "single_select", "options": {"completed": "O_completed", "review_gated": "O_review"}},
-                "gating_class": {"field_id": "F4", "data_type": "single_select", "options": {"auto_runnable": "O_auto", "review_gated": "O_rg"}},
-                "implementation_branch": {"field_id": "F5", "data_type": "text"},
-                "goal_area": {"field_id": "F6", "data_type": "single_select", "options": {"implementation-orchestrator": "O_impl", "provider-sync": "O_ps"}},
-                "dependency_summary": {"field_id": "F7", "data_type": "text"},
-                "human_review_state": {"field_id": "F8", "data_type": "single_select", "options": {"merged": "O_merged", "not_requested": "O_nr"}},
-                "pr_url": {"field_id": "F9", "data_type": "text"},
-                "validation_status": {"field_id": "F10", "data_type": "single_select", "options": {"passed": "O_passed", "pending": "O_pending"}},
-                "smoke_status": {"field_id": "F11", "data_type": "single_select", "options": {"passed": "O_sp", "pending": "O_pen"}},
-                "merge_readiness": {"field_id": "F12", "data_type": "single_select", "options": {"local_only": "O_local"}},
-                "finalization_state": {"field_id": "F13", "data_type": "single_select", "options": {"merged_to_main": "O_fin", "not_finalized": "O_not"}},
+                "title": {"field_id": "builtin:title", "data_type": "title"},
+                "node_id": {"field_id": "FIELD_node_id", "data_type": "text"},
+                "target_execplan_id": {"field_id": "FIELD_target_execplan_id", "data_type": "text"},
+                "status": {
+                    "field_id": "FIELD_status",
+                    "data_type": "single_select",
+                    "provider_managed": True,
+                    "options": {"Todo": "OPT_TODO", "In Progress": "OPT_PROGRESS", "Done": "OPT_DONE"},
+                },
+                "gating_class": {
+                    "field_id": "FIELD_gating_class",
+                    "data_type": "single_select",
+                    "options": {
+                        "auto_runnable": "OPT_AUTO",
+                        "review_gated": "OPT_REVIEW",
+                        "decision_gated": "OPT_DECISION",
+                    },
+                },
+                "implementation_branch": {"field_id": "FIELD_branch", "data_type": "text"},
+                "goal_area": {
+                    "field_id": "FIELD_goal_area",
+                    "data_type": "single_select",
+                    "options": {"provider-sync": "OPT_PROVIDER", "governance": "OPT_GOV"},
+                },
+                "dependency_summary": {"field_id": "FIELD_dep", "data_type": "text"},
+                "human_review_state": {
+                    "field_id": "FIELD_review",
+                    "data_type": "single_select",
+                    "options": {
+                        "not_requested": "OPT_NR",
+                        "ready_for_review": "OPT_RFR",
+                        "merged": "OPT_MERGED",
+                    },
+                },
+                "pr_url": {"field_id": "FIELD_pr", "data_type": "text"},
+                "validation_status": {
+                    "field_id": "FIELD_validation",
+                    "data_type": "single_select",
+                    "options": {"pending": "OPT_PENDING", "passed": "OPT_PASSED", "failed": "OPT_FAILED"},
+                },
+                "smoke_status": {
+                    "field_id": "FIELD_smoke",
+                    "data_type": "single_select",
+                    "options": {"pending": "OPT_PENDING", "passed": "OPT_PASSED", "failed": "OPT_FAILED"},
+                },
+                "merge_readiness": {
+                    "field_id": "FIELD_merge",
+                    "data_type": "single_select",
+                    "options": {"local_only": "OPT_LOCAL", "ready": "OPT_READY", "blocked": "OPT_BLOCKED"},
+                },
+                "finalization_state": {
+                    "field_id": "FIELD_finalization",
+                    "data_type": "single_select",
+                    "options": {"not_finalized": "OPT_NOT_FINAL", "merged_to_main": "OPT_FINAL"},
+                },
             },
+            "item_ids_by_node_id": {},
         },
     )
+    return path
 
-    code, report = build_github_projects_sync_plan(
+
+def test_build_sync_plan_maps_canonical_status_to_provider_status(tmp_path: Path) -> None:
+    _seed_specs(tmp_path)
+    _seed_remaining_work(tmp_path)
+    execplan = _seed_execplan(tmp_path)
+    field_map_path = _seed_field_map(tmp_path)
+
+    code, report = sync.build_github_projects_sync_plan(
         root=tmp_path.as_posix(),
-        execplan_path=execplan.as_posix(),
-        branch="impl-execplan/20260311-provider-sync-scaffold-codex-01-execplan-codex-01-20260311",
         field_map_path=field_map_path.as_posix(),
-        pr_url="https://github.com/example/repo/pull/123",
+        branch="impl-execplan/provider-sync",
+        execplan_path=execplan.as_posix(),
     )
 
     assert code == 0
-    assert report["status"] == "ok"
-    assert report["dry_run"] is True
-    assert report["operations"][0]["action"] == "update_item"
-    assert report["operations"][1]["action"] == "create_draft_item"
-    active_op = next(op for op in report["operations"] if op["node_id"] == "rwg-005")
-    pr_update = next(update for update in active_op["field_updates"] if update["field_name"] == "pr_url")
-    assert pr_update["value"] == "https://github.com/example/repo/pull/123"
+    assert report["ok"] is True
+    assert report["create_count"] == 2
+    ready_op = next(item for item in report["operations"] if item["node_id"] == "rwg-005")
+    status_update = next(item for item in ready_op["field_updates"] if item["field_name"] == "status")
+    assert status_update["provider_value"] == "Todo"
+    assert status_update["option_id"] == "OPT_TODO"
+    completed_op = next(item for item in report["operations"] if item["node_id"] == "rwg-004")
+    completed_status = next(item for item in completed_op["field_updates"] if item["field_name"] == "status")
+    assert completed_status["provider_value"] == "Done"
+    assert completed_status["option_id"] == "OPT_DONE"
 
 
-def test_github_projects_sync_plan_requires_field_map(tmp_path: Path) -> None:
+def test_execute_sync_updates_field_map_with_created_item_ids(tmp_path: Path, monkeypatch) -> None:
     _seed_specs(tmp_path)
-    execplan = _seed_graph(tmp_path)
+    _seed_remaining_work(tmp_path)
+    execplan = _seed_execplan(tmp_path)
+    field_map_path = _seed_field_map(tmp_path)
 
-    code, report = build_github_projects_sync_plan(
-        root=tmp_path.as_posix(),
-        execplan_path=execplan.as_posix(),
-        branch="impl-execplan/20260311-provider-sync-scaffold-codex-01-execplan-codex-01-20260311",
+    monkeypatch.setattr(sync, "github_token_from_env", lambda: "token")
+    monkeypatch.setattr(
+        sync,
+        "add_project_draft_item",
+        lambda **kwargs: {
+            "data": {
+                "addProjectV2DraftIssue": {
+                    "projectItem": {
+                        "id": f"ITEM_{kwargs['title'].replace(' ', '_')}",
+                    }
+                }
+            }
+        },
+    )
+    monkeypatch.setattr(
+        sync,
+        "update_project_item_text_field",
+        lambda **kwargs: {"data": {"updateProjectV2ItemFieldValue": {"projectV2Item": {"id": kwargs["item_id"]}}}},
+    )
+    monkeypatch.setattr(
+        sync,
+        "update_project_item_single_select_field",
+        lambda **kwargs: {"data": {"updateProjectV2ItemFieldValue": {"projectV2Item": {"id": kwargs["item_id"]}}}},
     )
 
-    assert code == 1
-    assert "field_map_path_required" in report["blockers"]
+    code, report = sync.execute_github_projects_sync(
+        root=tmp_path.as_posix(),
+        field_map_path=field_map_path.as_posix(),
+        branch="impl-execplan/provider-sync",
+        execplan_path=execplan.as_posix(),
+        dry_run=False,
+    )
+
+    assert code == 0
+    assert report["ok"] is True
+    updated_field_map = json.loads(field_map_path.read_text(encoding="utf-8"))
+    assert updated_field_map["item_ids_by_node_id"]["rwg-005"] == "ITEM_Provider_sync_runtime"
+    assert updated_field_map["item_ids_by_node_id"]["rwg-004"] == "ITEM_Bootstrap_runtime"
