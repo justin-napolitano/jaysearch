@@ -57,12 +57,12 @@ GitHub Projects is the first provider target. Microsoft Lists should be represen
 
 ## Progress
 
-- [ ] Define provider-neutral adapter contract
-- [ ] Define GitHub Projects-first projection model
-- [ ] Scaffold provider integration package
-- [ ] Protect canonical local authority
-- [ ] Preserve human/agent portability across provider projections
-- [ ] Add focused tests and smoke coverage
+- [x] Define provider-neutral adapter contract
+- [x] Define GitHub Projects-first projection model
+- [x] Scaffold provider integration package
+- [x] Protect canonical local authority
+- [x] Preserve human/agent portability across provider projections
+- [x] Add focused tests and smoke coverage
 
 ## Surprises & Discoveries
 
@@ -70,6 +70,8 @@ GitHub Projects is the first provider target. Microsoft Lists should be represen
 - preserving local authority may require stronger conflict-report artifacts than the current draft contract assumes
 - one remote board per ExecPlan would fragment the governed graph; a graph-domain board with slice items is the better first projection model
 - the board must remain usable by humans if Codex, Claude, or any single agent disappears, so synced fields must expose enough structured state to resume safely from canonical artifacts
+- the remaining-work validator already provides the right projection substrate, so the scaffold can project canonical board items without introducing a second provider-specific readiness model
+- a placeholder Microsoft Lists schema is enough for this slice as long as the provider-neutral contract stays explicit and GitHub Projects proves the first concrete mapping
 
 ## Decision Log
 
@@ -77,10 +79,11 @@ GitHub Projects is the first provider target. Microsoft Lists should be represen
 - 2026-03-11 / agent-codex-01 / GitHub Projects is the first provider target and should project the remaining-work graph as a single governed execution/review board rather than one board per ExecPlan.
 - 2026-03-11 / agent-codex-01 / The sync framework should support both human and agent players, so provider items must be comprehensible and actionable without access to any one agent's hidden state.
 - 2026-03-11 / agent-codex-01 / Provider-neutral adapter contracts and provider-specific schema mappings should both be explicit first-class artifacts.
+- 2026-03-11 / agent-codex-01 / Provider-sync scaffold should remain deterministic and network-free in this slice; only projection contracts, local mapping logic, and smokeable outputs are in scope.
 
 ## Outcomes & Retrospective
 
-On completion, this slice should leave a provider-neutral adapter scaffold plus a GitHub Projects-first mapping contract that can project canonical remaining-work state outward without weakening the platform’s source-of-truth rules.
+This slice now leaves a provider-neutral adapter scaffold plus a GitHub Projects-first mapping contract that projects canonical remaining-work state outward without weakening the platform’s source-of-truth rules.
 
 ## Context and Orientation
 
