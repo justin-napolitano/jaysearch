@@ -36,6 +36,8 @@ Use these categories for future design and implementation artifacts:
 - project-manager systems should remain observer surfaces rather than authorities
 - explicit contract import is preferable to implicit reverse-sync
 - planning merge readiness and implementation merge readiness should be treated as distinct proof games
+- remaining implementation work should be modeled as a canonical backlog graph rather than prose-only next steps
+- safe parallel execution requires explicit conflict domains in addition to dependency edges
 
 ### Policy Choices
 
@@ -50,6 +52,7 @@ Use these categories for future design and implementation artifacts:
 - exact scoring thresholds for planner and implementation phases
 - exact reviewer/referee automation boundaries for future implementation tools
 - exact runtime validator contract for the game graph itself
+- exact runtime validator contract for the remaining-work graph
 
 ## Usage Requirement
 
