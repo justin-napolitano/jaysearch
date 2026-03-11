@@ -1,0 +1,203 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+echo "[1/2] implementation orchestrator contract"
+python3 - <<'PY'
+import json
+import sys
+import tempfile
+from pathlib import Path
+
+sys.path.insert(0, str(Path.cwd() / "src"))
+
+from platform_tools import implementation_orchestrator as runtime
+
+
+def write_json(path: Path, data: object) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(data, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+
+
+def write_text(path: Path, text: str) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(text, encoding="utf-8")
+
+
+branch = "impl-execplan/20260311-implementation-orchestrator-runtime-codex-01-execplan-codex-01-20260311"
+with tempfile.TemporaryDirectory() as tmp:
+    root = Path(tmp)
+    execplan_path = root / ".agent" / "execplans" / "20260311-implementation-orchestrator-runtime-codex-01-execplan.md"
+    write_text(
+        execplan_path,
+        "\n".join(
+            [
+                "---",
+                'id: "20260311-implementation-orchestrator-runtime-codex-01-execplan"',
+                'title: "Implementation Orchestrator Runtime"',
+                'owner: "agent/codex-01"',
+                'created: "2026-03-11T00:00:00Z"',
+                'status: "draft"',
+                'base_branch: "main"',
+                "changes:",
+                "  - src/platform_tools/implementation_orchestrator.py",
+                "  - bin/implementation-orchestrator",
+                'approve_policy: "codeowners"',
+                'reviewers: ["github:test"]',
+                'draft_by: "agent/codex-01"',
+                f'draft_branch: "{branch}"',
+                'draft_created: "2026-03-11T00:00:00Z"',
+                'finalized_by: ""',
+                'finalized_at: ""',
+                'finalized_in_pr: ""',
+                "validation:",
+                "  tests:",
+                '    - name: "execplan-validate"',
+                '      command: "bin/execplan-validate .agent/execplans/20260311-implementation-orchestrator-runtime-codex-01-execplan.md"',
+                '      expected_exit: 0',
+                '    - name: "implementation-orchestrator-smoke-test"',
+                '      command: "bin/implementation-orchestrator-smoke-test"',
+                '      expected_exit: 0',
+                "---",
+                "",
+                "# Purpose / Big Picture",
+            ]
+        )
+        + "\n",
+    )
+    write_json(
+        root / "artifacts" / "planner" / "research" / "remaining-work-graph.json",
+        {
+            "graph_id": "remaining-work-graph-20260311",
+            "created_at": "2026-03-11T00:00:00Z",
+            "nodes": [
+                {
+                    "node_id": "rwg-002",
+                    "title": "Composite orchestrator status command",
+                    "status": "completed",
+                    "gating_class": "auto_runnable",
+                    "target_execplan_id": "20260311-composite-orchestrator-status-codex-01-execplan",
+                    "goal_area": "orchestrator-status",
+                },
+                {
+                    "node_id": "rwg-003",
+                    "title": "Game graph validator",
+                    "status": "completed",
+                    "gating_class": "auto_runnable",
+                    "target_execplan_id": "20260311-game-graph-validator-and-status-codex-01-execplan",
+                    "goal_area": "game-graph",
+                },
+                {
+                    "node_id": "rwg-004",
+                    "title": "Implementation orchestrator runtime",
+                    "status": "blocked",
+                    "gating_class": "auto_runnable",
+                    "target_execplan_id": "20260311-implementation-orchestrator-runtime-codex-01-execplan",
+                    "goal_area": "implementation-orchestrator",
+                    "implementation_branch": branch,
+                },
+            ],
+            "edges": [
+                {"from": "rwg-004", "to": "rwg-002", "relation": "depends_on"},
+                {"from": "rwg-004", "to": "rwg-003", "relation": "depends_on"},
+            ],
+        },
+    )
+    write_json(
+        root / "artifacts" / "planner" / "graphs" / "impl-runtime-graph.json",
+        {
+            "graph_id": "impl-runtime-graph",
+            "created_at": "2026-03-11T00:00:00Z",
+            "updated_at": "2026-03-11T00:00:00Z",
+            "nodes": [
+                {
+                    "node_id": "task-1",
+                    "node_type": "task",
+                    "title": "Implement orchestrator runtime",
+                    "summary": "Implement runtime",
+                    "status": "ready",
+                    "priority": "P1",
+                    "owner": "agent/codex-01",
+                    "created_at": "2026-03-11T00:00:00Z",
+                    "updated_at": "2026-03-11T00:00:00Z",
+                    "description": "Implement runtime",
+                    "ready_definition": "Dependencies complete",
+                    "done_definition": "Runtime merged",
+                    "changes": ["src/platform_tools/implementation_orchestrator.py"],
+                    "provenance": {"source_session": "ps-1", "source_artifact": "extracted-state.json", "recorded_at": "2026-03-11T00:00:00Z", "commit_refs": []},
+                    "evidence_refs": [],
+                    "external_refs": [],
+                }
+            ],
+            "edges": [],
+        },
+    )
+    write_text(
+        root / "spec" / "game-transitions.yaml",
+        "\n".join(
+            [
+                "version: v1",
+                "last_updated: 2026-03-11",
+                "phases:",
+                "  - planner",
+                "  - implementation",
+                "shared_statuses:",
+                "  - ready",
+                "  - in_progress",
+                "  - in_review",
+                "moves:",
+                "  implementation:",
+                "    select:",
+                "      allowed_from:",
+                "        - ready",
+                "      allowed_to:",
+                "        - in_progress",
+                "      referee_required: false",
+                "      required_evidence:",
+                "        - selection_ref",
+                "    implement:",
+                "      allowed_from:",
+                "        - in_progress",
+                "      allowed_to:",
+                "        - in_progress",
+                "        - in_review",
+                "      referee_required: false",
+                "      required_evidence:",
+                "        - commit_ref",
+            ]
+        )
+        + "\n",
+    )
+
+    runtime.get_game_status = lambda **kwargs: (
+        0,
+        {
+            "branch": branch,
+            "blockers": [],
+            "active_execplan": {
+                "id": "20260311-implementation-orchestrator-runtime-codex-01-execplan",
+                "path": execplan_path.as_posix(),
+            },
+            "active_game": {"id": "game-implementation", "lineage": ["game-platform", "game-execplan", "game-implementation"]},
+        },
+    )
+    runtime.check_merge_readiness = lambda **kwargs: (0, {"readiness": True, "failing_checks": []})
+    runtime.get_orchestrator_status = lambda **kwargs: (0, {"status": "ok", "next_actions": [{"action": "continue_active_slice"}]})
+
+    code, report = runtime.run_implementation_orchestrator(
+        root=root.as_posix(),
+        action="select",
+        graph_id="impl-runtime-graph",
+        execplan_path=execplan_path.as_posix(),
+        branch=branch,
+    )
+    print(json.dumps(report, indent=2, sort_keys=True))
+    assert code == 0
+    assert report["command"] == "implementation-orchestrator"
+    assert report["graph_move_result"]["target_status"] == "in_progress"
+    assert report["selected_node"]["status"] == "in_progress"
+PY
+
+echo "[2/2] focused pytest"
+uv run pytest tests/test_implementation_orchestrator.py
+
+echo "implementation orchestrator smoke test completed"
