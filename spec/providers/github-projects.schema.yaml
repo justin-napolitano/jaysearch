@@ -1,0 +1,47 @@
+version: v1
+last_updated: 2026-03-11
+provider: github_projects
+projection_kind: remaining_work_board
+board_model:
+  board_scope: remaining_work_graph
+  item_identity_field: node_id
+  item_type: slice_node
+required_board_fields:
+  - node_id
+  - title
+  - target_execplan_id
+  - status
+  - gating_class
+  - implementation_branch
+  - goal_area
+  - dependency_summary
+  - human_review_state
+field_map:
+  node_id: text
+  title: title
+  target_execplan_id: text
+  status: single_select
+  gating_class: single_select
+  implementation_branch: text
+  goal_area: single_select
+  dependency_summary: text
+  human_review_state: single_select
+  pr_url: text
+  validation_status: single_select
+  smoke_status: single_select
+  merge_readiness: single_select
+status_options:
+  - ready
+  - blocked
+  - review_gated
+  - decision_gated
+  - completed
+human_review_state_options:
+  - not_requested
+  - ready_for_review
+  - in_review
+  - merged
+invariants:
+  - one_board_per_remaining_work_graph_projection
+  - not_one_board_per_execplan
+  - remote_items_are_views_not_authorities

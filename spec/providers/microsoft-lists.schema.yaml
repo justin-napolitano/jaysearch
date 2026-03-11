@@ -1,0 +1,20 @@
+version: v1
+last_updated: 2026-03-11
+provider: microsoft_lists
+projection_kind: remaining_work_board
+status: placeholder
+board_model:
+  board_scope: remaining_work_graph
+  item_identity_field: node_id
+required_list_fields:
+  - node_id
+  - title
+  - target_execplan_id
+  - status
+  - gating_class
+  - implementation_branch
+  - goal_area
+placeholder_notes:
+  - mapping contract reserved for future provider implementation
+  - local graph remains canonical
+  - unresolved sync conflicts default to local state
