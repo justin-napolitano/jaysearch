@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-PYTHONPATH="$(pwd)/src${PYTHONPATH:+:$PYTHONPATH}" python3 -m platform_tools.integrations.github_projects_runtime "$@"
+PYTHONPATH="$(pwd)/src${PYTHONPATH:+:$PYTHONPATH}" python3 -m platform_tools.integrations.github_projects_sync "$@"

@@ -67,6 +67,7 @@ def _project_item(node: dict[str, Any], *, provider: str) -> dict[str, Any]:
     )
     review_state = "merged" if node.get("status") == "completed" else ("ready_for_review" if node.get("status") == "ready" else "not_requested")
     validation_state = "passed" if node.get("status") in {"ready", "completed"} else "pending"
+    finalization_state = "merged_to_main" if node.get("status") == "completed" else "not_finalized"
     return {
         "provider": provider,
         "identity": str(node.get("node_id", "")).strip(),
@@ -80,9 +81,11 @@ def _project_item(node: dict[str, Any], *, provider: str) -> dict[str, Any]:
             "goal_area": str(node.get("goal_area", "")).strip(),
             "dependency_summary": dependency_summary,
             "human_review_state": review_state,
+            "pr_url": "",
             "validation_status": validation_state,
             "smoke_status": validation_state,
             "merge_readiness": "local_only",
+            "finalization_state": finalization_state,
         },
         "local_provenance": {
             "graph_node_id": str(node.get("node_id", "")).strip(),
