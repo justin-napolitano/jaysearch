@@ -167,6 +167,48 @@
           "bibliography_claim_ids": ["claim-nested-game-system"]
         }
       ]
+    },
+    {
+      "artifact_path": "docs/remaining-work-graph.md",
+      "artifact_node_id": "artifact-remaining-work-graph-doc",
+      "required": true,
+      "claims": [
+        {
+          "claim_id": "rwg-001",
+          "summary": "Remaining implementation work should be represented as a canonical backlog graph with dependency and conflict edges.",
+          "category": "design-inference",
+          "source_ids": ["src-maskin-2007", "src-myerson-2007", "src-harel-1987", "src-prov-overview"],
+          "bibliography_claim_ids": ["claim-remaining-work-graph"]
+        }
+      ]
+    },
+    {
+      "artifact_path": "docs/parallel-execution-policy.md",
+      "artifact_node_id": "artifact-parallel-execution-policy",
+      "required": true,
+      "claims": [
+        {
+          "claim_id": "pep-001",
+          "summary": "Parallel Codex execution should be allowed only when both dependency safety and conflict-domain safety are satisfied.",
+          "category": "design-inference",
+          "source_ids": ["src-maskin-2007", "src-fagan-1986", "src-harel-1987"],
+          "bibliography_claim_ids": ["claim-remaining-work-graph"]
+        }
+      ]
+    },
+    {
+      "artifact_path": "docs/queued-execplans.md",
+      "artifact_node_id": "artifact-queued-execplans",
+      "required": true,
+      "claims": [
+        {
+          "claim_id": "qep-001",
+          "summary": "Queued ExecPlans should be projected from the canonical remaining-work graph rather than maintained as a separate source of truth.",
+          "category": "design-inference",
+          "source_ids": ["src-prov-overview", "src-prov-dm", "src-harel-1987"],
+          "bibliography_claim_ids": ["claim-remaining-work-graph"]
+        }
+      ]
     }
   ]
 }

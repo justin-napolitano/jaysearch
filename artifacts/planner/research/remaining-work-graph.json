@@ -1,0 +1,90 @@
+{
+  "graph_id": "remaining-work-graph-20260311",
+  "created_at": "2026-03-11T00:00:00Z",
+  "nodes": [
+    {
+      "node_id": "rwg-001",
+      "title": "Machine-readable output hardening",
+      "status": "completed",
+      "gating_class": "auto_runnable",
+      "conflict_domains": ["planner-cli", "orchestrator-status"],
+      "target_execplan_id": "20260311-machine-readable-output-hardening-codex-01-execplan",
+      "goal_area": "orchestrator-status",
+      "expected_artifacts": ["bin/planner", "bin/citation-check", "bin/planner-score", "bin/rule-graph-check"]
+    },
+    {
+      "node_id": "rwg-002",
+      "title": "Composite orchestrator status command",
+      "status": "ready",
+      "gating_class": "auto_runnable",
+      "conflict_domains": ["orchestrator-status", "merge-readiness"],
+      "target_execplan_id": "20260311-composite-orchestrator-status-codex-01-execplan",
+      "goal_area": "orchestrator-status",
+      "expected_artifacts": ["bin/orchestrator-status", "src/platform_tools/orchestrator_status.py"],
+      "implementation_branch": "impl-execplan/20260311-composite-orchestrator-status-codex-01-execplan-codex-01-20260311"
+    },
+    {
+      "node_id": "rwg-003",
+      "title": "Game-graph validator and active-game status surface",
+      "status": "completed",
+      "gating_class": "auto_runnable",
+      "conflict_domains": ["game-graph"],
+      "target_execplan_id": "20260311-game-graph-validator-and-status-codex-01-execplan",
+      "goal_area": "game-graph",
+      "expected_artifacts": ["bin/game-graph-check", "bin/game-status", "src/platform_tools/game_graph_check.py"]
+    },
+    {
+      "node_id": "rwg-004",
+      "title": "Implementation orchestrator runtime",
+      "status": "blocked",
+      "gating_class": "auto_runnable",
+      "conflict_domains": ["planner-cli", "orchestrator-status", "merge-readiness"],
+      "target_execplan_id": "20260311-implementation-orchestrator-runtime-codex-01-execplan",
+      "goal_area": "implementation-orchestrator",
+      "expected_artifacts": ["src/platform_tools/implementation_orchestrator.py", "bin/implementation-orchestrator"]
+    },
+    {
+      "node_id": "rwg-005",
+      "title": "Provider sync scaffolding",
+      "status": "review_gated",
+      "gating_class": "review_gated",
+      "conflict_domains": ["provider-sync"],
+      "target_execplan_id": "20260311-provider-sync-scaffold-codex-01-execplan",
+      "goal_area": "provider-sync",
+      "expected_artifacts": ["src/platform_tools/integrations/", "spec/provider-adapter.schema.yaml"]
+    },
+    {
+      "node_id": "artifact-orchestrator-contract",
+      "title": "Codex orchestrator contract",
+      "status": "ready",
+      "gating_class": "auto_runnable",
+      "conflict_domains": [],
+      "target_execplan_id": "20260310-codex-orchestrator-contract-codex-01-execplan",
+      "goal_area": "reference",
+      "expected_artifacts": ["docs/codex-orchestrator-contract.md"]
+    },
+    {
+      "node_id": "artifact-merge-readiness-contract",
+      "title": "Merge-readiness contract",
+      "status": "ready",
+      "gating_class": "auto_runnable",
+      "conflict_domains": [],
+      "target_execplan_id": "20260310-merge-readiness-engine-codex-01-execplan",
+      "goal_area": "reference",
+      "expected_artifacts": ["docs/merge-readiness-contract.md"]
+    }
+  ],
+  "edges": [
+    { "from": "rwg-002", "to": "rwg-001", "relation": "depends_on" },
+    { "from": "rwg-004", "to": "rwg-002", "relation": "depends_on" },
+    { "from": "rwg-004", "to": "rwg-003", "relation": "depends_on" },
+    { "from": "rwg-005", "to": "rwg-004", "relation": "gated_by" },
+    { "from": "rwg-001", "to": "rwg-002", "relation": "conflicts_with" },
+    { "from": "rwg-002", "to": "rwg-004", "relation": "conflicts_with" },
+    { "from": "rwg-001", "to": "artifact-orchestrator-contract", "relation": "informed_by" },
+    { "from": "rwg-002", "to": "artifact-orchestrator-contract", "relation": "informed_by" },
+    { "from": "rwg-004", "to": "artifact-orchestrator-contract", "relation": "informed_by" },
+    { "from": "rwg-002", "to": "artifact-merge-readiness-contract", "relation": "informed_by" },
+    { "from": "rwg-004", "to": "artifact-merge-readiness-contract", "relation": "informed_by" }
+  ]
+}

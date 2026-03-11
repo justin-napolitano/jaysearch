@@ -140,6 +140,12 @@
       "title": "The platform should be modeled as a nested system of parent-child games with explicit proof subgames"
     },
     {
+      "id": "claim-remaining-work-graph",
+      "type": "claim",
+      "label": "Remaining Work Graph",
+      "title": "Remaining implementation work should be represented as a canonical backlog graph with dependency and conflict edges"
+    },
+    {
       "id": "artifact-planner-game-model",
       "type": "artifact",
       "label": "Planner Game Model",
@@ -216,6 +222,24 @@
       "type": "artifact",
       "label": "Implementation Proof Game",
       "title": "docs/games/implementation-merge-readiness-game.md"
+    },
+    {
+      "id": "artifact-remaining-work-graph-doc",
+      "type": "artifact",
+      "label": "Remaining Work Graph Doc",
+      "title": "docs/remaining-work-graph.md"
+    },
+    {
+      "id": "artifact-parallel-execution-policy",
+      "type": "artifact",
+      "label": "Parallel Execution Policy",
+      "title": "docs/parallel-execution-policy.md"
+    },
+    {
+      "id": "artifact-queued-execplans",
+      "type": "artifact",
+      "label": "Queued ExecPlans",
+      "title": "docs/queued-execplans.md"
     }
   ],
   "edges": [
@@ -243,6 +267,10 @@
     { "from": "concept-provenance", "to": "claim-nested-game-system", "relation": "supports" },
     { "from": "concept-state-transitions", "to": "claim-nested-game-system", "relation": "supports" },
     { "from": "concept-inspection", "to": "claim-nested-game-system", "relation": "supports" },
+    { "from": "concept-mechanism-design", "to": "claim-remaining-work-graph", "relation": "supports" },
+    { "from": "concept-provenance", "to": "claim-remaining-work-graph", "relation": "supports" },
+    { "from": "concept-state-transitions", "to": "claim-remaining-work-graph", "relation": "supports" },
+    { "from": "concept-inspection", "to": "claim-remaining-work-graph", "relation": "informs" },
     { "from": "claim-planning-implementation-game", "to": "artifact-planner-game-model", "relation": "cited_in" },
     { "from": "claim-planning-implementation-game", "to": "artifact-implementation-game-model", "relation": "cited_in" },
     { "from": "claim-canonical-graph", "to": "artifact-transition-spec", "relation": "cited_in" },
@@ -255,12 +283,16 @@
     { "from": "claim-nested-game-system", "to": "artifact-game-inheritance", "relation": "cited_in" },
     { "from": "claim-nested-game-system", "to": "artifact-planning-proof-game", "relation": "cited_in" },
     { "from": "claim-nested-game-system", "to": "artifact-implementation-proof-game", "relation": "cited_in" },
+    { "from": "claim-remaining-work-graph", "to": "artifact-remaining-work-graph-doc", "relation": "cited_in" },
+    { "from": "claim-remaining-work-graph", "to": "artifact-parallel-execution-policy", "relation": "cited_in" },
+    { "from": "claim-remaining-work-graph", "to": "artifact-queued-execplans", "relation": "cited_in" },
     { "from": "concept-mechanism-design", "to": "artifact-scoring-spec", "relation": "informs" },
     { "from": "concept-inspection", "to": "artifact-scoring-spec", "relation": "informs" },
     { "from": "artifact-assumptions-doc", "to": "claim-planning-implementation-game", "relation": "classified_as" },
     { "from": "artifact-assumptions-doc", "to": "claim-canonical-graph", "relation": "classified_as" },
     { "from": "artifact-assumptions-doc", "to": "claim-explicit-reconciliation", "relation": "classified_as" },
     { "from": "artifact-assumptions-doc", "to": "claim-codex-orchestration", "relation": "classified_as" },
-    { "from": "artifact-assumptions-doc", "to": "claim-nested-game-system", "relation": "classified_as" }
+    { "from": "artifact-assumptions-doc", "to": "claim-nested-game-system", "relation": "classified_as" },
+    { "from": "artifact-assumptions-doc", "to": "claim-remaining-work-graph", "relation": "classified_as" }
   ]
 }
