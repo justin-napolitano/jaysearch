@@ -89,3 +89,8 @@ sync:
       review_gated: In Progress
       decision_gated: In Progress
       completed: Done
+  field_value_map:
+    goal_area:
+      orchestrator-status: orchestrator-runtime
+      implementation-orchestrator: orchestrator-runtime
+      game-graph: runtime-governance
