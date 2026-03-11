@@ -44,6 +44,24 @@ def _provider_managed_fields(mapping: dict[str, Any]) -> set[str]:
     return {str(item).strip() for item in fields if str(item).strip()}
 
 
+def _normalize_field_name(value: str) -> str:
+    return str(value).strip().lower().replace(" ", "_")
+
+
+def _field_name_candidates(field_name: str) -> list[str]:
+    normalized = _normalize_field_name(field_name)
+    aliases = {
+        "status": ["status", "Status"],
+    }.get(normalized, [field_name])
+    candidates = {normalized}
+    for alias in aliases:
+        alias_str = str(alias).strip()
+        if alias_str:
+            candidates.add(alias_str)
+            candidates.add(_normalize_field_name(alias_str))
+    return list(candidates)
+
+
 def _build_field_blueprints(mapping: dict[str, Any]) -> list[dict[str, Any]]:
     field_types = mapping.get("field_map", {}) if isinstance(mapping.get("field_map"), dict) else {}
     provider_managed = _provider_managed_fields(mapping)
@@ -95,6 +113,7 @@ def build_bootstrap_plan(
     owner_type: str,
     title: str | None = None,
     field_map_output_path: str | None = None,
+    existing_project_id: str | None = None,
 ) -> tuple[int, dict[str, Any]]:
     mapping = load_github_projects_mapping(root=root)
     blockers = _bootstrap_contract_blockers(mapping)
@@ -113,6 +132,7 @@ def build_bootstrap_plan(
         "owner_type": owner_type,
         "title": board_title,
         "field_map_output_path": output_path,
+        "existing_project_id": str(existing_project_id or "").strip(),
         "project_create": {
             "owner": owner,
             "owner_type": owner_type,
@@ -150,11 +170,15 @@ def _build_field_map_from_listing(
         .get("nodes", [])
     )
     field_nodes = field_nodes if isinstance(field_nodes, list) else []
-    field_lookup = {
-        str(field.get("name", "")).strip(): field
-        for field in field_nodes
-        if isinstance(field, dict) and str(field.get("name", "")).strip()
-    }
+    field_lookup: dict[str, dict[str, Any]] = {}
+    for field in field_nodes:
+        if not isinstance(field, dict):
+            continue
+        name = str(field.get("name", "")).strip()
+        if not name:
+            continue
+        field_lookup[name] = field
+        field_lookup[_normalize_field_name(name)] = field
     field_map = {
         "project_id": project_id,
         "fields": {
@@ -172,7 +196,11 @@ def _build_field_map_from_listing(
         data_type = str(data_type_value).strip()
         if data_type == "title":
             continue
-        listed = field_lookup.get(field_name, {})
+        listed = {}
+        for candidate in _field_name_candidates(field_name):
+            listed = field_lookup.get(candidate, {})
+            if listed:
+                break
         field_entry = {
             "field_id": str(listed.get("id", "")).strip(),
             "data_type": data_type,
@@ -202,6 +230,7 @@ def execute_bootstrap(
     owner_type: str,
     title: str | None = None,
     field_map_output_path: str | None = None,
+    existing_project_id: str | None = None,
     dry_run: bool = True,
 ) -> tuple[int, dict[str, Any]]:
     code, plan = build_bootstrap_plan(
@@ -210,6 +239,7 @@ def execute_bootstrap(
         owner_type=owner_type,
         title=title,
         field_map_output_path=field_map_output_path,
+        existing_project_id=existing_project_id,
     )
     if code != 0 or dry_run:
         return code, plan
@@ -237,72 +267,82 @@ def execute_bootstrap(
         plan["owner_lookup_response"] = owner_response
         return 1, plan
 
-    project_response = create_project(token=token, owner_id=owner_id, title=plan["title"])
-    project_errors = graphql_errors(project_response)
-    project_id = str(
-        project_response.get("data", {}).get("createProjectV2", {}).get("projectV2", {}).get("id", "")
-    ).strip()
-    if project_errors or not project_id:
-        plan["status"] = "blocked"
-        plan["ok"] = False
-        plan["blockers"] = (
-            [f"github_graphql:{message}" for message in project_errors] if project_errors else ["project_creation_failed"]
-        )
-        plan["project_response"] = project_response
-        return 1, plan
-
     plan["dry_run"] = False
-    execution_results: list[dict[str, Any]] = [
-        {
-            "action": "create_project",
-            "project_id": project_id,
-            "response": project_response,
-        }
-    ]
-    for field in plan["field_creates"]:
-        if field.get("provider_managed", False):
-            execution_results.append(
-                {
-                    "action": "discover_field",
-                    "field_name": field["field_name"],
-                    "provider_managed": True,
-                }
-            )
-            continue
-        graphql_type = _graphql_field_type(str(field["data_type"]).strip())
-        if not graphql_type:
-            plan["status"] = "blocked"
-            plan["ok"] = False
-            plan["blockers"] = [f"unsupported_field_type:{field['field_name']}:{field['data_type']}"]
-            return 1, plan
-        response = create_project_field(
-            token=token,
-            project_id=project_id,
-            field_name=str(field["field_name"]).strip(),
-            data_type=graphql_type,
-            single_select_options=list(field.get("options", [])),
+    existing_id = str(existing_project_id or "").strip()
+    execution_results: list[dict[str, Any]] = []
+    if existing_id:
+        project_id = existing_id
+        execution_results.append(
+            {
+                "action": "reuse_project",
+                "project_id": project_id,
+            }
         )
-        field_errors = graphql_errors(response)
-        if field_errors:
+    else:
+        project_response = create_project(token=token, owner_id=owner_id, title=plan["title"])
+        project_errors = graphql_errors(project_response)
+        project_id = str(
+            project_response.get("data", {}).get("createProjectV2", {}).get("projectV2", {}).get("id", "")
+        ).strip()
+        if project_errors or not project_id:
             plan["status"] = "blocked"
             plan["ok"] = False
-            plan["blockers"] = [f"github_graphql:{message}" for message in field_errors]
-            plan["project_id"] = project_id
-            plan["execution_results"] = execution_results + [
+            plan["blockers"] = (
+                [f"github_graphql:{message}" for message in project_errors] if project_errors else ["project_creation_failed"]
+            )
+            plan["project_response"] = project_response
+            return 1, plan
+        execution_results.append(
+            {
+                "action": "create_project",
+                "project_id": project_id,
+                "response": project_response,
+            }
+        )
+        for field in plan["field_creates"]:
+            if field.get("provider_managed", False):
+                execution_results.append(
+                    {
+                        "action": "discover_field",
+                        "field_name": field["field_name"],
+                        "provider_managed": True,
+                    }
+                )
+                continue
+            graphql_type = _graphql_field_type(str(field["data_type"]).strip())
+            if not graphql_type:
+                plan["status"] = "blocked"
+                plan["ok"] = False
+                plan["blockers"] = [f"unsupported_field_type:{field['field_name']}:{field['data_type']}"]
+                return 1, plan
+            response = create_project_field(
+                token=token,
+                project_id=project_id,
+                field_name=str(field["field_name"]).strip(),
+                data_type=graphql_type,
+                single_select_options=list(field.get("options", [])),
+            )
+            field_errors = graphql_errors(response)
+            if field_errors:
+                plan["status"] = "blocked"
+                plan["ok"] = False
+                plan["blockers"] = [f"github_graphql:{message}" for message in field_errors]
+                plan["project_id"] = project_id
+                plan["execution_results"] = execution_results + [
+                    {
+                        "action": "create_field",
+                        "field_name": field["field_name"],
+                        "response": response,
+                    }
+                ]
+                return 1, plan
+            execution_results.append(
                 {
                     "action": "create_field",
                     "field_name": field["field_name"],
                     "response": response,
                 }
-            ]
-            return 1, plan
-        execution_results.append(
-            {
-                "action": "create_field",
-                "field_name": field["field_name"],
-                "response": response,
-            }
-        )
+            )
 
     field_listing = list_project_fields(token=token, project_id=project_id)
     listing_errors = graphql_errors(field_listing)
@@ -332,6 +372,7 @@ def main() -> int:
     parser.add_argument("--owner-type", required=True, choices=["user", "organization"])
     parser.add_argument("--title", default=None)
     parser.add_argument("--field-map-output-path", default=None)
+    parser.add_argument("--existing-project-id", default=None)
     parser.add_argument("--execute", action="store_true")
     args = parser.parse_args()
     code, report = execute_bootstrap(
@@ -340,6 +381,7 @@ def main() -> int:
         owner_type=args.owner_type,
         title=args.title,
         field_map_output_path=args.field_map_output_path,
+        existing_project_id=args.existing_project_id,
         dry_run=not args.execute,
     )
     print(json.dumps(report, indent=2, sort_keys=True))

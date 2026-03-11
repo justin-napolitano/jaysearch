@@ -320,7 +320,7 @@ def test_execute_bootstrap_discovers_provider_managed_status(tmp_path: Path, mon
                         "nodes": [
                             {
                                 "id": "FIELD_STATUS_BUILTIN",
-                                "name": "status",
+                                "name": "Status",
                                 "dataType": "SINGLE_SELECT",
                                 "options": [
                                     {"id": "OPT_READY", "name": "ready"},
@@ -349,3 +349,54 @@ def test_execute_bootstrap_discovers_provider_managed_status(tmp_path: Path, mon
     field_map = json.loads(output_path.read_text(encoding="utf-8"))
     assert field_map["fields"]["status"]["field_id"] == "FIELD_STATUS_BUILTIN"
     assert field_map["fields"]["status"]["provider_managed"] is True
+
+
+def test_execute_bootstrap_can_refresh_existing_project_field_map(tmp_path: Path, monkeypatch) -> None:
+    _seed_mapping(tmp_path)
+    output_path = tmp_path / "artifacts" / "provider-sync" / "github-projects-field-map.json"
+
+    monkeypatch.setattr(bootstrap, "github_token_from_env", lambda: "token")
+    monkeypatch.setattr(
+        bootstrap,
+        "resolve_owner_id",
+        lambda **_: ("USER123", {"data": {"user": {"id": "USER123"}}}),
+    )
+    monkeypatch.setattr(
+        bootstrap,
+        "list_project_fields",
+        lambda **_: {
+            "data": {
+                "node": {
+                    "fields": {
+                        "nodes": [
+                            {
+                                "id": "FIELD_STATUS_BUILTIN",
+                                "name": "Status",
+                                "dataType": "SINGLE_SELECT",
+                                "options": [
+                                    {"id": "OPT_READY", "name": "ready"},
+                                ],
+                            }
+                        ]
+                    }
+                }
+            }
+        },
+    )
+
+    code, report = bootstrap.execute_bootstrap(
+        root=tmp_path.as_posix(),
+        owner="JNA31A_AIT",
+        owner_type="user",
+        field_map_output_path=output_path.as_posix(),
+        existing_project_id="PVT_EXISTING",
+        dry_run=False,
+    )
+
+    assert code == 0
+    assert report["ok"] is True
+    assert report["project_id"] == "PVT_EXISTING"
+    assert any(item["action"] == "reuse_project" for item in report["execution_results"])
+    field_map = json.loads(output_path.read_text(encoding="utf-8"))
+    assert field_map["project_id"] == "PVT_EXISTING"
+    assert field_map["fields"]["status"]["field_id"] == "FIELD_STATUS_BUILTIN"
