@@ -1,0 +1,105 @@
+{
+  "fields": {
+    "dependency_summary": {
+      "data_type": "text",
+      "field_id": "PVTF_lAHODxnPG84BReuczg_S80A"
+    },
+    "finalization_state": {
+      "data_type": "single_select",
+      "field_id": "PVTSSF_lAHODxnPG84BReuczg_S80Y",
+      "options": {
+        "merged_to_main": "e89a1b5c",
+        "not_finalized": "bce39c6f"
+      }
+    },
+    "gating_class": {
+      "data_type": "single_select",
+      "field_id": "PVTSSF_lAHODxnPG84BReuczg_S8z0",
+      "options": {
+        "auto_runnable": "8dfa7e17",
+        "decision_gated": "0fdcfe39",
+        "review_gated": "55c1a271"
+      }
+    },
+    "goal_area": {
+      "data_type": "single_select",
+      "field_id": "PVTSSF_lAHODxnPG84BReuczg_S8z8",
+      "options": {
+        "governance": "4a6ee4c4",
+        "integration": "f068fee9",
+        "orchestrator-runtime": "72ae7233",
+        "provider-sync": "689dd0cd",
+        "runtime-governance": "01a662d6"
+      }
+    },
+    "human_review_state": {
+      "data_type": "single_select",
+      "field_id": "PVTSSF_lAHODxnPG84BReuczg_S80E",
+      "options": {
+        "in_review": "060eacb7",
+        "merged": "79a44f77",
+        "not_requested": "fab69c28",
+        "ready_for_review": "bb7d58b4"
+      }
+    },
+    "implementation_branch": {
+      "data_type": "text",
+      "field_id": "PVTF_lAHODxnPG84BReuczg_S8z4"
+    },
+    "merge_readiness": {
+      "data_type": "single_select",
+      "field_id": "PVTSSF_lAHODxnPG84BReuczg_S80U",
+      "options": {
+        "blocked": "57a0b94f",
+        "local_only": "e44c5a46",
+        "ready": "c76f3074"
+      }
+    },
+    "node_id": {
+      "data_type": "text",
+      "field_id": "PVTF_lAHODxnPG84BReuczg_S8zs"
+    },
+    "pr_url": {
+      "data_type": "text",
+      "field_id": "PVTF_lAHODxnPG84BReuczg_S80I"
+    },
+    "smoke_status": {
+      "data_type": "single_select",
+      "field_id": "PVTSSF_lAHODxnPG84BReuczg_S80Q",
+      "options": {
+        "failed": "87790f83",
+        "passed": "2c5bfb86",
+        "pending": "771a493a"
+      }
+    },
+    "status": {
+      "data_type": "single_select",
+      "field_id": "PVTSSF_lAHODxnPG84BReuczg_S8zM",
+      "options": {
+        "Done": "98236657",
+        "In Progress": "47fc9ee4",
+        "Todo": "f75ad846"
+      },
+      "provider_managed": true
+    },
+    "target_execplan_id": {
+      "data_type": "text",
+      "field_id": "PVTF_lAHODxnPG84BReuczg_S8zw"
+    },
+    "title": {
+      "data_type": "title",
+      "field_id": "builtin:title"
+    },
+    "validation_status": {
+      "data_type": "single_select",
+      "field_id": "PVTSSF_lAHODxnPG84BReuczg_S80M",
+      "options": {
+        "failed": "660341c1",
+        "passed": "b32848f1",
+        "pending": "498b3a60"
+      }
+    }
+  },
+  "item_ids_by_node_id": {},
+  "project_id": "PVT_kwHODxnPG84BReuc"
+}
