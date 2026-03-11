@@ -29,6 +29,13 @@ def load_provider_mapping(*, root: str = ".", provider: str) -> dict[str, Any]:
     return _load_yaml(Path(root) / "spec" / "providers" / filename)
 
 
+def _execplan_path_for_target(*, root: str, target_execplan_id: str) -> str:
+    if not target_execplan_id:
+        return ""
+    candidate = Path(root) / ".agent" / "execplans" / f"{target_execplan_id}.md"
+    return candidate.as_posix() if candidate.exists() else ""
+
+
 def _provider_projection_blockers(
     *,
     contract: dict[str, Any],
@@ -61,12 +68,13 @@ def _provider_projection_blockers(
     return blockers
 
 
-def _project_item(node: dict[str, Any], *, provider: str) -> dict[str, Any]:
+def _project_item(node: dict[str, Any], *, provider: str, root: str) -> dict[str, Any]:
     dependency_summary = ", ".join(
         f"{item['node_id']}={item['status']}" for item in node.get("dependency_states", [])
     )
     review_state = "merged" if node.get("status") == "completed" else ("ready_for_review" if node.get("status") == "ready" else "not_requested")
     validation_state = "passed" if node.get("status") in {"ready", "completed"} else "pending"
+    finalization_state = "merged_to_main" if node.get("status") == "completed" else "not_finalized"
     return {
         "provider": provider,
         "identity": str(node.get("node_id", "")).strip(),
@@ -80,13 +88,21 @@ def _project_item(node: dict[str, Any], *, provider: str) -> dict[str, Any]:
             "goal_area": str(node.get("goal_area", "")).strip(),
             "dependency_summary": dependency_summary,
             "human_review_state": review_state,
+            "pr_url": "",
             "validation_status": validation_state,
             "smoke_status": validation_state,
             "merge_readiness": "local_only",
+            "finalization_state": finalization_state,
         },
         "local_provenance": {
             "graph_node_id": str(node.get("node_id", "")).strip(),
             "target_execplan_id": str(node.get("target_execplan_id", "")).strip(),
+            "completion_ref": str(node.get("completion_ref", "")).strip(),
+            "execplan_path": _execplan_path_for_target(
+                root=root,
+                target_execplan_id=str(node.get("target_execplan_id", "")).strip(),
+            ),
+            "implementation_branch": str(node.get("implementation_branch", "")).strip(),
         },
     }
 
@@ -115,7 +131,7 @@ def build_provider_projection(
         for node in remaining_work_report.get(collection_name, []):
             if not isinstance(node, dict):
                 continue
-            items.append(_project_item(node, provider=provider))
+            items.append(_project_item(node, provider=provider, root=root))
     items = sorted(items, key=lambda item: item["identity"])
 
     execplan_id = ""
