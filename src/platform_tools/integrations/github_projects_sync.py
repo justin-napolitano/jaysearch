@@ -109,6 +109,28 @@ def _field_updates_for_item(
     return updates, blockers
 
 
+def _item_summary_body(operation: dict[str, Any]) -> str:
+    provenance = operation.get("local_provenance", {}) if isinstance(operation.get("local_provenance"), dict) else {}
+    lines = [
+        f"# {str(operation.get('title', '')).strip()}",
+        "",
+        f"- node_id: {str(operation.get('node_id', '')).strip()}",
+        f"- target_execplan_id: {str(provenance.get('target_execplan_id', '')).strip()}",
+        f"- execplan_path: {str(provenance.get('execplan_path', '')).strip()}",
+        f"- implementation_branch: {str(provenance.get('implementation_branch', '')).strip()}",
+    ]
+    completion_ref = str(provenance.get("completion_ref", "")).strip()
+    if completion_ref:
+        lines.append(f"- completion_ref: {completion_ref}")
+    lines.extend(["", "## Field Updates", ""])
+    for update in operation.get("field_updates", []):
+        if not isinstance(update, dict):
+            continue
+        provider_value = str(update.get("provider_value", update.get("value", ""))).strip()
+        lines.append(f"- {str(update.get('field_name', '')).strip()}: {provider_value}")
+    return "\n".join(lines).strip()
+
+
 def build_github_projects_sync_plan(
     *,
     root: str = ".",
@@ -169,6 +191,7 @@ def build_github_projects_sync_plan(
                 "field_updates": updates,
             }
         )
+        operations[-1]["summary_body"] = _item_summary_body(operations[-1])
 
     report = {
         "command": "github-projects-sync",
@@ -232,7 +255,7 @@ def execute_github_projects_sync(
             continue
         item_id = str(operation.get("item_id", "")).strip()
         if not item_id:
-            body = json.dumps(operation.get("local_provenance", {}), indent=2, sort_keys=True)
+            body = str(operation.get("summary_body", "")).strip()
             response = add_project_draft_item(
                 token=token,
                 project_id=project_id,

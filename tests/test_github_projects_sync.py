@@ -297,10 +297,11 @@ def test_execute_sync_updates_field_map_with_created_item_ids(tmp_path: Path, mo
     field_map_path = _seed_field_map(tmp_path)
 
     monkeypatch.setattr(sync, "github_token_from_env", lambda: "token")
-    monkeypatch.setattr(
-        sync,
-        "add_project_draft_item",
-        lambda **kwargs: {
+    captured_bodies: list[str] = []
+
+    def _add_project_draft_item(**kwargs):
+        captured_bodies.append(kwargs["body"])
+        return {
             "data": {
                 "addProjectV2DraftIssue": {
                     "projectItem": {
@@ -308,8 +309,9 @@ def test_execute_sync_updates_field_map_with_created_item_ids(tmp_path: Path, mo
                     }
                 }
             }
-        },
-    )
+        }
+
+    monkeypatch.setattr(sync, "add_project_draft_item", _add_project_draft_item)
     monkeypatch.setattr(
         sync,
         "update_project_item_text_field",
@@ -334,6 +336,8 @@ def test_execute_sync_updates_field_map_with_created_item_ids(tmp_path: Path, mo
     updated_field_map = json.loads(field_map_path.read_text(encoding="utf-8"))
     assert updated_field_map["item_ids_by_node_id"]["rwg-005"] == "ITEM_Provider_sync_runtime"
     assert updated_field_map["item_ids_by_node_id"]["rwg-004"] == "ITEM_Bootstrap_runtime"
+    assert any("target_execplan_id" in body for body in captured_bodies)
+    assert any("execplan_path" in body for body in captured_bodies)
 
 
 def test_build_sync_plan_maps_goal_area_to_existing_provider_options(tmp_path: Path) -> None:
@@ -364,3 +368,4 @@ def test_build_sync_plan_maps_goal_area_to_existing_provider_options(tmp_path: P
     goal_area = next(item for item in operation["field_updates"] if item["field_name"] == "goal_area")
     assert goal_area["provider_value"] == "orchestrator-runtime"
     assert goal_area["option_id"] == "OPT_ORCH"
+    assert "target_execplan_id" in operation["summary_body"]
