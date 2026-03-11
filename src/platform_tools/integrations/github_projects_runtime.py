@@ -72,14 +72,21 @@ def resolve_owner_id(*, token: str, owner: str, owner_type: str) -> tuple[str, d
     if owner_type_upper not in {"USER", "ORGANIZATION"}:
         raise ValueError(f"unsupported_owner_type:{owner_type}")
 
-    query = """
-    query($login: String!) {
-      user(login: $login) { id }
-      organization(login: $login) { id }
-    }
-    """
+    if owner_type_upper == "USER":
+        query = """
+        query($login: String!) {
+          user(login: $login) { id }
+        }
+        """
+        node_key = "user"
+    else:
+        query = """
+        query($login: String!) {
+          organization(login: $login) { id }
+        }
+        """
+        node_key = "organization"
     response = github_graphql_request(token, query, {"login": owner})
-    node_key = "organization" if owner_type_upper == "ORGANIZATION" else "user"
     owner_id = str(response.get("data", {}).get(node_key, {}).get("id", "")).strip()
     return owner_id, response
 
@@ -124,7 +131,7 @@ def create_project_field(
       }
     }
     """
-    options = [{"name": option, "color": "GRAY"} for option in (single_select_options or [])]
+    options = [{"name": option, "description": option, "color": "GRAY"} for option in (single_select_options or [])]
     return github_graphql_request(
         token,
         mutation,
@@ -167,4 +174,3 @@ def list_project_fields(*, token: str, project_id: str) -> dict[str, Any]:
     }
     """
     return github_graphql_request(token, query, {"projectId": project_id})
-

@@ -188,3 +188,88 @@ def test_execute_bootstrap_writes_sync_compatible_field_map(tmp_path: Path, monk
     assert field_map["fields"]["status"]["field_id"] == "FIELD_status"
     assert field_map["fields"]["status"]["options"]["ready"] == "OPT_READY"
     assert field_map["fields"]["finalization_state"]["options"]["merged_to_main"] == "OPT_MERGED"
+
+
+def test_execute_bootstrap_accepts_user_owner_lookup(tmp_path: Path, monkeypatch) -> None:
+    _seed_mapping(tmp_path)
+    output_path = tmp_path / "artifacts" / "provider-sync" / "github-projects-field-map.json"
+
+    monkeypatch.setattr(bootstrap, "github_token_from_env", lambda: "token")
+    monkeypatch.setattr(
+        bootstrap,
+        "resolve_owner_id",
+        lambda **_: ("USER123", {"data": {"user": {"id": "USER123"}}}),
+    )
+    monkeypatch.setattr(
+        bootstrap,
+        "create_project",
+        lambda **_: {"data": {"createProjectV2": {"projectV2": {"id": "PVT_USER", "title": "Board"}}}},
+    )
+    monkeypatch.setattr(
+        bootstrap,
+        "create_project_field",
+        lambda **kwargs: {
+            "data": {
+                "createProjectV2Field": {
+                    "projectV2Field": {
+                        "id": f"FIELD_{kwargs['field_name']}",
+                        "name": kwargs["field_name"],
+                    }
+                }
+            }
+        },
+    )
+    monkeypatch.setattr(
+        bootstrap,
+        "list_project_fields",
+        lambda **_: {"data": {"node": {"fields": {"nodes": []}}}},
+    )
+
+    code, report = bootstrap.execute_bootstrap(
+        root=tmp_path.as_posix(),
+        owner="JNA31A_AIT",
+        owner_type="user",
+        field_map_output_path=output_path.as_posix(),
+        dry_run=False,
+    )
+
+    assert code == 0
+    assert report["ok"] is True
+    assert report["project_id"] == "PVT_USER"
+
+
+def test_execute_bootstrap_marks_live_mode_on_partial_failure(tmp_path: Path, monkeypatch) -> None:
+    _seed_mapping(tmp_path)
+
+    monkeypatch.setattr(bootstrap, "github_token_from_env", lambda: "token")
+    monkeypatch.setattr(
+        bootstrap,
+        "resolve_owner_id",
+        lambda **_: ("USER123", {"data": {"user": {"id": "USER123"}}}),
+    )
+    monkeypatch.setattr(
+        bootstrap,
+        "create_project",
+        lambda **_: {"data": {"createProjectV2": {"projectV2": {"id": "PVT_FAIL", "title": "Board"}}}},
+    )
+    monkeypatch.setattr(
+        bootstrap,
+        "create_project_field",
+        lambda **kwargs: (
+            {"errors": [{"message": "boom"}]}
+            if kwargs["field_name"] == "status"
+            else {"data": {"createProjectV2Field": {"projectV2Field": {"id": f"FIELD_{kwargs['field_name']}"}}}}
+        ),
+    )
+
+    code, report = bootstrap.execute_bootstrap(
+        root=tmp_path.as_posix(),
+        owner="JNA31A_AIT",
+        owner_type="user",
+        dry_run=False,
+    )
+
+    assert code == 1
+    assert report["ok"] is False
+    assert report["dry_run"] is False
+    assert report["project_id"] == "PVT_FAIL"
