@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+EXECPLAN_PATH=".agent/execplans/20260311-github-projects-bootstrap-runtime-codex-01-execplan.md"
+FIELD_MAP_PATH="$(mktemp)"
+
+echo "[1/3] execplan validation"
+bin/execplan-validate "$EXECPLAN_PATH"
+
+echo "[2/3] github projects bootstrap dry run"
+BOOTSTRAP_JSON="$(bin/github-projects-bootstrap --owner example-org --owner-type organization --field-map-output-path "$FIELD_MAP_PATH")"
+echo "$BOOTSTRAP_JSON"
+printf '%s\n' "$BOOTSTRAP_JSON" | python3 -c 'import json,sys; data=json.load(sys.stdin); assert data["command"]=="github-projects-bootstrap"; assert data["ok"] is True; assert data["dry_run"] is True; assert data["field_map_preview"]["fields"]["title"]["field_id"]=="builtin:title"; assert "status" in data["field_map_preview"]["fields"]'
+
+echo "[3/3] focused pytest"
+uv run pytest tests/test_github_projects_bootstrap.py
+
+rm -f "$FIELD_MAP_PATH"
+echo "github projects bootstrap smoke test completed"
