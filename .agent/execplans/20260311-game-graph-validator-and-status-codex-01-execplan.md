@@ -55,23 +55,24 @@ This slice should produce one validator command, one status command, focused tes
 
 ## Progress
 
-- [ ] Implement game-graph validator
-- [ ] Implement game-status command
-- [ ] Add focused tests
-- [ ] Add smoke coverage
+- [x] Implement game-graph validator
+- [x] Implement game-status command
+- [x] Add focused tests
+- [x] Add smoke coverage
 
 ## Surprises & Discoveries
 
-- the game graph may need minor normalization once a real validator exists
-- active-game status may need to define fallback behavior when a branch has no explicit game marker
+- active-game status is most reliable when the caller passes an explicit ExecPlan path; branch naming alone is not a sufficient source of truth
+- branch-policy evaluation had to run relative to the requested repo root so status checks stay deterministic in tests and smoke paths
 
 ## Decision Log
 
 - 2026-03-11 / agent-codex-01 / The game graph should have its own validator rather than relying on JSON syntax checks alone.
+- 2026-03-11 / agent-codex-01 / `game-status` should prefer an explicit ExecPlan path, then fall back to governed branch-state heuristics when no explicit plan is supplied.
 
 ## Outcomes & Retrospective
 
-On completion, this slice should leave the nested-game hierarchy machine-checkable and expose the active game/subgame through a stable status command.
+This slice leaves the nested-game hierarchy machine-checkable and exposes the active implementation game through a stable machine-readable status command.
 
 ## Context and Orientation
 
