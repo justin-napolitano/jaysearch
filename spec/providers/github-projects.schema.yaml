@@ -78,3 +78,5 @@ bootstrap:
   supports_field_creation: true
   emits_field_map_contract: github_projects_sync_v1
   default_field_map_output_path: artifacts/provider-sync/github-projects-field-map.json
+  provider_managed_fields:
+    - status

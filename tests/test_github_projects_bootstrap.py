@@ -80,6 +80,8 @@ def _seed_mapping(root: Path) -> None:
                 "  supports_field_creation: true",
                 "  emits_field_map_contract: github_projects_sync_v1",
                 "  default_field_map_output_path: artifacts/provider-sync/github-projects-field-map.json",
+                "  provider_managed_fields:",
+                "    - status",
             ]
         )
         + "\n",
@@ -102,8 +104,10 @@ def test_build_bootstrap_plan_uses_schema_blueprint(tmp_path: Path) -> None:
     assert report["project_create"]["owner"] == "example-org"
     assert report["field_map_preview"]["fields"]["title"]["field_id"] == "builtin:title"
     status_field = next(field for field in report["field_creates"] if field["field_name"] == "status")
+    assert status_field["provider_managed"] is True
     assert status_field["options"] == ["ready", "blocked", "review_gated", "decision_gated", "completed"]
     assert report["field_map_preview"]["fields"]["status"]["options"]["ready"] == "pending:status:ready"
+    assert report["field_map_preview"]["fields"]["status"]["provider_managed"] is True
 
 
 def test_execute_bootstrap_writes_sync_compatible_field_map(tmp_path: Path, monkeypatch) -> None:
@@ -257,7 +261,7 @@ def test_execute_bootstrap_marks_live_mode_on_partial_failure(tmp_path: Path, mo
         "create_project_field",
         lambda **kwargs: (
             {"errors": [{"message": "boom"}]}
-            if kwargs["field_name"] == "status"
+            if kwargs["field_name"] == "gating_class"
             else {"data": {"createProjectV2Field": {"projectV2Field": {"id": f"FIELD_{kwargs['field_name']}"}}}}
         ),
     )
@@ -273,3 +277,75 @@ def test_execute_bootstrap_marks_live_mode_on_partial_failure(tmp_path: Path, mo
     assert report["ok"] is False
     assert report["dry_run"] is False
     assert report["project_id"] == "PVT_FAIL"
+
+
+def test_execute_bootstrap_discovers_provider_managed_status(tmp_path: Path, monkeypatch) -> None:
+    _seed_mapping(tmp_path)
+    output_path = tmp_path / "artifacts" / "provider-sync" / "github-projects-field-map.json"
+    created_fields: list[str] = []
+
+    monkeypatch.setattr(bootstrap, "github_token_from_env", lambda: "token")
+    monkeypatch.setattr(
+        bootstrap,
+        "resolve_owner_id",
+        lambda **_: ("USER123", {"data": {"user": {"id": "USER123"}}}),
+    )
+    monkeypatch.setattr(
+        bootstrap,
+        "create_project",
+        lambda **_: {"data": {"createProjectV2": {"projectV2": {"id": "PVT_DISCOVER", "title": "Board"}}}},
+    )
+
+    def _create_field(**kwargs):
+        created_fields.append(kwargs["field_name"])
+        return {
+            "data": {
+                "createProjectV2Field": {
+                    "projectV2Field": {
+                        "id": f"FIELD_{kwargs['field_name']}",
+                        "name": kwargs["field_name"],
+                    }
+                }
+            }
+        }
+
+    monkeypatch.setattr(bootstrap, "create_project_field", _create_field)
+    monkeypatch.setattr(
+        bootstrap,
+        "list_project_fields",
+        lambda **_: {
+            "data": {
+                "node": {
+                    "fields": {
+                        "nodes": [
+                            {
+                                "id": "FIELD_STATUS_BUILTIN",
+                                "name": "status",
+                                "dataType": "SINGLE_SELECT",
+                                "options": [
+                                    {"id": "OPT_READY", "name": "ready"},
+                                    {"id": "OPT_BLOCKED", "name": "blocked"},
+                                ],
+                            }
+                        ]
+                    }
+                }
+            }
+        },
+    )
+
+    code, report = bootstrap.execute_bootstrap(
+        root=tmp_path.as_posix(),
+        owner="JNA31A_AIT",
+        owner_type="user",
+        field_map_output_path=output_path.as_posix(),
+        dry_run=False,
+    )
+
+    assert code == 0
+    assert report["ok"] is True
+    assert "status" not in created_fields
+    assert any(item["action"] == "discover_field" and item["field_name"] == "status" for item in report["execution_results"])
+    field_map = json.loads(output_path.read_text(encoding="utf-8"))
+    assert field_map["fields"]["status"]["field_id"] == "FIELD_STATUS_BUILTIN"
+    assert field_map["fields"]["status"]["provider_managed"] is True
