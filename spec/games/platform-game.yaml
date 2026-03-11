@@ -1,0 +1,15 @@
+game_id: platform-game
+type: platform
+title: Platform Game
+parent_game: null
+objective: Build and operate the governed Codex-native platform coherently
+board: repository-plus-governed-artifacts
+players:
+  - human_authority
+  - codex_orchestrator
+  - validator_referees
+referees:
+  - bin/execplan-validate
+  - bin/run-local-ci
+win_condition: subgames remain coherent and auditable
+loss_condition: subgames conflict or canonical authority drifts
