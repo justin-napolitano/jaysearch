@@ -52,25 +52,29 @@ This slice should turn the existing projection scaffold into a deterministic run
 
 ## Progress
 
-- [ ] Implement deterministic GitHub Projects payload generation
-- [ ] Add outbound sync runtime and command wrapper
-- [ ] Project PR/review/finalization fields safely
-- [ ] Add focused tests and smoke coverage
+- [x] Implement deterministic GitHub Projects payload generation
+- [x] Add outbound sync runtime and command wrapper
+- [x] Project PR/review/finalization fields safely
+- [x] Add focused tests and smoke coverage
 
 ## Surprises & Discoveries
 
 - GitHub Projects field ids and option ids may require a locally supplied mapping artifact instead of discovery-time API dependence
 - PR and merge-finalization state should be projected from canonical branch/merge evidence rather than inferred from mutable board edits
+- locally supplied item ids and field ids are the cleanest first runtime boundary; the command can update mapped items and create draft items without relying on live schema discovery
+- dry-run mode is enough to prove deterministic outbound intent in tests and smoke coverage while keeping network side effects out of the validation path
 
 ## Decision Log
 
 - 2026-03-11 / agent-codex-01 / GitHub Projects sync remains outbound projection only; remote edits must not become canonical local state in this slice.
 - 2026-03-11 / agent-codex-01 / The synced board model should represent remaining-work slice nodes, not one board per ExecPlan.
 - 2026-03-11 / agent-codex-01 / Review and finalization fields should be projected as evidence-bearing board fields sourced from PR links, validation state, and signed-merge status.
+- 2026-03-11 / agent-codex-01 / Runtime execution should require a local field-map artifact for project id, field ids, option ids, and optional pre-existing item ids rather than doing live GitHub schema discovery.
+- 2026-03-11 / agent-codex-01 / The initial live runtime should support dry-run by default and optional execute mode behind `GITHUB_TOKEN`, preserving deterministic local validation.
 
 ## Outcomes & Retrospective
 
-On completion, this slice should provide the first live external projection runtime for the game: canonical local state in, deterministic GitHub Projects updates out, no authority drift back in.
+This slice now provides the first live external projection runtime for the game: canonical local state in, deterministic GitHub Projects updates out, no authority drift back in.
 
 ## Context and Orientation
 
