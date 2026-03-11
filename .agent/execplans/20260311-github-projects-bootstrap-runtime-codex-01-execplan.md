@@ -52,15 +52,17 @@ This slice should create the board, create the required custom fields and option
 
 ## Progress
 
-- [ ] Implement deterministic bootstrap planning
-- [ ] Add outbound bootstrap runtime and command wrapper
-- [ ] Emit reusable local field-map artifact
-- [ ] Add focused tests and smoke coverage
+- [x] Implement deterministic bootstrap planning
+- [x] Add outbound bootstrap runtime and command wrapper
+- [x] Emit reusable local field-map artifact
+- [x] Add focused tests and smoke coverage
 
 ## Surprises & Discoveries
 
 - GitHub Projects bootstrap needs a stable way to define required fields without live schema guessing, so the provider schema must become the canonical board blueprint
 - the clean handoff is bootstrap first, sync second: create board + field-map, then let `github-projects-sync` handle item-level projection
+- a dry-run field-map preview is useful because it proves the projected board contract before any live GitHub mutation happens
+- GitHub option ids are only authoritative after board creation, so execute mode must list project fields after mutation rather than fabricate placeholder ids
 
 ## Decision Log
 
@@ -71,6 +73,12 @@ This slice should create the board, create the required custom fields and option
 ## Outcomes & Retrospective
 
 On completion, this slice should let the repo create a real GitHub Projects board from local contracts and immediately hand off to the existing sync runtime for item seeding.
+
+Implemented:
+
+- deterministic `bin/github-projects-bootstrap` dry-run planning from canonical schema
+- execute mode that creates the board, creates fields, re-reads the project field surface, and emits a sync-compatible field-map artifact
+- focused tests and a smoke path covering the bootstrap contract
 
 ## Context and Orientation
 
