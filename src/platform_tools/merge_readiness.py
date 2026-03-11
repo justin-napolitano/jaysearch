@@ -207,6 +207,7 @@ def check_merge_readiness(
     execplan_path: str | None = None,
     base_ref: str = "main",
     graph_id: str | None = None,
+    include_validation_runs: bool = True,
 ) -> tuple[int, dict[str, Any]]:
     cwd = Path(root)
     branch = get_current_branch()
@@ -229,12 +230,13 @@ def check_merge_readiness(
 
     validation_results = []
     failing_checks: list[str] = []
-    for entry in commands:
-        result = _run(entry["command"], cwd=cwd)
-        result["name"] = entry["name"]
-        validation_results.append(result)
-        if not result["ok"]:
-            failing_checks.append(f"validation_failed:{entry['name']}")
+    if include_validation_runs:
+        for entry in commands:
+            result = _run(entry["command"], cwd=cwd)
+            result["name"] = entry["name"]
+            validation_results.append(result)
+            if not result["ok"]:
+                failing_checks.append(f"validation_failed:{entry['name']}")
 
     smoke_present = any("smoke" in entry["name"].lower() or "smoke" in entry["command"].lower() for entry in commands)
     if not smoke_present:
@@ -269,6 +271,7 @@ def check_merge_readiness(
         "next_action": next_action,
         "checks": {
             "validations": validation_results,
+            "validation_runs_included": include_validation_runs,
             "smoke_test_present": smoke_present,
             "commit_stack": commit_reports,
             "scope_blockers": scope_report,
