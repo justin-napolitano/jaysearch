@@ -72,6 +72,8 @@ def _seed_repo(root: Path, *, missing_rule: bool = False) -> None:
         {"id": "rule-smoke-test-required", "type": "rule", "label": "smoke", "title": "smoke"},
         {"id": "rule-clean-merge-state", "type": "rule", "label": "clean", "title": "clean"},
         {"id": "rule-human-sized-commits", "type": "rule", "label": "commit", "title": "commit"},
+        {"id": "rule-procedural-commit-order", "type": "rule", "label": "order", "title": "order"},
+        {"id": "rule-latest-main-branching", "type": "rule", "label": "branch", "title": "branch"},
         {"id": "rule-execplan-validation", "type": "rule", "label": "execplan", "title": "execplan"},
         {"id": "rule-human-finalization", "type": "rule", "label": "human", "title": "human"},
         {"id": "artifact-agent-game-rules", "type": "artifact", "label": "rules", "title": "docs/agent-game-rules-v1.md"},
@@ -99,6 +101,10 @@ def _seed_repo(root: Path, *, missing_rule: bool = False) -> None:
                 {"from": "rule-clean-merge-state", "to": "artifact-governance-doc", "relation": "satisfied_by"},
                 {"from": "rule-human-sized-commits", "to": "phase-merge-readiness", "relation": "applies_to"},
                 {"from": "rule-human-sized-commits", "to": "artifact-governance-doc", "relation": "satisfied_by"},
+                {"from": "rule-procedural-commit-order", "to": "phase-merge-readiness", "relation": "applies_to"},
+                {"from": "rule-procedural-commit-order", "to": "artifact-governance-doc", "relation": "satisfied_by"},
+                {"from": "rule-latest-main-branching", "to": "phase-merge-readiness", "relation": "applies_to"},
+                {"from": "rule-latest-main-branching", "to": "artifact-governance-doc", "relation": "satisfied_by"},
                 {"from": "rule-execplan-validation", "to": "phase-merge-readiness", "relation": "applies_to"},
                 {"from": "rule-execplan-validation", "to": "validator-execplan-validate", "relation": "enforced_by"},
                 {"from": "rule-human-finalization", "to": "authority-human", "relation": "requires"},
@@ -112,6 +118,10 @@ def test_rule_graph_check_passes_for_valid_graph(tmp_path: Path) -> None:
     _seed_repo(tmp_path)
     code, report = check_rule_graph(tmp_path.as_posix())
     assert code == 0
+    assert report["command"] == "rule-graph-check"
+    assert report["status"] == "ok"
+    assert report["blockers"] == []
+    assert report["next_validations"] == []
     assert report["ok"] is True
 
 
@@ -119,4 +129,7 @@ def test_rule_graph_check_fails_for_missing_required_rule(tmp_path: Path) -> Non
     _seed_repo(tmp_path, missing_rule=True)
     code, report = check_rule_graph(tmp_path.as_posix())
     assert code == 1
+    assert report["command"] == "rule-graph-check"
+    assert report["status"] == "blocked"
+    assert report["blockers"]
     assert any("missing_required_rule:rule-clean-merge-state" == err for err in report["errors"])

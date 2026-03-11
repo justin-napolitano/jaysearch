@@ -1,0 +1,109 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+ROOT="$(pwd)"
+SESSION_ID=""
+GRAPH_ID=""
+
+cleanup() {
+  if [[ -n "$SESSION_ID" ]]; then
+    rm -rf "$ROOT/artifacts/planner/sessions/$SESSION_ID"
+  fi
+  if [[ -n "$GRAPH_ID" ]]; then
+    rm -f "$ROOT/artifacts/planner/graphs/$GRAPH_ID.json"
+  fi
+}
+
+trap cleanup EXIT
+
+assert_contract() {
+  local label="$1"
+  local expected_command="$2"
+  local expected_status="$3"
+  local report_json="$4"
+
+  REPORT_JSON="$report_json" python3 - "$label" "$expected_command" "$expected_status" <<'PY'
+import json
+import os
+import sys
+
+label, expected_command, expected_status = sys.argv[1:4]
+report = json.loads(os.environ["REPORT_JSON"])
+required = ["command", "status", "blockers", "next_validations"]
+missing = [key for key in required if key not in report]
+if missing:
+    raise SystemExit(f"{label}:missing_fields:{','.join(missing)}")
+if report["command"] != expected_command:
+    raise SystemExit(f"{label}:unexpected_command:{report['command']}")
+if report["status"] != expected_status:
+    raise SystemExit(f"{label}:unexpected_status:{report['status']}")
+if not isinstance(report["blockers"], list):
+    raise SystemExit(f"{label}:blockers_not_list")
+if not isinstance(report["next_validations"], list):
+    raise SystemExit(f"{label}:next_validations_not_list")
+print(json.dumps({"label": label, "status": report["status"]}, sort_keys=True))
+PY
+}
+
+echo "[1/6] citation-check contract"
+CITATION_JSON="$(bin/citation-check)"
+assert_contract "citation-check" "citation-check" "ok" "$CITATION_JSON"
+
+echo "[2/6] rule-graph-check contract"
+RULE_JSON="$(bin/rule-graph-check)"
+assert_contract "rule-graph-check" "rule-graph-check" "ok" "$RULE_JSON"
+
+echo "[3/6] planner session start contract"
+SESSION_JSON="$(bin/planner session start --title "Orchestrator Smoke" --objective "verify machine-readable output")"
+assert_contract "planner-session-start" "planner" "ok" "$SESSION_JSON"
+SESSION_ID="$(printf '%s\n' "$SESSION_JSON" | python3 -c 'import json,sys; print(json.load(sys.stdin)["session_id"])')"
+SESSION_DIR="$ROOT/artifacts/planner/sessions/$SESSION_ID"
+
+python3 - "$SESSION_DIR" <<'PY'
+import json
+import pathlib
+import sys
+
+session_dir = pathlib.Path(sys.argv[1])
+payload = {
+    "goals": [
+        {
+            "title": "Smoke orchestrator contract",
+            "success_criteria": "stable output",
+            "scope": "orchestrator",
+            "status": "validated",
+        }
+    ],
+    "constraints": [{"title": "Deterministic", "constraint": "Deterministic", "constraint_type": "platform"}],
+    "assumptions": [],
+    "decisions": [],
+    "questions": [],
+    "tasks": [
+        {
+            "title": "Normalize planner contract",
+            "description": "Normalize planner contract",
+            "ready_definition": "",
+            "done_definition": "",
+            "status": "ready",
+            "changes": ["src/platform_tools/planner_cli.py"],
+            "evidence_refs": [{"kind": "note", "ref": "orchestrator-smoke"}],
+        }
+    ],
+    "risks": [],
+    "evidence": [{"title": "Planner CLI", "artifact_type": "file", "path": "src/platform_tools/planner_cli.py"}],
+}
+(session_dir / "extracted-state.json").write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+PY
+
+echo "[4/6] planner graph build and validate contracts"
+GRAPH_JSON="$(bin/planner graph build --session-id "$SESSION_ID")"
+assert_contract "planner-graph-build" "planner" "ok" "$GRAPH_JSON"
+GRAPH_ID="$(printf '%s\n' "$GRAPH_JSON" | python3 -c 'import json,sys; print(json.load(sys.stdin)["graph_id"])')"
+VALIDATE_JSON="$(bin/planner graph validate --graph-id "$GRAPH_ID")"
+assert_contract "planner-graph-validate" "planner" "ok" "$VALIDATE_JSON"
+
+echo "[5/6] planner-score contract"
+SCORE_JSON="$(bin/planner-score --graph-id "$GRAPH_ID")"
+assert_contract "planner-score" "planner-score" "ok" "$SCORE_JSON"
+
+echo "[6/6] smoke completed"

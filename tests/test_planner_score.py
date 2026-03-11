@@ -103,7 +103,10 @@ def _seed_repo(root: Path) -> str:
 def test_score_graph_emits_bounded_scores(tmp_path: Path) -> None:
     graph_id = _seed_repo(tmp_path)
     report = score_graph(root=tmp_path.as_posix(), graph_id=graph_id)
-    assert report["tool"] == "planner_score"
+    assert report["command"] == "planner-score"
+    assert report["status"] == "ok"
+    assert report["blockers"] == []
+    assert report["next_validations"] == []
     assert 0 <= report["planner_game"]["score"] <= 100
     assert 0 <= report["implementation_game"]["score"] <= 100
     assert "TLS" in report["planner_game"]["metrics"]
