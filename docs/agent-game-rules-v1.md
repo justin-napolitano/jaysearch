@@ -180,6 +180,12 @@ Procedural commit-order rule:
 - A slice may skip unused classes, but it should not collapse distant classes together without justification.
 - Reviewers should be able to inspect the stack from contract to enforcement to explanatory material without reconstructing the intended sequence by hand.
 
+Latest-main branching rule:
+
+- Unless a human explicitly states otherwise, every new work branch should be cut from the latest `main`.
+- Agents should prefer `origin/main` as the source of truth when local `main` is stale.
+- Starting a new slice from a stale base is a governance failure unless the deviation is deliberate and documented.
+
 ## 10. Match Flow and Stop Conditions
 
 Lifecycle flow:
