@@ -1,5 +1,5 @@
 version: v1
-last_updated: 2026-03-05
+last_updated: 2026-03-11
 move_set:
   allowed:
     - read_repository
@@ -17,9 +17,18 @@ move_set:
 execution_constraints:
   execplan_branch_review_required: true
   required_branch_format: "draft-execplan/<plan-id>-<agent>-YYYYMMDD"
+  implementation_branch_format: "impl-execplan/<plan-id>-<agent>-YYYYMMDD"
+  queue_branch_format: "queue-execplan/<queue-name>-<agent>-YYYYMMDD"
   disallow_execplan_changes_on_main: true
+  require_distinct_implementation_branch_per_parallel_execplan: true
+  forbid_shared_execution_branch_for_parallel_slices: true
+  queue_branches_are_integration_only: true
+  governed_execplan_finalization_requires_signed_merge_commit: true
+  governed_execplan_finalization_uses_merge_commit_authority: true
   allowed_branch_patterns:
     - draft-execplan/*
+    - impl-execplan/*
+    - queue-execplan/*
     - feature/*
     - docs/*
     - hotfix/*

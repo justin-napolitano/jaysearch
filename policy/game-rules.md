@@ -20,6 +20,19 @@ Universal branch-first policy:
 - Validators must emit machine-readable branch-policy findings and fail deterministically on violation.
 - Branch names must also match an allowed workflow-specific pattern from canonical spec metadata.
 
+Implementation branch policy:
+
+- Draft plans belong on `draft-execplan/*` branches.
+- Individual implementation slices belong on `impl-execplan/*` branches.
+- Parallel implementation slices must use distinct implementation branches.
+- `queue-execplan/*` branches are allowed for integration stacking, but they are not the canonical execution branch for a slice.
+
+Governed finalization policy:
+
+- Governed ExecPlan finalization should use the signed merge commit on `main` as the authority event.
+- Draft or implementation commits are supporting evidence only.
+- Future automation should prefer one-command human finalization that derives metadata from the merge event.
+
 Hostile review policy:
 
 - Hostile review runs must execute on a dedicated branch matching
