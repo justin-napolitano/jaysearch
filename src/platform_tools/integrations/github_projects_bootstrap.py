@@ -237,6 +237,7 @@ def execute_bootstrap(
         plan["project_response"] = project_response
         return 1, plan
 
+    plan["dry_run"] = False
     execution_results: list[dict[str, Any]] = [
         {
             "action": "create_project",
@@ -295,7 +296,6 @@ def execute_bootstrap(
     output_path = Path(plan["field_map_output_path"])
     write_json(output_path, field_map)
 
-    plan["dry_run"] = False
     plan["project_id"] = project_id
     plan["field_map"] = field_map
     plan["execution_results"] = execution_results
