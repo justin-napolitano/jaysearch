@@ -3,7 +3,7 @@ id: "20260311-implementation-branch-split-governance-codex-01-execplan"
 title: "Require separate implementation branches for parallel ExecPlan workflows"
 owner: "agent/codex-01"
 created: "2026-03-11T00:00:00Z"
-status: draft
+status: approved
 base_branch: main
 changes:
   - .agent/execplans/20260311-implementation-branch-split-governance-codex-01-execplan.md
@@ -22,7 +22,7 @@ draft_by: "agent/codex-01"
 draft_branch: "draft-execplan/20260311-queued-execplans-codex-01-execplan-codex-01-20260311"
 draft_created: "2026-03-11T00:00:00Z"
 finalized_by: "github:justin-napolitano"
-finalized_at: "20260311"
+finalized_at: "2026-03-11T00:00:00Z"
 finalized_in_pr: "50"
 validation:
   tests:
