@@ -48,6 +48,9 @@ def _seed_specs(root: Path) -> None:
                 "required:",
                 "  - graph_id",
                 "  - created_at",
+                "  - ordering_policy",
+                "  - queue_projection",
+                "  - graph_actions",
                 "  - nodes",
                 "  - edges",
             ]
@@ -165,6 +168,22 @@ def _seed_remaining_work(root: Path) -> None:
         {
             "graph_id": "remaining-work-graph-20260311",
             "created_at": "2026-03-11T00:00:00Z",
+            "ordering_policy": {
+                "ready_statuses": ["ready"],
+                "ready_sort_fields": ["ready_order", "tie_breaker", "node_id"],
+                "reorder_requires_explicit_action": True,
+                "board_projection_authority": "projection_only",
+            },
+            "queue_projection": {
+                "path": "docs/queued-execplans.md",
+                "projection_authority": "projection_only",
+                "last_reconciled_action_id": "act-2",
+                "ready_execplan_ids": ["20260311-github-projects-provider-sync-runtime-codex-01-execplan"],
+            },
+            "graph_actions": [
+                {"action_id": "act-1", "action": "complete", "node_id": "rwg-004", "rationale": "bootstrap completed"},
+                {"action_id": "act-2", "action": "promote_ready", "node_id": "rwg-005", "rationale": "provider sync ready"},
+            ],
             "nodes": [
                 {
                     "node_id": "rwg-005",
@@ -175,6 +194,19 @@ def _seed_remaining_work(root: Path) -> None:
                     "target_execplan_id": "20260311-github-projects-provider-sync-runtime-codex-01-execplan",
                     "goal_area": "provider-sync",
                     "implementation_branch": "impl-execplan/provider-sync",
+                    "ordering": {
+                        "queue_position": 1,
+                        "ready_order": 1,
+                        "tie_breaker": "20260311-github-projects-provider-sync-runtime-codex-01-execplan",
+                        "source_action_id": "act-2",
+                    },
+                    "action_state": {
+                        "last_action_id": "act-2",
+                        "last_action": "promote_ready",
+                        "action_required": False,
+                        "reorder_requires_human": False,
+                        "reorder_blockers": [],
+                    },
                 },
                 {
                     "node_id": "rwg-004",
@@ -186,12 +218,35 @@ def _seed_remaining_work(root: Path) -> None:
                     "target_execplan_id": "20260311-github-projects-bootstrap-runtime-codex-01-execplan",
                     "goal_area": "provider-sync",
                     "implementation_branch": "impl-execplan/bootstrap",
+                    "ordering": {"queue_position": 2, "tie_breaker": "20260311-github-projects-bootstrap-runtime-codex-01-execplan"},
+                    "action_state": {
+                        "last_action_id": "act-1",
+                        "last_action": "complete",
+                        "action_required": False,
+                        "reorder_requires_human": False,
+                        "reorder_blockers": [],
+                    },
                 },
             ],
             "edges": [
                 {"from": "rwg-005", "to": "rwg-004", "relation": "depends_on"},
             ],
         },
+    )
+    _write_text(
+        root / "docs" / "queued-execplans.md",
+        "\n".join(
+            [
+                "# Queued ExecPlans",
+                "",
+                "## Mirror Metadata",
+                "",
+                "- canonical_last_graph_action_id: `act-2`",
+                "- canonical_ready_order: `20260311-github-projects-provider-sync-runtime-codex-01-execplan`",
+                "- projection_authority: `projection_only`",
+            ]
+        )
+        + "\n",
     )
 
 
@@ -339,6 +394,7 @@ def test_execute_sync_updates_field_map_with_created_item_ids(tmp_path: Path, mo
     assert updated_field_map["item_ids_by_node_id"]["rwg-004"] == "ITEM_Bootstrap_runtime"
     assert any("target_execplan_id" in body for body in captured_bodies)
     assert any("execplan_path" in body for body in captured_bodies)
+    assert any("queue_position" in body for body in captured_bodies)
 
 
 def test_build_sync_plan_maps_goal_area_to_existing_provider_options(tmp_path: Path) -> None:
@@ -370,3 +426,4 @@ def test_build_sync_plan_maps_goal_area_to_existing_provider_options(tmp_path: P
     assert goal_area["provider_value"] == "orchestrator-runtime"
     assert goal_area["option_id"] == "OPT_ORCH"
     assert "target_execplan_id" in operation["summary_body"]
+    assert "ready_order" in operation["summary_body"]

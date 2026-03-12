@@ -208,6 +208,22 @@ def _seed_remaining_work(root: Path) -> Path:
         {
             "graph_id": "remaining-work-graph-20260311",
             "created_at": "2026-03-11T00:00:00Z",
+            "ordering_policy": {
+                "ready_statuses": ["ready"],
+                "ready_sort_fields": ["ready_order", "tie_breaker", "node_id"],
+                "reorder_requires_explicit_action": True,
+                "board_projection_authority": "projection_only",
+            },
+            "queue_projection": {
+                "path": "docs/queued-execplans.md",
+                "projection_authority": "projection_only",
+                "last_reconciled_action_id": "act-2",
+                "ready_execplan_ids": [],
+            },
+            "graph_actions": [
+                {"action_id": "act-1", "action": "complete", "node_id": "rwg-006", "rationale": "completed"},
+                {"action_id": "act-2", "action": "block", "node_id": "rwg-005", "rationale": "review gated"},
+            ],
             "nodes": [
                 {
                     "node_id": "rwg-006",
@@ -219,6 +235,14 @@ def _seed_remaining_work(root: Path) -> Path:
                     "target_execplan_id": "20260311-runtime-constraint-canonicalization-codex-01-execplan",
                     "goal_area": "runtime-governance",
                     "implementation_branch": "impl-execplan/runtime-constraints",
+                    "ordering": {"queue_position": 1, "tie_breaker": "20260311-runtime-constraint-canonicalization-codex-01-execplan"},
+                    "action_state": {
+                        "last_action_id": "act-1",
+                        "last_action": "complete",
+                        "action_required": False,
+                        "reorder_requires_human": False,
+                        "reorder_blockers": [],
+                    },
                 },
                 {
                     "node_id": "rwg-005",
@@ -229,6 +253,14 @@ def _seed_remaining_work(root: Path) -> Path:
                     "conflict_domains": ["provider-sync"],
                     "target_execplan_id": "20260311-provider-sync-scaffold-codex-01-execplan",
                     "goal_area": "provider-sync",
+                    "ordering": {"queue_position": 2, "tie_breaker": "20260311-provider-sync-scaffold-codex-01-execplan"},
+                    "action_state": {
+                        "last_action_id": "act-2",
+                        "last_action": "block",
+                        "action_required": False,
+                        "reorder_requires_human": False,
+                        "reorder_blockers": ["review_gate"],
+                    },
                 },
             ],
             "edges": [
@@ -236,7 +268,23 @@ def _seed_remaining_work(root: Path) -> Path:
             ],
         },
     )
+    _write_text(
+        root / "docs" / "queued-execplans.md",
+        "\n".join(
+            [
+                "# Queued ExecPlans",
+                "",
+                "## Mirror Metadata",
+                "",
+                "- canonical_last_graph_action_id: `act-2`",
+                "- canonical_ready_order: ``",
+                "- projection_authority: `projection_only`",
+            ]
+        )
+        + "\n",
+    )
     return execplan
+
 
 
 def test_provider_projection_builds_github_projects_board(tmp_path: Path) -> None:
@@ -255,8 +303,8 @@ def test_provider_projection_builds_github_projects_board(tmp_path: Path) -> Non
     assert report["provider"] == "github_projects"
     assert report["board_model"]["board_scope"] == "remaining_work_graph"
     assert report["item_count"] == 2
-    assert report["items"][0]["fields"]["node_id"] == "rwg-005"
-    assert report["items"][0]["fields"]["human_review_state"] == "ready_for_review"
+    provider_item = next(item for item in report["items"] if item["fields"]["node_id"] == "rwg-005")
+    assert provider_item["fields"]["human_review_state"] == "ready_for_review"
 
 
 def test_provider_projection_supports_microsoft_placeholder_mapping(tmp_path: Path) -> None:
