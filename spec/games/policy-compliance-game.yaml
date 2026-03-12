@@ -1,0 +1,29 @@
+game_id: game-policy-compliance
+type: policy_compliance
+title: Policy-Compliance Game
+layer: assurance
+rule_scope: domain_game
+parent_game: game-implementation
+objective: prove that governed slices are advancing through referee evidence rather than assertion
+board: branch-plus-queue-legality-state
+players:
+  - codex_orchestrator
+  - human_operator
+  - validator_referees
+inherits_board_law: true
+local_rule_focus:
+  - procedural_commit_order
+  - human_sized_commits
+  - latest_main_branch_alignment
+  - clean_merge_state
+  - graph_action_required
+  - stale_queue_blocking
+referees:
+  - bin/policy-compliance-check
+  - bin/remaining-work-graph-check
+referee_order:
+  - global_board_law
+  - active_domain_game
+  - active_subgame
+win_condition: branch legality is machine-checkable before hostile or human review
+loss_condition: branch advancement still depends on narration, stale queue state, or undocumented commit behavior

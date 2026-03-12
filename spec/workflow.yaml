@@ -14,6 +14,7 @@ stop_conditions:
 execution_requirements:
   shared_platform_board_has_inherited_global_law: true
   active_moves_must_satisfy_global_and_local_rules: true
+  governed_slice_advancement_requires_referee_chain: true
   merge_readiness_is_proof_game: true
   universal_branch_first: true
   protected_branches_disallowed_for_execution:
@@ -50,6 +51,10 @@ execution_requirements:
     existing_project_id_requires_board_reuse: true
     existing_item_ids_require_update_preference: true
     human_operations_runtime_must_be_takeover_safe: true
+  queue_reconciliation_requirements:
+    graph_actions_required_for_governed_work: true
+    stale_queue_blocks_advancement: true
+    queue_and_graph_must_reconcile_before_next_slice: true
   referee_order:
     - global_board_law
     - active_domain_game

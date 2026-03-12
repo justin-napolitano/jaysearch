@@ -16,6 +16,10 @@ Global board law applies to every move on the shared platform board.
 Domain games inherit that law and add local move sets. Subgames and
 proof games inherit both and may narrow local obligations further.
 
+The current policy-compliance game is an assurance-layer domain game
+under implementation. The current commit-structure game is a narrower
+subgame under policy compliance.
+
 ## Inherited by Default
 
 These concepts inherit from parent game to child game unless explicitly narrowed:

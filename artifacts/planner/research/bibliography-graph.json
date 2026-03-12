@@ -236,6 +236,18 @@
       "title": "docs/games/implementation-game.md"
     },
     {
+      "id": "artifact-policy-compliance-game-doc",
+      "type": "artifact",
+      "label": "Policy Compliance Game Doc",
+      "title": "docs/games/policy-compliance-game.md"
+    },
+    {
+      "id": "artifact-commit-structure-game-doc",
+      "type": "artifact",
+      "label": "Commit Structure Game Doc",
+      "title": "docs/games/commit-structure-game.md"
+    },
+    {
       "id": "artifact-planning-proof-game",
       "type": "artifact",
       "label": "Planning Proof Game",
@@ -309,6 +321,8 @@
     { "from": "claim-nested-game-system", "to": "artifact-execplan-game-doc", "relation": "cited_in" },
     { "from": "claim-nested-game-system", "to": "artifact-planning-game-doc", "relation": "cited_in" },
     { "from": "claim-nested-game-system", "to": "artifact-implementation-game-doc", "relation": "cited_in" },
+    { "from": "claim-nested-game-system", "to": "artifact-policy-compliance-game-doc", "relation": "cited_in" },
+    { "from": "claim-nested-game-system", "to": "artifact-commit-structure-game-doc", "relation": "cited_in" },
     { "from": "claim-nested-game-system", "to": "artifact-planning-proof-game", "relation": "cited_in" },
     { "from": "claim-nested-game-system", "to": "artifact-implementation-proof-game", "relation": "cited_in" },
     { "from": "claim-remaining-work-graph", "to": "artifact-remaining-work-graph-doc", "relation": "cited_in" },

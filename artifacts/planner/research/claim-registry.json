@@ -197,6 +197,34 @@
       ]
     },
     {
+      "artifact_path": "docs/games/policy-compliance-game.md",
+      "artifact_node_id": "artifact-policy-compliance-game-doc",
+      "required": true,
+      "claims": [
+        {
+          "claim_id": "pcg-001",
+          "summary": "Policy compliance is an assurance-layer game that proves governed work cannot advance by assertion alone.",
+          "category": "design-inference",
+          "source_ids": ["src-fagan-1986", "src-prov-overview", "src-harel-1987"],
+          "bibliography_claim_ids": ["claim-nested-game-system"]
+        }
+      ]
+    },
+    {
+      "artifact_path": "docs/games/commit-structure-game.md",
+      "artifact_node_id": "artifact-commit-structure-game-doc",
+      "required": true,
+      "claims": [
+        {
+          "claim_id": "csg-001",
+          "summary": "Commit structure is a narrower subgame that keeps Codex-authored history procedurally ordered and reviewable.",
+          "category": "design-inference",
+          "source_ids": ["src-fagan-1986", "src-myers-1978", "src-harel-1987"],
+          "bibliography_claim_ids": ["claim-nested-game-system"]
+        }
+      ]
+    },
+    {
       "artifact_path": "docs/games/planning-merge-readiness-game.md",
       "artifact_node_id": "artifact-planning-proof-game",
       "required": true,

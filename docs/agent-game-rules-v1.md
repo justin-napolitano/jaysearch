@@ -227,6 +227,13 @@ Board/review runtime rule:
 - Once project or item identities are known, moves must reuse them rather than duplicating board state.
 - Human review and takeover moves are only valid if they remain reconstructable from canonical local evidence.
 
+Policy-compliance rule:
+
+- Governed slices must not advance by agent assertion, prose judgment, or board edits alone.
+- Required referee chains must pass before a slice may become review-ready, merge-ready, or completed.
+- Policy-compliance is the legality surface for implementation branches before hostile review or human review.
+- Governed work must record the corresponding graph action and queue reconciliation on-branch; stale queue or graph state blocks advancement.
+
 ## 10. Match Flow and Stop Conditions
 
 Lifecycle flow:

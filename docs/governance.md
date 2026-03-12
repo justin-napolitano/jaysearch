@@ -89,6 +89,14 @@ Board review runtime rule:
 - When canonical item ids are already known, sync must prefer updating those items instead of creating new ones.
 - Human operations runtime must expose takeover-safe state from canonical local evidence so another human or agent can resume without session memory.
 
+Policy-compliance rule:
+
+- Governed slices must not advance by agent assertion, prose judgment, or board edits alone.
+- A required referee chain must pass before review-readiness, merge-readiness, or later completion may be claimed.
+- `bin/policy-compliance-check` is the canonical legality surface for branch-level policy compliance.
+- Policy compliance should block advancement when commit structure is illegal, when the branch is not aligned with latest `main`, or when graph and queue reconciliation are stale for the active slice.
+- Graph and queue state are part of governed branch legality, not optional bookkeeping after the fact.
+
 Game layering rule:
 
 - The platform is one shared board with inherited global law.

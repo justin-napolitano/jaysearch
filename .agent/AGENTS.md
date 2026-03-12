@@ -197,6 +197,15 @@ new item creation\
 • human-operations runtime output must be takeover-safe so another human
 or agent can continue from canonical state alone
 
+Policy-compliance rules:
+
+• governed slices must not advance by agent assertion, prose judgment,
+  or board edits alone\
+• policy compliance and downstream referees must pass before a slice can
+  claim review-readiness or later completion\
+• graph and queue reconciliation are part of governed branch legality,
+  not post hoc cleanup
+
 ------------------------------------------------------------------------
 
 # ExecPlan Metadata Schema

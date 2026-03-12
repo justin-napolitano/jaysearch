@@ -7,6 +7,7 @@ from typing import Any
 
 from platform_tools.human_operations_runtime import DEFAULT_FIELD_MAP_PATH, load_field_map_state, review_projection_for_node
 from platform_tools.integrations.github_projects_sync import build_github_projects_sync_plan
+from platform_tools.policy_compliance_check import check_policy_compliance
 from platform_tools.remaining_work_graph_check import check_remaining_work_graph
 
 
@@ -39,6 +40,12 @@ def get_human_operations_status(
     )
     current_branch = str(remaining_report.get("branch", branch or "")).strip()
     blockers = [f"remaining_work_graph:{item}" for item in remaining_report.get("errors", [])] if remaining_code != 0 else []
+    _, policy_report = check_policy_compliance(
+        root=root,
+        execplan_path=execplan_path,
+    )
+    if not policy_report.get("ok", False):
+        blockers.extend(f"policy_compliance:{item}" for item in policy_report.get("blockers", []))
 
     field_map_state = load_field_map_state(root=root, field_map_path=field_map_path)
     if field_map_state["field_map_exists"] and not field_map_state["project_id"]:
@@ -152,6 +159,10 @@ def get_human_operations_status(
             "counts": counts,
             "pending_reconciliation_count": len(pending_reconciliation),
             "takeover_candidate_count": len(takeover_candidates),
+        },
+        "policy_compliance": {
+            "ok": bool(policy_report.get("ok", False)),
+            "blockers": [str(item) for item in policy_report.get("blockers", [])],
         },
         "review_nodes": review_nodes,
         "next_actions": next_actions,
