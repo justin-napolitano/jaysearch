@@ -356,3 +356,71 @@ def test_policy_compliance_blocks_late_execplan_authority_change(tmp_path: Path)
     assert code == 1
     assert any("procedural_commit_order_violation" in blocker for blocker in report["blockers"])
     assert any("execplan_reconciliation_violation" in blocker for blocker in report["blockers"])
+
+
+def test_policy_compliance_allows_bounded_late_policy_repair_sequence(tmp_path: Path) -> None:
+    execplan = _seed_repo(tmp_path, graph_and_queue_on_main=False)
+
+    _write(execplan, _execplan_text().replace("- [ ] Test", "- [x] Test"))
+    _git(tmp_path, "add", execplan.as_posix())
+    _git(tmp_path, "commit", "-m", "docs(execplan): update policy progress")
+
+    _write(tmp_path / "src" / "platform_tools" / "policy_compliance_check.py", "ALLOWED = True\n")
+    _write(tmp_path / "tests" / "test_policy_compliance_check.py", "def test_allowed():\n    assert True\n")
+    _git(tmp_path, "add", "src/platform_tools/policy_compliance_check.py", "tests/test_policy_compliance_check.py")
+    _git(tmp_path, "commit", "-m", "fix(governance): allow bounded follow-up repairs")
+
+    _write(tmp_path / "docs" / "governance.md", "split commits allowed\n")
+    _write(tmp_path / "docs" / "agent-game-rules-v1.md", "split commits allowed\n")
+    _write(tmp_path / "docs" / "queued-execplans.md", _queue_text() + "\n<!-- bounded follow-up repairs -->\n")
+    _git(
+        tmp_path,
+        "add",
+        "docs/governance.md",
+        "docs/agent-game-rules-v1.md",
+        "docs/queued-execplans.md",
+    )
+    _git(tmp_path, "commit", "-m", "docs(governance): document bounded follow-up repairs")
+
+    _write(tmp_path / "tests" / "test_policy_compliance_check.py", "def test_allowed():\n    assert True\n\ndef test_more():\n    assert True\n")
+    _git(tmp_path, "add", "tests/test_policy_compliance_check.py")
+    _git(tmp_path, "commit", "-m", "test(governance): lock bounded follow-up repairs")
+
+    _write(
+        tmp_path / "src" / "platform_tools" / "policy_compliance_check.py",
+        "ALLOWED = True\nBOUNDED = True\n",
+    )
+    _write(
+        tmp_path / "tests" / "test_policy_compliance_check.py",
+        "def test_allowed():\n    assert True\n\ndef test_more():\n    assert True\n\ndef test_bounded():\n    assert True\n",
+    )
+    _git(tmp_path, "add", "src/platform_tools/policy_compliance_check.py", "tests/test_policy_compliance_check.py")
+    _git(tmp_path, "commit", "-m", "feat(governance): enforce bounded follow-up repairs")
+
+    code, report = check_policy_compliance(
+        root=tmp_path.as_posix(),
+        execplan_path=execplan.as_posix(),
+        base_ref="main",
+    )
+
+    assert code == 0
+    assert report["ok"] is True
+    assert not any("procedural_commit_order_violation" in blocker for blocker in report["blockers"])
+    assert len([warning for warning in report["warnings"] if "bounded_policy_repair_commit" in warning]) == 3
+
+
+def test_policy_compliance_blocks_unbounded_late_runtime_follow_up(tmp_path: Path) -> None:
+    execplan = _seed_repo(tmp_path, graph_and_queue_on_main=False)
+
+    _write(tmp_path / "src" / "policy_runtime_followup.py", "FOLLOW_UP = True\n")
+    _git(tmp_path, "add", "src/policy_runtime_followup.py")
+    _git(tmp_path, "commit", "-m", "fix(policy): add unrelated runtime follow-up")
+
+    code, report = check_policy_compliance(
+        root=tmp_path.as_posix(),
+        execplan_path=execplan.as_posix(),
+        base_ref="main",
+    )
+
+    assert code == 1
+    assert any("procedural_commit_order_violation" in blocker for blocker in report["blockers"])
