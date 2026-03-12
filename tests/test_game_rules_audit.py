@@ -26,6 +26,8 @@ def _seed_repo(root: Path, *, omit_game_doc_claim: bool = False) -> None:
     _write(root / "docs/games/execplan-game.md", "# ExecPlan\n")
     _write(root / "docs/games/planning-game.md", "# Planning\n")
     _write(root / "docs/games/implementation-game.md", "# Implementation\n")
+    _write(root / "docs/games/policy-compliance-game.md", "# Policy Compliance\n")
+    _write(root / "docs/games/commit-structure-game.md", "# Commit Structure\n")
     _write(root / "docs/games/planning-merge-readiness-game.md", "# Planning Proof\n")
     _write(root / "docs/games/implementation-merge-readiness-game.md", "# Implementation Proof\n")
     _write(root / "docs/governance.md", "gov\n")
@@ -41,16 +43,16 @@ def _seed_repo(root: Path, *, omit_game_doc_claim: bool = False) -> None:
                 "  required_fields: [graph_id, created_at, nodes, edges]",
                 "node:",
                 "  required_fields: [id, type, label, title]",
-                "  type_allowed: [game, artifact]",
+                "  type_allowed: [game, artifact, rule, validator, phase, authority]",
                 "edge:",
                 "  required_fields: [from, to, relation]",
-                "  relation_allowed: [contains, terminates_in, hands_off_to, links_to, documented_in, inherits]",
+                "  relation_allowed: [contains, terminates_in, hands_off_to, links_to, documented_in, inherits, applies_to, enforced_by, satisfied_by, requires]",
                 "game_node:",
                 "  required_fields: [layer, scope, spec_path]",
-                "  allowed_layers: [platform, authority, work, assurance]",
-                "  allowed_scopes: [global_board_law, domain_game, proof_game]",
+                "  allowed_layers: [platform, authority, work, review, truth, projection, assurance]",
+                "  allowed_scopes: [global_board_law, domain_game, proof_game, subgame_local]",
                 "game_graph:",
-                "  required_game_ids: [game-platform, game-execplan, game-planning, game-implementation, game-planning-proof, game-implementation-proof]",
+                "  required_game_ids: [game-platform, game-execplan, game-planning, game-implementation, game-policy-compliance, game-commit-structure, game-planning-proof, game-implementation-proof]",
                 "  root_game_id: game-platform",
                 "  required_edges:",
                 "    - from: game-platform",
@@ -61,6 +63,12 @@ def _seed_repo(root: Path, *, omit_game_doc_claim: bool = False) -> None:
                 "      relation: contains",
                 "    - from: game-execplan",
                 "      to: game-implementation",
+                "      relation: contains",
+                "    - from: game-implementation",
+                "      to: game-policy-compliance",
+                "      relation: contains",
+                "    - from: game-policy-compliance",
+                "      to: game-commit-structure",
                 "      relation: contains",
                 "    - from: game-planning",
                 "      to: game-planning-proof",
@@ -153,6 +161,42 @@ def _seed_repo(root: Path, *, omit_game_doc_claim: bool = False) -> None:
                 "loss_condition: bad",
             ]
         ),
+        "spec/games/policy-compliance-game.yaml": "\n".join(
+            [
+                "game_id: game-policy-compliance",
+                "type: policy_compliance",
+                "title: Policy Compliance Game",
+                "layer: assurance",
+                "rule_scope: domain_game",
+                "parent_game: game-implementation",
+                "objective: legality",
+                "board: board",
+                "players: [implementer]",
+                "referees: [bin/policy-compliance-check]",
+                "referee_order: [global_board_law, active_domain_game, active_subgame]",
+                "local_rule_focus: [latest_main_branching, clean_merge_state]",
+                "win_condition: ok",
+                "loss_condition: bad",
+            ]
+        ),
+        "spec/games/commit-structure-game.yaml": "\n".join(
+            [
+                "game_id: game-commit-structure",
+                "type: policy_compliance",
+                "title: Commit Structure Game",
+                "layer: assurance",
+                "rule_scope: subgame_local",
+                "parent_game: game-policy-compliance",
+                "objective: legal commits",
+                "board: board",
+                "players: [implementer]",
+                "referees: [bin/policy-compliance-check]",
+                "referee_order: [global_board_law, active_domain_game, active_subgame]",
+                "local_rule_focus: [procedural_commit_order, human_sized_commits]",
+                "win_condition: ok",
+                "loss_condition: bad",
+            ]
+        ),
         "spec/games/planning-merge-readiness-game.yaml": "\n".join(
             [
                 "game_id: game-planning-proof",
@@ -202,6 +246,8 @@ def _seed_repo(root: Path, *, omit_game_doc_claim: bool = False) -> None:
                 {"id": "game-execplan", "type": "game", "label": "ExecPlan Game", "title": "ExecPlan", "layer": "authority", "scope": "domain_game", "spec_path": "spec/games/execplan-game.yaml"},
                 {"id": "game-planning", "type": "game", "label": "Planning Game", "title": "Planning", "layer": "work", "scope": "domain_game", "spec_path": "spec/games/planning-game.yaml"},
                 {"id": "game-implementation", "type": "game", "label": "Implementation Game", "title": "Implementation", "layer": "work", "scope": "domain_game", "spec_path": "spec/games/implementation-game.yaml"},
+                {"id": "game-policy-compliance", "type": "game", "label": "Policy Compliance Game", "title": "Policy Compliance", "layer": "assurance", "scope": "domain_game", "spec_path": "spec/games/policy-compliance-game.yaml"},
+                {"id": "game-commit-structure", "type": "game", "label": "Commit Structure Game", "title": "Commit Structure", "layer": "assurance", "scope": "subgame_local", "spec_path": "spec/games/commit-structure-game.yaml"},
                 {"id": "game-planning-proof", "type": "game", "label": "Planning Proof", "title": "Planning Proof", "layer": "assurance", "scope": "proof_game", "spec_path": "spec/games/planning-merge-readiness-game.yaml"},
                 {"id": "game-implementation-proof", "type": "game", "label": "Implementation Proof", "title": "Implementation Proof", "layer": "assurance", "scope": "proof_game", "spec_path": "spec/games/implementation-merge-readiness-game.yaml"},
                 {"id": "artifact-rule-graph", "type": "artifact", "label": "Rule Graph", "title": "artifacts/planner/research/rule-graph.json"},
@@ -213,6 +259,8 @@ def _seed_repo(root: Path, *, omit_game_doc_claim: bool = False) -> None:
                 {"id": "artifact-execplan-game-doc", "type": "artifact", "label": "ExecPlan", "title": "docs/games/execplan-game.md"},
                 {"id": "artifact-planning-game-doc", "type": "artifact", "label": "Planning", "title": "docs/games/planning-game.md"},
                 {"id": "artifact-implementation-game-doc", "type": "artifact", "label": "Implementation", "title": "docs/games/implementation-game.md"},
+                {"id": "artifact-policy-compliance-game-doc", "type": "artifact", "label": "Policy Compliance", "title": "docs/games/policy-compliance-game.md"},
+                {"id": "artifact-commit-structure-game-doc", "type": "artifact", "label": "Commit Structure", "title": "docs/games/commit-structure-game.md"},
                 {"id": "artifact-planning-proof-game", "type": "artifact", "label": "Planning Proof", "title": "docs/games/planning-merge-readiness-game.md"},
                 {"id": "artifact-implementation-proof-game", "type": "artifact", "label": "Implementation Proof", "title": "docs/games/implementation-merge-readiness-game.md"}
             ],
@@ -220,6 +268,8 @@ def _seed_repo(root: Path, *, omit_game_doc_claim: bool = False) -> None:
                 {"from": "game-platform", "to": "game-execplan", "relation": "contains"},
                 {"from": "game-execplan", "to": "game-planning", "relation": "contains"},
                 {"from": "game-execplan", "to": "game-implementation", "relation": "contains"},
+                {"from": "game-implementation", "to": "game-policy-compliance", "relation": "contains"},
+                {"from": "game-policy-compliance", "to": "game-commit-structure", "relation": "contains"},
                 {"from": "game-planning", "to": "game-planning-proof", "relation": "terminates_in"},
                 {"from": "game-implementation", "to": "game-implementation-proof", "relation": "terminates_in"},
                 {"from": "game-planning", "to": "game-implementation", "relation": "hands_off_to"},
@@ -232,6 +282,8 @@ def _seed_repo(root: Path, *, omit_game_doc_claim: bool = False) -> None:
                 {"from": "game-execplan", "to": "artifact-execplan-game-doc", "relation": "documented_in"},
                 {"from": "game-planning", "to": "artifact-planning-game-doc", "relation": "documented_in"},
                 {"from": "game-implementation", "to": "artifact-implementation-game-doc", "relation": "documented_in"},
+                {"from": "game-policy-compliance", "to": "artifact-policy-compliance-game-doc", "relation": "documented_in"},
+                {"from": "game-commit-structure", "to": "artifact-commit-structure-game-doc", "relation": "documented_in"},
                 {"from": "game-planning-proof", "to": "artifact-planning-proof-game", "relation": "documented_in"},
                 {"from": "game-implementation-proof", "to": "artifact-implementation-proof-game", "relation": "documented_in"}
             ],
@@ -258,6 +310,7 @@ def _seed_repo(root: Path, *, omit_game_doc_claim: bool = False) -> None:
                 {"id": "validator-execplan-validate", "type": "validator", "label": "Execplan", "title": "bin/execplan-validate"},
                 {"id": "validator-run-local-ci", "type": "validator", "label": "CI", "title": "bin/run-local-ci"},
                 {"id": "validator-smoke-test", "type": "validator", "label": "Smoke", "title": "bin/run-local-ci"},
+                {"id": "validator-policy-compliance-check", "type": "validator", "label": "Policy Compliance", "title": "bin/policy-compliance-check"},
                 {"id": "phase-merge-readiness", "type": "phase", "label": "Merge", "title": "Merge"},
                 {"id": "authority-human", "type": "authority", "label": "Human", "title": "Human"}
             ],
@@ -265,13 +318,13 @@ def _seed_repo(root: Path, *, omit_game_doc_claim: bool = False) -> None:
                 {"from": "rule-smoke-test-required", "to": "phase-merge-readiness", "relation": "applies_to"},
                 {"from": "rule-smoke-test-required", "to": "validator-smoke-test", "relation": "enforced_by"},
                 {"from": "rule-clean-merge-state", "to": "phase-merge-readiness", "relation": "applies_to"},
-                {"from": "rule-clean-merge-state", "to": "artifact-governance-doc", "relation": "satisfied_by"},
+                {"from": "rule-clean-merge-state", "to": "validator-policy-compliance-check", "relation": "enforced_by"},
                 {"from": "rule-human-sized-commits", "to": "phase-merge-readiness", "relation": "applies_to"},
-                {"from": "rule-human-sized-commits", "to": "artifact-governance-doc", "relation": "satisfied_by"},
+                {"from": "rule-human-sized-commits", "to": "validator-policy-compliance-check", "relation": "enforced_by"},
                 {"from": "rule-procedural-commit-order", "to": "phase-merge-readiness", "relation": "applies_to"},
-                {"from": "rule-procedural-commit-order", "to": "artifact-governance-doc", "relation": "satisfied_by"},
+                {"from": "rule-procedural-commit-order", "to": "validator-policy-compliance-check", "relation": "enforced_by"},
                 {"from": "rule-latest-main-branching", "to": "phase-merge-readiness", "relation": "applies_to"},
-                {"from": "rule-latest-main-branching", "to": "artifact-governance-doc", "relation": "satisfied_by"},
+                {"from": "rule-latest-main-branching", "to": "validator-policy-compliance-check", "relation": "enforced_by"},
                 {"from": "rule-execplan-validation", "to": "phase-merge-readiness", "relation": "applies_to"},
                 {"from": "rule-execplan-validation", "to": "validator-execplan-validate", "relation": "enforced_by"},
                 {"from": "rule-human-finalization", "to": "authority-human", "relation": "requires"},
@@ -294,6 +347,8 @@ def _seed_repo(root: Path, *, omit_game_doc_claim: bool = False) -> None:
                 {"id": "artifact-execplan-game-doc", "type": "artifact", "label": "ExecPlan", "title": "docs/games/execplan-game.md"},
                 {"id": "artifact-planning-game-doc", "type": "artifact", "label": "Planning", "title": "docs/games/planning-game.md"},
                 {"id": "artifact-implementation-game-doc", "type": "artifact", "label": "Implementation", "title": "docs/games/implementation-game.md"},
+                {"id": "artifact-policy-compliance-game-doc", "type": "artifact", "label": "Policy Compliance", "title": "docs/games/policy-compliance-game.md"},
+                {"id": "artifact-commit-structure-game-doc", "type": "artifact", "label": "Commit Structure", "title": "docs/games/commit-structure-game.md"},
                 {"id": "artifact-planning-proof-game", "type": "artifact", "label": "Planning Proof", "title": "docs/games/planning-merge-readiness-game.md"},
                 {"id": "artifact-implementation-proof-game", "type": "artifact", "label": "Implementation Proof", "title": "docs/games/implementation-merge-readiness-game.md"}
             ],
@@ -304,6 +359,8 @@ def _seed_repo(root: Path, *, omit_game_doc_claim: bool = False) -> None:
                 {"from": "claim-nested-game-system", "to": "artifact-execplan-game-doc", "relation": "cited_in"},
                 {"from": "claim-nested-game-system", "to": "artifact-planning-game-doc", "relation": "cited_in"},
                 {"from": "claim-nested-game-system", "to": "artifact-implementation-game-doc", "relation": "cited_in"},
+                {"from": "claim-nested-game-system", "to": "artifact-policy-compliance-game-doc", "relation": "cited_in"},
+                {"from": "claim-nested-game-system", "to": "artifact-commit-structure-game-doc", "relation": "cited_in"},
                 {"from": "claim-nested-game-system", "to": "artifact-planning-proof-game", "relation": "cited_in"},
                 {"from": "claim-nested-game-system", "to": "artifact-implementation-proof-game", "relation": "cited_in"}
             ],
@@ -316,6 +373,8 @@ def _seed_repo(root: Path, *, omit_game_doc_claim: bool = False) -> None:
         ("docs/games/execplan-game.md", "artifact-execplan-game-doc", "egd-001"),
         ("docs/games/planning-game.md", "artifact-planning-game-doc", "plgd-001"),
         ("docs/games/implementation-game.md", "artifact-implementation-game-doc", "igd-001"),
+        ("docs/games/policy-compliance-game.md", "artifact-policy-compliance-game-doc", "pcg-001"),
+        ("docs/games/commit-structure-game.md", "artifact-commit-structure-game-doc", "csg-001"),
         ("docs/games/planning-merge-readiness-game.md", "artifact-planning-proof-game", "pmr-001"),
         ("docs/games/implementation-merge-readiness-game.md", "artifact-implementation-proof-game", "imr-001"),
     ]
