@@ -21,6 +21,9 @@ All meaningful work must originate from an ExecPlan.
 5.  Finalization requires a **signed commit**.
 6.  Validation must be deterministic and machine‑checkable.
 
+All ExecPlans execute on the shared platform board under inherited global
+board law before any domain-specific game rules are applied.
+
 ------------------------------------------------------------------------
 
 # What is an ExecPlan
@@ -213,6 +216,12 @@ Operational rules:
 - known item ids must be updated rather than duplicated
 - human operations and takeover state must be derivable from canonical
   local evidence without relying on session memory
+
+Referee order:
+
+1. global board law
+2. active domain game
+3. active subgame or proof game
 
 ------------------------------------------------------------------------
 

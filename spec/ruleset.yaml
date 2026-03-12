@@ -1,5 +1,24 @@
 version: v1
 last_updated: 2026-03-11
+global_board_law:
+  required:
+    - forbidden_moves
+    - scope_compliance
+    - no_hidden_state
+    - canonical_state_ownership
+    - determinism
+    - human_authority_boundaries
+  referee_order:
+    - global_board_law
+    - active_domain_game
+    - active_subgame
+  planned_domain_layers:
+    - authority
+    - work
+    - review
+    - truth
+    - projection
+    - assurance
 move_set:
   allowed:
     - read_repository
@@ -15,6 +34,7 @@ move_set:
     - forge_signature_or_signed_metadata
     - suppress_required_referee_evidence
 execution_constraints:
+  referees_must_check_global_board_law_before_local_rules: true
   execplan_branch_review_required: true
   required_branch_format: "draft-execplan/<plan-id>-<agent>-YYYYMMDD"
   implementation_branch_format: "impl-execplan/<plan-id>-<agent>-YYYYMMDD"
