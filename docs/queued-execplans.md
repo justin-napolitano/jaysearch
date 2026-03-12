@@ -45,9 +45,40 @@ This document turns the remaining-work graph into an explicit near-term queue of
    - goal: reconcile merged ExecPlans to `status: completed` from signed merge history
 
 10. `20260312-human-operations-review-runtime-codex-01-execplan`
-   - status: `ready`
+   - status: `completed`
    - goal: formalize board review, takeover, and merge reconciliation as machine-readable runtime state
    - implementation branch: `impl-execplan/20260312-human-operations-review-runtime-codex-01-execplan-codex-01-20260312`
+
+11. `20260312-game-rules-engine-audit-and-extensibility-codex-01-execplan`
+   - status: `completed`
+   - goal: formalize global board law, game layers, and extension readiness for future subgames
+   - implementation branch: `impl-execplan/20260312-game-rules-engine-audit-and-extensibility-codex-01-execplan-codex-01-20260312`
+
+12. `20260312-game-policy-compliance-codex-01-execplan`
+   - status: `ready`
+   - goal: create `game-policy-compliance` and its `game-commit-structure` subgame so governed slices cannot advance by assertion alone
+   - draft branch: `draft-execplan/20260312-game-policy-compliance-codex-01-execplan-codex-01-20260312`
+
+13. `future:game-hostile-review`
+   - status: `blocked`
+   - goal: add machine hostile review before human approval gates
+   - blocker: `20260312-game-policy-compliance-codex-01-execplan` must land first
+
+14. `future:game-branching`
+   - status: `decision_gated`
+   - goal: formalize branch-cut legality and branch-choice policy as its own game
+
+15. `future:game-citation`
+   - status: `decision_gated`
+   - goal: formalize citation-backed claim verification and anti-hallucination evidence rules
+
+16. `future:game-documentation`
+   - status: `decision_gated`
+   - goal: formalize documentation completeness for code, games, and relationships
+
+17. `future:game-board-integrity`
+   - status: `decision_gated`
+   - goal: formalize provider-board reuse, item identity reuse, and sync integrity
 
 ## Queue Discipline
 
