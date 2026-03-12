@@ -20,6 +20,9 @@ This document establishes:
 • Validation expectations\
 • Audit and provenance requirements
 
+All agent moves inherit platform board law before any local game or
+phase rule is considered.
+
 Agents **draft** work.\
 Humans **finalize** work.
 
@@ -96,6 +99,9 @@ Agents MUST NOT:
 • Store secrets or credentials in repository artifacts\
 • Create releases or tags that change governance rules\
 • Forge Signed-off-by metadata
+
+These forbidden moves are part of global board law, not just local phase
+policy.
 
 ------------------------------------------------------------------------
 
