@@ -91,7 +91,35 @@ def _classify_commit(subject: str) -> str:
     return "unknown"
 
 
-def _commit_reports(cwd: Path, base_ref: str) -> tuple[list[dict[str, Any]], list[str], list[str]]:
+def _is_late_execplan_progress_commit(
+    *,
+    commit_class: str,
+    commit_files: list[str],
+    changed_lines: int,
+    active_execplan_path: str,
+) -> bool:
+    if commit_class != "execplan":
+        return False
+    if not active_execplan_path:
+        return False
+    if commit_files != [active_execplan_path]:
+        return False
+    return changed_lines <= 80
+
+
+def _repo_relative_path(path: Path, *, root: Path) -> str:
+    try:
+        return path.resolve().relative_to(root.resolve()).as_posix()
+    except ValueError:
+        return path.as_posix()
+
+
+def _commit_reports(
+    cwd: Path,
+    base_ref: str,
+    *,
+    active_execplan_path: str,
+) -> tuple[list[dict[str, Any]], list[str], list[str]]:
     merge_base = _merge_base(cwd, base_ref)
     output = _git(cwd, "rev-list", "--reverse", f"{merge_base}..HEAD")
     commits = [line.strip() for line in output.splitlines() if line.strip()]
@@ -104,6 +132,8 @@ def _commit_reports(cwd: Path, base_ref: str) -> tuple[list[dict[str, Any]], lis
         subject = _git(cwd, "show", "-s", "--format=%s", commit)
         body = _git(cwd, "show", "-s", "--format=%b", commit)
         numstat = _git(cwd, "show", "--numstat", "--format=", commit)
+        name_only = _git(cwd, "show", "--name-only", "--format=", commit)
+        commit_files = [line.strip() for line in name_only.splitlines() if line.strip()]
         file_count = 0
         changed_lines = 0
         for line in numstat.splitlines():
@@ -118,7 +148,15 @@ def _commit_reports(cwd: Path, base_ref: str) -> tuple[list[dict[str, Any]], lis
         commit_class = _classify_commit(subject)
         class_order = CLASS_ORDER[commit_class]
         if commit_class != "unknown" and class_order < max_seen:
-            errors.append(f"procedural_commit_order_violation:{commit}:{subject}")
+            if _is_late_execplan_progress_commit(
+                commit_class=commit_class,
+                commit_files=commit_files,
+                changed_lines=changed_lines,
+                active_execplan_path=active_execplan_path,
+            ):
+                warnings.append(f"late_execplan_progress_update:{commit}")
+            else:
+                errors.append(f"procedural_commit_order_violation:{commit}:{subject}")
         max_seen = max(max_seen, class_order)
 
         if changed_lines > 400 and "commit-size-justification" not in body:
@@ -135,6 +173,7 @@ def _commit_reports(cwd: Path, base_ref: str) -> tuple[list[dict[str, Any]], lis
                 "class": commit_class,
                 "file_count": file_count,
                 "changed_lines": changed_lines,
+                "files": commit_files,
             }
         )
 
@@ -188,7 +227,11 @@ def check_policy_compliance(
     parsed = parse_plan(plan_path)
     execplan_id = str(parsed.frontmatter.get("id", "")).strip()
     changed_files = _changed_files(cwd, base_ref)
-    commit_stack, commit_errors, commit_warnings = _commit_reports(cwd, base_ref)
+    commit_stack, commit_errors, commit_warnings = _commit_reports(
+        cwd,
+        base_ref,
+        active_execplan_path=_repo_relative_path(plan_path, root=cwd),
+    )
     dirty_artifacts = _dirty_generated_artifacts(cwd)
     branch_aligned, merge_base, base_head = _branch_is_aligned_with_base(cwd, base_ref)
     remaining_work_code, remaining_work_report = check_remaining_work_graph(
