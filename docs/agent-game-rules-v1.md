@@ -204,6 +204,13 @@ Governed finalization authority rule:
 - If both draft and implementation merges exist for the same ExecPlan id, the implementation merge should be treated as the stronger completion authority signal.
 - If merge, signature verification, or identity derivation is ambiguous, the reconciliation move must fail explicitly rather than claiming completion.
 
+Board/review runtime rule:
+
+- The external review board is a projection-only surface.
+- Live sync requires the canonical field-map artifact.
+- Once project or item identities are known, moves must reuse them rather than duplicating board state.
+- Human review and takeover moves are only valid if they remain reconstructable from canonical local evidence.
+
 ## 10. Match Flow and Stop Conditions
 
 Lifecycle flow:
