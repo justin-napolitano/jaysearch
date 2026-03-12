@@ -232,7 +232,7 @@ properties:
 """
 
 
-def _seed_repo(root: Path, *, graph_and_queue_on_main: bool) -> Path:
+def _seed_repo(root: Path, *, graph_and_queue_on_main: bool, split_test_phase: bool = False) -> Path:
     _git(root, "init", "-b", "main")
     _git(root, "config", "user.name", "Tests")
     _git(root, "config", "user.email", "tests@example.com")
@@ -261,6 +261,10 @@ def _seed_repo(root: Path, *, graph_and_queue_on_main: bool) -> Path:
     _write(root / "tests" / "policy_runtime.txt", "ok\n")
     _git(root, "add", "tests/policy_runtime.txt")
     _git(root, "commit", "-m", "test(policy): add coverage")
+    if split_test_phase:
+        _write(root / "tests" / "policy_runtime_extra.txt", "extra\n")
+        _git(root, "add", "tests/policy_runtime_extra.txt")
+        _git(root, "commit", "-m", "test(policy): add extra coverage")
 
     if not graph_and_queue_on_main:
         _write_json(root / "artifacts/planner/research/remaining-work-graph.json", _remaining_work_graph())
@@ -317,3 +321,17 @@ def test_policy_compliance_allows_small_late_execplan_progress_update(tmp_path: 
     assert report["ok"] is True
     assert not any("procedural_commit_order_violation" in blocker for blocker in report["blockers"])
     assert any("late_execplan_progress_update" in warning for warning in report["warnings"])
+
+
+def test_policy_compliance_allows_multiple_adjacent_test_commits(tmp_path: Path) -> None:
+    execplan = _seed_repo(tmp_path, graph_and_queue_on_main=False, split_test_phase=True)
+
+    code, report = check_policy_compliance(
+        root=tmp_path.as_posix(),
+        execplan_path=execplan.as_posix(),
+        base_ref="main",
+    )
+
+    assert code == 0
+    assert report["ok"] is True
+    assert not any("procedural_commit_order_violation" in blocker for blocker in report["blockers"])
