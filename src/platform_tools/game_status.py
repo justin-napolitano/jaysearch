@@ -7,6 +7,8 @@ import subprocess
 from pathlib import Path
 from typing import Any
 
+import yaml
+
 from platform_tools.branch_policy import evaluate_branch_policy, get_current_branch
 from platform_tools.game_graph_check import check_game_graph
 from platform_tools.plan_utils import parse_plan
@@ -20,6 +22,11 @@ def _git(cwd: Path, *args: str) -> tuple[int, str]:
 
 def _load_json(path: Path) -> Any:
     return json.loads(path.read_text(encoding="utf-8"))
+
+
+def _load_yaml(path: Path) -> dict[str, Any]:
+    loaded = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
+    return loaded if isinstance(loaded, dict) else {}
 
 
 def _evaluate_branch_policy_at_root(root: Path, branch: str) -> dict[str, Any]:
@@ -52,6 +59,22 @@ def _contains_parents(root: Path) -> dict[str, str]:
         if edge.get("relation") == "contains":
             parents[str(edge.get("to", ""))] = str(edge.get("from", ""))
     return parents
+
+
+def _game_spec_for_id(root: Path, game_id: str) -> dict[str, Any]:
+    graph_path = root / "artifacts" / "planner" / "research" / "game-graph.json"
+    graph = _load_json(graph_path)
+    for node in graph.get("nodes", []):
+        if not isinstance(node, dict) or str(node.get("id", "")).strip() != game_id:
+            continue
+        spec_path = str(node.get("spec_path", "")).strip()
+        if not spec_path:
+            return {}
+        path = root / spec_path
+        if not path.exists():
+            return {}
+        return _load_json(path) if path.suffix == ".json" else parse_plan(path).frontmatter if path.suffix == ".md" else _load_yaml(path)
+    return {}
 
 
 def _lineage(game_id: str, parents: dict[str, str]) -> list[str]:
@@ -137,6 +160,7 @@ def get_game_status(
         active_game_reason = "branch_policy_blocked"
 
     active_node = nodes.get(active_game_id, {})
+    active_spec = _game_spec_for_id(cwd, active_game_id) if active_node else {}
     lineage = _lineage(active_game_id, parents) if active_node else [active_game_id]
 
     if graph_code != 0 or not branch_report.get("ok", False):
@@ -169,6 +193,10 @@ def get_game_status(
             "id": active_game_id,
             "label": str(active_node.get("label", "")).strip(),
             "title": str(active_node.get("title", "")).strip(),
+            "layer": str(active_node.get("layer", "")).strip(),
+            "scope": str(active_node.get("scope", "")).strip(),
+            "referee_order": active_spec.get("referee_order", []),
+            "local_rule_focus": active_spec.get("local_rule_focus", []),
             "reason": active_game_reason,
             "lineage": lineage,
         },
