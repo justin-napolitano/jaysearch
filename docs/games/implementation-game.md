@@ -4,6 +4,12 @@
 
 The implementation game executes scoped work under contract and validator pressure.
 
+## Layer
+
+The implementation game is a work-domain game. It inherits global board
+law and ExecPlan constraints, then narrows them to scoped execution,
+verification, recovery, and review preparation.
+
 ## Board
 
 The implementation board is the same canonical graph, but with stronger emphasis on:
@@ -21,6 +27,13 @@ The implementation board is the same canonical graph, but with stronger emphasis
 - review
 - recover
 - escalate
+
+## Local Rule Focus
+
+- scoped file changes
+- verification evidence
+- recovery state
+- review readiness preparation
 
 ## Win Condition
 
