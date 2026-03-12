@@ -23,6 +23,30 @@ def _heading_present(body: str, heading: str) -> bool:
     return False
 
 
+def _has_policy_compliance_validation(frontmatter: dict[str, Any], plan_path: Path) -> bool:
+    validation = frontmatter.get("validation", {})
+    if not isinstance(validation, dict):
+        return False
+    tests = validation.get("tests", [])
+    if not isinstance(tests, list):
+        return False
+    expected_commands = {
+        f"bin/policy-compliance-check --execplan-path {plan_path.as_posix()}",
+    }
+    try:
+        relative_plan_path = plan_path.resolve().relative_to(Path.cwd().resolve()).as_posix()
+        expected_commands.add(f"bin/policy-compliance-check --execplan-path {relative_plan_path}")
+    except ValueError:
+        pass
+    for item in tests:
+        if not isinstance(item, dict):
+            continue
+        command = str(item.get("command", "")).strip()
+        if command in expected_commands:
+            return True
+    return False
+
+
 def validate_execplan(path: str | Path) -> dict[str, Any]:
     p = Path(path)
     parsed = parse_plan(p)
@@ -30,6 +54,7 @@ def validate_execplan(path: str | Path) -> dict[str, Any]:
     warnings: list[str] = []
     frontmatter = parsed.frontmatter
     body = parsed.body
+    current_branch = get_current_branch()
 
     for heading in REQUIRED_HEADINGS:
         if not _heading_present(body, heading):
@@ -50,6 +75,13 @@ def validate_execplan(path: str | Path) -> dict[str, Any]:
             branch = frontmatter.get("draft_branch", "")
             if not isinstance(branch, str) or not branch.startswith("draft-execplan/"):
                 errors.append("invalid_draft_branch")
+
+        if (
+            isinstance(current_branch, str)
+            and current_branch.startswith("impl-execplan/")
+            and not _has_policy_compliance_validation(frontmatter, p)
+        ):
+            errors.append("missing_policy_compliance_validation")
 
         changes = frontmatter.get("changes")
         if not isinstance(changes, list) or len(changes) == 0:

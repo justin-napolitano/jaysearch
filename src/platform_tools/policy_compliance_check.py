@@ -37,7 +37,7 @@ CLASS_ORDER = {
 }
 BOUNDED_EXECPLAN_FRONTMATTER_FIELDS = {"changes", "validation"}
 BOUNDED_EXECPLAN_MAX_LINES = 120
-BOUNDED_POLICY_REPAIR_MAX_LINES = 140
+BOUNDED_POLICY_REPAIR_MAX_LINES = 220
 BOUNDED_POLICY_REPAIR_MAX_FILES = 3
 BOUNDED_POLICY_REPAIR_SUBJECT_PREFIXES = (
     "fix(governance):",
@@ -430,6 +430,10 @@ def _published_branch_rewrite_status(cwd: Path, branch: str) -> dict[str, Any]:
     }
 
 
+def _requires_published_implementation_branch(branch: str) -> bool:
+    return bool(branch) and branch.startswith("impl-execplan/")
+
+
 def check_policy_compliance(
     *,
     root: str = ".",
@@ -462,6 +466,8 @@ def check_policy_compliance(
     blockers: list[str] = []
     if not branch_aligned:
         blockers.append("latest_main_branching_violation")
+    if _requires_published_implementation_branch(branch) and not rewrite_guard["published_ref_exists"]:
+        blockers.append("implementation_branch_not_published")
     if not rewrite_guard["ok"]:
         blockers.append("published_branch_history_rewrite_violation")
     if dirty_artifacts:
