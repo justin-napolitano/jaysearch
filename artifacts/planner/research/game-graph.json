@@ -6,37 +6,55 @@
       "id": "game-platform",
       "type": "game",
       "label": "Platform Game",
-      "title": "Top-level governed platform game"
+      "title": "Top-level governed platform game",
+      "layer": "platform",
+      "scope": "global_board_law",
+      "spec_path": "spec/games/platform-game.yaml"
     },
     {
       "id": "game-execplan",
       "type": "game",
       "label": "ExecPlan Game",
-      "title": "Contract game"
+      "title": "Contract game",
+      "layer": "authority",
+      "scope": "domain_game",
+      "spec_path": "spec/games/execplan-game.yaml"
     },
     {
       "id": "game-planning",
       "type": "game",
       "label": "Planning Game",
-      "title": "Ambiguity-reduction game"
+      "title": "Ambiguity-reduction game",
+      "layer": "work",
+      "scope": "domain_game",
+      "spec_path": "spec/games/planning-game.yaml"
     },
     {
       "id": "game-implementation",
       "type": "game",
       "label": "Implementation Game",
-      "title": "Validated execution game"
+      "title": "Validated execution game",
+      "layer": "work",
+      "scope": "domain_game",
+      "spec_path": "spec/games/implementation-game.yaml"
     },
     {
       "id": "game-planning-proof",
       "type": "game",
       "label": "Planning Merge Readiness",
-      "title": "Planning proof game"
+      "title": "Planning proof game",
+      "layer": "assurance",
+      "scope": "proof_game",
+      "spec_path": "spec/games/planning-merge-readiness-game.yaml"
     },
     {
       "id": "game-implementation-proof",
       "type": "game",
       "label": "Implementation Merge Readiness",
-      "title": "Implementation proof game"
+      "title": "Implementation proof game",
+      "layer": "assurance",
+      "scope": "proof_game",
+      "spec_path": "spec/games/implementation-merge-readiness-game.yaml"
     },
     {
       "id": "artifact-rule-graph",
@@ -61,18 +79,135 @@
       "type": "artifact",
       "label": "Games README",
       "title": "docs/games/README.md"
+    },
+    {
+      "id": "artifact-game-inheritance",
+      "type": "artifact",
+      "label": "Game Inheritance",
+      "title": "docs/games/game-inheritance.md"
+    },
+    {
+      "id": "artifact-platform-game-doc",
+      "type": "artifact",
+      "label": "Platform Game Doc",
+      "title": "docs/games/platform-game.md"
+    },
+    {
+      "id": "artifact-execplan-game-doc",
+      "type": "artifact",
+      "label": "ExecPlan Game Doc",
+      "title": "docs/games/execplan-game.md"
+    },
+    {
+      "id": "artifact-planning-game-doc",
+      "type": "artifact",
+      "label": "Planning Game Doc",
+      "title": "docs/games/planning-game.md"
+    },
+    {
+      "id": "artifact-implementation-game-doc",
+      "type": "artifact",
+      "label": "Implementation Game Doc",
+      "title": "docs/games/implementation-game.md"
+    },
+    {
+      "id": "artifact-planning-proof-game",
+      "type": "artifact",
+      "label": "Planning Proof Game",
+      "title": "docs/games/planning-merge-readiness-game.md"
+    },
+    {
+      "id": "artifact-implementation-proof-game",
+      "type": "artifact",
+      "label": "Implementation Proof Game",
+      "title": "docs/games/implementation-merge-readiness-game.md"
     }
   ],
   "edges": [
-    { "from": "game-platform", "to": "game-execplan", "relation": "contains" },
-    { "from": "game-execplan", "to": "game-planning", "relation": "contains" },
-    { "from": "game-execplan", "to": "game-implementation", "relation": "contains" },
-    { "from": "game-planning", "to": "game-planning-proof", "relation": "terminates_in" },
-    { "from": "game-implementation", "to": "game-implementation-proof", "relation": "terminates_in" },
-    { "from": "game-platform", "to": "artifact-rule-graph", "relation": "links_to" },
-    { "from": "game-platform", "to": "artifact-bibliography-graph", "relation": "links_to" },
-    { "from": "game-platform", "to": "artifact-claim-registry", "relation": "links_to" },
-    { "from": "game-platform", "to": "artifact-games-readme", "relation": "documented_in" },
-    { "from": "game-planning", "to": "game-implementation", "relation": "hands_off_to" }
+    {
+      "from": "game-platform",
+      "to": "game-execplan",
+      "relation": "contains"
+    },
+    {
+      "from": "game-execplan",
+      "to": "game-planning",
+      "relation": "contains"
+    },
+    {
+      "from": "game-execplan",
+      "to": "game-implementation",
+      "relation": "contains"
+    },
+    {
+      "from": "game-planning",
+      "to": "game-planning-proof",
+      "relation": "terminates_in"
+    },
+    {
+      "from": "game-implementation",
+      "to": "game-implementation-proof",
+      "relation": "terminates_in"
+    },
+    {
+      "from": "game-planning",
+      "to": "game-implementation",
+      "relation": "hands_off_to"
+    },
+    {
+      "from": "game-platform",
+      "to": "artifact-rule-graph",
+      "relation": "links_to"
+    },
+    {
+      "from": "game-platform",
+      "to": "artifact-bibliography-graph",
+      "relation": "links_to"
+    },
+    {
+      "from": "game-platform",
+      "to": "artifact-claim-registry",
+      "relation": "links_to"
+    },
+    {
+      "from": "game-platform",
+      "to": "artifact-games-readme",
+      "relation": "documented_in"
+    },
+    {
+      "from": "game-platform",
+      "to": "artifact-game-inheritance",
+      "relation": "documented_in"
+    },
+    {
+      "from": "game-platform",
+      "to": "artifact-platform-game-doc",
+      "relation": "documented_in"
+    },
+    {
+      "from": "game-execplan",
+      "to": "artifact-execplan-game-doc",
+      "relation": "documented_in"
+    },
+    {
+      "from": "game-planning",
+      "to": "artifact-planning-game-doc",
+      "relation": "documented_in"
+    },
+    {
+      "from": "game-implementation",
+      "to": "artifact-implementation-game-doc",
+      "relation": "documented_in"
+    },
+    {
+      "from": "game-planning-proof",
+      "to": "artifact-planning-proof-game",
+      "relation": "documented_in"
+    },
+    {
+      "from": "game-implementation-proof",
+      "to": "artifact-implementation-proof-game",
+      "relation": "documented_in"
+    }
   ]
 }

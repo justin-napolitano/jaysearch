@@ -1,15 +1,27 @@
-game_id: planning-game
+game_id: game-planning
 type: planning
 title: Planning Game
-parent_game: execplan-game
+layer: work
+rule_scope: domain_game
+parent_game: game-execplan
 objective: reduce ambiguity into explicit graph state
 board: canonical-graph-plus-planner-sessions
 players:
   - human_operator
   - planner_facilitator
   - planner_critic
+inherits_board_law: true
+local_rule_focus:
+  - ambiguity_reduction
+  - dependency_declaration
+  - blocker_visibility
+  - citation_backed_design_constraints
 referees:
   - bin/planner
   - bin/citation-check
+referee_order:
+  - global_board_law
+  - active_domain_game
+  - active_subgame
 win_condition: bounded intent and explicit blockers
 loss_condition: ambiguity or contradiction remains hidden

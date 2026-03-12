@@ -1,14 +1,25 @@
-game_id: implementation-merge-readiness-game
+game_id: game-implementation-proof
 type: merge_readiness
 title: Implementation Merge-Readiness Game
-parent_game: implementation-game
+layer: assurance
+rule_scope: proof_game
+parent_game: game-implementation
 objective: prove branch readiness for merge review
 board: branch-proof-state
 players:
   - codex_orchestrator
   - human_operator
+inherits_board_law: true
+local_rule_focus:
+  - proof_obligations
+  - branch_readiness
+  - review_evidence
 referees:
   - bin/run-local-ci
   - bin/merge-readiness-check
+referee_order:
+  - global_board_law
+  - active_domain_game
+  - active_subgame
 win_condition: branch is machine-checkably ready for review
 loss_condition: readiness depends on informal memory or missing evidence

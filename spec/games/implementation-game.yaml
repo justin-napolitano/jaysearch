@@ -1,15 +1,27 @@
-game_id: implementation-game
+game_id: game-implementation
 type: implementation
 title: Implementation Game
-parent_game: execplan-game
+layer: work
+rule_scope: domain_game
+parent_game: game-execplan
 objective: execute scoped work with evidence and review
 board: canonical-graph-plus-implementation-state
 players:
   - human_operator
   - implementation_orchestrator
   - hostile_reviewer
+inherits_board_law: true
+local_rule_focus:
+  - scoped_file_changes
+  - verification_evidence
+  - recovery_state
+  - review_readiness_preparation
 referees:
   - bin/run-local-ci
   - bin/execplan-validate
+referee_order:
+  - global_board_law
+  - active_domain_game
+  - active_subgame
 win_condition: scoped work is validated and reviewed
 loss_condition: unvalidated or out-of-scope work is treated as complete

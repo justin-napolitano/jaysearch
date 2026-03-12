@@ -1,14 +1,25 @@
-game_id: planning-merge-readiness-game
+game_id: game-planning-proof
 type: merge_readiness
 title: Planning Merge-Readiness Game
-parent_game: planning-game
+layer: assurance
+rule_scope: proof_game
+parent_game: game-planning
 objective: prove planning outputs are ready for contract or downstream execution
 board: planning-proof-state
 players:
   - codex_orchestrator
   - human_operator
+inherits_board_law: true
+local_rule_focus:
+  - proof_obligations
+  - explicit_evidence
+  - citation_completeness
 referees:
   - bin/execplan-validate
   - bin/citation-check
+referee_order:
+  - global_board_law
+  - active_domain_game
+  - active_subgame
 win_condition: planning outputs are explicit and evidence-backed
 loss_condition: planning still depends on hidden assumptions
