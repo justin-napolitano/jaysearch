@@ -71,11 +71,11 @@ This slice should turn human operations into an explicit governed runtime so a h
 
 ## Progress
 
-- [ ] Define canonical human-operations and board-review invariants
-- [ ] Add deterministic human-operations runtime/status command
-- [ ] Reconcile GitHub Projects review fields from canonical local evidence
-- [ ] Add focused tests and smoke coverage
-- [ ] Validate the slice
+- [x] Define canonical human-operations and board-review invariants
+- [x] Add deterministic human-operations runtime/status command
+- [x] Reconcile GitHub Projects review fields from canonical local evidence
+- [x] Add focused tests and smoke coverage
+- [x] Validate the slice
 
 ## Surprises & Discoveries
 
@@ -83,6 +83,7 @@ This slice should turn human operations into an explicit governed runtime so a h
 - GitHub Projects sync is now good enough to act as a real review surface, but the rules for when it may be updated, reused, or treated as stale are not yet fully machine-readable
 - downstream work should not recreate boards, duplicate project items, or reopen already-completed provider-sync baselines, so those invariants need to be explicit policy rather than tribal knowledge
 - human operations now spans multiple surfaces: merge history, remaining-work graph, implementation branches, and GitHub Projects projection; the platform needs one deterministic summary command for that combined state
+- the provider projection layer was still deriving review fields from raw node status alone, so this slice needed a shared human-operations evidence helper to keep the board, orchestrator, and review runtime consistent
 
 ## Decision Log
 
@@ -100,6 +101,13 @@ On completion, the repository should have a governed human-operations runtime th
 - blocks duplicate board bootstrap or duplicate project-item creation once field-map and item ids exist
 - makes handoff and takeover rules machine-readable
 - lets downstream slices consume human-operations state without reopening already-completed platform work
+
+Implemented outcome:
+
+- `bin/human-operations-status` exposes deterministic board/runtime review state from canonical local evidence
+- provider sync now derives review/finalization fields from the same human-operations evidence layer used by status commands
+- machine-readable governance/workflow rules now encode board reuse, item-id reuse, and takeover-safe runtime expectations
+- the remaining-work graph now reflects the completed provider-sync/finalization baseline and the active human-operations slice
 
 ## Context and Orientation
 
