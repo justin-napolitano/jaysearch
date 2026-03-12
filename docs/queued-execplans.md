@@ -57,6 +57,7 @@ This document turns the remaining-work graph into an explicit near-term queue of
 12. `20260312-game-policy-compliance-codex-01-execplan`
    - status: `ready`
    - goal: create `game-policy-compliance` and its `game-commit-structure` subgame so governed slices cannot advance by assertion alone
+   - must also formalize graph-action-required and stale-queue blocking so merge/readiness cannot advance on stale backlog state
    - draft branch: `draft-execplan/20260312-game-policy-compliance-codex-01-execplan-codex-01-20260312`
 
 13. `future:game-hostile-review`
@@ -79,6 +80,11 @@ This document turns the remaining-work graph into an explicit near-term queue of
 17. `future:game-board-integrity`
    - status: `decision_gated`
    - goal: formalize provider-board reuse, item identity reuse, and sync integrity
+
+18. `graph-action-required-and-stale-queue-enforcement`
+   - status: `blocked`
+   - goal: require every governed work action to map to graph state and block advancement when queue reconciliation is stale
+   - blocker: should be formalized inside `20260312-game-policy-compliance-codex-01-execplan`
 
 ## Queue Discipline
 
