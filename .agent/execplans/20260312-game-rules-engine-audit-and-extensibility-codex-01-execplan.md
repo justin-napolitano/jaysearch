@@ -82,14 +82,14 @@ This slice exists to make the nested game system trustworthy before the next maj
 
 ## Progress
 
-- [ ] Inventory canonical rule sources and classify enforcement status
-- [ ] Distinguish inherited global board-law rules from domain-local game rules
-- [ ] Distinguish global board-law rules, domain-game rules, and subgame-local rules
-- [ ] Clarify game inheritance and override boundaries in canonical artifacts
-- [ ] Clarify referee order across inherited board law, domain games, and subgames
-- [ ] Add deterministic audit/report command for rules-engine completeness
-- [ ] Record hostile-review game as the next follow-on subgame
-- [ ] Validate the slice
+- [x] Inventory canonical rule sources and classify enforcement status
+- [x] Distinguish inherited global board-law rules from domain-local game rules
+- [x] Distinguish global board-law rules, domain-game rules, and subgame-local rules
+- [x] Clarify game inheritance and override boundaries in canonical artifacts
+- [x] Clarify referee order across inherited board law, domain games, and subgames
+- [x] Add deterministic audit/report command for rules-engine completeness
+- [x] Record hostile-review game as the next follow-on subgame
+- [x] Validate the slice
 
 ## Surprises & Discoveries
 
@@ -100,6 +100,8 @@ This slice exists to make the nested game system trustworthy before the next maj
 - the game stack is better modeled as one shared platform board with inherited global law plus domain-specific games, not as a flat set of peer games
 - commit-order and commit-structure rules exist in governance, but they are not yet clearly modeled as a first-class game/referee obligation
 - the next planned hostile-review game should only be added after the underlying hierarchy, inheritance model, and referee bindings are explicit enough to support new subgames cleanly
+- the existing per-game specs used ids like `platform-game` while the game graph used `game-platform`; the audit slice aligned those ids so graph nodes and canonical specs now resolve to each other deterministically
+- current rule coverage is strong enough to audit extension readiness, but the audit still correctly reports several rules as `partial`, especially commit-structure and broader policy-compliance concerns that do not yet live in dedicated games
 
 ## Decision Log
 
@@ -125,6 +127,7 @@ On completion, the repository should have:
 - a machine-readable audit result identifying prose-only, enforced, and duplicated rules
 - explicit extension points for adding new games and binding referees to them
 - a committed record that hostile review is the next planned subgame after the audit
+- a committed record that `game-policy-compliance` and `game-commit-structure` should exist before hostile review relies on them as canonical inputs
 
 Expected implemented outcome:
 
@@ -135,6 +138,7 @@ Expected implemented outcome:
 - the audit explicitly reports whether commit-structure rules are merely governed policy today or already part of a referee-enforced game
 - the game graph and related specs clarify which rules belong to which game and how subgames inherit or narrow them
 - the repository can add a future hostile-review game without inventing ad hoc rule channels
+- the repository can point a human or agent at one deterministic audit command to see current layer coverage, citation coverage, partial rules, and follow-on game recommendations
 
 ## Context and Orientation
 
@@ -200,6 +204,21 @@ That means the repository needs an explicit audit of:
    - `bin/execplan-validate .agent/execplans/20260312-game-rules-engine-audit-and-extensibility-codex-01-execplan.md`
    - `bin/game-rules-audit-smoke-test`
 
+Implemented:
+
+1. Aligned current game specs and graph nodes around canonical `game-*` ids, layer metadata, rule scope metadata, and referee order.
+2. Added explicit inherited board-law language to the game docs, governance docs, agent rules, and workflow/ruleset specs.
+3. Added citation-backed provenance entries for the current game docs so the layered model is verifiable from canonical artifacts.
+4. Added `bin/game-rules-audit` and a focused smoke test to report:
+   - global board law
+   - active game layers
+   - referee order
+   - rule enforcement status
+   - citation coverage for game docs
+   - commit-structure status
+   - planned follow-on games
+5. Extended `game-graph-check` and `game-status` so the existing runtime understands layer/scope metadata instead of only parent-child phase relations.
+
 ## Validation and Acceptance
 
 Acceptance criteria:
@@ -213,6 +232,7 @@ Acceptance criteria:
 - the game board and hierarchy are complete enough that failed moves can be kicked back at the correct game boundary
 - hostile-review is recorded as the next follow-on game, not left as chat-only intent
 - focused tests and smoke pass
+- the audit reports `game-policy-compliance`, `game-commit-structure`, and `game-hostile-review` as the next formal follow-on games
 
 ## Idempotence and Recovery
 
@@ -228,6 +248,11 @@ Expected artifacts:
 - deterministic game-rules audit command
 - focused tests and smoke coverage
 - explicit follow-on note for the hostile-review game
+- deterministic evidence that the current executable stack is:
+  - platform board law
+  - authority-domain ExecPlan game
+  - work-domain planning and implementation games
+  - assurance proof games for merge readiness
 
 ## Interfaces and Dependencies
 

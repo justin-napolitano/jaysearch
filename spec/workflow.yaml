@@ -12,6 +12,9 @@ stop_conditions:
   - draft_ttl_exceeded
   - execution_on_protected_branch
 execution_requirements:
+  shared_platform_board_has_inherited_global_law: true
+  active_moves_must_satisfy_global_and_local_rules: true
+  merge_readiness_is_proof_game: true
   universal_branch_first: true
   protected_branches_disallowed_for_execution:
     - main
@@ -47,6 +50,10 @@ execution_requirements:
     existing_project_id_requires_board_reuse: true
     existing_item_ids_require_update_preference: true
     human_operations_runtime_must_be_takeover_safe: true
+  referee_order:
+    - global_board_law
+    - active_domain_game
+    - active_subgame
 platform_execution_order:
   - 20260304-platform-validator-jay-execplan
   - 20260304-todo-automation-jay-execplan

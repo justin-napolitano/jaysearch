@@ -5,6 +5,18 @@ Authority model:
 - Agents draft work.
 - Humans finalize work.
 
+Global board law:
+
+- forbidden moves
+- scope compliance
+- no hidden state
+- canonical state ownership
+- determinism
+- human authority boundaries
+
+Referees should check global board law before active domain-game and
+subgame rules.
+
 Finalization requires:
 
 - SSH signed commit
@@ -76,6 +88,14 @@ Board review runtime rule:
 - Live board sync requires a canonical field-map artifact and must reuse the existing project id when one is already known.
 - When canonical item ids are already known, sync must prefer updating those items instead of creating new ones.
 - Human operations runtime must expose takeover-safe state from canonical local evidence so another human or agent can resume without session memory.
+
+Game layering rule:
+
+- The platform is one shared board with inherited global law.
+- Domain games add local move sets on top of that law.
+- Proof and other subgames narrow local obligations further.
+- Failed moves should be rejected at the narrowest game boundary that
+  still preserves any inherited board-law violation.
 
 Exception lifecycle contract:
 

@@ -4,10 +4,23 @@
 
 The nested game system only works if inheritance and override rules are explicit.
 
+## Scope Levels
+
+Rules exist at three scopes:
+
+- global board law
+- domain-game rules
+- subgame-local or proof-game rules
+
+Global board law applies to every move on the shared platform board.
+Domain games inherit that law and add local move sets. Subgames and
+proof games inherit both and may narrow local obligations further.
+
 ## Inherited by Default
 
 These concepts inherit from parent game to child game unless explicitly narrowed:
 
+- global board law
 - authority boundaries
 - evidence requirements
 - referee identities
@@ -28,10 +41,23 @@ These concepts may be overridden locally if the override is explicit and does no
 
 Child games may not override:
 
+- forbidden-move boundaries
+- scope-compliance boundaries
 - human-only finalization authority
 - canonical source-of-truth ownership
 - validator authority to reject illegal moves
 - no-hidden-state requirement
+
+## Referee Order
+
+Referees should review moves in deterministic order:
+
+1. global board law
+2. active domain-game rules
+3. active subgame or proof-game rules
+
+Child games may narrow local checks, but they must not skip inherited
+global law.
 
 ## Merge-Readiness Rule
 

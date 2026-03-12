@@ -4,6 +4,12 @@
 
 The planning game reduces ambiguity and shapes intent into explicit, auditable state.
 
+## Layer
+
+The planning game is a work-domain game. It inherits global board law
+and ExecPlan constraints, then narrows them to ambiguity reduction,
+decomposition, and graph formation.
+
 ## Board
 
 The planning board is the canonical graph plus planner session artifacts.
@@ -18,6 +24,13 @@ The planning board is the canonical graph plus planner session artifacts.
 - decompose
 - validate
 - commit
+
+## Local Rule Focus
+
+- ambiguity reduction
+- dependency declaration
+- blocker visibility
+- citation-backed design constraints
 
 ## Win Condition
 

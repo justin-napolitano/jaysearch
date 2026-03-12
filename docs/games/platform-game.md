@@ -10,6 +10,11 @@ The platform game is the top-level game. Its objective is to build and operate a
 - Codex orchestrator
 - validators as referees
 
+## Layer
+
+The platform game is the root layer. It owns the shared board and the
+inherited board law that every lower game must obey.
+
 ## Board
 
 The platform board is the union of:
@@ -19,6 +24,21 @@ The platform board is the union of:
 - ExecPlans
 - governed specs
 - research provenance artifacts
+
+## Inherited Board Law
+
+- forbidden moves
+- scope compliance
+- no hidden state
+- canonical state ownership
+- determinism
+- human authority boundaries
+
+## Referee Order
+
+1. global board law
+2. active domain game
+3. active subgame
 
 ## Win Condition
 
