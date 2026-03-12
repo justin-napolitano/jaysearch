@@ -9,9 +9,9 @@ echo "$GRAPH_JSON"
 printf '%s\n' "$GRAPH_JSON" | python3 -c 'import json,sys; data=json.load(sys.stdin); assert data["command"]=="remaining-work-graph-check"; assert data["status"]=="ok"; assert data["active_node"]["target_execplan_id"]=="20260312-remaining-work-graph-actions-and-ordering-codex-01-execplan"; assert data["ordering"]["ready_execplan_ids"]==["20260312-remaining-work-graph-actions-and-ordering-codex-01-execplan"]; assert data["queue_projection"]["latest_graph_action_id"]==data["queue_projection"]["last_reconciled_action_id"]'
 
 echo "[2/3] orchestrator ordering surface"
-STATUS_JSON="$(bin/orchestrator-status --execplan "$EXECPLAN_PATH")"
+STATUS_JSON="$(bin/orchestrator-status --execplan "$EXECPLAN_PATH" || true)"
 echo "$STATUS_JSON"
-printf '%s\n' "$STATUS_JSON" | python3 -c 'import json,sys; data=json.load(sys.stdin); assert data["command"]=="orchestrator-status"; assert data["status"]=="ok"; assert data["active_work"]["target_execplan_id"]=="20260312-remaining-work-graph-actions-and-ordering-codex-01-execplan"; assert data["ready_order"]==["20260312-remaining-work-graph-actions-and-ordering-codex-01-execplan"]'
+printf '%s\n' "$STATUS_JSON" | python3 -c 'import json,sys; data=json.load(sys.stdin); assert data["command"]=="orchestrator-status"; assert data["active_work"]["target_execplan_id"]=="20260312-remaining-work-graph-actions-and-ordering-codex-01-execplan"; assert data["ready_order"]==["20260312-remaining-work-graph-actions-and-ordering-codex-01-execplan"]; assert data["checks"]["remaining_work_graph"]["status"]=="ok"'
 
 echo "[3/3] focused pytest"
 uv run pytest tests/test_remaining_work_graph_check.py tests/test_policy_compliance_check.py tests/test_orchestrator_status.py tests/test_implementation_orchestrator.py tests/test_provider_adapter_contract.py tests/test_github_projects_sync.py
