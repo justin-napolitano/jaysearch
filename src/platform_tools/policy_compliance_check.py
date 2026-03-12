@@ -34,6 +34,21 @@ CLASS_ORDER = {
 }
 BOUNDED_EXECPLAN_FRONTMATTER_FIELDS = {"changes", "validation"}
 BOUNDED_EXECPLAN_MAX_LINES = 120
+BOUNDED_POLICY_REPAIR_MAX_LINES = 140
+BOUNDED_POLICY_REPAIR_MAX_FILES = 3
+BOUNDED_POLICY_REPAIR_SUBJECT_PREFIXES = (
+    "fix(governance):",
+    "feat(governance):",
+    "test(governance):",
+    "docs(governance):",
+)
+BOUNDED_POLICY_REPAIR_ALLOWED_FILES = {
+    "docs/agent-game-rules-v1.md",
+    "docs/governance.md",
+    "docs/queued-execplans.md",
+    "src/platform_tools/policy_compliance_check.py",
+    "tests/test_policy_compliance_check.py",
+}
 
 
 def _git(cwd: Path, *args: str) -> str:
@@ -175,6 +190,31 @@ def _is_bounded_execplan_reconciliation(
     return True, reasons
 
 
+def _is_bounded_policy_repair_commit(
+    *,
+    subject: str,
+    commit_class: str,
+    commit_files: list[str],
+    changed_lines: int,
+) -> tuple[bool, list[str]]:
+    reasons: list[str] = []
+    if commit_class not in {"runtime", "test", "governance"}:
+        return False, reasons
+    if not subject.startswith(BOUNDED_POLICY_REPAIR_SUBJECT_PREFIXES):
+        return False, reasons
+    if changed_lines > BOUNDED_POLICY_REPAIR_MAX_LINES:
+        reasons.append(f"changed_lines_exceeded:{changed_lines}")
+        return False, reasons
+    if len(commit_files) > BOUNDED_POLICY_REPAIR_MAX_FILES:
+        reasons.append(f"file_count_exceeded:{len(commit_files)}")
+        return False, reasons
+    disallowed_files = sorted(set(commit_files) - BOUNDED_POLICY_REPAIR_ALLOWED_FILES)
+    if disallowed_files:
+        reasons.extend(f"disallowed_file:{path}" for path in disallowed_files)
+        return False, reasons
+    return True, reasons
+
+
 def _repo_relative_path(path: Path, *, root: Path) -> str:
     try:
         return path.resolve().relative_to(root.resolve()).as_posix()
@@ -224,11 +264,20 @@ def _commit_reports(
                 changed_lines=changed_lines,
                 active_execplan_path=active_execplan_path,
             )
+            allowed_policy_repair, policy_repair_reasons = _is_bounded_policy_repair_commit(
+                subject=subject,
+                commit_class=commit_class,
+                commit_files=commit_files,
+                changed_lines=changed_lines,
+            )
             if allowed_execplan_reconciliation:
                 warnings.append(f"bounded_execplan_reconciliation:{commit}")
+            elif allowed_policy_repair:
+                warnings.append(f"bounded_policy_repair_commit:{commit}")
             else:
                 errors.append(f"procedural_commit_order_violation:{commit}:{subject}")
                 errors.extend(f"execplan_reconciliation_violation:{commit}:{reason}" for reason in reconciliation_reasons)
+                errors.extend(f"policy_repair_violation:{commit}:{reason}" for reason in policy_repair_reasons)
         max_seen = max(max_seen, class_order)
 
         if changed_lines > 400 and "commit-size-justification" not in body:
