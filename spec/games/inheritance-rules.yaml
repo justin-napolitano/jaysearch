@@ -2,6 +2,7 @@ version: v1
 last_updated: 2026-03-11
 inheritance:
   inherited_by_default:
+    - global_board_law
     - authority_boundaries
     - evidence_requirements
     - referee_identities
@@ -14,7 +15,13 @@ inheritance:
     - local_loss_conditions
     - handoff_criteria
   forbidden_overrides:
+    - forbidden_move_boundaries
+    - scope_compliance_boundaries
     - human_only_finalization_authority
     - canonical_source_of_truth_ownership
     - validator_authority_to_reject_illegal_moves
     - no_hidden_state_requirement
+  referee_order:
+    - global_board_law
+    - active_domain_game
+    - active_subgame

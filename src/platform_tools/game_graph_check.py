@@ -84,6 +84,9 @@ def check_game_graph(root: str = ".") -> tuple[int, dict[str, Any]]:
     node_map: dict[str, dict[str, Any]] = {}
     allowed_node_types = set(schema.get("node", {}).get("type_allowed", []))
     allowed_relations = set(schema.get("edge", {}).get("relation_allowed", []))
+    game_node_required_fields = schema.get("game_node", {}).get("required_fields", [])
+    allowed_game_layers = set(schema.get("game_node", {}).get("allowed_layers", []))
+    allowed_game_scopes = set(schema.get("game_node", {}).get("allowed_scopes", []))
 
     for node in nodes:
         if not isinstance(node, dict):
@@ -96,6 +99,16 @@ def check_game_graph(root: str = ".") -> tuple[int, dict[str, Any]]:
         node_type = str(node.get("type", ""))
         if node_type not in allowed_node_types:
             errors.append(f"invalid_node_type:{node_id or '?'}:{node_type}")
+        if node_type == "game":
+            for field in game_node_required_fields:
+                if field not in node:
+                    errors.append(f"missing_game_node_field:{node_id or '?'}:{field}")
+            layer = str(node.get("layer", ""))
+            if layer and layer not in allowed_game_layers:
+                errors.append(f"invalid_game_layer:{node_id or '?'}:{layer}")
+            scope = str(node.get("scope", ""))
+            if scope and scope not in allowed_game_scopes:
+                errors.append(f"invalid_game_scope:{node_id or '?'}:{scope}")
         if node_id in node_map:
             errors.append(f"duplicate_node_id:{node_id}")
         elif node_id:
@@ -187,6 +200,14 @@ def check_game_graph(root: str = ".") -> tuple[int, dict[str, Any]]:
 
     for node_id, node in sorted(node_map.items()):
         if str(node.get("type", "")) != "artifact":
+            if str(node.get("type", "")) == "game":
+                spec_path = str(node.get("spec_path", "")).strip()
+                if spec_path and not (base / spec_path).exists():
+                    errors.append(f"missing_game_spec_path:{node_id}:{spec_path}")
+                elif spec_path:
+                    spec = _load_yaml(base / spec_path)
+                    if str(spec.get("game_id", "")).strip() != node_id:
+                        errors.append(f"game_spec_id_mismatch:{node_id}:{spec_path}")
             continue
         title = str(node.get("title", "")).strip()
         if title and not (base / title).exists():

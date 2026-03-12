@@ -31,11 +31,14 @@ game_spec:
   required_fields:
     - game_id
     - title
+    - layer
+    - rule_scope
     - parent_game
     - objective
     - board
     - players
     - referees
+    - referee_order
     - win_condition
     - loss_condition
   allowed_types:
@@ -44,6 +47,29 @@ game_spec:
     - planning
     - implementation
     - merge_readiness
+  allowed_layers:
+    - platform
+    - authority
+    - work
+    - assurance
+  allowed_rule_scopes:
+    - global_board_law
+    - domain_game
+    - proof_game
+game_node:
+  required_fields:
+    - layer
+    - scope
+    - spec_path
+  allowed_layers:
+    - platform
+    - authority
+    - work
+    - assurance
+  allowed_scopes:
+    - global_board_law
+    - domain_game
+    - proof_game
 game_graph:
   required_game_ids:
     - game-platform
@@ -75,3 +101,4 @@ game_graph:
 notes:
   - spec/games.schema.yaml is the shared contract for all per-game specs
   - spec/games/*.yaml are constrained game instances, not independent schemas
+  - game nodes carry layer and scope metadata so referees can distinguish inherited board law from local game rules

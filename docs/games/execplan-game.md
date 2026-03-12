@@ -4,6 +4,12 @@
 
 The ExecPlan game converts intent into governed contract state. It is the commitment layer between exploration and execution.
 
+## Layer
+
+The ExecPlan game is the current authority-domain game. It inherits
+platform board law and adds contract-specific rules about scope,
+approval, and transition into downstream work.
+
 ## Inputs
 
 - planning outputs
@@ -16,6 +22,13 @@ The ExecPlan game converts intent into governed contract state. It is the commit
 - governed ExecPlan artifacts
 - validation contract
 - approved scope boundaries
+
+## Local Rule Focus
+
+- scope declaration
+- approval boundaries
+- governed contract metadata
+- execution preconditions
 
 ## Win Condition
 

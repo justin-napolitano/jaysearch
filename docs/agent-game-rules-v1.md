@@ -52,6 +52,16 @@ A turn operates on repository state:
 
 A move is valid only if it leaves board state policy-compliant.
 
+Global board law applies to every move before any local phase/game rule
+is considered:
+
+- forbidden moves
+- scope compliance
+- no hidden state
+- canonical state ownership
+- determinism
+- human authority boundaries
+
 ## 4. Allowed Moves
 
 Allowed agent moves:
@@ -158,6 +168,12 @@ Referee output must include:
 - exit code
 - deterministic machine-readable result
 - concise human summary
+
+Referees should evaluate moves in this order:
+
+1. inherited global board law
+2. active domain-game rules
+3. active subgame or proof-game rules
 
 Implementation-slice smoke-test rule:
 

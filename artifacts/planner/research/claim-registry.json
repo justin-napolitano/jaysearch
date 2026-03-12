@@ -141,6 +141,62 @@
       ]
     },
     {
+      "artifact_path": "docs/games/platform-game.md",
+      "artifact_node_id": "artifact-platform-game-doc",
+      "required": true,
+      "claims": [
+        {
+          "claim_id": "pgd-001",
+          "summary": "The platform game owns one shared board with inherited board law that every lower game must satisfy.",
+          "category": "design-inference",
+          "source_ids": ["src-prov-overview", "src-harel-1987"],
+          "bibliography_claim_ids": ["claim-nested-game-system"]
+        }
+      ]
+    },
+    {
+      "artifact_path": "docs/games/execplan-game.md",
+      "artifact_node_id": "artifact-execplan-game-doc",
+      "required": true,
+      "claims": [
+        {
+          "claim_id": "egd-001",
+          "summary": "The ExecPlan game is the authority-domain layer that governs scope and approval before downstream work.",
+          "category": "design-inference",
+          "source_ids": ["src-maskin-2007", "src-prov-overview"],
+          "bibliography_claim_ids": ["claim-nested-game-system"]
+        }
+      ]
+    },
+    {
+      "artifact_path": "docs/games/planning-game.md",
+      "artifact_node_id": "artifact-planning-game-doc",
+      "required": true,
+      "claims": [
+        {
+          "claim_id": "plgd-001",
+          "summary": "The planning game is a work-domain game that reduces ambiguity into explicit graph state under inherited board law.",
+          "category": "design-inference",
+          "source_ids": ["src-maskin-2007", "src-harel-1987"],
+          "bibliography_claim_ids": ["claim-nested-game-system"]
+        }
+      ]
+    },
+    {
+      "artifact_path": "docs/games/implementation-game.md",
+      "artifact_node_id": "artifact-implementation-game-doc",
+      "required": true,
+      "claims": [
+        {
+          "claim_id": "igd-001",
+          "summary": "The implementation game is a work-domain game that narrows inherited law into scoped execution, verification, and review preparation.",
+          "category": "design-inference",
+          "source_ids": ["src-fagan-1986", "src-prov-overview", "src-harel-1987"],
+          "bibliography_claim_ids": ["claim-nested-game-system"]
+        }
+      ]
+    },
+    {
       "artifact_path": "docs/games/planning-merge-readiness-game.md",
       "artifact_node_id": "artifact-planning-proof-game",
       "required": true,

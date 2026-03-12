@@ -1,13 +1,24 @@
-game_id: execplan-game
+game_id: game-execplan
 type: execplan
 title: ExecPlan Game
-parent_game: platform-game
+layer: authority
+rule_scope: domain_game
+parent_game: game-platform
 objective: convert intent into governed contract state
 board: execplan-artifacts
 players:
   - human_authority
   - codex_orchestrator
+inherits_board_law: true
+local_rule_focus:
+  - governed_contract_state
+  - scope_declaration
+  - approval_boundaries
 referees:
   - bin/execplan-validate
+referee_order:
+  - global_board_law
+  - active_domain_game
+  - active_subgame
 win_condition: plan is specific enough to govern work
 loss_condition: plan still relies on hidden assumptions
