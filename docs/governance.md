@@ -70,6 +70,13 @@ Governed finalization authority rule:
 - If merge history, signature verification, or finalizer identity is ambiguous, the reconciliation command must fail with explicit blockers rather than invent completion metadata.
 - Future automation should derive finalization metadata from the signed merge event wherever possible.
 
+Board review runtime rule:
+
+- The GitHub Projects board is a projection surface for review and handoff, not an authority source.
+- Live board sync requires a canonical field-map artifact and must reuse the existing project id when one is already known.
+- When canonical item ids are already known, sync must prefer updating those items instead of creating new ones.
+- Human operations runtime must expose takeover-safe state from canonical local evidence so another human or agent can resume without session memory.
+
 Exception lifecycle contract:
 
 - Exception registry file: `.agent/governance/exceptions.yaml`.

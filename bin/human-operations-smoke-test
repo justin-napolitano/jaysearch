@@ -1,0 +1,252 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+echo "[1/2] human-operations focused tests"
+uv run pytest tests/test_human_operations_status.py tests/test_github_projects_sync.py tests/test_provider_adapter_contract.py
+
+echo "[2/2] human-operations status smoke"
+PYTHONPATH="$(pwd)/src${PYTHONPATH:+:$PYTHONPATH}" python3 - <<'PY'
+import json
+import tempfile
+from pathlib import Path
+
+from platform_tools.human_operations_status import get_human_operations_status
+
+
+def write_text(path: Path, text: str) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(text, encoding="utf-8")
+
+
+def write_json(path: Path, data: object) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(data, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+
+
+with tempfile.TemporaryDirectory() as tmp:
+    root = Path(tmp)
+    write_text(
+        root / "spec" / "remaining-work-graph.schema.yaml",
+        "\n".join(
+            [
+                "version: 1",
+                "title: Remaining Work Graph Schema",
+                "type: object",
+                "required:",
+                "  - graph_id",
+                "  - created_at",
+                "  - nodes",
+                "  - edges",
+                "properties:",
+                "  nodes:",
+                "    type: array",
+                "    items:",
+                "      type: object",
+                "      required:",
+                "        - node_id",
+                "        - title",
+                "        - status",
+                "        - gating_class",
+                "        - conflict_domains",
+                "        - target_execplan_id",
+                "      properties:",
+                "        status:",
+                "          enum: [ready, blocked, review_gated, decision_gated, completed]",
+                "        gating_class:",
+                "          enum: [auto_runnable, review_gated, decision_gated]",
+                "  edges:",
+                "    type: array",
+                "    items:",
+                "      type: object",
+                "      required: [from, to, relation]",
+                "      properties:",
+                "        relation:",
+                "          enum: [depends_on, conflicts_with, informed_by, gated_by]",
+            ]
+        )
+        + "\n",
+    )
+    write_text(
+        root / "spec" / "provider-adapter.schema.yaml",
+        "\n".join(
+            [
+                "version: v1",
+                "provider_adapter:",
+                "  required_fields:",
+                "    - provider",
+                "    - projection_kind",
+                "    - authority_mode",
+                "    - identity_field",
+                "    - supported_entities",
+                "    - exported_fields",
+                "    - conflict_policy",
+                "    - human_portable",
+                "    - agent_portable",
+                "  authority_mode_allowed:",
+                "    - projection_only",
+                "  projection_kind_allowed:",
+                "    - remaining_work_board",
+            ]
+        )
+        + "\n",
+    )
+    write_text(
+        root / "spec" / "providers" / "github-projects.schema.yaml",
+        "\n".join(
+            [
+                "version: v1",
+                "provider: github_projects",
+                "projection_kind: remaining_work_board",
+                "board_model:",
+                "  board_scope: remaining_work_graph",
+                "  item_identity_field: node_id",
+                "required_board_fields:",
+                "  - node_id",
+                "  - title",
+                "  - target_execplan_id",
+                "  - status",
+                "  - gating_class",
+                "  - implementation_branch",
+                "  - goal_area",
+                "  - dependency_summary",
+                "  - human_review_state",
+                "sync:",
+                "  provider_managed_value_map:",
+                "    status:",
+                "      ready: Todo",
+                "      completed: Done",
+            ]
+        )
+        + "\n",
+    )
+    write_text(
+        root / ".agent" / "execplans" / "20260312-human-operations-review-runtime-codex-01-execplan.md",
+        "\n".join(
+            [
+                "---",
+                'id: "20260312-human-operations-review-runtime-codex-01-execplan"',
+                'status: "draft"',
+                'finalized_by: ""',
+                'finalized_at: ""',
+                'finalized_in_pr: ""',
+                "---",
+                "",
+                "# Purpose / Big Picture",
+            ]
+        )
+        + "\n",
+    )
+    write_text(
+        root / ".agent" / "execplans" / "20260312-execplan-finalization-completion-reconciliation-codex-01-execplan.md",
+        "\n".join(
+            [
+                "---",
+                'id: "20260312-execplan-finalization-completion-reconciliation-codex-01-execplan"',
+                'status: "completed"',
+                'finalized_by: "github:jay.napolitano"',
+                'finalized_at: "2026-03-12T12:00:00Z"',
+                'finalized_in_pr: "54"',
+                "---",
+                "",
+                "# Purpose / Big Picture",
+            ]
+        )
+        + "\n",
+    )
+    write_json(
+        root / "artifacts" / "planner" / "research" / "remaining-work-graph.json",
+        {
+            "graph_id": "remaining-work-graph-20260311",
+            "created_at": "2026-03-11T00:00:00Z",
+            "nodes": [
+                {
+                    "node_id": "rwg-009",
+                    "title": "ExecPlan finalization completion reconciliation",
+                    "status": "completed",
+                    "gating_class": "auto_runnable",
+                    "conflict_domains": ["governance"],
+                    "target_execplan_id": "20260312-execplan-finalization-completion-reconciliation-codex-01-execplan",
+                    "goal_area": "governance",
+                    "completion_ref": "merged:test",
+                },
+                {
+                    "node_id": "rwg-010",
+                    "title": "Human operations review runtime",
+                    "status": "ready",
+                    "gating_class": "auto_runnable",
+                    "conflict_domains": ["review-runtime"],
+                    "target_execplan_id": "20260312-human-operations-review-runtime-codex-01-execplan",
+                    "goal_area": "governance",
+                    "implementation_branch": "impl-execplan/20260312-human-operations-review-runtime-codex-01-execplan-codex-01-20260312",
+                },
+            ],
+            "edges": [],
+        },
+    )
+    write_json(
+        root / "artifacts" / "provider-sync" / "github-projects-field-map.json",
+        {
+            "project_id": "PVT_123",
+            "fields": {
+                "title": {"field_id": "builtin:title", "data_type": "title"},
+                "status": {
+                    "field_id": "FIELD_status",
+                    "data_type": "single_select",
+                    "provider_managed": True,
+                    "options": {"Todo": "OPT_TODO", "Done": "OPT_DONE"},
+                },
+                "node_id": {"field_id": "FIELD_node_id", "data_type": "text"},
+                "target_execplan_id": {"field_id": "FIELD_execplan", "data_type": "text"},
+                "gating_class": {
+                    "field_id": "FIELD_gating",
+                    "data_type": "single_select",
+                    "options": {"auto_runnable": "OPT_AUTO"},
+                },
+                "implementation_branch": {"field_id": "FIELD_branch", "data_type": "text"},
+                "goal_area": {
+                    "field_id": "FIELD_goal_area",
+                    "data_type": "single_select",
+                    "options": {"governance": "OPT_GOV"},
+                },
+                "dependency_summary": {"field_id": "FIELD_dep", "data_type": "text"},
+                "human_review_state": {
+                    "field_id": "FIELD_review",
+                    "data_type": "single_select",
+                    "options": {"in_review": "OPT_IN_REVIEW", "merged": "OPT_MERGED", "not_requested": "OPT_NR"},
+                },
+                "pr_url": {"field_id": "FIELD_pr", "data_type": "text"},
+                "validation_status": {
+                    "field_id": "FIELD_validation",
+                    "data_type": "single_select",
+                    "options": {"pending": "OPT_PENDING", "passed": "OPT_PASSED"},
+                },
+                "smoke_status": {
+                    "field_id": "FIELD_smoke",
+                    "data_type": "single_select",
+                    "options": {"pending": "OPT_PENDING", "passed": "OPT_PASSED"},
+                },
+                "merge_readiness": {
+                    "field_id": "FIELD_merge",
+                    "data_type": "single_select",
+                    "options": {"local_only": "OPT_LOCAL", "ready": "OPT_READY"},
+                },
+                "finalization_state": {
+                    "field_id": "FIELD_final",
+                    "data_type": "single_select",
+                    "options": {"not_finalized": "OPT_NOT_FINAL", "merged_to_main": "OPT_FINAL"},
+                }
+            },
+            "item_ids_by_node_id": {"rwg-009": "ITEM_9"}
+        },
+    )
+
+    code, report = get_human_operations_status(
+        root=root.as_posix(),
+        branch="impl-execplan/20260312-human-operations-review-runtime-codex-01-execplan-codex-01-20260312",
+    )
+    if code != 0 or report["review_summary"]["counts"]["in_review"] != 1:
+        raise SystemExit(json.dumps(report, indent=2, sort_keys=True))
+    print(json.dumps({"command": "human-operations-status", "status": "ok", "review_counts": report["review_summary"]["counts"]}, sort_keys=True))
+PY
+
+echo "human-operations smoke test completed"

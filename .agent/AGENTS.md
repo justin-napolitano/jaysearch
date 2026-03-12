@@ -180,6 +180,17 @@ If merge history, signature verification, or identity mapping is
 ambiguous, the reconciliation command must block rather than infer
 completion.
 
+Board review runtime rules:
+
+• synced provider boards are review surfaces, not authority sources\
+• live board sync requires the canonical field-map artifact\
+• once a project id is known, bootstrap should reuse that board rather
+than fabricate a replacement\
+• once item ids are known, sync should prefer item updates rather than
+new item creation\
+• human-operations runtime output must be takeover-safe so another human
+or agent can continue from canonical state alone
+
 ------------------------------------------------------------------------
 
 # ExecPlan Metadata Schema

@@ -41,6 +41,12 @@ execution_requirements:
   finalization_requirements:
     governed_execplans_require_signed_merge_commit_on_main: true
     governed_execplans_merge_commit_is_canonical_finalization_event: true
+  board_runtime_requirements:
+    board_review_surface_is_projection_only: true
+    provider_sync_field_map_required_for_live_board_sync: true
+    existing_project_id_requires_board_reuse: true
+    existing_item_ids_require_update_preference: true
+    human_operations_runtime_must_be_takeover_safe: true
 platform_execution_order:
   - 20260304-platform-validator-jay-execplan
   - 20260304-todo-automation-jay-execplan

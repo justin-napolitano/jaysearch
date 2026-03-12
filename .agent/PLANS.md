@@ -201,6 +201,19 @@ cannot be derived deterministically, reconciliation must fail with
 explicit blockers rather than silently leaving an authoritative plan in
 an ambiguous state.
 
+Board review runtime:
+
+The external review board is a projection of canonical local state. It
+must not become a second authority source.
+
+Operational rules:
+
+- live board sync requires the canonical field-map artifact
+- known project ids must be reused rather than replaced
+- known item ids must be updated rather than duplicated
+- human operations and takeover state must be derivable from canonical
+  local evidence without relying on session memory
+
 ------------------------------------------------------------------------
 
 # Validation
