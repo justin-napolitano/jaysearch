@@ -95,6 +95,10 @@ def _requires_citation_check(changed_files: list[str]) -> bool:
     )
 
 
+def _has_policy_compliance_runtime(cwd: Path) -> bool:
+    return (cwd / "bin" / "policy-compliance-check").exists()
+
+
 def _dirty_generated_artifacts(cwd: Path) -> list[str]:
     output = _git(cwd, "status", "--porcelain", "--untracked-files=all")
     dirty: list[str] = []
@@ -223,6 +227,7 @@ def check_merge_readiness(
     for name, command in (
         ("rule_graph_check", "bin/rule-graph-check"),
         ("citation_check", "bin/citation-check" if _requires_citation_check(changed_files) else ""),
+        ("policy_compliance_check", "bin/policy-compliance-check" if _has_policy_compliance_runtime(cwd) else ""),
     ):
         if command and command not in seen_commands:
             commands.append({"name": name, "command": command})
