@@ -63,6 +63,11 @@ Governed finalization authority rule:
 
 - Governed ExecPlan finalization should be keyed to the signed merge commit on `main`, not to an intermediate draft or implementation commit.
 - The signed merge commit is the canonical authority event for `finalized_by`, `finalized_at`, and merge-backed `finalized_in_pr` metadata.
+- Signature verification must succeed for the selected merge commit before reconciliation may claim completion.
+- When merge-backed evidence is deterministic, governed ExecPlans should be reconciled to `status: completed` from that canonical merge event.
+- Reconciliation must prefer an `impl-execplan/*` merge over a `draft-execplan/*` merge for the same ExecPlan id when both exist.
+- `finalized_by` must be resolved through the canonical signer identity map in `spec/governance.yaml`, not inferred from a single maintainer entry in repository prose.
+- If merge history, signature verification, or finalizer identity is ambiguous, the reconciliation command must fail with explicit blockers rather than invent completion metadata.
 - Future automation should derive finalization metadata from the signed merge event wherever possible.
 
 Exception lifecycle contract:

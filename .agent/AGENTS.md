@@ -165,6 +165,21 @@ Signature verification must succeed.
 
 Governed ExecPlan finalization should treat the signed merge commit on `main` as the canonical authority event. Future automation may prepare finalization metadata, but human authority remains at the signed merge boundary.
 
+When merge-backed reconciliation is available, governed ExecPlans should
+be updated to `status: completed` from that canonical merge event rather
+than left in draft-shaped metadata indefinitely.
+
+Deterministic reconciliation may derive:
+
+• `finalized_at` from the merge commit timestamp\
+• merge-backed `finalized_in_pr` from the merge commit subject\
+• `finalized_by` from the signed merge identity after resolving it
+through the canonical signer identity map in `spec/governance.yaml`
+
+If merge history, signature verification, or identity mapping is
+ambiguous, the reconciliation command must block rather than infer
+completion.
+
 ------------------------------------------------------------------------
 
 # ExecPlan Metadata Schema
