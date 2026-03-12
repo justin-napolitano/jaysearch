@@ -73,6 +73,9 @@ invariants:
   - one_board_per_remaining_work_graph_projection
   - not_one_board_per_execplan
   - remote_items_are_views_not_authorities
+  - existing_project_id_requires_board_reuse
+  - known_item_ids_require_update_preference
+  - board_review_fields_must_follow_canonical_local_evidence
 bootstrap:
   supports_project_creation: true
   supports_field_creation: true
