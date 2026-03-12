@@ -16,6 +16,7 @@ MERGE_ROLE_PRIORITY = {
     "draft-execplan": 2,
     "other": 1,
 }
+DEFAULT_ALLOWED_SIGNATURE_STATUSES = {"G"}
 
 
 def _git(root: Path, *args: str) -> str:
@@ -50,11 +51,57 @@ def _to_utc_z(value: str) -> str:
     return parsed.astimezone(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
-def _initial_human_maintainer(repo_root: Path) -> str:
-    agents_path = repo_root / ".agent" / "AGENTS.md"
-    if not agents_path.exists():
-        raise ValueError("missing_agents_policy")
-    matches = re.findall(r"^github:[a-zA-Z0-9_.-]+$", agents_path.read_text(encoding="utf-8"), flags=re.MULTILINE)
+def _governance_finalization_policy(repo_root: Path) -> dict[str, Any]:
+    governance_path = repo_root / "spec" / "governance.yaml"
+    if not governance_path.exists():
+        raise ValueError("missing_governance_spec")
+    data = yaml.safe_load(governance_path.read_text(encoding="utf-8")) or {}
+    if not isinstance(data, dict):
+        raise ValueError("invalid_governance_spec")
+    finalization = data.get("finalization") or {}
+    if not isinstance(finalization, dict):
+        raise ValueError("invalid_governance_finalization_spec")
+    return finalization
+
+
+def _identity_values(entry: dict[str, Any], key: str) -> set[str]:
+    raw = entry.get(key) or []
+    if not isinstance(raw, list):
+        raise ValueError(f"invalid_identity_map:{key}")
+    return {str(item).strip() for item in raw if str(item).strip()}
+
+
+def _resolve_finalized_by(repo_root: Path, merge_evidence: dict[str, str]) -> str:
+    finalization = _governance_finalization_policy(repo_root)
+    identity_map = finalization.get("signer_identity_map") or []
+    if not isinstance(identity_map, list) or not identity_map:
+        raise ValueError("missing_signer_identity_map")
+
+    signer_name = merge_evidence.get("signer_name", "").strip()
+    signer_fingerprint = merge_evidence.get("signer_fingerprint", "").strip()
+    author_email = merge_evidence.get("author_email", "").strip().lower()
+
+    matches: list[str] = []
+    for entry in identity_map:
+        if not isinstance(entry, dict):
+            raise ValueError("invalid_signer_identity_map_entry")
+        github_identity = str(entry.get("github", "")).strip()
+        if not github_identity:
+            raise ValueError("invalid_signer_identity_map_entry")
+
+        emails = {item.lower() for item in _identity_values(entry, "emails")}
+        signer_names = _identity_values(entry, "signer_names")
+        signer_fingerprints = _identity_values(entry, "signer_fingerprints")
+
+        if signer_fingerprint and signer_fingerprint in signer_fingerprints:
+            matches.append(github_identity)
+            continue
+        if signer_name and signer_name in signer_names:
+            matches.append(github_identity)
+            continue
+        if author_email and author_email in emails:
+            matches.append(github_identity)
+
     unique = sorted(set(matches))
     if len(unique) != 1:
         raise ValueError("finalized_by_not_deterministic")
@@ -66,7 +113,7 @@ def _merge_candidates(repo_root: Path, main_ref: str, plan_id: str, draft_branch
         repo_root,
         "log",
         "--merges",
-        "--format=%H%x1f%cI%x1f%an%x1f%ae%x1f%s%x1f%b%x1e",
+        "--format=%H%x1f%cI%x1f%an%x1f%ae%x1f%G?%x1f%GS%x1f%GK%x1f%s%x1f%b%x1e",
         main_ref,
     )
     candidates: list[dict[str, str]] = []
@@ -74,12 +121,12 @@ def _merge_candidates(repo_root: Path, main_ref: str, plan_id: str, draft_branch
         chunk = chunk.strip()
         if not chunk:
             continue
-        parts = chunk.split("\x1f", 5)
-        if len(parts) == 5:
+        parts = chunk.split("\x1f", 8)
+        if len(parts) == 8:
             parts.append("")
-        if len(parts) != 6:
+        if len(parts) != 9:
             continue
-        commit, committed_at, author_name, author_email, subject, body = parts
+        commit, committed_at, author_name, author_email, signature_status, signer_name, signer_fingerprint, subject, body = parts
         text = "\n".join([subject, body])
         if plan_id not in text and draft_branch not in text:
             continue
@@ -98,6 +145,9 @@ def _merge_candidates(repo_root: Path, main_ref: str, plan_id: str, draft_branch
                 "committed_at": _to_utc_z(committed_at),
                 "author_name": author_name,
                 "author_email": author_email,
+                "signature_status": signature_status,
+                "signer_name": signer_name.strip(),
+                "signer_fingerprint": signer_fingerprint.strip(),
                 "subject": subject,
                 "body": body.strip(),
                 "pull_request": pr_match.group(1) if pr_match else "",
@@ -113,8 +163,18 @@ def _select_merge_candidate(repo_root: Path, main_ref: str, plan_id: str, draft_
     if not candidates:
         raise ValueError("missing_merge_commit")
 
-    max_priority = max(MERGE_ROLE_PRIORITY[item["merge_role"]] for item in candidates)
-    strongest = [item for item in candidates if MERGE_ROLE_PRIORITY[item["merge_role"]] == max_priority]
+    finalization = _governance_finalization_policy(repo_root)
+    allowed_signature_statuses = {
+        str(item).strip()
+        for item in (finalization.get("allowed_signature_statuses") or sorted(DEFAULT_ALLOWED_SIGNATURE_STATUSES))
+        if str(item).strip()
+    } or set(DEFAULT_ALLOWED_SIGNATURE_STATUSES)
+    signed_candidates = [item for item in candidates if item.get("signature_status", "") in allowed_signature_statuses]
+    if not signed_candidates:
+        raise ValueError("missing_signed_merge_commit")
+
+    max_priority = max(MERGE_ROLE_PRIORITY[item["merge_role"]] for item in signed_candidates)
+    strongest = [item for item in signed_candidates if MERGE_ROLE_PRIORITY[item["merge_role"]] == max_priority]
     if len(strongest) != 1:
         raise ValueError("ambiguous_merge_commit")
     return strongest[0]
@@ -141,7 +201,7 @@ def finalize_execplan(
         status = status or "completed"
         finalized_at = finalized_at or merge_evidence["committed_at"]
         finalized_in_pr = finalized_in_pr or merge_evidence["pull_request"]
-        finalized_by = finalized_by or _initial_human_maintainer(repo_root)
+        finalized_by = finalized_by or _resolve_finalized_by(repo_root, merge_evidence)
     else:
         status = status or "proposed"
 

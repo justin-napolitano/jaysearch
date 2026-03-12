@@ -199,9 +199,10 @@ Governed finalization authority rule:
 - Signed merge commits on `main` are the canonical finalization event for governed ExecPlans.
 - Intermediate draft or implementation commits may provide evidence, but they do not replace signed merge authority.
 - Deterministic finalization automation should derive `finalized_by`, `finalized_at`, and `finalized_in_pr` from the signed merge event where feasible.
+- Automated derivation of `finalized_by` must use the signer identity map in `spec/governance.yaml`; repository prose is explanatory, not authoritative, for finalizer identity.
 - When merge evidence is deterministic, governed ExecPlans should be reconciled to `status: completed` from that same merge event.
 - If both draft and implementation merges exist for the same ExecPlan id, the implementation merge should be treated as the stronger completion authority signal.
-- If merge or identity derivation is ambiguous, the reconciliation move must fail explicitly rather than claiming completion.
+- If merge, signature verification, or identity derivation is ambiguous, the reconciliation move must fail explicitly rather than claiming completion.
 
 ## 10. Match Flow and Stop Conditions
 

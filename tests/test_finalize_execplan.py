@@ -1,40 +1,16 @@
 from __future__ import annotations
 
-import subprocess
 from pathlib import Path
 import sys
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
-from platform_tools.finalize_execplan import finalize_execplan
+from platform_tools import finalize_execplan as finalize_module
 
 
 def _write(path: Path, text: str) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(text, encoding="utf-8")
-
-
-def _git(root: Path, *args: str) -> None:
-    subprocess.run(["git", *args], cwd=root, check=True, capture_output=True, text=True)
-
-
-def _base_repo(root: Path) -> Path:
-    _git(root, "init", "-b", "main")
-    _git(root, "config", "user.name", "Tests")
-    _git(root, "config", "user.email", "tests@example.com")
-    _write(
-        root / ".agent" / "AGENTS.md",
-        """# AGENTS.md
-
-Initial human maintainer:
-
-github:justin-napolitano
-""",
-    )
-    _write(root / "README.md", "base\n")
-    _git(root, "add", ".")
-    _git(root, "commit", "--no-gpg-sign", "-m", "docs: base")
-    return root / ".agent" / "execplans" / "20260312-test-plan-codex-01-execplan.md"
 
 
 def _plan_text(draft_branch: str) -> str:
@@ -49,7 +25,7 @@ changes:
   - .agent/execplans/20260312-test-plan-codex-01-execplan.md
 approve_policy: codeowners
 reviewers:
-  - "github:justin-napolitano"
+  - "github:jay.napolitano"
 draft_by: "agent/codex-01"
 draft_branch: "{draft_branch}"
 draft_created: "2026-03-12T00:00:00Z"
@@ -70,127 +46,252 @@ depends_on: []
 # Purpose / Big Picture
 
 Test.
-
-## Progress
-
-- [ ] Test
-
-## Surprises & Discoveries
-
-None.
-
-## Decision Log
-
-None.
-
-## Outcomes & Retrospective
-
-Test.
-
-## Context and Orientation
-
-Test.
-
-## Plan of Work
-
-Test.
-
-## Concrete Steps
-
-1. Test.
-
-## Validation and Acceptance
-
-Test.
-
-## Idempotence and Recovery
-
-Test.
-
-## Artifacts and Notes
-
-Test.
-
-## Interfaces and Dependencies
-
-Test.
 """
 
 
-def _commit_plan_branch(root: Path, branch: str, message: str) -> Path:
-    _git(root, "checkout", "-b", branch)
+def _base_repo(root: Path, draft_branch: str) -> Path:
+    _write(
+        root / "spec" / "governance.yaml",
+        """version: v1
+finalization:
+  canonical_event: signed_merge_commit_on_main
+  allowed_signature_statuses:
+    - G
+  derived_fields:
+    - finalized_by
+    - finalized_at
+    - finalized_in_pr
+  completion_status: completed
+  preferred_merge_branch_role_order:
+    - impl-execplan
+    - draft-execplan
+  ambiguity_policy: block
+  signer_identity_map:
+    - github: github:jay.napolitano
+      emails:
+        - jay.napolitano@adventhealth.com
+      signer_names:
+        - Jay Napolitano
+      signer_fingerprints:
+        - SHA256:test-fingerprint
+""",
+    )
+    _write(root / ".agent" / "AGENTS.md", "# AGENTS.md\n")
     plan = root / ".agent" / "execplans" / "20260312-test-plan-codex-01-execplan.md"
-    _write(plan, _plan_text(branch))
-    _git(root, "add", str(plan.relative_to(root)))
-    _git(root, "commit", "--no-gpg-sign", "-m", message)
+    _write(plan, _plan_text(draft_branch))
     return plan
 
 
-def _merge_branch(root: Path, branch: str, pr_number: int) -> None:
-    _git(root, "checkout", "main")
-    _git(
-        root,
-        "merge",
-        "--no-ff",
-        "--no-gpg-sign",
-        branch,
-        "-m",
-        f"Merge pull request #{pr_number} from JNA31A_AIT/{branch}",
+def test_finalize_execplan_derives_completed_state_from_signed_impl_merge(monkeypatch, tmp_path: Path) -> None:
+    branch = "impl-execplan/20260312-test-plan-codex-01-execplan-codex-01-20260312"
+    plan = _base_repo(tmp_path, branch)
+
+    monkeypatch.setattr(
+        finalize_module,
+        "_merge_candidates",
+        lambda *_args, **_kwargs: [
+            {
+                "commit": "abc123",
+                "committed_at": "2026-03-12T12:34:56Z",
+                "author_name": "Jay Napolitano",
+                "author_email": "jay.napolitano@adventhealth.com",
+                "signature_status": "G",
+                "signer_name": "Jay Napolitano",
+                "signer_fingerprint": "SHA256:test-fingerprint",
+                "subject": f"Merge pull request #77 from JNA31A_AIT/{branch}",
+                "body": "",
+                "pull_request": "77",
+                "branch_ref": branch,
+                "merge_role": "impl-execplan",
+            }
+        ],
     )
 
-
-def test_finalize_execplan_derives_completed_state_from_impl_merge(tmp_path: Path) -> None:
-    plan = _base_repo(tmp_path)
-    branch = "impl-execplan/20260312-test-plan-codex-01-execplan-codex-01-20260312"
-    _commit_plan_branch(tmp_path, branch, "docs(execplan): add test plan")
-    _merge_branch(tmp_path, branch, 77)
-
-    result = finalize_execplan(path=plan, repo_root=tmp_path, derive_from_merge=True, main_ref="main")
+    result = finalize_module.finalize_execplan(path=plan, repo_root=tmp_path, derive_from_merge=True, main_ref="main")
 
     assert result["status"] == "completed"
-    assert result["finalized_by"] == "github:justin-napolitano"
+    assert result["finalized_by"] == "github:jay.napolitano"
     assert result["finalized_in_pr"] == "77"
     assert result["merge_evidence"]["merge_role"] == "impl-execplan"
     assert result["changed"] is True
-    text = plan.read_text(encoding="utf-8")
-    assert 'status: completed' in text
+    assert 'status: completed' in plan.read_text(encoding="utf-8")
 
 
-def test_finalize_execplan_prefers_impl_merge_over_draft_merge(tmp_path: Path) -> None:
-    plan = _base_repo(tmp_path)
+def test_finalize_execplan_prefers_signed_impl_merge_over_signed_draft_merge(monkeypatch, tmp_path: Path) -> None:
     draft_branch = "draft-execplan/20260312-test-plan-codex-01-execplan-codex-01-20260312"
     impl_branch = "impl-execplan/20260312-test-plan-codex-01-execplan-codex-01-20260312"
-    _commit_plan_branch(tmp_path, draft_branch, "docs(execplan): add test plan")
-    _merge_branch(tmp_path, draft_branch, 70)
+    plan = _base_repo(tmp_path, draft_branch)
 
-    _git(tmp_path, "checkout", "-b", impl_branch, "main")
-    _write(tmp_path / "README.md", "base\nimpl\n")
-    _git(tmp_path, "add", "README.md")
-    _git(tmp_path, "commit", "--no-gpg-sign", "-m", "feat: add impl evidence")
-    _merge_branch(tmp_path, impl_branch, 71)
+    monkeypatch.setattr(
+        finalize_module,
+        "_merge_candidates",
+        lambda *_args, **_kwargs: [
+            {
+                "commit": "draft1",
+                "committed_at": "2026-03-12T10:00:00Z",
+                "author_name": "Jay Napolitano",
+                "author_email": "jay.napolitano@adventhealth.com",
+                "signature_status": "G",
+                "signer_name": "Jay Napolitano",
+                "signer_fingerprint": "SHA256:test-fingerprint",
+                "subject": f"Merge pull request #70 from JNA31A_AIT/{draft_branch}",
+                "body": "",
+                "pull_request": "70",
+                "branch_ref": draft_branch,
+                "merge_role": "draft-execplan",
+            },
+            {
+                "commit": "impl1",
+                "committed_at": "2026-03-12T11:00:00Z",
+                "author_name": "Jay Napolitano",
+                "author_email": "jay.napolitano@adventhealth.com",
+                "signature_status": "G",
+                "signer_name": "Jay Napolitano",
+                "signer_fingerprint": "SHA256:test-fingerprint",
+                "subject": f"Merge pull request #71 from JNA31A_AIT/{impl_branch}",
+                "body": "",
+                "pull_request": "71",
+                "branch_ref": impl_branch,
+                "merge_role": "impl-execplan",
+            },
+        ],
+    )
 
-    result = finalize_execplan(path=plan, repo_root=tmp_path, derive_from_merge=True, main_ref="main")
+    result = finalize_module.finalize_execplan(path=plan, repo_root=tmp_path, derive_from_merge=True, main_ref="main")
 
     assert result["finalized_in_pr"] == "71"
     assert result["merge_evidence"]["merge_role"] == "impl-execplan"
 
 
-def test_finalize_execplan_blocks_when_merge_history_is_ambiguous(tmp_path: Path) -> None:
-    plan = _base_repo(tmp_path)
-    branch_one = "impl-execplan/20260312-test-plan-codex-01-execplan-codex-01-20260312-a"
-    branch_two = "impl-execplan/20260312-test-plan-codex-01-execplan-codex-01-20260312-b"
-    _commit_plan_branch(tmp_path, branch_one, "docs(execplan): add test plan")
-    _merge_branch(tmp_path, branch_one, 80)
+def test_finalize_execplan_blocks_when_merge_history_is_ambiguous(monkeypatch, tmp_path: Path) -> None:
+    branch = "draft-execplan/20260312-test-plan-codex-01-execplan-codex-01-20260312"
+    plan = _base_repo(tmp_path, branch)
 
-    _git(tmp_path, "checkout", "-b", branch_two, "main")
-    _write(tmp_path / "README.md", "base\nagain\n")
-    _git(tmp_path, "add", "README.md")
-    _git(tmp_path, "commit", "--no-gpg-sign", "-m", "feat: add second impl evidence")
-    _merge_branch(tmp_path, branch_two, 81)
+    monkeypatch.setattr(
+        finalize_module,
+        "_merge_candidates",
+        lambda *_args, **_kwargs: [
+            {
+                "commit": "impl1",
+                "committed_at": "2026-03-12T10:00:00Z",
+                "author_name": "Jay Napolitano",
+                "author_email": "jay.napolitano@adventhealth.com",
+                "signature_status": "G",
+                "signer_name": "Jay Napolitano",
+                "signer_fingerprint": "SHA256:test-fingerprint",
+                "subject": "Merge pull request #80 from JNA31A_AIT/impl-execplan/foo",
+                "body": "",
+                "pull_request": "80",
+                "branch_ref": "impl-execplan/foo",
+                "merge_role": "impl-execplan",
+            },
+            {
+                "commit": "impl2",
+                "committed_at": "2026-03-12T11:00:00Z",
+                "author_name": "Jay Napolitano",
+                "author_email": "jay.napolitano@adventhealth.com",
+                "signature_status": "G",
+                "signer_name": "Jay Napolitano",
+                "signer_fingerprint": "SHA256:test-fingerprint",
+                "subject": "Merge pull request #81 from JNA31A_AIT/impl-execplan/bar",
+                "body": "",
+                "pull_request": "81",
+                "branch_ref": "impl-execplan/bar",
+                "merge_role": "impl-execplan",
+            },
+        ],
+    )
 
     try:
-        finalize_execplan(path=plan, repo_root=tmp_path, derive_from_merge=True, main_ref="main")
+        finalize_module.finalize_execplan(path=plan, repo_root=tmp_path, derive_from_merge=True, main_ref="main")
     except ValueError as exc:
         assert str(exc) == "ambiguous_merge_commit"
     else:
         raise AssertionError("expected ambiguous merge history to block reconciliation")
+
+
+def test_finalize_execplan_blocks_when_signed_merge_is_missing(monkeypatch, tmp_path: Path) -> None:
+    branch = "impl-execplan/20260312-test-plan-codex-01-execplan-codex-01-20260312"
+    plan = _base_repo(tmp_path, branch)
+
+    monkeypatch.setattr(
+        finalize_module,
+        "_merge_candidates",
+        lambda *_args, **_kwargs: [
+            {
+                "commit": "abc123",
+                "committed_at": "2026-03-12T12:34:56Z",
+                "author_name": "Jay Napolitano",
+                "author_email": "jay.napolitano@adventhealth.com",
+                "signature_status": "N",
+                "signer_name": "",
+                "signer_fingerprint": "",
+                "subject": f"Merge pull request #77 from JNA31A_AIT/{branch}",
+                "body": "",
+                "pull_request": "77",
+                "branch_ref": branch,
+                "merge_role": "impl-execplan",
+            }
+        ],
+    )
+
+    try:
+        finalize_module.finalize_execplan(path=plan, repo_root=tmp_path, derive_from_merge=True, main_ref="main")
+    except ValueError as exc:
+        assert str(exc) == "missing_signed_merge_commit"
+    else:
+        raise AssertionError("expected unsigned merge history to block reconciliation")
+
+
+def test_finalize_execplan_blocks_when_signer_identity_map_is_ambiguous(monkeypatch, tmp_path: Path) -> None:
+    branch = "impl-execplan/20260312-test-plan-codex-01-execplan-codex-01-20260312"
+    plan = _base_repo(tmp_path, branch)
+    _write(
+        tmp_path / "spec" / "governance.yaml",
+        """version: v1
+finalization:
+  canonical_event: signed_merge_commit_on_main
+  allowed_signature_statuses:
+    - G
+  signer_identity_map:
+    - github: github:jay.napolitano
+      emails:
+        - jay.napolitano@adventhealth.com
+      signer_names:
+        - Jay Napolitano
+      signer_fingerprints: []
+    - github: github:other.user
+      emails:
+        - jay.napolitano@adventhealth.com
+      signer_names: []
+      signer_fingerprints: []
+""",
+    )
+
+    monkeypatch.setattr(
+        finalize_module,
+        "_merge_candidates",
+        lambda *_args, **_kwargs: [
+            {
+                "commit": "abc123",
+                "committed_at": "2026-03-12T12:34:56Z",
+                "author_name": "Jay Napolitano",
+                "author_email": "jay.napolitano@adventhealth.com",
+                "signature_status": "G",
+                "signer_name": "Jay Napolitano",
+                "signer_fingerprint": "",
+                "subject": f"Merge pull request #77 from JNA31A_AIT/{branch}",
+                "body": "",
+                "pull_request": "77",
+                "branch_ref": branch,
+                "merge_role": "impl-execplan",
+            }
+        ],
+    )
+
+    try:
+        finalize_module.finalize_execplan(path=plan, repo_root=tmp_path, derive_from_merge=True, main_ref="main")
+    except ValueError as exc:
+        assert str(exc) == "finalized_by_not_deterministic"
+    else:
+        raise AssertionError("expected ambiguous signer identity to block reconciliation")
