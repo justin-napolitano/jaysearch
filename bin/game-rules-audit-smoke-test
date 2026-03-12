@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+PLAN_PATH=".agent/execplans/20260312-game-rules-engine-audit-and-extensibility-codex-01-execplan.md"
+
+PLAN_JSON="$(bin/execplan-validate "$PLAN_PATH")"
+AUDIT_JSON="$(bin/game-rules-audit)"
+
+python3 - "$PLAN_JSON" "$AUDIT_JSON" <<'PY'
+import json
+import sys
+
+plan = json.loads(sys.argv[1])
+audit = json.loads(sys.argv[2])
+
+if plan.get("error_count") != 0:
+    raise SystemExit("execplan-validate failed")
+if not audit.get("ok"):
+    raise SystemExit("game-rules-audit blocked")
+if audit.get("board_model", {}).get("referee_order") != [
+    "global_board_law",
+    "active_domain_game",
+    "active_subgame",
+]:
+    raise SystemExit("unexpected referee order")
+if "game-hostile-review" not in audit.get("extension_readiness", {}).get("planned_follow_on_games", []):
+    raise SystemExit("missing hostile review follow-on")
+PY
