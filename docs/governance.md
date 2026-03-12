@@ -96,6 +96,8 @@ Policy-compliance rule:
 - `bin/policy-compliance-check` is the canonical legality surface for branch-level policy compliance.
 - Policy compliance should block advancement when commit structure is illegal, when the branch is not aligned with latest `main`, or when graph and queue reconciliation are stale for the active slice.
 - Graph and queue state are part of governed branch legality, not optional bookkeeping after the fact.
+- `bin/remaining-work-graph-check` is the canonical legality surface for graph-action state, deterministic ready ordering, and stale queue-projection detection.
+- Reorder operations are legal only when recorded as canonical graph actions; silent queue edits or board-only reprioritization are forbidden moves.
 
 Game layering rule:
 
@@ -111,3 +113,9 @@ Exception lifecycle contract:
 - Required fields include owner, approver, rationale, created/expires timestamps, and bypass evidence.
 - Active exceptions may not be expired.
 - Exceptions nearing expiry (within renewal window) require renewal evidence.
+
+Remaining-work ordering rule:
+
+- The local remaining-work graph owns graph-action records, queue position, and deterministic ready ordering.
+- `docs/queued-execplans.md` is a projection mirror and must advertise the latest reconciled graph action id and ready-order metadata from the graph.
+- GitHub Projects or other provider boards may surface ordering and action-required state, but they must not author or override it.

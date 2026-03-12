@@ -55,11 +55,12 @@ This document turns the remaining-work graph into an explicit near-term queue of
    - implementation branch: `impl-execplan/20260312-game-rules-engine-audit-and-extensibility-codex-01-execplan-codex-01-20260312`
 
 12. `20260312-game-policy-compliance-codex-01-execplan`
-   - status: `ready`
+   - status: `completed`
    - goal: create `game-policy-compliance` and its `game-commit-structure` subgame so governed slices cannot advance by assertion alone
    - must also formalize graph-action-required and stale-queue blocking so merge/readiness cannot advance on stale backlog state
    - draft branch: `draft-execplan/20260312-game-policy-compliance-codex-01-execplan-codex-01-20260312`
    - implementation branch: `impl-execplan/20260312-game-policy-compliance-codex-01-execplan-codex-01-20260312`
+   - completion ref: `merged:pr-72`
 
 13. `future:game-hostile-review`
    - status: `blocked`
@@ -83,14 +84,21 @@ This document turns the remaining-work graph into an explicit near-term queue of
    - goal: formalize provider-board reuse, item identity reuse, and sync integrity
 
 18. `graph-action-required-and-stale-queue-enforcement`
-   - status: `blocked`
+   - status: `completed`
    - goal: require every governed work action to map to graph state and block advancement when queue reconciliation is stale
-   - blocker: should be formalized inside `20260312-game-policy-compliance-codex-01-execplan`
+   - implemented in: `20260312-game-policy-compliance-codex-01-execplan`
 
-19. `future:remaining-work-graph-actions-and-ordering`
-   - status: `blocked`
+19. `20260312-remaining-work-graph-actions-and-ordering-codex-01-execplan`
+   - status: `ready`
    - goal: formalize deterministic graph actions, canonical ordering fields, and governed reorder/reconciliation behavior
-   - blocker: `20260312-game-policy-compliance-codex-01-execplan` should land first
+   - draft branch: `draft-execplan/20260312-remaining-work-graph-actions-and-ordering-codex-01-execplan-codex-01-20260312`
+   - implementation branch: `impl-execplan/20260312-remaining-work-graph-actions-and-ordering-codex-01-execplan-codex-01-20260312`
+
+## Mirror Metadata
+
+- canonical_last_graph_action_id: `rwg-action-20260312-004-promote-rwg-020`
+- canonical_ready_order: `20260312-remaining-work-graph-actions-and-ordering-codex-01-execplan`
+- projection_authority: `projection_only`
 
 ## Queue Discipline
 
