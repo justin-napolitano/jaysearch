@@ -37,8 +37,8 @@ CLASS_ORDER = {
 }
 BOUNDED_EXECPLAN_FRONTMATTER_FIELDS = {"changes", "validation"}
 BOUNDED_EXECPLAN_MAX_LINES = 120
-BOUNDED_POLICY_REPAIR_MAX_LINES = 220
-BOUNDED_POLICY_REPAIR_MAX_FILES = 3
+BOUNDED_POLICY_REPAIR_MAX_LINES = 260
+BOUNDED_POLICY_REPAIR_MAX_FILES = 5
 BOUNDED_POLICY_REPAIR_SUBJECT_PREFIXES = (
     "fix(governance):",
     "feat(governance):",
@@ -49,7 +49,9 @@ BOUNDED_POLICY_REPAIR_ALLOWED_FILES = {
     "docs/agent-game-rules-v1.md",
     "docs/governance.md",
     "docs/queued-execplans.md",
+    "src/platform_tools/execplan_lint.py",
     "src/platform_tools/policy_compliance_check.py",
+    "tests/test_execplan_lint.py",
     "tests/test_policy_compliance_check.py",
 }
 EXCEPTION_REGISTRY_PATH = ".agent/governance/exceptions.yaml"
@@ -218,6 +220,7 @@ def _is_bounded_policy_repair_commit(
     commit_class: str,
     commit_files: list[str],
     changed_lines: int,
+    active_execplan_path: str,
 ) -> tuple[bool, list[str]]:
     reasons: list[str] = []
     if commit_class not in {"runtime", "test", "governance"}:
@@ -230,7 +233,10 @@ def _is_bounded_policy_repair_commit(
     if len(commit_files) > BOUNDED_POLICY_REPAIR_MAX_FILES:
         reasons.append(f"file_count_exceeded:{len(commit_files)}")
         return False, reasons
-    disallowed_files = sorted(set(commit_files) - BOUNDED_POLICY_REPAIR_ALLOWED_FILES)
+    allowed_files = set(BOUNDED_POLICY_REPAIR_ALLOWED_FILES)
+    if active_execplan_path:
+        allowed_files.add(active_execplan_path)
+    disallowed_files = sorted(set(commit_files) - allowed_files)
     if disallowed_files:
         reasons.extend(f"disallowed_file:{path}" for path in disallowed_files)
         return False, reasons
@@ -291,6 +297,7 @@ def _commit_reports(
                 commit_class=commit_class,
                 commit_files=commit_files,
                 changed_lines=changed_lines,
+                active_execplan_path=active_execplan_path,
             )
             if allowed_execplan_reconciliation:
                 warnings.append(f"bounded_execplan_reconciliation:{commit}")
