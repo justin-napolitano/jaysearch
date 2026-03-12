@@ -171,6 +171,8 @@ def get_orchestrator_status(
             blockers.extend(f"{check_name}:{item}" for item in check_report["blockers"])
     if active_work and str(active_work.get("status", "")).strip() != "ready":
         blockers.append(f"active_work_not_ready:{active_work['node_id']}:{active_work['status']}")
+    if active_work and bool(active_work.get("action_state", {}).get("action_required", False)):
+        blockers.append(f"active_work_requires_graph_action:{active_work['node_id']}")
 
     next_validations = [
         "bin/execplan-validate .agent/execplans/20260311-composite-orchestrator-status-codex-01-execplan.md"
@@ -247,6 +249,9 @@ def get_orchestrator_status(
         "active_work": active_work,
         "ready_work": ready_work,
         "blocked_work": blocked_work,
+        "ready_order": remaining_work_report.get("ordering", {}).get("ready_execplan_ids", []),
+        "queue_projection": remaining_work_report.get("queue_projection", {}),
+        "action_required_nodes": remaining_work_report.get("action_required_nodes", []),
         "authority_constraints": authority_constraints,
         "next_actions": next_actions,
         "checks": checks,

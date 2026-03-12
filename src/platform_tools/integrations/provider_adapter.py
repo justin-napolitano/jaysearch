@@ -102,6 +102,10 @@ def _project_item(node: dict[str, Any], *, provider: str, root: str, current_bra
                 target_execplan_id=str(node.get("target_execplan_id", "")).strip(),
             ),
             "implementation_branch": str(node.get("implementation_branch", "")).strip(),
+            "queue_position": node.get("ordering", {}).get("queue_position"),
+            "ready_order": node.get("ordering", {}).get("ready_order"),
+            "last_action": str(node.get("action_state", {}).get("last_action", "")).strip(),
+            "action_required": bool(node.get("action_state", {}).get("action_required", False)),
         },
     }
 
@@ -131,7 +135,15 @@ def build_provider_projection(
             if not isinstance(node, dict):
                 continue
             items.append(_project_item(node, provider=provider, root=root, current_branch=str(remaining_work_report.get("branch", branch or "")).strip()))
-    items = sorted(items, key=lambda item: item["identity"])
+    items = sorted(
+        items,
+        key=lambda item: (
+            item.get("local_provenance", {}).get("queue_position")
+            if isinstance(item.get("local_provenance", {}).get("queue_position"), int)
+            else 999999,
+            item["identity"],
+        ),
+    )
 
     execplan_id = ""
     if execplan_path:
@@ -147,6 +159,8 @@ def build_provider_projection(
         "authority_mode": "projection_only",
         "branch": str(remaining_work_report.get("branch", branch or "")).strip(),
         "execplan_id": execplan_id,
+        "ready_order": remaining_work_report.get("ordering", {}).get("ready_execplan_ids", []),
+        "queue_projection": remaining_work_report.get("queue_projection", {}),
         "board_model": mapping.get("board_model", {}),
         "items": items,
         "item_count": len(items),
