@@ -22,6 +22,7 @@ changes:
   - spec/game-transitions.yaml
   - spec/ruleset.yaml
   - spec/workflow.yaml
+  - artifacts/planner/research/remaining-work-graph.json
   - artifacts/planner/research/game-graph.json
   - artifacts/planner/research/bibliography-graph.json
   - artifacts/planner/research/claim-registry.json
@@ -32,6 +33,7 @@ changes:
   - bin/game-rules-audit
   - bin/policy-compliance-check
   - bin/policy-compliance-smoke-test
+  - docs/queued-execplans.md
   - tests/test_game_rules_audit.py
   - tests/test_policy_compliance_check.py
 approve_policy: codeowners
@@ -94,6 +96,7 @@ This slice should take the partial rules surfaced by the game-rules audit and bi
 - 2026-03-12 / agent-codex-01 / `game-commit-structure` should live under `game-policy-compliance`.
 - 2026-03-12 / agent-codex-01 / Merge readiness should consume policy-compliance outcomes rather than redefining policy rules itself.
 - 2026-03-12 / agent-codex-01 / Global board-law rules must remain inherited platform constraints even after policy-compliance is added.
+- 2026-03-12 / agent-codex-01 / The platform must not advance state by agent assertion, prose judgment, or board edits alone; required referee chains must pass before a slice can advance.
 
 ## Outcomes & Retrospective
 
@@ -105,12 +108,14 @@ On completion, the repository should have:
 - a deterministic referee command for policy compliance
 - updated audit output that classifies these rules as enforced by policy-compliance rather than merely partial
 - a clear dependency edge showing `game-hostile-review` builds on policy compliance instead of replacing it
+- a primary inherited rule that the repo cannot advance a governed slice unless the required referee chain passes
 
 Expected implemented outcome:
 
 - `bin/policy-compliance-check` emits deterministic machine-readable blockers and pass/fail results
 - the current game audit can point to policy-compliance and commit-structure as canonical games instead of planned follow-ons
 - merge-readiness and later hostile-review work can consume policy-compliance results as upstream evidence
+- slice progression surfaces such as review-readiness and merge-readiness can consume policy-compliance status instead of trusting agent narration
 
 ## Context and Orientation
 
@@ -124,14 +129,17 @@ The game-rules audit established the core platform model:
 
 That audit also surfaced partial rules that need stronger formalization before the review layer grows further. This slice is the step that turns those partial rules into a durable legality surface.
 
+This slice also establishes the project-level principle that governed work should advance only from passing referee evidence. Agents may propose or execute moves, but they should not be able to advance canonical state purely by assertion.
+
 ## Plan of Work
 
 1. Inventory the currently partial policy rules and assign them canonical ownership under `game-policy-compliance` or `game-commit-structure`.
 2. Add canonical game specs and graph nodes for policy compliance and commit structure.
 3. Clarify which rules remain inherited platform law versus which are enforced locally by policy-compliance.
 4. Implement a deterministic policy-compliance referee command.
-5. Update the game-rules audit so it reports these rules as enforced by the new game family.
-6. Keep hostile review queued behind this slice rather than implementing it here.
+5. Bind policy-compliance outcomes to advancement semantics so later review/merge gates can consume them deterministically.
+6. Update the game-rules audit so it reports these rules as enforced by the new game family.
+7. Keep hostile review queued behind this slice rather than implementing it here.
 
 ## Concrete Steps
 
@@ -144,8 +152,9 @@ That audit also surfaced partial rules that need stronger formalization before t
    - `bin/policy-compliance-check`
    - `bin/policy-compliance-smoke-test`
    - `tests/test_policy_compliance_check.py`
-5. Update `bin/game-rules-audit` and related tests to reflect the new game family.
-6. Run:
+5. Update the relevant runtime/status surfaces so policy-compliance can serve as an advancement gate rather than only an advisory report.
+6. Update `bin/game-rules-audit` and related tests to reflect the new game family.
+7. Run:
    - `bin/execplan-validate .agent/execplans/20260312-game-policy-compliance-codex-01-execplan.md`
    - `bin/policy-compliance-smoke-test`
 
@@ -177,6 +186,7 @@ Acceptance criteria:
 - commit structure exists as a canonical subgame under policy compliance
 - the current partial policy rules are explicitly attached to that game family
 - the platform can deterministically report policy-compliance blockers
+- governed advancement can be blocked by policy-compliance failure instead of relying on agent assertions
 - the game audit no longer reports commit-structure as a merely planned subgame
 - hostile review remains queued behind policy compliance instead of being partially implemented here
 
