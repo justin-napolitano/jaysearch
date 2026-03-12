@@ -187,6 +187,20 @@ canonical finalization event. Future automation should derive
 `finalized_by`, `finalized_at`, and `finalized_in_pr` from that merge
 event where feasible.
 
+`finalized_by` must be resolved through the signer identity map defined
+in `spec/governance.yaml`. Repository prose alone is not a sufficient
+source of finalizer identity for automated completion reconciliation.
+
+When a governed ExecPlan has a deterministic merge-backed reconciliation
+path, `status: completed` should be set from that canonical merge event.
+Completion should not depend on manual prose follow-up when merge
+evidence is already machine-detectable.
+
+If the merge event, signature verification result, or finalizer identity
+cannot be derived deterministically, reconciliation must fail with
+explicit blockers rather than silently leaving an authoritative plan in
+an ambiguous state.
+
 ------------------------------------------------------------------------
 
 # Validation

@@ -1,0 +1,102 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+echo "[1/2] finalize-execplan focused tests"
+uv run pytest tests/test_finalize_execplan.py
+
+echo "[2/2] finalize-execplan reconciliation smoke"
+PYTHONPATH="$(pwd)/src${PYTHONPATH:+:$PYTHONPATH}" python3 - <<'PY'
+import json
+import tempfile
+from pathlib import Path
+
+from platform_tools import finalize_execplan as finalize_module
+
+
+def write(path: Path, text: str) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(text, encoding="utf-8")
+
+
+with tempfile.TemporaryDirectory() as tmp:
+    root = Path(tmp)
+    write(
+        root / "spec" / "governance.yaml",
+        """version: v1
+finalization:
+  canonical_event: signed_merge_commit_on_main
+  allowed_signature_statuses:
+    - G
+  signer_identity_map:
+    - github: github:jay.napolitano
+      emails:
+        - jay.napolitano@adventhealth.com
+      signer_names:
+        - Jay Napolitano
+      signer_fingerprints:
+        - SHA256:smoke-fingerprint
+""",
+    )
+    plan = root / ".agent" / "execplans" / "20260312-smoke-plan-codex-01-execplan.md"
+    branch = "impl-execplan/20260312-smoke-plan-codex-01-execplan-codex-01-20260312"
+    write(
+        plan,
+        f"""---
+id: "20260312-smoke-plan-codex-01-execplan"
+title: "Smoke plan"
+owner: "agent/codex-01"
+created: "2026-03-12T00:00:00Z"
+status: draft
+base_branch: main
+changes:
+  - .agent/execplans/20260312-smoke-plan-codex-01-execplan.md
+approve_policy: codeowners
+reviewers:
+  - "github:jay.napolitano"
+draft_by: "agent/codex-01"
+draft_branch: "{branch}"
+draft_created: "2026-03-12T00:00:00Z"
+finalized_by: ""
+finalized_at: ""
+finalized_in_pr: ""
+validation:
+  tests:
+    - name: "execplan-validate"
+      command: "bin/execplan-validate .agent/execplans/20260312-smoke-plan-codex-01-execplan.md"
+      expected_exit: 0
+tasks:
+  - title: "Smoke"
+    priority: "P1"
+depends_on: []
+---
+
+# Purpose / Big Picture
+
+Smoke.
+""",
+    )
+
+    finalize_module._merge_candidates = lambda *_args, **_kwargs: [
+        {
+            "commit": "smoke-merge",
+            "committed_at": "2026-03-12T14:00:00Z",
+            "author_name": "Jay Napolitano",
+            "author_email": "jay.napolitano@adventhealth.com",
+            "signature_status": "G",
+            "signer_name": "Jay Napolitano",
+            "signer_fingerprint": "SHA256:smoke-fingerprint",
+            "subject": f"Merge pull request #90 from JNA31A_AIT/{branch}",
+            "body": "",
+            "pull_request": "90",
+            "branch_ref": branch,
+            "merge_role": "impl-execplan",
+        }
+    ]
+
+    report = finalize_module.finalize_execplan(path=plan, repo_root=root, derive_from_merge=True, main_ref="main")
+    if report["status"] != "completed" or report["finalized_by"] != "github:jay.napolitano":
+        raise SystemExit(json.dumps(report, indent=2, sort_keys=True))
+    print(json.dumps({"command": "finalize-execplan", "status": "ok", "finalized_by": report["finalized_by"], "finalized_in_pr": report["finalized_in_pr"]}, sort_keys=True))
+PY
+
+echo "finalize-execplan smoke test completed"

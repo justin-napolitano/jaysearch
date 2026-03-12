@@ -36,3 +36,23 @@ exception_lifecycle:
     - revoked
   renewal_window_days: 7
   bypass_evidence_min_items: 1
+finalization:
+  canonical_event: signed_merge_commit_on_main
+  allowed_signature_statuses:
+    - G
+  derived_fields:
+    - finalized_by
+    - finalized_at
+    - finalized_in_pr
+  completion_status: completed
+  preferred_merge_branch_role_order:
+    - impl-execplan
+    - draft-execplan
+  ambiguity_policy: block
+  signer_identity_map:
+    - github: github:jay.napolitano
+      emails:
+        - jay.napolitano@adventhealth.com
+      signer_names:
+        - Jay Napolitano
+      signer_fingerprints: []
