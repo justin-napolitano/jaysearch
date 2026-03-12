@@ -30,6 +30,9 @@ def _seed_schema(root: Path) -> None:
                 "required:",
                 "  - graph_id",
                 "  - created_at",
+                "  - ordering_policy",
+                "  - queue_projection",
+                "  - graph_actions",
                 "  - nodes",
                 "  - edges",
                 "properties:",
@@ -37,6 +40,12 @@ def _seed_schema(root: Path) -> None:
                 "    type: string",
                 "  created_at:",
                 "    type: string",
+                "  ordering_policy:",
+                "    type: object",
+                "  queue_projection:",
+                "    type: object",
+                "  graph_actions:",
+                "    type: array",
                 "  nodes:",
                 "    type: array",
                 "    items:",
@@ -103,6 +112,32 @@ def test_remaining_work_graph_check_reports_active_ready_slice(tmp_path: Path) -
         {
             "graph_id": "remaining-work-graph-20260311",
             "created_at": "2026-03-11T00:00:00Z",
+            "ordering_policy": {
+                "ready_statuses": ["ready"],
+                "ready_sort_fields": ["ready_order", "tie_breaker", "node_id"],
+                "reorder_requires_explicit_action": True,
+                "board_projection_authority": "projection_only",
+            },
+            "queue_projection": {
+                "path": "docs/queued-execplans.md",
+                "projection_authority": "projection_only",
+                "last_reconciled_action_id": "act-2",
+                "ready_execplan_ids": ["20260311-runtime-constraint-canonicalization-codex-01-execplan"],
+            },
+            "graph_actions": [
+                {
+                    "action_id": "act-1",
+                    "action": "complete",
+                    "node_id": "rwg-001",
+                    "rationale": "completed dependency",
+                },
+                {
+                    "action_id": "act-2",
+                    "action": "promote_ready",
+                    "node_id": "rwg-006",
+                    "rationale": "ready slice",
+                },
+            ],
             "nodes": [
                 {
                     "node_id": "rwg-001",
@@ -113,6 +148,14 @@ def test_remaining_work_graph_check_reports_active_ready_slice(tmp_path: Path) -
                     "target_execplan_id": "20260311-composite-orchestrator-status-codex-01-execplan",
                     "goal_area": "orchestrator-status",
                     "completion_ref": "merged:composite",
+                    "ordering": {"queue_position": 1, "tie_breaker": "20260311-composite-orchestrator-status-codex-01-execplan"},
+                    "action_state": {
+                        "last_action_id": "act-1",
+                        "last_action": "complete",
+                        "action_required": False,
+                        "reorder_requires_human": False,
+                        "reorder_blockers": [],
+                    },
                 },
                 {
                     "node_id": "rwg-006",
@@ -123,6 +166,19 @@ def test_remaining_work_graph_check_reports_active_ready_slice(tmp_path: Path) -
                     "target_execplan_id": "20260311-runtime-constraint-canonicalization-codex-01-execplan",
                     "goal_area": "runtime-governance",
                     "implementation_branch": "impl-execplan/20260311-runtime-constraint-canonicalization-codex-01-execplan-codex-01-20260311",
+                    "ordering": {
+                        "queue_position": 2,
+                        "ready_order": 1,
+                        "tie_breaker": "20260311-runtime-constraint-canonicalization-codex-01-execplan",
+                        "source_action_id": "act-2",
+                    },
+                    "action_state": {
+                        "last_action_id": "act-2",
+                        "last_action": "promote_ready",
+                        "action_required": False,
+                        "reorder_requires_human": False,
+                        "reorder_blockers": [],
+                    },
                 },
             ],
             "edges": [
@@ -144,6 +200,21 @@ def test_remaining_work_graph_check_reports_active_ready_slice(tmp_path: Path) -
         )
         + "\n",
     )
+    _write_text(
+        tmp_path / "docs" / "queued-execplans.md",
+        "\n".join(
+            [
+                "# Queued ExecPlans",
+                "",
+                "## Mirror Metadata",
+                "",
+                "- canonical_last_graph_action_id: `act-2`",
+                "- canonical_ready_order: `20260311-runtime-constraint-canonicalization-codex-01-execplan`",
+                "- projection_authority: `projection_only`",
+            ]
+        )
+        + "\n",
+    )
 
     code, report = check_remaining_work_graph(
         root=tmp_path.as_posix(),
@@ -155,6 +226,7 @@ def test_remaining_work_graph_check_reports_active_ready_slice(tmp_path: Path) -
     assert report["status"] == "ok"
     assert report["active_node"]["node_id"] == "rwg-006"
     assert report["ready_nodes"][0]["node_id"] == "rwg-006"
+    assert report["ordering"]["ready_execplan_ids"] == ["20260311-runtime-constraint-canonicalization-codex-01-execplan"]
 
 
 def test_remaining_work_graph_check_rejects_stale_blocked_state(tmp_path: Path) -> None:
@@ -164,6 +236,26 @@ def test_remaining_work_graph_check_rejects_stale_blocked_state(tmp_path: Path) 
         {
             "graph_id": "remaining-work-graph-20260311",
             "created_at": "2026-03-11T00:00:00Z",
+            "ordering_policy": {
+                "ready_statuses": ["ready"],
+                "ready_sort_fields": ["ready_order", "tie_breaker", "node_id"],
+                "reorder_requires_explicit_action": True,
+                "board_projection_authority": "projection_only",
+            },
+            "queue_projection": {
+                "path": "docs/queued-execplans.md",
+                "projection_authority": "projection_only",
+                "last_reconciled_action_id": "act-1",
+                "ready_execplan_ids": [],
+            },
+            "graph_actions": [
+                {
+                    "action_id": "act-1",
+                    "action": "complete",
+                    "node_id": "rwg-001",
+                    "rationale": "completed dependency",
+                }
+            ],
             "nodes": [
                 {
                     "node_id": "rwg-001",
@@ -174,6 +266,14 @@ def test_remaining_work_graph_check_rejects_stale_blocked_state(tmp_path: Path) 
                     "target_execplan_id": "20260311-composite-orchestrator-status-codex-01-execplan",
                     "goal_area": "orchestrator-status",
                     "completion_ref": "merged:composite",
+                    "ordering": {"queue_position": 1, "tie_breaker": "20260311-composite-orchestrator-status-codex-01-execplan"},
+                    "action_state": {
+                        "last_action_id": "act-1",
+                        "last_action": "complete",
+                        "action_required": False,
+                        "reorder_requires_human": False,
+                        "reorder_blockers": [],
+                    },
                 },
                 {
                     "node_id": "rwg-004",
@@ -184,12 +284,31 @@ def test_remaining_work_graph_check_rejects_stale_blocked_state(tmp_path: Path) 
                     "conflict_domains": ["orchestrator-status"],
                     "target_execplan_id": "20260311-implementation-orchestrator-runtime-codex-01-execplan",
                     "goal_area": "implementation-orchestrator",
+                    "ordering": {
+                        "queue_position": 2,
+                        "tie_breaker": "20260311-implementation-orchestrator-runtime-codex-01-execplan",
+                    },
                 },
             ],
             "edges": [
                 {"from": "rwg-004", "to": "rwg-001", "relation": "depends_on"},
             ],
         },
+    )
+    _write_text(
+        tmp_path / "docs" / "queued-execplans.md",
+        "\n".join(
+            [
+                "# Queued ExecPlans",
+                "",
+                "## Mirror Metadata",
+                "",
+                "- canonical_last_graph_action_id: `act-1`",
+                "- canonical_ready_order: ``",
+                "- projection_authority: `projection_only`",
+            ]
+        )
+        + "\n",
     )
 
     code, report = check_remaining_work_graph(root=tmp_path.as_posix())
