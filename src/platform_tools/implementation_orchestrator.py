@@ -6,6 +6,7 @@ from pathlib import Path
 from typing import Any
 
 from platform_tools.game_status import get_game_status
+from platform_tools.human_operations_status import get_human_operations_status
 from platform_tools.merge_readiness import check_merge_readiness
 from platform_tools.orchestrator_status import get_orchestrator_status
 from platform_tools.plan_utils import parse_plan
@@ -178,6 +179,11 @@ def run_implementation_orchestrator(
         execplan_path=resolved_execplan_path or execplan_path,
         base_ref=base_ref,
     )
+    _, human_operations_report = get_human_operations_status(
+        root=root,
+        branch=branch_name or None,
+        execplan_path=resolved_execplan_path or execplan_path,
+    )
 
     blockers: list[str] = []
     if game_code != 0:
@@ -287,6 +293,10 @@ def run_implementation_orchestrator(
         "orchestrator_status": {
             "status": status_report.get("status", ""),
             "next_actions": status_report.get("next_actions", []),
+        },
+        "human_operations_status": {
+            "status": human_operations_report.get("status", ""),
+            "next_actions": human_operations_report.get("next_actions", []),
         },
         "next_actions": _next_actions(action=action, selected_node=selected_node, blockers=blockers),
     }

@@ -7,6 +7,7 @@ from typing import Any
 
 from platform_tools.citation_check import check_citations
 from platform_tools.game_status import get_game_status
+from platform_tools.human_operations_status import get_human_operations_status
 from platform_tools.merge_readiness import check_merge_readiness
 from platform_tools.plan_utils import parse_plan
 from platform_tools.planner_score import score_graph
@@ -100,6 +101,11 @@ def get_orchestrator_status(
         base_ref=base_ref,
         include_validation_runs=False,
     )
+    _, human_operations_report = get_human_operations_status(
+        root=root,
+        branch=current_branch or None,
+        execplan_path=execplan_path,
+    )
     score_surface = _planner_score_surface(cwd, planner_graph_id)
 
     checks = {
@@ -137,6 +143,12 @@ def get_orchestrator_status(
                 for item in merge_report.get("checks", {}).get("validations", [])
                 if isinstance(item, dict) and str(item.get("command", "")).strip()
             ],
+        ),
+        "human_operations": _adapt_contract(
+            command="human-operations-status",
+            ok=bool(human_operations_report.get("ok", False)),
+            blockers=[str(item) for item in human_operations_report.get("blockers", [])],
+            payload=human_operations_report,
         ),
         "planner_score": score_surface,
     }
@@ -193,6 +205,8 @@ def get_orchestrator_status(
             "human_review_required",
             "execplan_finalization_required",
             "signed_merge_commit_required",
+            "board_review_projection_only",
+            "takeover_state_must_be_machine_readable",
         }
     )
     evidence_refs = sorted(
@@ -202,6 +216,7 @@ def get_orchestrator_status(
             "artifacts/planner/research/bibliography-graph.json",
             "artifacts/planner/research/claim-registry.json",
             "artifacts/planner/research/game-graph.json",
+            "artifacts/provider-sync/github-projects-field-map.json",
             "docs/codex-orchestrator-contract.md",
             "docs/merge-readiness-contract.md",
         }
