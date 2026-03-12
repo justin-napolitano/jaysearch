@@ -220,6 +220,7 @@ def _stub_governed_checks(monkeypatch, execplan_path: Path, branch: str) -> None
                     "target_execplan_id": "20260311-implementation-orchestrator-runtime-codex-01-execplan",
                     "implementation_branch": branch,
                     "eligible_now": True,
+                    "action_state": {"action_required": False},
                 },
             },
         ),
@@ -231,6 +232,16 @@ def _stub_governed_checks(monkeypatch, execplan_path: Path, branch: str) -> None
             {
                 "status": "ok",
                 "next_actions": [{"action": "continue_active_slice"}],
+            },
+        ),
+    )
+    monkeypatch.setattr(
+        "platform_tools.implementation_orchestrator.get_human_operations_status",
+        lambda **kwargs: (
+            0,
+            {
+                "status": "ok",
+                "next_actions": [],
             },
         ),
     )
@@ -334,12 +345,17 @@ def test_implementation_orchestrator_blocks_when_game_is_not_implementation(monk
                     "target_execplan_id": "20260311-implementation-orchestrator-runtime-codex-01-execplan",
                     "implementation_branch": branch,
                     "eligible_now": True,
+                    "action_state": {"action_required": False},
                 },
             },
         ),
     )
     monkeypatch.setattr(
         "platform_tools.implementation_orchestrator.get_orchestrator_status",
+        lambda **kwargs: (0, {"status": "ok", "next_actions": []}),
+    )
+    monkeypatch.setattr(
+        "platform_tools.implementation_orchestrator.get_human_operations_status",
         lambda **kwargs: (0, {"status": "ok", "next_actions": []}),
     )
 
@@ -353,3 +369,42 @@ def test_implementation_orchestrator_blocks_when_game_is_not_implementation(monk
 
     assert code == 1
     assert "active_game_mismatch:game-platform" in report["blockers"]
+
+
+def test_implementation_orchestrator_blocks_when_active_slice_requires_graph_action(monkeypatch, tmp_path: Path) -> None:
+    branch = "impl-execplan/20260311-implementation-orchestrator-runtime-codex-01-execplan-codex-01-20260311"
+    execplan_path = _seed_execplan(tmp_path, branch)
+    _seed_remaining_work(tmp_path, branch)
+    graph_id = _seed_graph(tmp_path)
+    _seed_transition_spec(tmp_path)
+    _stub_governed_checks(monkeypatch, execplan_path, branch)
+    monkeypatch.setattr(
+        "platform_tools.implementation_orchestrator.check_remaining_work_graph",
+        lambda **kwargs: (
+            0,
+            {
+                "ok": True,
+                "errors": [],
+                "active_node": {
+                    "node_id": "rwg-004",
+                    "title": "Implementation orchestrator runtime",
+                    "status": "ready",
+                    "target_execplan_id": "20260311-implementation-orchestrator-runtime-codex-01-execplan",
+                    "implementation_branch": branch,
+                    "eligible_now": True,
+                    "action_state": {"action_required": True},
+                },
+            },
+        ),
+    )
+
+    code, report = run_implementation_orchestrator(
+        root=tmp_path.as_posix(),
+        action="inspect",
+        graph_id=graph_id,
+        execplan_path=execplan_path.as_posix(),
+        branch=branch,
+    )
+
+    assert code == 1
+    assert "active_slice_requires_graph_action:rwg-004" in report["blockers"]

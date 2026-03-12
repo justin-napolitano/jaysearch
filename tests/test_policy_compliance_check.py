@@ -115,6 +115,26 @@ def _remaining_work_graph() -> dict[str, object]:
     return {
         "graph_id": "remaining-work-test",
         "created_at": "2026-03-12T00:00:00Z",
+        "ordering_policy": {
+            "ready_statuses": ["ready"],
+            "ready_sort_fields": ["ready_order", "tie_breaker", "node_id"],
+            "reorder_requires_explicit_action": True,
+            "board_projection_authority": "projection_only",
+        },
+        "queue_projection": {
+            "path": "docs/queued-execplans.md",
+            "projection_authority": "projection_only",
+            "last_reconciled_action_id": "act-1",
+            "ready_execplan_ids": [EXECPLAN_ID],
+        },
+        "graph_actions": [
+            {
+                "action_id": "act-1",
+                "action": "promote_ready",
+                "node_id": "rwg-012",
+                "rationale": "ready implementation slice",
+            }
+        ],
         "nodes": [
             {
                 "node_id": "rwg-012",
@@ -127,6 +147,19 @@ def _remaining_work_graph() -> dict[str, object]:
                 "goal_area": "governance",
                 "expected_artifacts": ["bin/policy-compliance-check"],
                 "implementation_branch": BRANCH,
+                "ordering": {
+                    "queue_position": 1,
+                    "ready_order": 1,
+                    "tie_breaker": EXECPLAN_ID,
+                    "source_action_id": "act-1",
+                },
+                "action_state": {
+                    "last_action_id": "act-1",
+                    "last_action": "promote_ready",
+                    "action_required": False,
+                    "reorder_requires_human": False,
+                    "reorder_blockers": [],
+                },
             }
         ],
         "edges": [],
@@ -136,10 +169,67 @@ def _remaining_work_graph() -> dict[str, object]:
 def _queue_text() -> str:
     return (
         "# Queued ExecPlans\n\n"
+        "## Mirror Metadata\n\n"
+        "- canonical_last_graph_action_id: `act-1`\n"
+        f"- canonical_ready_order: `{EXECPLAN_ID}`\n"
+        "- projection_authority: `projection_only`\n\n"
         f"1. `{EXECPLAN_ID}`\n"
         "   - status: `ready`\n"
         f"   - implementation branch: `{BRANCH}`\n"
     )
+
+
+def _remaining_work_schema_text() -> str:
+    return """version: 1
+title: "Remaining Work Graph Schema"
+type: object
+required:
+  - graph_id
+  - created_at
+  - ordering_policy
+  - queue_projection
+  - graph_actions
+  - nodes
+  - edges
+properties:
+  graph_id:
+    type: string
+  created_at:
+    type: string
+  ordering_policy:
+    type: object
+  queue_projection:
+    type: object
+  graph_actions:
+    type: array
+  nodes:
+    type: array
+    items:
+      type: object
+      required:
+        - node_id
+        - title
+        - status
+        - gating_class
+        - conflict_domains
+        - target_execplan_id
+      properties:
+        status:
+          enum: ["ready", "blocked", "review_gated", "decision_gated", "completed"]
+        gating_class:
+          enum: ["auto_runnable", "review_gated", "decision_gated"]
+  edges:
+    type: array
+    items:
+      type: object
+      required:
+        - from
+        - to
+        - relation
+      properties:
+        relation:
+          enum: ["depends_on", "conflicts_with", "informed_by", "gated_by"]
+"""
 
 
 def _seed_repo(root: Path, *, graph_and_queue_on_main: bool) -> Path:
@@ -147,6 +237,7 @@ def _seed_repo(root: Path, *, graph_and_queue_on_main: bool) -> Path:
     _git(root, "config", "user.name", "Tests")
     _git(root, "config", "user.email", "tests@example.com")
     _write(root / "README.md", "base\n")
+    _write(root / "spec" / "remaining-work-graph.schema.yaml", _remaining_work_schema_text())
     if graph_and_queue_on_main:
         _write_json(root / "artifacts/planner/research/remaining-work-graph.json", _remaining_work_graph())
         _write(root / "docs/queued-execplans.md", _queue_text())

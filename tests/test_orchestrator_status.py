@@ -111,6 +111,9 @@ def test_orchestrator_status_reports_active_ready_slice(monkeypatch, tmp_path: P
                     }
                 ],
                 "blocked_nodes": [],
+                "ordering": {"ready_execplan_ids": ["20260311-composite-orchestrator-status-codex-01-execplan"]},
+                "queue_projection": {"projection_authority": "projection_only"},
+                "action_required_nodes": [],
             },
         ),
     )
@@ -122,6 +125,16 @@ def test_orchestrator_status_reports_active_ready_slice(monkeypatch, tmp_path: P
                 "readiness": True,
                 "failing_checks": [],
                 "checks": {"validations": [], "validation_runs_included": False},
+            },
+        ),
+    )
+    monkeypatch.setattr(
+        "platform_tools.orchestrator_status.check_policy_compliance",
+        lambda **kwargs: (
+            0,
+            {
+                "ok": True,
+                "blockers": [],
             },
         ),
     )
@@ -147,6 +160,7 @@ def test_orchestrator_status_reports_active_ready_slice(monkeypatch, tmp_path: P
     assert report["status"] == "ok"
     assert report["active_work"]["node_id"] == "rwg-002"
     assert report["next_actions"][0]["action"] == "continue_active_slice"
+    assert report["ready_order"] == ["20260311-composite-orchestrator-status-codex-01-execplan"]
     assert report["checks"]["planner_score"]["status"] == "deferred"
     assert report["checks"]["remaining_work_graph"]["status"] == "ok"
 
@@ -198,6 +212,9 @@ def test_orchestrator_status_recommends_starting_ready_slice(monkeypatch, tmp_pa
                         "implementation_branch": "",
                     }
                 ],
+                "ordering": {"ready_execplan_ids": ["20260311-composite-orchestrator-status-codex-01-execplan"]},
+                "queue_projection": {"projection_authority": "projection_only"},
+                "action_required_nodes": [],
             },
         ),
     )
@@ -209,6 +226,16 @@ def test_orchestrator_status_recommends_starting_ready_slice(monkeypatch, tmp_pa
                 "readiness": True,
                 "failing_checks": [],
                 "checks": {"validations": [], "validation_runs_included": False},
+            },
+        ),
+    )
+    monkeypatch.setattr(
+        "platform_tools.orchestrator_status.check_policy_compliance",
+        lambda **kwargs: (
+            0,
+            {
+                "ok": True,
+                "blockers": [],
             },
         ),
     )
