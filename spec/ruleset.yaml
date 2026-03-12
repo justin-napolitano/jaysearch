@@ -25,6 +25,12 @@ execution_constraints:
   queue_branches_are_integration_only: true
   governed_execplan_finalization_requires_signed_merge_commit: true
   governed_execplan_finalization_uses_merge_commit_authority: true
+  board_review_surface_is_projection_only: true
+  provider_sync_field_map_required_for_live_board_sync: true
+  provider_sync_existing_project_requires_board_reuse: true
+  provider_sync_known_item_ids_require_update_preference: true
+  human_operations_runtime_must_be_takeover_safe: true
+  downstream_slices_must_treat_completed_provider_sync_as_baseline: true
   allowed_branch_patterns:
     - draft-execplan/*
     - impl-execplan/*

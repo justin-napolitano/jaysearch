@@ -56,3 +56,9 @@ finalization:
       signer_names:
         - Jay Napolitano
       signer_fingerprints: []
+board_review_runtime:
+  authority_mode: projection_only
+  field_map_required_for_live_sync: true
+  existing_project_id_requires_reuse: true
+  known_item_ids_require_update_preference: true
+  takeover_state_must_be_machine_readable: true
