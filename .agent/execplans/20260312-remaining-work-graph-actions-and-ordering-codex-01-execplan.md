@@ -13,6 +13,7 @@ changes:
   - docs/agent-game-rules-v1.md
   - spec/remaining-work-graph.schema.yaml
   - spec/governance.yaml
+  - spec/providers/github-projects.schema.yaml
   - artifacts/planner/research/remaining-work-graph.json
   - src/platform_tools/remaining_work_graph_check.py
   - src/platform_tools/policy_compliance_check.py
@@ -69,11 +70,11 @@ This slice is not a new domain game. It is a global board-law and runtime-govern
 ## Progress
 
 - [x] Materialize the implementation ExecPlan on the canonical implementation branch
-- [ ] Define canonical graph-action records and allowed transitions
-- [ ] Define deterministic ready ordering and reorder constraints
-- [ ] Encode stale-queue and action-required blockers in the graph validator
-- [ ] Project graph-action status into runtime and provider surfaces without giving them authority
-- [ ] Validate the slice
+- [x] Define canonical graph-action records and allowed transitions
+- [x] Define deterministic ready ordering and reorder constraints
+- [x] Encode stale-queue and action-required blockers in the graph validator
+- [x] Project graph-action status into runtime and provider surfaces without giving them authority
+- [x] Validate the slice
 
 ## Surprises & Discoveries
 
@@ -88,6 +89,7 @@ This slice is not a new domain game. It is a global board-law and runtime-govern
 - 2026-03-12 / agent-codex-01 / Policy compliance merged on `main` before this slice started, so backlog state must be canonically reconciled as part of this implementation branch.
 - 2026-03-12 / agent-codex-01 / GitHub Projects may mirror graph order and action-required state, but it must not become the authority for either.
 - 2026-03-12 / agent-codex-01 / Reorder operations should be explicit canonical moves with deterministic legality checks rather than silent file edits.
+- 2026-03-12 / agent-codex-01 / Hostile review should now depend on the ordering slice so review-layer runtimes consume canonical graph-order evidence instead of reconstructing backlog order themselves.
 
 ## Outcomes & Retrospective
 
@@ -175,6 +177,13 @@ Expected artifacts:
 - updated remaining-work graph schema and canonical graph artifact
 - deterministic graph-action and ordering validator output
 - smoke coverage for ready-order and reorder legality
+
+Implemented evidence:
+
+- `artifacts/planner/research/remaining-work-graph.json` now carries canonical `graph_actions`, `ordering_policy`, and `queue_projection` metadata
+- `src/platform_tools/remaining_work_graph_check.py` validates queue freshness, ready-order determinism, and explicit promote/reorder legality
+- provider and orchestrator surfaces now consume validated ordering metadata instead of inferring queue order from prose or board state
+- focused pytest and `bin/remaining-work-graph-ordering-smoke-test` passed on the implementation branch
 
 ## Interfaces and Dependencies
 
