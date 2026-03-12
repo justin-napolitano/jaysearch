@@ -54,8 +54,36 @@ Commit structuring rule:
   6. research, claim-registry, or bibliography updates
   7. governance rule updates
 - A commit should usually contain one artifact class from this sequence unless the slice is too small to justify separation.
+- Codex may use multiple adjacent commits for the same artifact class when needed to stay under commit-size limits or keep each commit human-reviewable.
+- When one class is split across multiple commits, those commits should remain contiguous in the procedural sequence rather than being interleaved with later classes.
 - If a slice omits a class, Codex should skip it rather than collapsing unrelated classes together.
 - Merge review should preserve this order so reviewers can inspect contract, implementation, and evidence in sequence.
+
+Bounded ExecPlan reconciliation rule:
+
+- During execution, Codex may update the active ExecPlan when real findings require plan, validation, or evidence reconciliation.
+- Allowed bounded updates include:
+  - progress checkbox and execution-log updates
+  - `Surprises & Discoveries` and `Decision Log` entries
+  - validation command additions required to prove the current slice lawfully
+  - `changes` field additions only for newly discovered files that are directly required to complete the same slice
+- Bounded reconciliation must stay within the active slice goal and must not silently turn one slice into a different slice.
+- Bounded reconciliation must not change:
+  - `id`
+  - `base_branch`
+  - approval policy
+  - reviewer authority
+  - dependencies or goals in a way that materially expands scope
+- When `changes` expands, the ExecPlan should record why the new path is required by the discovered finding rather than by a new backlog objective.
+- Referees should treat a small active-ExecPlan reconciliation commit as legal when it is explicit, machine-reviewable, and scope-preserving.
+
+Fix-forward reconciliation rule:
+
+- Branch-level policy or scope compliance should be repaired with new explicit commits on the active branch rather than by rewriting branch history.
+- Agents must not rewrite commit history merely to make a referee pass, hide an illegal move, or erase evidence of a discovered policy defect.
+- History rewrite mode is allowed only when a human explicitly authorizes it for a named branch or command sequence.
+- When a forward repair is possible, referees and agents should prefer additive repair commits that preserve the visible audit trail.
+- Governance and checker design should provide a lawful fix-forward path so agents do not need to rely on history surgery for ordinary compliance recovery.
 
 Latest-main branching rule:
 
@@ -96,6 +124,8 @@ Policy-compliance rule:
 - `bin/policy-compliance-check` is the canonical legality surface for branch-level policy compliance.
 - Policy compliance should block advancement when commit structure is illegal, when the branch is not aligned with latest `main`, or when graph and queue reconciliation are stale for the active slice.
 - Graph and queue state are part of governed branch legality, not optional bookkeeping after the fact.
+- `bin/remaining-work-graph-check` is the canonical legality surface for graph-action state, deterministic ready ordering, and stale queue-projection detection.
+- Reorder operations are legal only when recorded as canonical graph actions; silent queue edits or board-only reprioritization are forbidden moves.
 
 Game layering rule:
 
@@ -111,3 +141,9 @@ Exception lifecycle contract:
 - Required fields include owner, approver, rationale, created/expires timestamps, and bypass evidence.
 - Active exceptions may not be expired.
 - Exceptions nearing expiry (within renewal window) require renewal evidence.
+
+Remaining-work ordering rule:
+
+- The local remaining-work graph owns graph-action records, queue position, and deterministic ready ordering.
+- `docs/queued-execplans.md` is a projection mirror and must advertise the latest reconciled graph action id and ready-order metadata from the graph.
+- GitHub Projects or other provider boards may surface ordering and action-required state, but they must not author or override it.

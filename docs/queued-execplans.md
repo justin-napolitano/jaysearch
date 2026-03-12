@@ -55,11 +55,12 @@ This document turns the remaining-work graph into an explicit near-term queue of
    - implementation branch: `impl-execplan/20260312-game-rules-engine-audit-and-extensibility-codex-01-execplan-codex-01-20260312`
 
 12. `20260312-game-policy-compliance-codex-01-execplan`
-   - status: `ready`
+   - status: `completed`
    - goal: create `game-policy-compliance` and its `game-commit-structure` subgame so governed slices cannot advance by assertion alone
    - must also formalize graph-action-required and stale-queue blocking so merge/readiness cannot advance on stale backlog state
    - draft branch: `draft-execplan/20260312-game-policy-compliance-codex-01-execplan-codex-01-20260312`
    - implementation branch: `impl-execplan/20260312-game-policy-compliance-codex-01-execplan-codex-01-20260312`
+   - completion ref: `merged:pr-72`
 
 13. `future:game-hostile-review`
    - status: `blocked`
@@ -83,14 +84,21 @@ This document turns the remaining-work graph into an explicit near-term queue of
    - goal: formalize provider-board reuse, item identity reuse, and sync integrity
 
 18. `graph-action-required-and-stale-queue-enforcement`
-   - status: `blocked`
+   - status: `completed`
    - goal: require every governed work action to map to graph state and block advancement when queue reconciliation is stale
-   - blocker: should be formalized inside `20260312-game-policy-compliance-codex-01-execplan`
+   - implemented in: `20260312-game-policy-compliance-codex-01-execplan`
 
-19. `future:remaining-work-graph-actions-and-ordering`
-   - status: `blocked`
+19. `20260312-remaining-work-graph-actions-and-ordering-codex-01-execplan`
+   - status: `ready`
    - goal: formalize deterministic graph actions, canonical ordering fields, and governed reorder/reconciliation behavior
-   - blocker: `20260312-game-policy-compliance-codex-01-execplan` should land first
+   - draft branch: `draft-execplan/20260312-remaining-work-graph-actions-and-ordering-codex-01-execplan-codex-01-20260312`
+   - implementation branch: `impl-execplan/20260312-remaining-work-graph-actions-and-ordering-codex-01-execplan-codex-01-20260312`
+
+## Mirror Metadata
+
+- canonical_last_graph_action_id: `rwg-action-20260312-004-promote-rwg-020`
+- canonical_ready_order: `20260312-remaining-work-graph-actions-and-ordering-codex-01-execplan`
+- projection_authority: `projection_only`
 
 ## Queue Discipline
 
@@ -102,6 +110,12 @@ Queued ExecPlans are not active merely because they are listed here. They become
 - the slice is not held by review or decision gates
 
 Under the current governance model, implementation execution should occur on a dedicated `impl-execplan/*` branch. `queue-execplan/*` branches may be used later for deliberate integration stacking only.
+
+When a queued slice needs several commits inside one procedural step, Codex may split that artifact class into multiple adjacent commits so the branch stays under commit hard limits and each review unit remains human-sized.
+
+When execution findings require updates to the active ExecPlan, Codex may make a bounded reconciliation commit for the active plan as long as the update stays within the same slice goal and records the reason for the change explicitly.
+
+When branch-level governance or checker defects are discovered mid-slice, Codex should repair them with new bounded follow-up commits on the active branch. History rewrites are not the normal compliance path and require explicit human authorization.
 
 ## Relationship to the Graph
 
