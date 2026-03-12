@@ -6,6 +6,7 @@ from typing import Any
 
 import yaml
 
+from platform_tools.human_operations_runtime import review_projection_for_node
 from platform_tools.plan_utils import parse_plan
 from platform_tools.remaining_work_graph_check import check_remaining_work_graph
 
@@ -68,13 +69,11 @@ def _provider_projection_blockers(
     return blockers
 
 
-def _project_item(node: dict[str, Any], *, provider: str, root: str) -> dict[str, Any]:
+def _project_item(node: dict[str, Any], *, provider: str, root: str, current_branch: str) -> dict[str, Any]:
     dependency_summary = ", ".join(
         f"{item['node_id']}={item['status']}" for item in node.get("dependency_states", [])
     )
-    review_state = "merged" if node.get("status") == "completed" else ("ready_for_review" if node.get("status") == "ready" else "not_requested")
-    validation_state = "passed" if node.get("status") in {"ready", "completed"} else "pending"
-    finalization_state = "merged_to_main" if node.get("status") == "completed" else "not_finalized"
+    review_projection = review_projection_for_node(node, root=root, current_branch=current_branch)
     return {
         "provider": provider,
         "identity": str(node.get("node_id", "")).strip(),
@@ -87,12 +86,12 @@ def _project_item(node: dict[str, Any], *, provider: str, root: str) -> dict[str
             "implementation_branch": str(node.get("implementation_branch", "")).strip(),
             "goal_area": str(node.get("goal_area", "")).strip(),
             "dependency_summary": dependency_summary,
-            "human_review_state": review_state,
-            "pr_url": "",
-            "validation_status": validation_state,
-            "smoke_status": validation_state,
-            "merge_readiness": "local_only",
-            "finalization_state": finalization_state,
+            "human_review_state": review_projection["human_review_state"],
+            "pr_url": review_projection["pr_url"],
+            "validation_status": review_projection["validation_status"],
+            "smoke_status": review_projection["smoke_status"],
+            "merge_readiness": review_projection["merge_readiness"],
+            "finalization_state": review_projection["finalization_state"],
         },
         "local_provenance": {
             "graph_node_id": str(node.get("node_id", "")).strip(),
@@ -131,7 +130,7 @@ def build_provider_projection(
         for node in remaining_work_report.get(collection_name, []):
             if not isinstance(node, dict):
                 continue
-            items.append(_project_item(node, provider=provider, root=root))
+            items.append(_project_item(node, provider=provider, root=root, current_branch=str(remaining_work_report.get("branch", branch or "")).strip()))
     items = sorted(items, key=lambda item: item["identity"])
 
     execplan_id = ""

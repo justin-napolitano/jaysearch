@@ -256,7 +256,7 @@ def test_provider_projection_builds_github_projects_board(tmp_path: Path) -> Non
     assert report["board_model"]["board_scope"] == "remaining_work_graph"
     assert report["item_count"] == 2
     assert report["items"][0]["fields"]["node_id"] == "rwg-005"
-    assert report["items"][0]["fields"]["human_review_state"] == "not_requested"
+    assert report["items"][0]["fields"]["human_review_state"] == "ready_for_review"
 
 
 def test_provider_projection_supports_microsoft_placeholder_mapping(tmp_path: Path) -> None:

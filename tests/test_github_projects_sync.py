@@ -231,6 +231,7 @@ def _seed_field_map(root: Path) -> Path:
                     "field_id": "FIELD_review",
                     "data_type": "single_select",
                     "options": {
+                        "in_review": "OPT_IN_REVIEW",
                         "not_requested": "OPT_NR",
                         "ready_for_review": "OPT_RFR",
                         "merged": "OPT_MERGED",

@@ -125,6 +125,17 @@ def test_orchestrator_status_reports_active_ready_slice(monkeypatch, tmp_path: P
             },
         ),
     )
+    monkeypatch.setattr(
+        "platform_tools.orchestrator_status.get_human_operations_status",
+        lambda **kwargs: (
+            0,
+            {
+                "status": "ok",
+                "ok": True,
+                "blockers": [],
+            },
+        ),
+    )
 
     code, report = get_orchestrator_status(
         root=tmp_path.as_posix(),
@@ -198,6 +209,17 @@ def test_orchestrator_status_recommends_starting_ready_slice(monkeypatch, tmp_pa
                 "readiness": True,
                 "failing_checks": [],
                 "checks": {"validations": [], "validation_runs_included": False},
+            },
+        ),
+    )
+    monkeypatch.setattr(
+        "platform_tools.orchestrator_status.get_human_operations_status",
+        lambda **kwargs: (
+            0,
+            {
+                "status": "ok",
+                "ok": True,
+                "blockers": [],
             },
         ),
     )

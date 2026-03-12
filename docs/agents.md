@@ -52,3 +52,16 @@ These conventions ensure persona-level actions are auditable across plans, branc
 ## Finalization Direction
 
 Governed ExecPlans should treat the signed merge commit on `main` as the canonical finalization event. A future `finalize-execplan` flow should derive finalization metadata from that merge event while preserving human signing authority.
+
+## Board Review Runtime
+
+GitHub Projects and other provider boards are review surfaces backed by
+canonical local state. They are not workflow authorities.
+
+Operational baseline:
+
+- live sync requires the canonical field-map artifact
+- existing project ids must be reused
+- existing item ids must be updated rather than duplicated
+- human review and takeover state should be recoverable from canonical
+  local evidence without relying on agent session memory
