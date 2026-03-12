@@ -39,6 +39,24 @@
       "spec_path": "spec/games/implementation-game.yaml"
     },
     {
+      "id": "game-policy-compliance",
+      "type": "game",
+      "label": "Policy-Compliance Game",
+      "title": "Implementation legality game",
+      "layer": "assurance",
+      "scope": "domain_game",
+      "spec_path": "spec/games/policy-compliance-game.yaml"
+    },
+    {
+      "id": "game-commit-structure",
+      "type": "game",
+      "label": "Commit-Structure Game",
+      "title": "Commit legality subgame",
+      "layer": "assurance",
+      "scope": "subgame_local",
+      "spec_path": "spec/games/commit-structure-game.yaml"
+    },
+    {
       "id": "game-planning-proof",
       "type": "game",
       "label": "Planning Merge Readiness",
@@ -111,6 +129,18 @@
       "title": "docs/games/implementation-game.md"
     },
     {
+      "id": "artifact-policy-compliance-game-doc",
+      "type": "artifact",
+      "label": "Policy-Compliance Game Doc",
+      "title": "docs/games/policy-compliance-game.md"
+    },
+    {
+      "id": "artifact-commit-structure-game-doc",
+      "type": "artifact",
+      "label": "Commit-Structure Game Doc",
+      "title": "docs/games/commit-structure-game.md"
+    },
+    {
       "id": "artifact-planning-proof-game",
       "type": "artifact",
       "label": "Planning Proof Game",
@@ -137,6 +167,16 @@
     {
       "from": "game-execplan",
       "to": "game-implementation",
+      "relation": "contains"
+    },
+    {
+      "from": "game-implementation",
+      "to": "game-policy-compliance",
+      "relation": "contains"
+    },
+    {
+      "from": "game-policy-compliance",
+      "to": "game-commit-structure",
       "relation": "contains"
     },
     {
@@ -197,6 +237,16 @@
     {
       "from": "game-implementation",
       "to": "artifact-implementation-game-doc",
+      "relation": "documented_in"
+    },
+    {
+      "from": "game-policy-compliance",
+      "to": "artifact-policy-compliance-game-doc",
+      "relation": "documented_in"
+    },
+    {
+      "from": "game-commit-structure",
+      "to": "artifact-commit-structure-game-doc",
       "relation": "documented_in"
     },
     {

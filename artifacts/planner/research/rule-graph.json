@@ -87,6 +87,12 @@
       "title": "bin/run-local-ci"
     },
     {
+      "id": "validator-policy-compliance-check",
+      "type": "validator",
+      "label": "Policy Compliance Check",
+      "title": "bin/policy-compliance-check"
+    },
+    {
       "id": "validator-smoke-test",
       "type": "validator",
       "label": "Smoke Test",
@@ -113,16 +119,20 @@
     { "from": "rule-clean-merge-state", "to": "phase-merge-readiness", "relation": "applies_to" },
     { "from": "rule-clean-merge-state", "to": "artifact-agent-game-rules", "relation": "satisfied_by" },
     { "from": "rule-clean-merge-state", "to": "artifact-governance-doc", "relation": "satisfied_by" },
+    { "from": "rule-clean-merge-state", "to": "validator-policy-compliance-check", "relation": "enforced_by" },
     { "from": "rule-human-sized-commits", "to": "phase-merge-readiness", "relation": "applies_to" },
     { "from": "rule-human-sized-commits", "to": "artifact-agent-game-rules", "relation": "satisfied_by" },
     { "from": "rule-human-sized-commits", "to": "artifact-governance-doc", "relation": "satisfied_by" },
+    { "from": "rule-human-sized-commits", "to": "validator-policy-compliance-check", "relation": "enforced_by" },
     { "from": "rule-procedural-commit-order", "to": "phase-merge-readiness", "relation": "applies_to" },
     { "from": "rule-procedural-commit-order", "to": "artifact-agent-game-rules", "relation": "satisfied_by" },
     { "from": "rule-procedural-commit-order", "to": "artifact-governance-doc", "relation": "satisfied_by" },
+    { "from": "rule-procedural-commit-order", "to": "validator-policy-compliance-check", "relation": "enforced_by" },
     { "from": "rule-procedural-commit-order", "to": "rule-human-sized-commits", "relation": "depends_on" },
     { "from": "rule-latest-main-branching", "to": "phase-merge-readiness", "relation": "applies_to" },
     { "from": "rule-latest-main-branching", "to": "artifact-agent-game-rules", "relation": "satisfied_by" },
     { "from": "rule-latest-main-branching", "to": "artifact-governance-doc", "relation": "satisfied_by" },
+    { "from": "rule-latest-main-branching", "to": "validator-policy-compliance-check", "relation": "enforced_by" },
     { "from": "rule-execplan-validation", "to": "phase-merge-readiness", "relation": "applies_to" },
     { "from": "rule-execplan-validation", "to": "validator-execplan-validate", "relation": "enforced_by" },
     { "from": "rule-execplan-validation", "to": "artifact-governance-spec", "relation": "satisfied_by" },

@@ -35,6 +35,7 @@ move_set:
     - suppress_required_referee_evidence
 execution_constraints:
   referees_must_check_global_board_law_before_local_rules: true
+  governed_slice_advancement_requires_referee_chain: true
   execplan_branch_review_required: true
   required_branch_format: "draft-execplan/<plan-id>-<agent>-YYYYMMDD"
   implementation_branch_format: "impl-execplan/<plan-id>-<agent>-YYYYMMDD"
@@ -51,6 +52,9 @@ execution_constraints:
   provider_sync_known_item_ids_require_update_preference: true
   human_operations_runtime_must_be_takeover_safe: true
   downstream_slices_must_treat_completed_provider_sync_as_baseline: true
+  policy_compliance_blocks_review_and_merge_progression: true
+  graph_actions_required_for_governed_work: true
+  stale_queue_blocks_advancement: true
   allowed_branch_patterns:
     - draft-execplan/*
     - impl-execplan/*
