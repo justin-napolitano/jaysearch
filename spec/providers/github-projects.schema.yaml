@@ -97,3 +97,6 @@ sync:
       orchestrator-status: orchestrator-runtime
       implementation-orchestrator: orchestrator-runtime
       game-graph: runtime-governance
+      review-runtime: integration
+      research-provenance: runtime-governance
+      documentation: integration

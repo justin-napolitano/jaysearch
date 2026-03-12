@@ -4,6 +4,9 @@ type: object
 required:
   - graph_id
   - created_at
+  - ordering_policy
+  - queue_projection
+  - graph_actions
   - nodes
   - edges
 properties:
@@ -11,6 +14,66 @@ properties:
     type: string
   created_at:
     type: string
+  ordering_policy:
+    type: object
+    required:
+      - ready_statuses
+      - ready_sort_fields
+      - reorder_requires_explicit_action
+      - board_projection_authority
+    properties:
+      ready_statuses:
+        type: array
+        items:
+          type: string
+      ready_sort_fields:
+        type: array
+        items:
+          type: string
+      reorder_requires_explicit_action:
+        type: boolean
+      board_projection_authority:
+        enum: ["projection_only"]
+  queue_projection:
+    type: object
+    required:
+      - path
+      - projection_authority
+      - last_reconciled_action_id
+      - ready_execplan_ids
+    properties:
+      path:
+        type: string
+      projection_authority:
+        enum: ["projection_only"]
+      last_reconciled_action_id:
+        type: string
+      ready_execplan_ids:
+        type: array
+        items:
+          type: string
+  graph_actions:
+    type: array
+    items:
+      type: object
+      required:
+        - action_id
+        - action
+        - node_id
+        - rationale
+      properties:
+        action_id:
+          type: string
+        action:
+          enum: ["promote_ready", "block", "unblock", "complete", "reorder"]
+        node_id:
+          type: string
+        rationale:
+          type: string
+        evidence_ref:
+          type: string
+        queue_reconciled:
+          type: boolean
   nodes:
     type: array
     items:
@@ -49,6 +112,40 @@ properties:
             type: string
         completion_ref:
           type: string
+        ordering:
+          type: object
+          required:
+            - queue_position
+            - tie_breaker
+          properties:
+            queue_position:
+              type: integer
+            ready_order:
+              type: integer
+            tie_breaker:
+              type: string
+            source_action_id:
+              type: string
+        action_state:
+          type: object
+          required:
+            - last_action_id
+            - last_action
+            - action_required
+            - reorder_requires_human
+          properties:
+            last_action_id:
+              type: string
+            last_action:
+              enum: ["promote_ready", "block", "unblock", "complete", "reorder"]
+            action_required:
+              type: boolean
+            reorder_requires_human:
+              type: boolean
+            reorder_blockers:
+              type: array
+              items:
+                type: string
   edges:
     type: array
     items:
