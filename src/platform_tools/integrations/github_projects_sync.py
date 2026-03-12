@@ -201,6 +201,8 @@ def build_github_projects_sync_plan(
         "blockers": sorted(set(blockers)),
         "project_id": project_id,
         "field_map_path": field_map_path,
+        "board_reuse_required": bool(project_id),
+        "prefer_update_when_item_id_known": bool(item_ids),
         "operation_count": len(operations),
         "create_count": sum(1 for item in operations if item["action"] == "create_draft_item"),
         "update_count": sum(1 for item in operations if item["action"] == "update_item"),
