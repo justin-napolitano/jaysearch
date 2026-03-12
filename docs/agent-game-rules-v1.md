@@ -198,6 +198,21 @@ Procedural commit-order rule:
 - A slice may skip unused classes, but it should not collapse distant classes together without justification.
 - Reviewers should be able to inspect the stack from contract to enforcement to explanatory material without reconstructing the intended sequence by hand.
 
+Bounded ExecPlan reconciliation rule:
+
+- Agents may update the active ExecPlan during execution when new findings require explicit reconciliation of progress, decisions, validations, or in-scope file lists.
+- Legal bounded reconciliation moves are limited to:
+  - progress/log updates
+  - discovery and decision entries
+  - validation additions required by the same slice
+  - narrow `changes` field expansion for newly discovered in-scope files
+- Illegal reconciliation moves include:
+  - changing plan identity or branch authority
+  - rewriting the slice into a different goal
+  - adding unrelated file scope under the guise of findings
+  - expanding dependencies or approvals in a way that creates a new backlog item
+- Referees should accept a small active-ExecPlan reconciliation commit when it is explicit and scope-preserving, and reject it when it acts as hidden scope expansion.
+
 Latest-main branching rule:
 
 - Unless a human explicitly states otherwise, every new work branch should be cut from the latest `main`.

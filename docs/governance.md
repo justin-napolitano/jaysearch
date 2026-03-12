@@ -59,6 +59,24 @@ Commit structuring rule:
 - If a slice omits a class, Codex should skip it rather than collapsing unrelated classes together.
 - Merge review should preserve this order so reviewers can inspect contract, implementation, and evidence in sequence.
 
+Bounded ExecPlan reconciliation rule:
+
+- During execution, Codex may update the active ExecPlan when real findings require plan, validation, or evidence reconciliation.
+- Allowed bounded updates include:
+  - progress checkbox and execution-log updates
+  - `Surprises & Discoveries` and `Decision Log` entries
+  - validation command additions required to prove the current slice lawfully
+  - `changes` field additions only for newly discovered files that are directly required to complete the same slice
+- Bounded reconciliation must stay within the active slice goal and must not silently turn one slice into a different slice.
+- Bounded reconciliation must not change:
+  - `id`
+  - `base_branch`
+  - approval policy
+  - reviewer authority
+  - dependencies or goals in a way that materially expands scope
+- When `changes` expands, the ExecPlan should record why the new path is required by the discovered finding rather than by a new backlog objective.
+- Referees should treat a small active-ExecPlan reconciliation commit as legal when it is explicit, machine-reviewable, and scope-preserving.
+
 Latest-main branching rule:
 
 - Unless a human explicitly states otherwise, every new work branch must be created from the latest `main`.

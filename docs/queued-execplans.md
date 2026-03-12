@@ -113,6 +113,8 @@ Under the current governance model, implementation execution should occur on a d
 
 When a queued slice needs several commits inside one procedural step, Codex may split that artifact class into multiple adjacent commits so the branch stays under commit hard limits and each review unit remains human-sized.
 
+When execution findings require updates to the active ExecPlan, Codex may make a bounded reconciliation commit for the active plan as long as the update stays within the same slice goal and records the reason for the change explicitly.
+
 ## Relationship to the Graph
 
 This queue is a human-readable mirror of `artifacts/planner/research/remaining-work-graph.json` and `bin/remaining-work-graph-check`. If the two disagree, the canonical artifact and validator are authoritative.
