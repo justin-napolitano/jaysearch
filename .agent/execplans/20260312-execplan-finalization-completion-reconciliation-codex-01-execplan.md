@@ -67,6 +67,8 @@ This slice should make merged ExecPlans machine-reconcilable without weakening t
 - a safe solution needs to distinguish preparation of finalization metadata from the human-signed merge authority event itself
 - merge history for one plan may include both a draft-plan merge and a later implementation merge, so reconciliation should prefer `impl-execplan/*` merge commits when both exist
 - merge commits expose PR number and merge timestamp directly, but GitHub username derivation is less direct than PR/timestamp derivation and needs an explicit deterministic fallback
+- review uncovered that deriving `finalized_by` from a single maintainer entry in `.agent/AGENTS.md` is not a safe long-term rule; signer-to-`github:<username>` mapping needs to be explicit and machine-readable
+- review also uncovered that reconciliation must enforce signature verification directly rather than assuming any merge on `main` satisfies the signed-merge authority rule
 
 ## Decision Log
 
@@ -74,6 +76,8 @@ This slice should make merged ExecPlans machine-reconcilable without weakening t
 - 2026-03-12 / agent-codex-01 / The repository needs one deterministic command path that derives merge-backed finalization metadata instead of relying on manual markdown edits after merge.
 - 2026-03-12 / agent-codex-01 / Ambiguous or missing merge history should produce explicit machine-readable blockers rather than inferred completion claims.
 - 2026-03-12 / agent-codex-01 / When both draft and implementation merges exist for the same ExecPlan id, the implementation merge is the stronger completion authority signal.
+- 2026-03-12 / agent-codex-01 / `finalized_by` reconciliation should resolve through an explicit signer identity map in `spec/governance.yaml` instead of repository prose.
+- 2026-03-12 / agent-codex-01 / The reconciliation runtime must reject unsigned merge evidence even when PR metadata and timestamps are otherwise present.
 
 ## Outcomes & Retrospective
 

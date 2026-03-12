@@ -173,11 +173,12 @@ Deterministic reconciliation may derive:
 
 • `finalized_at` from the merge commit timestamp\
 • merge-backed `finalized_in_pr` from the merge commit subject\
-• `finalized_by` from deterministic repository identity rules when the
-merge signer maps unambiguously to one canonical human identity
+• `finalized_by` from the signed merge identity after resolving it
+through the canonical signer identity map in `spec/governance.yaml`
 
-If merge history or identity mapping is ambiguous, the reconciliation
-command must block rather than infer completion.
+If merge history, signature verification, or identity mapping is
+ambiguous, the reconciliation command must block rather than infer
+completion.
 
 ------------------------------------------------------------------------
 
