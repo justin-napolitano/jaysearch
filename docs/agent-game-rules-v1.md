@@ -233,6 +233,8 @@ Policy-compliance rule:
 - Required referee chains must pass before a slice may become review-ready, merge-ready, or completed.
 - Policy-compliance is the legality surface for implementation branches before hostile review or human review.
 - Governed work must record the corresponding graph action and queue reconciliation on-branch; stale queue or graph state blocks advancement.
+- Reorder moves must be explicit canonical graph actions. Editing queue prose or board order without a matching graph action is an illegal move.
+- The queue mirror must advertise the latest reconciled graph action id and canonical ready order from the graph before advancement may continue.
 
 ## 10. Match Flow and Stop Conditions
 

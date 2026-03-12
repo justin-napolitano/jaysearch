@@ -12,9 +12,12 @@ The remaining-work graph is canonical for:
 - dependency ordering
 - conflict domains
 - queued ExecPlan readiness classification
+- canonical graph-action records for governed backlog moves
+- deterministic ready-order and queue-position fields
 - chaining posture for future orchestration
 - implementation-branch targeting for ready slices
 - machine-checkable active-slice and ready-slice derivation when paired with `bin/remaining-work-graph-check`
+- queue-projection freshness metadata for `docs/queued-execplans.md`
 
 It is not canonical for:
 
@@ -38,6 +41,14 @@ Each remaining-work node should define:
 - target ExecPlan id
 - implementation branch when the slice is runnable now
 - explicit `status_reason` whenever the node is blocked or review/decision gated
+- deterministic ordering metadata when the node participates in governed queue order
+- machine-readable action state when governed work moves between blocked, ready, reordered, or completed states
+
+Top-level graph state should also define:
+
+- `graph_actions` as the canonical move log for governed backlog transitions
+- `ordering_policy` as the deterministic ready-order contract
+- `queue_projection` as the projection-only freshness handshake with `docs/queued-execplans.md`
 
 ## Gating Classes
 
@@ -72,3 +83,15 @@ The initial queued areas captured by this graph are:
 5. provider-sync scaffolding
 
 These areas are not equivalent in readiness. The graph artifact and `bin/remaining-work-graph-check` define which are already completed, which are ready for a dedicated `impl-execplan/*` branch now, and which remain blocked or gated.
+
+## Ordering and Reorder Law
+
+Ready work order is canonical only when all of the following are true:
+
+- a ready node has explicit `ordering.ready_order`
+- its `action_state.last_action` is `promote_ready`
+- any reorder was recorded in `graph_actions`
+- `queue_projection.last_reconciled_action_id` matches the latest canonical graph action
+- `docs/queued-execplans.md` mirror metadata matches the graph
+
+This means reorder operations are legal moves, not silent edits. GitHub Projects and other boards may display queue position or next action, but those values must be projected from the validated local graph rather than authored remotely.
