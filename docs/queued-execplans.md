@@ -24,13 +24,30 @@ This document turns the remaining-work graph into an explicit near-term queue of
    - goal: execute implementation-phase moves against the shared board and evidence model
 
 5. `20260311-runtime-constraint-canonicalization-codex-01-execplan`
-   - status: `ready`
+   - status: `completed`
    - goal: move remaining runtime-critical queue and readiness rules into validated canonical artifacts
    - implementation branch: `impl-execplan/20260311-runtime-constraint-canonicalization-codex-01-execplan-codex-01-20260311`
 
 6. `20260311-provider-sync-scaffold-codex-01-execplan`
-   - status: `review_gated`
+   - status: `completed`
    - goal: scaffold provider adapters without granting external authority
+
+7. `20260311-github-projects-bootstrap-runtime-codex-01-execplan`
+   - status: `completed`
+   - goal: bootstrap one governed GitHub Projects board from canonical provider schema
+
+8. `20260311-github-projects-provider-sync-runtime-codex-01-execplan`
+   - status: `completed`
+   - goal: project canonical slice state into the governed GitHub Projects review board
+
+9. `20260312-execplan-finalization-completion-reconciliation-codex-01-execplan`
+   - status: `completed`
+   - goal: reconcile merged ExecPlans to `status: completed` from signed merge history
+
+10. `20260312-human-operations-review-runtime-codex-01-execplan`
+   - status: `ready`
+   - goal: formalize board review, takeover, and merge reconciliation as machine-readable runtime state
+   - implementation branch: `impl-execplan/20260312-human-operations-review-runtime-codex-01-execplan-codex-01-20260312`
 
 ## Queue Discipline
 
