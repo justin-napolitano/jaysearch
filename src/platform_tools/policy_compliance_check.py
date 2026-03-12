@@ -7,7 +7,7 @@ from pathlib import Path
 from typing import Any
 
 from platform_tools.branch_policy import get_current_branch
-from platform_tools.plan_utils import parse_plan
+from platform_tools.plan_utils import parse_frontmatter, parse_plan
 from platform_tools.remaining_work_graph_check import check_remaining_work_graph
 
 
@@ -32,6 +32,8 @@ CLASS_ORDER = {
     "governance": 7,
     "unknown": 99,
 }
+BOUNDED_EXECPLAN_FRONTMATTER_FIELDS = {"changes", "validation"}
+BOUNDED_EXECPLAN_MAX_LINES = 120
 
 
 def _git(cwd: Path, *args: str) -> str:
@@ -104,7 +106,73 @@ def _is_late_execplan_progress_commit(
         return False
     if commit_files != [active_execplan_path]:
         return False
-    return changed_lines <= 80
+    return changed_lines <= BOUNDED_EXECPLAN_MAX_LINES
+
+
+def _git_show_text(cwd: Path, ref: str, path: str) -> str:
+    proc = subprocess.run(
+        ["git", "show", f"{ref}:{path}"],
+        cwd=cwd,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    if proc.returncode != 0:
+        return ""
+    return proc.stdout
+
+
+def _frontmatter_changed_keys(before_text: str, after_text: str) -> set[str]:
+    before_frontmatter, _ = parse_frontmatter(before_text)
+    after_frontmatter, _ = parse_frontmatter(after_text)
+    keys = set(before_frontmatter) | set(after_frontmatter)
+    return {key for key in keys if before_frontmatter.get(key) != after_frontmatter.get(key)}
+
+
+def _changes_field_is_additive(before_text: str, after_text: str) -> bool:
+    before_frontmatter, _ = parse_frontmatter(before_text)
+    after_frontmatter, _ = parse_frontmatter(after_text)
+    before_changes = before_frontmatter.get("changes", [])
+    after_changes = after_frontmatter.get("changes", [])
+    if not isinstance(before_changes, list) or not isinstance(after_changes, list):
+        return False
+    before_set = {str(item).strip() for item in before_changes if str(item).strip()}
+    after_set = {str(item).strip() for item in after_changes if str(item).strip()}
+    return before_set.issubset(after_set)
+
+
+def _is_bounded_execplan_reconciliation(
+    *,
+    cwd: Path,
+    commit: str,
+    commit_class: str,
+    commit_files: list[str],
+    changed_lines: int,
+    active_execplan_path: str,
+) -> tuple[bool, list[str]]:
+    reasons: list[str] = []
+    if not _is_late_execplan_progress_commit(
+        commit_class=commit_class,
+        commit_files=commit_files,
+        changed_lines=changed_lines,
+        active_execplan_path=active_execplan_path,
+    ):
+        return False, reasons
+
+    before_text = _git_show_text(cwd, f"{commit}^", active_execplan_path)
+    after_text = _git_show_text(cwd, commit, active_execplan_path)
+    if not before_text or not after_text:
+        return False, ["missing_execplan_commit_context"]
+
+    changed_keys = _frontmatter_changed_keys(before_text, after_text)
+    disallowed_keys = sorted(changed_keys - BOUNDED_EXECPLAN_FRONTMATTER_FIELDS)
+    if disallowed_keys:
+        reasons.extend(f"disallowed_frontmatter_change:{key}" for key in disallowed_keys)
+        return False, reasons
+    if "changes" in changed_keys and not _changes_field_is_additive(before_text, after_text):
+        reasons.append("changes_field_not_additive")
+        return False, reasons
+    return True, reasons
 
 
 def _repo_relative_path(path: Path, *, root: Path) -> str:
@@ -148,15 +216,19 @@ def _commit_reports(
         commit_class = _classify_commit(subject)
         class_order = CLASS_ORDER[commit_class]
         if commit_class != "unknown" and class_order < max_seen:
-            if _is_late_execplan_progress_commit(
+            allowed_execplan_reconciliation, reconciliation_reasons = _is_bounded_execplan_reconciliation(
+                cwd=cwd,
+                commit=commit,
                 commit_class=commit_class,
                 commit_files=commit_files,
                 changed_lines=changed_lines,
                 active_execplan_path=active_execplan_path,
-            ):
-                warnings.append(f"late_execplan_progress_update:{commit}")
+            )
+            if allowed_execplan_reconciliation:
+                warnings.append(f"bounded_execplan_reconciliation:{commit}")
             else:
                 errors.append(f"procedural_commit_order_violation:{commit}:{subject}")
+                errors.extend(f"execplan_reconciliation_violation:{commit}:{reason}" for reason in reconciliation_reasons)
         max_seen = max(max_seen, class_order)
 
         if changed_lines > 400 and "commit-size-justification" not in body:

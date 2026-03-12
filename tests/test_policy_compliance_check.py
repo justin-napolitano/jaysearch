@@ -320,7 +320,7 @@ def test_policy_compliance_allows_small_late_execplan_progress_update(tmp_path: 
     assert code == 0
     assert report["ok"] is True
     assert not any("procedural_commit_order_violation" in blocker for blocker in report["blockers"])
-    assert any("late_execplan_progress_update" in warning for warning in report["warnings"])
+    assert any("bounded_execplan_reconciliation" in warning for warning in report["warnings"])
 
 
 def test_policy_compliance_allows_multiple_adjacent_test_commits(tmp_path: Path) -> None:
@@ -335,3 +335,24 @@ def test_policy_compliance_allows_multiple_adjacent_test_commits(tmp_path: Path)
     assert code == 0
     assert report["ok"] is True
     assert not any("procedural_commit_order_violation" in blocker for blocker in report["blockers"])
+
+
+def test_policy_compliance_blocks_late_execplan_authority_change(tmp_path: Path) -> None:
+    execplan = _seed_repo(tmp_path, graph_and_queue_on_main=False)
+
+    _write(
+        execplan,
+        _execplan_text().replace('approve_policy: codeowners', 'approve_policy: anyone'),
+    )
+    _git(tmp_path, "add", execplan.as_posix())
+    _git(tmp_path, "commit", "-m", "docs(execplan): update policy authority")
+
+    code, report = check_policy_compliance(
+        root=tmp_path.as_posix(),
+        execplan_path=execplan.as_posix(),
+        base_ref="main",
+    )
+
+    assert code == 1
+    assert any("procedural_commit_order_violation" in blocker for blocker in report["blockers"])
+    assert any("execplan_reconciliation_violation" in blocker for blocker in report["blockers"])
