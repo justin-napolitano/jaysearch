@@ -213,6 +213,13 @@ Bounded ExecPlan reconciliation rule:
   - expanding dependencies or approvals in a way that creates a new backlog item
 - Referees should accept a small active-ExecPlan reconciliation commit when it is explicit and scope-preserving, and reject it when it acts as hidden scope expansion.
 
+Fix-forward compliance rule:
+
+- Agents must repair policy or scope defects with new explicit commits when a forward fix is available.
+- Rewriting branch history to make a referee pass, conceal a violation, or remove evidence of a discovered defect is a forbidden move unless a human explicitly authorizes rewrite mode.
+- Human authorization for rewrite mode must be specific to the branch or repair action; agents must not assume rewrite permission from general autonomy.
+- Referees should prefer additive repair commits because they preserve the move log and keep compliance recovery machine-auditable.
+
 Latest-main branching rule:
 
 - Unless a human explicitly states otherwise, every new work branch should be cut from the latest `main`.
