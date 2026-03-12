@@ -46,6 +46,9 @@ validation:
     - name: "remaining-work-graph-ordering-smoke-test"
       command: "bin/remaining-work-graph-ordering-smoke-test"
       expected_exit: 0
+    - name: "policy-compliance-check"
+      command: "bin/policy-compliance-check --execplan-path .agent/execplans/20260312-remaining-work-graph-actions-and-ordering-codex-01-execplan.md"
+      expected_exit: 0
 tasks:
   - title: "Define canonical graph-action records and allowed transitions"
     priority: "P1"

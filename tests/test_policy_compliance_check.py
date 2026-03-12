@@ -232,7 +232,7 @@ properties:
 """
 
 
-def _seed_repo(root: Path, *, graph_and_queue_on_main: bool, split_test_phase: bool = False) -> Path:
+def _seed_repo(root: Path, *, graph_and_queue_on_main: bool, split_test_phase: bool = False, publish_branch: bool = True) -> Path:
     _git(root, "init", "-b", "main")
     _git(root, "config", "user.name", "Tests")
     _git(root, "config", "user.email", "tests@example.com")
@@ -271,6 +271,10 @@ def _seed_repo(root: Path, *, graph_and_queue_on_main: bool, split_test_phase: b
         _write(root / "docs/queued-execplans.md", _queue_text())
         _git(root, "add", "artifacts/planner/research/remaining-work-graph.json", "docs/queued-execplans.md")
         _git(root, "commit", "-m", "docs(policy): reconcile graph and queue")
+
+    if publish_branch:
+        _seed_remote(root)
+        _git(root, "push", "-u", "origin", BRANCH)
 
     return execplan
 
@@ -435,8 +439,6 @@ def test_policy_compliance_blocks_unbounded_late_runtime_follow_up(tmp_path: Pat
 
 def test_policy_compliance_blocks_published_branch_history_rewrite_without_exception(tmp_path: Path) -> None:
     execplan = _seed_repo(tmp_path, graph_and_queue_on_main=False)
-    _seed_remote(tmp_path)
-    _git(tmp_path, "push", "-u", "origin", BRANCH)
 
     _write(tmp_path / "docs" / "governance.md", "rewrite after publish\n")
     _git(tmp_path, "add", "docs/governance.md")
@@ -463,8 +465,6 @@ def test_policy_compliance_blocks_published_branch_history_rewrite_without_excep
 
 def test_policy_compliance_allows_published_branch_history_rewrite_with_exception(tmp_path: Path) -> None:
     execplan = _seed_repo(tmp_path, graph_and_queue_on_main=False)
-    _seed_remote(tmp_path)
-    _git(tmp_path, "push", "-u", "origin", BRANCH)
 
     _write(tmp_path / "docs" / "governance.md", "rewrite after publish\n")
     _git(tmp_path, "add", "docs/governance.md")
@@ -508,3 +508,17 @@ def test_policy_compliance_allows_published_branch_history_rewrite_with_exceptio
     assert report["checks"]["branch_rewrite_guard"]["published_ref_exists"] is True
     assert report["checks"]["branch_rewrite_guard"]["non_fast_forward"] is True
     assert report["checks"]["branch_rewrite_guard"]["authorized_exception_id"] == "branch-rewrite-001"
+
+
+def test_policy_compliance_blocks_unpublished_impl_branch(tmp_path: Path) -> None:
+    execplan = _seed_repo(tmp_path, graph_and_queue_on_main=False, publish_branch=False)
+
+    code, report = check_policy_compliance(
+        root=tmp_path.as_posix(),
+        execplan_path=execplan.as_posix(),
+        base_ref="main",
+    )
+
+    assert code == 1
+    assert "implementation_branch_not_published" in report["blockers"]
+    assert report["checks"]["branch_rewrite_guard"]["published_ref_exists"] is False
