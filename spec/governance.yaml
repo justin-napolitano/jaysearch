@@ -1,5 +1,5 @@
 version: v1
-last_updated: 2026-03-05
+last_updated: 2026-03-12
 required_checks:
   name_regex: "^[a-z][a-z0-9_]*$"
   contract:
@@ -62,3 +62,8 @@ board_review_runtime:
   existing_project_id_requires_reuse: true
   known_item_ids_require_update_preference: true
   takeover_state_must_be_machine_readable: true
+remaining_work_ordering:
+  canonical_source: remaining_work_graph
+  queue_projection_authority: projection_only
+  reorder_requires_graph_action: true
+  stale_queue_blocks_advancement: true

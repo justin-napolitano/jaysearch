@@ -193,8 +193,32 @@ Procedural commit-order rule:
   5. docs and runbooks
   6. research provenance updates
   7. governance rule changes
+- Agents may split one artifact class into multiple adjacent commits when needed to satisfy hard commit-size limits or preserve reviewer readability.
+- Split commits for one class should stay contiguous; they should not be interleaved with later classes unless a human documents an exception.
 - A slice may skip unused classes, but it should not collapse distant classes together without justification.
 - Reviewers should be able to inspect the stack from contract to enforcement to explanatory material without reconstructing the intended sequence by hand.
+
+Bounded ExecPlan reconciliation rule:
+
+- Agents may update the active ExecPlan during execution when new findings require explicit reconciliation of progress, decisions, validations, or in-scope file lists.
+- Legal bounded reconciliation moves are limited to:
+  - progress/log updates
+  - discovery and decision entries
+  - validation additions required by the same slice
+  - narrow `changes` field expansion for newly discovered in-scope files
+- Illegal reconciliation moves include:
+  - changing plan identity or branch authority
+  - rewriting the slice into a different goal
+  - adding unrelated file scope under the guise of findings
+  - expanding dependencies or approvals in a way that creates a new backlog item
+- Referees should accept a small active-ExecPlan reconciliation commit when it is explicit and scope-preserving, and reject it when it acts as hidden scope expansion.
+
+Fix-forward compliance rule:
+
+- Agents must repair policy or scope defects with new explicit commits when a forward fix is available.
+- Rewriting branch history to make a referee pass, conceal a violation, or remove evidence of a discovered defect is a forbidden move unless a human explicitly authorizes rewrite mode.
+- Human authorization for rewrite mode must be specific to the branch or repair action; agents must not assume rewrite permission from general autonomy.
+- Referees should prefer additive repair commits because they preserve the move log and keep compliance recovery machine-auditable.
 
 Latest-main branching rule:
 
@@ -233,6 +257,8 @@ Policy-compliance rule:
 - Required referee chains must pass before a slice may become review-ready, merge-ready, or completed.
 - Policy-compliance is the legality surface for implementation branches before hostile review or human review.
 - Governed work must record the corresponding graph action and queue reconciliation on-branch; stale queue or graph state blocks advancement.
+- Reorder moves must be explicit canonical graph actions. Editing queue prose or board order without a matching graph action is an illegal move.
+- The queue mirror must advertise the latest reconciled graph action id and canonical ready order from the graph before advancement may continue.
 
 ## 10. Match Flow and Stop Conditions
 

@@ -115,6 +115,26 @@ def _remaining_work_graph() -> dict[str, object]:
     return {
         "graph_id": "remaining-work-test",
         "created_at": "2026-03-12T00:00:00Z",
+        "ordering_policy": {
+            "ready_statuses": ["ready"],
+            "ready_sort_fields": ["ready_order", "tie_breaker", "node_id"],
+            "reorder_requires_explicit_action": True,
+            "board_projection_authority": "projection_only",
+        },
+        "queue_projection": {
+            "path": "docs/queued-execplans.md",
+            "projection_authority": "projection_only",
+            "last_reconciled_action_id": "act-1",
+            "ready_execplan_ids": [EXECPLAN_ID],
+        },
+        "graph_actions": [
+            {
+                "action_id": "act-1",
+                "action": "promote_ready",
+                "node_id": "rwg-012",
+                "rationale": "ready implementation slice",
+            }
+        ],
         "nodes": [
             {
                 "node_id": "rwg-012",
@@ -127,6 +147,19 @@ def _remaining_work_graph() -> dict[str, object]:
                 "goal_area": "governance",
                 "expected_artifacts": ["bin/policy-compliance-check"],
                 "implementation_branch": BRANCH,
+                "ordering": {
+                    "queue_position": 1,
+                    "ready_order": 1,
+                    "tie_breaker": EXECPLAN_ID,
+                    "source_action_id": "act-1",
+                },
+                "action_state": {
+                    "last_action_id": "act-1",
+                    "last_action": "promote_ready",
+                    "action_required": False,
+                    "reorder_requires_human": False,
+                    "reorder_blockers": [],
+                },
             }
         ],
         "edges": [],
@@ -136,17 +169,75 @@ def _remaining_work_graph() -> dict[str, object]:
 def _queue_text() -> str:
     return (
         "# Queued ExecPlans\n\n"
+        "## Mirror Metadata\n\n"
+        "- canonical_last_graph_action_id: `act-1`\n"
+        f"- canonical_ready_order: `{EXECPLAN_ID}`\n"
+        "- projection_authority: `projection_only`\n\n"
         f"1. `{EXECPLAN_ID}`\n"
         "   - status: `ready`\n"
         f"   - implementation branch: `{BRANCH}`\n"
     )
 
 
-def _seed_repo(root: Path, *, graph_and_queue_on_main: bool) -> Path:
+def _remaining_work_schema_text() -> str:
+    return """version: 1
+title: "Remaining Work Graph Schema"
+type: object
+required:
+  - graph_id
+  - created_at
+  - ordering_policy
+  - queue_projection
+  - graph_actions
+  - nodes
+  - edges
+properties:
+  graph_id:
+    type: string
+  created_at:
+    type: string
+  ordering_policy:
+    type: object
+  queue_projection:
+    type: object
+  graph_actions:
+    type: array
+  nodes:
+    type: array
+    items:
+      type: object
+      required:
+        - node_id
+        - title
+        - status
+        - gating_class
+        - conflict_domains
+        - target_execplan_id
+      properties:
+        status:
+          enum: ["ready", "blocked", "review_gated", "decision_gated", "completed"]
+        gating_class:
+          enum: ["auto_runnable", "review_gated", "decision_gated"]
+  edges:
+    type: array
+    items:
+      type: object
+      required:
+        - from
+        - to
+        - relation
+      properties:
+        relation:
+          enum: ["depends_on", "conflicts_with", "informed_by", "gated_by"]
+"""
+
+
+def _seed_repo(root: Path, *, graph_and_queue_on_main: bool, split_test_phase: bool = False, publish_branch: bool = True) -> Path:
     _git(root, "init", "-b", "main")
     _git(root, "config", "user.name", "Tests")
     _git(root, "config", "user.email", "tests@example.com")
     _write(root / "README.md", "base\n")
+    _write(root / "spec" / "remaining-work-graph.schema.yaml", _remaining_work_schema_text())
     if graph_and_queue_on_main:
         _write_json(root / "artifacts/planner/research/remaining-work-graph.json", _remaining_work_graph())
         _write(root / "docs/queued-execplans.md", _queue_text())
@@ -170,6 +261,10 @@ def _seed_repo(root: Path, *, graph_and_queue_on_main: bool) -> Path:
     _write(root / "tests" / "policy_runtime.txt", "ok\n")
     _git(root, "add", "tests/policy_runtime.txt")
     _git(root, "commit", "-m", "test(policy): add coverage")
+    if split_test_phase:
+        _write(root / "tests" / "policy_runtime_extra.txt", "extra\n")
+        _git(root, "add", "tests/policy_runtime_extra.txt")
+        _git(root, "commit", "-m", "test(policy): add extra coverage")
 
     if not graph_and_queue_on_main:
         _write_json(root / "artifacts/planner/research/remaining-work-graph.json", _remaining_work_graph())
@@ -177,7 +272,18 @@ def _seed_repo(root: Path, *, graph_and_queue_on_main: bool) -> Path:
         _git(root, "add", "artifacts/planner/research/remaining-work-graph.json", "docs/queued-execplans.md")
         _git(root, "commit", "-m", "docs(policy): reconcile graph and queue")
 
+    if publish_branch:
+        _seed_remote(root)
+        _git(root, "push", "-u", "origin", BRANCH)
+
     return execplan
+
+
+def _seed_remote(root: Path) -> Path:
+    remote = root.parent / f"{root.name}-remote.git"
+    subprocess.run(["git", "init", "--bare", remote.as_posix()], check=True, capture_output=True, text=True)
+    subprocess.run(["git", "remote", "add", "origin", remote.as_posix()], cwd=root, check=True, capture_output=True, text=True)
+    return remote
 
 
 def test_policy_compliance_passes_for_ordered_branch_with_graph_reconciliation(tmp_path: Path) -> None:
@@ -204,3 +310,215 @@ def test_policy_compliance_blocks_when_graph_and_queue_are_stale(tmp_path: Path)
     assert report["ok"] is False
     assert "graph_action_required" in report["blockers"]
     assert "queued_execplans_update_required" in report["blockers"]
+
+
+def test_policy_compliance_allows_small_late_execplan_progress_update(tmp_path: Path) -> None:
+    execplan = _seed_repo(tmp_path, graph_and_queue_on_main=False)
+
+    _write(
+        execplan,
+        _execplan_text().replace("- [ ] Test", "- [x] Test"),
+    )
+    _git(tmp_path, "add", execplan.as_posix())
+    _git(tmp_path, "commit", "-m", "docs(execplan): update policy progress")
+
+    code, report = check_policy_compliance(
+        root=tmp_path.as_posix(),
+        execplan_path=execplan.as_posix(),
+        base_ref="main",
+    )
+
+    assert code == 0
+    assert report["ok"] is True
+    assert not any("procedural_commit_order_violation" in blocker for blocker in report["blockers"])
+    assert any("bounded_execplan_reconciliation" in warning for warning in report["warnings"])
+
+
+def test_policy_compliance_allows_multiple_adjacent_test_commits(tmp_path: Path) -> None:
+    execplan = _seed_repo(tmp_path, graph_and_queue_on_main=False, split_test_phase=True)
+
+    code, report = check_policy_compliance(
+        root=tmp_path.as_posix(),
+        execplan_path=execplan.as_posix(),
+        base_ref="main",
+    )
+
+    assert code == 0
+    assert report["ok"] is True
+    assert not any("procedural_commit_order_violation" in blocker for blocker in report["blockers"])
+
+
+def test_policy_compliance_blocks_late_execplan_authority_change(tmp_path: Path) -> None:
+    execplan = _seed_repo(tmp_path, graph_and_queue_on_main=False)
+
+    _write(
+        execplan,
+        _execplan_text().replace('approve_policy: codeowners', 'approve_policy: anyone'),
+    )
+    _git(tmp_path, "add", execplan.as_posix())
+    _git(tmp_path, "commit", "-m", "docs(execplan): update policy authority")
+
+    code, report = check_policy_compliance(
+        root=tmp_path.as_posix(),
+        execplan_path=execplan.as_posix(),
+        base_ref="main",
+    )
+
+    assert code == 1
+    assert any("procedural_commit_order_violation" in blocker for blocker in report["blockers"])
+    assert any("execplan_reconciliation_violation" in blocker for blocker in report["blockers"])
+
+
+def test_policy_compliance_allows_bounded_late_policy_repair_sequence(tmp_path: Path) -> None:
+    execplan = _seed_repo(tmp_path, graph_and_queue_on_main=False)
+
+    _write(execplan, _execplan_text().replace("- [ ] Test", "- [x] Test"))
+    _git(tmp_path, "add", execplan.as_posix())
+    _git(tmp_path, "commit", "-m", "docs(execplan): update policy progress")
+
+    _write(tmp_path / "src" / "platform_tools" / "policy_compliance_check.py", "ALLOWED = True\n")
+    _write(tmp_path / "tests" / "test_policy_compliance_check.py", "def test_allowed():\n    assert True\n")
+    _git(tmp_path, "add", "src/platform_tools/policy_compliance_check.py", "tests/test_policy_compliance_check.py")
+    _git(tmp_path, "commit", "-m", "fix(governance): allow bounded follow-up repairs")
+
+    _write(tmp_path / "docs" / "governance.md", "split commits allowed\n")
+    _write(tmp_path / "docs" / "agent-game-rules-v1.md", "split commits allowed\n")
+    _write(tmp_path / "docs" / "queued-execplans.md", _queue_text() + "\n<!-- bounded follow-up repairs -->\n")
+    _git(
+        tmp_path,
+        "add",
+        "docs/governance.md",
+        "docs/agent-game-rules-v1.md",
+        "docs/queued-execplans.md",
+    )
+    _git(tmp_path, "commit", "-m", "docs(governance): document bounded follow-up repairs")
+
+    _write(tmp_path / "tests" / "test_policy_compliance_check.py", "def test_allowed():\n    assert True\n\ndef test_more():\n    assert True\n")
+    _git(tmp_path, "add", "tests/test_policy_compliance_check.py")
+    _git(tmp_path, "commit", "-m", "test(governance): lock bounded follow-up repairs")
+
+    _write(
+        tmp_path / "src" / "platform_tools" / "policy_compliance_check.py",
+        "ALLOWED = True\nBOUNDED = True\n",
+    )
+    _write(
+        tmp_path / "tests" / "test_policy_compliance_check.py",
+        "def test_allowed():\n    assert True\n\ndef test_more():\n    assert True\n\ndef test_bounded():\n    assert True\n",
+    )
+    _git(tmp_path, "add", "src/platform_tools/policy_compliance_check.py", "tests/test_policy_compliance_check.py")
+    _git(tmp_path, "commit", "-m", "feat(governance): enforce bounded follow-up repairs")
+
+    code, report = check_policy_compliance(
+        root=tmp_path.as_posix(),
+        execplan_path=execplan.as_posix(),
+        base_ref="main",
+    )
+
+    assert code == 0
+    assert report["ok"] is True
+    assert not any("procedural_commit_order_violation" in blocker for blocker in report["blockers"])
+    assert len([warning for warning in report["warnings"] if "bounded_policy_repair_commit" in warning]) == 3
+
+
+def test_policy_compliance_blocks_unbounded_late_runtime_follow_up(tmp_path: Path) -> None:
+    execplan = _seed_repo(tmp_path, graph_and_queue_on_main=False)
+
+    _write(tmp_path / "src" / "policy_runtime_followup.py", "FOLLOW_UP = True\n")
+    _git(tmp_path, "add", "src/policy_runtime_followup.py")
+    _git(tmp_path, "commit", "-m", "fix(policy): add unrelated runtime follow-up")
+
+    code, report = check_policy_compliance(
+        root=tmp_path.as_posix(),
+        execplan_path=execplan.as_posix(),
+        base_ref="main",
+    )
+
+    assert code == 1
+    assert any("procedural_commit_order_violation" in blocker for blocker in report["blockers"])
+
+
+def test_policy_compliance_blocks_published_branch_history_rewrite_without_exception(tmp_path: Path) -> None:
+    execplan = _seed_repo(tmp_path, graph_and_queue_on_main=False)
+
+    _write(tmp_path / "docs" / "governance.md", "rewrite after publish\n")
+    _git(tmp_path, "add", "docs/governance.md")
+    _git(tmp_path, "commit", "-m", "docs(governance): rewrite after publish")
+    _git(tmp_path, "push", "origin", BRANCH)
+    _git(tmp_path, "reset", "--hard", "HEAD^")
+
+    _write(tmp_path / "docs" / "governance.md", "replacement history\n")
+    _git(tmp_path, "add", "docs/governance.md")
+    _git(tmp_path, "commit", "-m", "docs(governance): replacement history")
+
+    code, report = check_policy_compliance(
+        root=tmp_path.as_posix(),
+        execplan_path=execplan.as_posix(),
+        base_ref="main",
+    )
+
+    assert code == 1
+    assert "published_branch_history_rewrite_violation" in report["blockers"]
+    assert report["checks"]["branch_rewrite_guard"]["published_ref_exists"] is True
+    assert report["checks"]["branch_rewrite_guard"]["non_fast_forward"] is True
+    assert report["checks"]["branch_rewrite_guard"]["authorized_exception_id"] == ""
+
+
+def test_policy_compliance_allows_published_branch_history_rewrite_with_exception(tmp_path: Path) -> None:
+    execplan = _seed_repo(tmp_path, graph_and_queue_on_main=False)
+
+    _write(tmp_path / "docs" / "governance.md", "rewrite after publish\n")
+    _git(tmp_path, "add", "docs/governance.md")
+    _git(tmp_path, "commit", "-m", "docs(governance): rewrite after publish")
+    _git(tmp_path, "push", "origin", BRANCH)
+    _git(tmp_path, "reset", "--hard", "HEAD^")
+
+    _write(
+        tmp_path / ".agent" / "governance" / "exceptions.yaml",
+        "\n".join(
+            [
+                "version: v1",
+                "last_updated: 2026-03-12",
+                "exceptions:",
+                "  - id: branch-rewrite-001",
+                f"    scope: branch_rewrite:{BRANCH}",
+                "    owner: github:justin-napolitano",
+                "    rationale: authorized history rewrite for branch repair",
+                "    approved_by: github:justin-napolitano",
+                "    created_at: 2026-03-12T00:00:00Z",
+                "    expires_at: 2026-03-19T00:00:00Z",
+                "    status: active",
+                "    bypass_evidence:",
+                "      - chat:explicit-human-authorization",
+                "",
+            ]
+        ),
+    )
+    _write(tmp_path / "docs" / "governance.md", "replacement history\n")
+    _git(tmp_path, "add", ".agent/governance/exceptions.yaml", "docs/governance.md")
+    _git(tmp_path, "commit", "-m", "docs(governance): replacement history")
+
+    code, report = check_policy_compliance(
+        root=tmp_path.as_posix(),
+        execplan_path=execplan.as_posix(),
+        base_ref="main",
+    )
+
+    assert code == 0
+    assert report["ok"] is True
+    assert report["checks"]["branch_rewrite_guard"]["published_ref_exists"] is True
+    assert report["checks"]["branch_rewrite_guard"]["non_fast_forward"] is True
+    assert report["checks"]["branch_rewrite_guard"]["authorized_exception_id"] == "branch-rewrite-001"
+
+
+def test_policy_compliance_blocks_unpublished_impl_branch(tmp_path: Path) -> None:
+    execplan = _seed_repo(tmp_path, graph_and_queue_on_main=False, publish_branch=False)
+
+    code, report = check_policy_compliance(
+        root=tmp_path.as_posix(),
+        execplan_path=execplan.as_posix(),
+        base_ref="main",
+    )
+
+    assert code == 1
+    assert "implementation_branch_not_published" in report["blockers"]
+    assert report["checks"]["branch_rewrite_guard"]["published_ref_exists"] is False

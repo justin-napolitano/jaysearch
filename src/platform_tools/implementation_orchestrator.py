@@ -206,6 +206,8 @@ def run_implementation_orchestrator(
         blockers.append(f"active_slice_execplan_mismatch:{slice_summary.get('target_execplan_id', '')}")
     elif slice_summary and str(slice_summary.get("status", "")).strip() != "ready":
         blockers.append(f"active_slice_not_ready:{slice_summary.get('node_id', '')}:{slice_summary.get('status', '')}")
+    elif slice_summary and bool(slice_summary.get("action_state", {}).get("action_required", False)):
+        blockers.append(f"active_slice_requires_graph_action:{slice_summary.get('node_id', '')}")
 
     graph = None
     selected_node = None
