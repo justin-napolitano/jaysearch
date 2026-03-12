@@ -1,6 +1,60 @@
 {
   "graph_id": "remaining-work-graph-20260311",
   "created_at": "2026-03-11T00:00:00Z",
+  "ordering_policy": {
+    "ready_statuses": ["ready"],
+    "ready_sort_fields": ["ready_order", "tie_breaker", "node_id"],
+    "reorder_requires_explicit_action": true,
+    "board_projection_authority": "projection_only"
+  },
+  "queue_projection": {
+    "path": "docs/queued-execplans.md",
+    "projection_authority": "projection_only",
+    "last_reconciled_action_id": "rwg-action-20260312-004-promote-rwg-020",
+    "ready_execplan_ids": ["20260312-remaining-work-graph-actions-and-ordering-codex-01-execplan"]
+  },
+  "graph_actions": [
+    {
+      "action_id": "rwg-action-20260312-001-complete-rwg-012",
+      "action": "complete",
+      "node_id": "rwg-012",
+      "rationale": "policy-compliance merged to main in PR 72 and is now canonical completed state",
+      "evidence_ref": "merged:pr-72",
+      "queue_reconciled": true
+    },
+    {
+      "action_id": "rwg-action-20260312-001b-complete-rwg-013",
+      "action": "complete",
+      "node_id": "rwg-013",
+      "rationale": "commit-structure subgame artifacts merged with policy-compliance and require canonical reconciliation",
+      "evidence_ref": "merged:pr-72",
+      "queue_reconciled": true
+    },
+    {
+      "action_id": "rwg-action-20260312-002-complete-rwg-019",
+      "action": "complete",
+      "node_id": "rwg-019",
+      "rationale": "stale-queue enforcement landed inside policy-compliance and must be reconciled canonically",
+      "evidence_ref": "merged:pr-72",
+      "queue_reconciled": true
+    },
+    {
+      "action_id": "rwg-action-20260312-003-reorder-rwg-020",
+      "action": "reorder",
+      "node_id": "rwg-020",
+      "rationale": "this slice becomes the deterministic next governed ready work once policy-compliance is completed",
+      "evidence_ref": "docs/queued-execplans.md",
+      "queue_reconciled": true
+    },
+    {
+      "action_id": "rwg-action-20260312-004-promote-rwg-020",
+      "action": "promote_ready",
+      "node_id": "rwg-020",
+      "rationale": "ready ordering and graph-action work is the next canonical slice after policy-compliance reconciliation",
+      "evidence_ref": ".agent/execplans/20260312-remaining-work-graph-actions-and-ordering-codex-01-execplan.md",
+      "queue_reconciled": true
+    }
+  ],
   "nodes": [
     {
       "node_id": "rwg-001",
@@ -131,36 +185,63 @@
     {
       "node_id": "rwg-012",
       "title": "Game policy-compliance runtime",
-      "status": "ready",
-      "status_reason": "active implementation slice for policy-compliance; must formalize graph-action-required, stale-queue blocking, and referee-gated advancement before hostile review can proceed",
+      "status": "completed",
+      "completion_ref": "merged:pr-72",
       "gating_class": "auto_runnable",
       "conflict_domains": ["governance", "merge-readiness", "policy-compliance"],
       "target_execplan_id": "20260312-game-policy-compliance-codex-01-execplan",
       "goal_area": "governance",
       "expected_artifacts": ["bin/policy-compliance-check", "src/platform_tools/policy_compliance_check.py", "bin/policy-compliance-smoke-test"],
-      "implementation_branch": "impl-execplan/20260312-game-policy-compliance-codex-01-execplan-codex-01-20260312"
+      "implementation_branch": "impl-execplan/20260312-game-policy-compliance-codex-01-execplan-codex-01-20260312",
+      "ordering": {
+        "queue_position": 12,
+        "tie_breaker": "20260312-game-policy-compliance-codex-01-execplan",
+        "source_action_id": "rwg-action-20260312-001-complete-rwg-012"
+      },
+      "action_state": {
+        "last_action_id": "rwg-action-20260312-001-complete-rwg-012",
+        "last_action": "complete",
+        "action_required": false,
+        "reorder_requires_human": false,
+        "reorder_blockers": []
+      }
     },
     {
       "node_id": "rwg-013",
       "title": "Game commit-structure subgame",
-      "status": "blocked",
-      "status_reason": "formalized as part of policy-compliance and should advance with or immediately after rwg-012",
+      "status": "completed",
+      "completion_ref": "merged:pr-72",
       "gating_class": "auto_runnable",
       "conflict_domains": ["policy-compliance", "merge-readiness"],
       "target_execplan_id": "20260312-game-policy-compliance-codex-01-execplan",
       "goal_area": "governance",
-      "expected_artifacts": ["docs/games/commit-structure-game.md", "spec/games/commit-structure-game.yaml"]
+      "expected_artifacts": ["docs/games/commit-structure-game.md", "spec/games/commit-structure-game.yaml"],
+      "ordering": {
+        "queue_position": 13,
+        "tie_breaker": "20260312-game-policy-compliance-codex-01-execplan"
+      },
+      "action_state": {
+        "last_action_id": "rwg-action-20260312-001b-complete-rwg-013",
+        "last_action": "complete",
+        "action_required": false,
+        "reorder_requires_human": false,
+        "reorder_blockers": []
+      }
     },
     {
       "node_id": "rwg-014",
       "title": "Game hostile-review runtime",
       "status": "blocked",
-      "status_reason": "must follow policy-compliance so hostile review consumes formal legality checks instead of inventing them",
+      "status_reason": "must follow remaining-work ordering so hostile review consumes canonical graph-action and reorder legality instead of inventing it",
       "gating_class": "auto_runnable",
       "conflict_domains": ["review-runtime", "merge-readiness", "policy-compliance"],
       "target_execplan_id": "future:game-hostile-review",
       "goal_area": "review-runtime",
-      "expected_artifacts": ["bin/hostile-review", "bin/hostile-review-smoke-test", "artifacts/review/hostile-review-report.json"]
+      "expected_artifacts": ["bin/hostile-review", "bin/hostile-review-smoke-test", "artifacts/review/hostile-review-report.json"],
+      "ordering": {
+        "queue_position": 14,
+        "tie_breaker": "future:game-hostile-review"
+      }
     },
     {
       "node_id": "rwg-015",
@@ -171,7 +252,11 @@
       "conflict_domains": ["governance", "workflow"],
       "target_execplan_id": "future:game-branching",
       "goal_area": "governance",
-      "expected_artifacts": ["docs/games/branching-game.md", "spec/games/branching-game.yaml"]
+      "expected_artifacts": ["docs/games/branching-game.md", "spec/games/branching-game.yaml"],
+      "ordering": {
+        "queue_position": 15,
+        "tie_breaker": "future:game-branching"
+      }
     },
     {
       "node_id": "rwg-016",
@@ -182,7 +267,11 @@
       "conflict_domains": ["research-provenance", "documentation"],
       "target_execplan_id": "future:game-citation",
       "goal_area": "research-provenance",
-      "expected_artifacts": ["docs/games/citation-game.md", "spec/games/citation-game.yaml"]
+      "expected_artifacts": ["docs/games/citation-game.md", "spec/games/citation-game.yaml"],
+      "ordering": {
+        "queue_position": 16,
+        "tie_breaker": "future:game-citation"
+      }
     },
     {
       "node_id": "rwg-017",
@@ -193,7 +282,11 @@
       "conflict_domains": ["documentation", "research-provenance"],
       "target_execplan_id": "future:game-documentation",
       "goal_area": "documentation",
-      "expected_artifacts": ["docs/games/documentation-game.md", "spec/games/documentation-game.yaml"]
+      "expected_artifacts": ["docs/games/documentation-game.md", "spec/games/documentation-game.yaml"],
+      "ordering": {
+        "queue_position": 17,
+        "tie_breaker": "future:game-documentation"
+      }
     },
     {
       "node_id": "rwg-018",
@@ -204,29 +297,59 @@
       "conflict_domains": ["provider-sync", "review-runtime"],
       "target_execplan_id": "future:game-board-integrity",
       "goal_area": "provider-sync",
-      "expected_artifacts": ["docs/games/board-integrity-game.md", "spec/games/board-integrity-game.yaml"]
+      "expected_artifacts": ["docs/games/board-integrity-game.md", "spec/games/board-integrity-game.yaml"],
+      "ordering": {
+        "queue_position": 18,
+        "tie_breaker": "future:game-board-integrity"
+      }
     },
     {
       "node_id": "rwg-019",
       "title": "Graph-action-required and stale-queue enforcement",
-      "status": "blocked",
-      "status_reason": "must be formalized inside policy-compliance so governed work cannot advance unless graph state and queue reconciliation are current",
+      "status": "completed",
+      "completion_ref": "merged:pr-72",
       "gating_class": "auto_runnable",
       "conflict_domains": ["policy-compliance", "merge-readiness", "remaining-work-graph"],
       "target_execplan_id": "20260312-game-policy-compliance-codex-01-execplan",
       "goal_area": "governance",
-      "expected_artifacts": ["artifacts/planner/research/remaining-work-graph.json", "bin/remaining-work-graph-check", "src/platform_tools/policy_compliance_check.py"]
+      "expected_artifacts": ["artifacts/planner/research/remaining-work-graph.json", "bin/remaining-work-graph-check", "src/platform_tools/policy_compliance_check.py"],
+      "ordering": {
+        "queue_position": 19,
+        "tie_breaker": "20260312-game-policy-compliance-codex-01-execplan",
+        "source_action_id": "rwg-action-20260312-002-complete-rwg-019"
+      },
+      "action_state": {
+        "last_action_id": "rwg-action-20260312-002-complete-rwg-019",
+        "last_action": "complete",
+        "action_required": false,
+        "reorder_requires_human": false,
+        "reorder_blockers": []
+      }
     },
     {
       "node_id": "rwg-020",
       "title": "Remaining-work graph actions and deterministic ordering",
-      "status": "blocked",
-      "status_reason": "should follow policy-compliance so graph actions, reorder legality, and stale-queue enforcement build on the new legality surface",
+      "status": "ready",
+      "status_reason": "policy-compliance is reconciled on main; deterministic graph-action and ordering legality is the next canonical slice",
       "gating_class": "auto_runnable",
       "conflict_domains": ["remaining-work-graph", "policy-compliance", "provider-sync"],
-      "target_execplan_id": "future:remaining-work-graph-actions-and-ordering",
+      "target_execplan_id": "20260312-remaining-work-graph-actions-and-ordering-codex-01-execplan",
       "goal_area": "governance",
-      "expected_artifacts": ["artifacts/planner/research/remaining-work-graph.json", "spec/remaining-work-graph.schema.yaml", "bin/remaining-work-graph-check"]
+      "implementation_branch": "impl-execplan/20260312-remaining-work-graph-actions-and-ordering-codex-01-execplan-codex-01-20260312",
+      "expected_artifacts": ["artifacts/planner/research/remaining-work-graph.json", "spec/remaining-work-graph.schema.yaml", "bin/remaining-work-graph-check"],
+      "ordering": {
+        "queue_position": 20,
+        "ready_order": 1,
+        "tie_breaker": "20260312-remaining-work-graph-actions-and-ordering-codex-01-execplan",
+        "source_action_id": "rwg-action-20260312-003-reorder-rwg-020"
+      },
+      "action_state": {
+        "last_action_id": "rwg-action-20260312-004-promote-rwg-020",
+        "last_action": "promote_ready",
+        "action_required": false,
+        "reorder_requires_human": false,
+        "reorder_blockers": []
+      }
     },
     {
       "node_id": "artifact-orchestrator-contract",
@@ -268,6 +391,7 @@
     { "from": "rwg-013", "to": "rwg-012", "relation": "depends_on" },
     { "from": "rwg-014", "to": "rwg-012", "relation": "depends_on" },
     { "from": "rwg-014", "to": "rwg-013", "relation": "depends_on" },
+    { "from": "rwg-014", "to": "rwg-020", "relation": "depends_on" },
     { "from": "rwg-019", "to": "rwg-012", "relation": "depends_on" },
     { "from": "rwg-020", "to": "rwg-012", "relation": "depends_on" },
     { "from": "rwg-015", "to": "rwg-012", "relation": "gated_by" },
