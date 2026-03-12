@@ -11,6 +11,7 @@ from platform_tools.human_operations_status import get_human_operations_status
 from platform_tools.merge_readiness import check_merge_readiness
 from platform_tools.plan_utils import parse_plan
 from platform_tools.planner_score import score_graph
+from platform_tools.policy_compliance_check import check_policy_compliance
 from platform_tools.remaining_work_graph_check import check_remaining_work_graph
 from platform_tools.rule_graph_check import check_rule_graph
 
@@ -95,6 +96,11 @@ def get_orchestrator_status(
 
     _, rule_report = check_rule_graph(root)
     _, citation_report = check_citations(root)
+    _, policy_report = check_policy_compliance(
+        root=root,
+        execplan_path=execplan_path,
+        base_ref=base_ref,
+    )
     _, merge_report = check_merge_readiness(
         root=root,
         execplan_path=execplan_path,
@@ -126,6 +132,12 @@ def get_orchestrator_status(
             ok=bool(citation_report.get("ok", False)),
             blockers=[str(item) for item in citation_report.get("blockers", [])],
             payload=citation_report,
+        ),
+        "policy_compliance": _adapt_contract(
+            command="policy-compliance-check",
+            ok=bool(policy_report.get("ok", False)),
+            blockers=[str(item) for item in policy_report.get("blockers", [])],
+            payload=policy_report,
         ),
         "game_status": _adapt_contract(
             command="game-status",
