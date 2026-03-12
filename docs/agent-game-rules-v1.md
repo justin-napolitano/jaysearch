@@ -193,6 +193,8 @@ Procedural commit-order rule:
   5. docs and runbooks
   6. research provenance updates
   7. governance rule changes
+- Agents may split one artifact class into multiple adjacent commits when needed to satisfy hard commit-size limits or preserve reviewer readability.
+- Split commits for one class should stay contiguous; they should not be interleaved with later classes unless a human documents an exception.
 - A slice may skip unused classes, but it should not collapse distant classes together without justification.
 - Reviewers should be able to inspect the stack from contract to enforcement to explanatory material without reconstructing the intended sequence by hand.
 

@@ -54,6 +54,8 @@ Commit structuring rule:
   6. research, claim-registry, or bibliography updates
   7. governance rule updates
 - A commit should usually contain one artifact class from this sequence unless the slice is too small to justify separation.
+- Codex may use multiple adjacent commits for the same artifact class when needed to stay under commit-size limits or keep each commit human-reviewable.
+- When one class is split across multiple commits, those commits should remain contiguous in the procedural sequence rather than being interleaved with later classes.
 - If a slice omits a class, Codex should skip it rather than collapsing unrelated classes together.
 - Merge review should preserve this order so reviewers can inspect contract, implementation, and evidence in sequence.
 
