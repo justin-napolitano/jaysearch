@@ -118,6 +118,10 @@ def _item_summary_body(operation: dict[str, Any]) -> str:
         f"- target_execplan_id: {str(provenance.get('target_execplan_id', '')).strip()}",
         f"- execplan_path: {str(provenance.get('execplan_path', '')).strip()}",
         f"- implementation_branch: {str(provenance.get('implementation_branch', '')).strip()}",
+        f"- queue_position: {provenance.get('queue_position', '')}",
+        f"- ready_order: {provenance.get('ready_order', '')}",
+        f"- last_action: {str(provenance.get('last_action', '')).strip()}",
+        f"- action_required: {str(provenance.get('action_required', False)).lower()}",
     ]
     completion_ref = str(provenance.get("completion_ref", "")).strip()
     if completion_ref:

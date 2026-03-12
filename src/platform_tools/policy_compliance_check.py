@@ -8,6 +8,7 @@ from typing import Any
 
 from platform_tools.branch_policy import get_current_branch
 from platform_tools.plan_utils import parse_plan
+from platform_tools.remaining_work_graph_check import check_remaining_work_graph
 
 
 COMMAND = "policy-compliance-check"
@@ -190,6 +191,11 @@ def check_policy_compliance(
     commit_stack, commit_errors, commit_warnings = _commit_reports(cwd, base_ref)
     dirty_artifacts = _dirty_generated_artifacts(cwd)
     branch_aligned, merge_base, base_head = _branch_is_aligned_with_base(cwd, base_ref)
+    remaining_work_code, remaining_work_report = check_remaining_work_graph(
+        root=root,
+        branch=branch,
+        execplan_path=plan_path.as_posix(),
+    )
 
     graph_node = _graph_node_for_execplan(cwd, execplan_id)
     queue_has_execplan = _queue_has_execplan(cwd, execplan_id)
@@ -200,6 +206,8 @@ def check_policy_compliance(
     if dirty_artifacts:
         blockers.append("dirty_generated_artifacts")
     blockers.extend(commit_errors)
+    if remaining_work_code != 0:
+        blockers.extend(f"remaining_work_graph:{item}" for item in remaining_work_report.get("errors", []))
 
     if graph_node is None:
         blockers.append(f"missing_remaining_work_node:{execplan_id}")
@@ -212,6 +220,9 @@ def check_policy_compliance(
             blockers.append(f"remaining_work_node_already_completed:{execplan_id}")
         if node_status not in {"ready", "review_gated"}:
             blockers.append(f"remaining_work_node_not_advancable:{node_status}")
+        active_node = remaining_work_report.get("active_node") or {}
+        if active_node and bool(active_node.get("action_state", {}).get("action_required", False)):
+            blockers.append("active_slice_requires_graph_action")
 
     if GRAPH_PATH not in changed_files:
         blockers.append("graph_action_required")
@@ -243,13 +254,16 @@ def check_policy_compliance(
                 "base_head": base_head,
             },
             "graph_binding": {
-                "ok": graph_node is not None,
+                "ok": graph_node is not None and remaining_work_code == 0,
                 "graph_path": GRAPH_PATH,
                 "queue_path": QUEUE_PATH,
                 "node": graph_node or {},
                 "queue_has_execplan": queue_has_execplan,
                 "changed_files_include_graph": GRAPH_PATH in changed_files,
                 "changed_files_include_queue": QUEUE_PATH in changed_files,
+                "remaining_work_status": remaining_work_report.get("status", ""),
+                "ready_order": remaining_work_report.get("ordering", {}).get("ready_execplan_ids", []),
+                "queue_projection": remaining_work_report.get("queue_projection", {}),
             },
             "commit_structure": {
                 "ok": not commit_errors,
