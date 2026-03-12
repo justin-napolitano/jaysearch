@@ -77,6 +77,14 @@ Bounded ExecPlan reconciliation rule:
 - When `changes` expands, the ExecPlan should record why the new path is required by the discovered finding rather than by a new backlog objective.
 - Referees should treat a small active-ExecPlan reconciliation commit as legal when it is explicit, machine-reviewable, and scope-preserving.
 
+Fix-forward reconciliation rule:
+
+- Branch-level policy or scope compliance should be repaired with new explicit commits on the active branch rather than by rewriting branch history.
+- Agents must not rewrite commit history merely to make a referee pass, hide an illegal move, or erase evidence of a discovered policy defect.
+- History rewrite mode is allowed only when a human explicitly authorizes it for a named branch or command sequence.
+- When a forward repair is possible, referees and agents should prefer additive repair commits that preserve the visible audit trail.
+- Governance and checker design should provide a lawful fix-forward path so agents do not need to rely on history surgery for ordinary compliance recovery.
+
 Latest-main branching rule:
 
 - Unless a human explicitly states otherwise, every new work branch must be created from the latest `main`.

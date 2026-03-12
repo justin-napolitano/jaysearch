@@ -115,6 +115,8 @@ When a queued slice needs several commits inside one procedural step, Codex may 
 
 When execution findings require updates to the active ExecPlan, Codex may make a bounded reconciliation commit for the active plan as long as the update stays within the same slice goal and records the reason for the change explicitly.
 
+When branch-level governance or checker defects are discovered mid-slice, Codex should repair them with new bounded follow-up commits on the active branch. History rewrites are not the normal compliance path and require explicit human authorization.
+
 ## Relationship to the Graph
 
 This queue is a human-readable mirror of `artifacts/planner/research/remaining-work-graph.json` and `bin/remaining-work-graph-check`. If the two disagree, the canonical artifact and validator are authoritative.
