@@ -1,0 +1,24 @@
+game_id: game-commit-structure
+type: policy_compliance
+title: Commit-Structure Game
+layer: assurance
+rule_scope: subgame_local
+parent_game: game-policy-compliance
+objective: keep Codex-authored commit history procedurally ordered and reviewable
+board: commit-stack-review-state
+players:
+  - codex_orchestrator
+  - human_operator
+inherits_board_law: true
+local_rule_focus:
+  - human_sized_commits
+  - procedural_commit_order
+  - single_class_commit_grouping
+referees:
+  - bin/policy-compliance-check
+referee_order:
+  - global_board_law
+  - active_domain_game
+  - active_subgame
+win_condition: commit stack preserves procedural order and human reviewability
+loss_condition: commit history obscures task boundaries or collapses unrelated evidence
