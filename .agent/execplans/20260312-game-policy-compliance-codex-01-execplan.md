@@ -76,12 +76,12 @@ This slice should take the partial rules surfaced by the game-rules audit and bi
 
 ## Progress
 
-- [ ] Formalize `game-policy-compliance`
-- [ ] Formalize `game-commit-structure` as a policy-compliance subgame
-- [ ] Bind partial policy rules to canonical rule ids and inheritance scope
-- [ ] Add deterministic referee/runtime coverage for policy compliance
-- [ ] Record `game-hostile-review` as dependent on policy-compliance completion
-- [ ] Validate the slice
+- [x] Formalize `game-policy-compliance`
+- [x] Formalize `game-commit-structure` as a policy-compliance subgame
+- [x] Bind partial policy rules to canonical rule ids and inheritance scope
+- [x] Add deterministic referee/runtime coverage for policy compliance
+- [x] Record `game-hostile-review` as dependent on policy-compliance completion
+- [x] Validate the slice
 
 ## Surprises & Discoveries
 
@@ -97,6 +97,7 @@ This slice should take the partial rules surfaced by the game-rules audit and bi
 - 2026-03-12 / agent-codex-01 / Merge readiness should consume policy-compliance outcomes rather than redefining policy rules itself.
 - 2026-03-12 / agent-codex-01 / Global board-law rules must remain inherited platform constraints even after policy-compliance is added.
 - 2026-03-12 / agent-codex-01 / The platform must not advance state by agent assertion, prose judgment, or board edits alone; required referee chains must pass before a slice can advance.
+- 2026-03-12 / agent-codex-01 / Policy-compliance must also treat graph and queue reconciliation as legality inputs so governed work cannot advance on stale backlog state.
 
 ## Outcomes & Retrospective
 
@@ -116,6 +117,7 @@ Expected implemented outcome:
 - the current game audit can point to policy-compliance and commit-structure as canonical games instead of planned follow-ons
 - merge-readiness and later hostile-review work can consume policy-compliance results as upstream evidence
 - slice progression surfaces such as review-readiness and merge-readiness can consume policy-compliance status instead of trusting agent narration
+- remaining-work graph and queue reconciliation are first-class legality checks inside policy-compliance rather than follow-up chores
 
 ## Context and Orientation
 
@@ -189,6 +191,13 @@ Acceptance criteria:
 - governed advancement can be blocked by policy-compliance failure instead of relying on agent assertions
 - the game audit no longer reports commit-structure as a merely planned subgame
 - hostile review remains queued behind policy compliance instead of being partially implemented here
+
+Validation run:
+
+- `bin/execplan-validate .agent/execplans/20260312-game-policy-compliance-codex-01-execplan.md`
+- `bin/game-graph-check`
+- `bin/game-rules-audit`
+- `uv run pytest tests/test_game_graph_check.py tests/test_game_status.py tests/test_game_rules_audit.py tests/test_policy_compliance_check.py`
 
 ## Idempotence and Recovery
 

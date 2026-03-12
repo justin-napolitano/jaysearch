@@ -19,6 +19,8 @@ GAME_DOC_PATHS = [
     "docs/games/execplan-game.md",
     "docs/games/planning-game.md",
     "docs/games/implementation-game.md",
+    "docs/games/policy-compliance-game.md",
+    "docs/games/commit-structure-game.md",
     "docs/games/planning-merge-readiness-game.md",
     "docs/games/implementation-merge-readiness-game.md",
 ]
@@ -47,25 +49,20 @@ RULE_BINDINGS = {
         "bound_games": ["game-implementation-proof"],
         "candidate_game": "game-implementation-merge-readiness",
     },
-    "rule-clean-merge-state": {
-        "scope": "subgame_local",
-        "bound_games": ["game-implementation-proof"],
-        "candidate_game": "game-implementation-merge-readiness",
-    },
     "rule-human-sized-commits": {
-        "scope": "domain_game",
-        "bound_games": ["game-implementation"],
+        "scope": "subgame_local",
+        "bound_games": ["game-policy-compliance", "game-commit-structure"],
         "candidate_game": "game-commit-structure",
     },
     "rule-procedural-commit-order": {
-        "scope": "domain_game",
-        "bound_games": ["game-implementation"],
+        "scope": "subgame_local",
+        "bound_games": ["game-policy-compliance", "game-commit-structure"],
         "candidate_game": "game-commit-structure",
     },
     "rule-latest-main-branching": {
-        "scope": "global_board_law",
-        "bound_games": ["game-platform", "game-execplan"],
-        "candidate_game": "game-branching",
+        "scope": "domain_game",
+        "bound_games": ["game-policy-compliance"],
+        "candidate_game": "game-policy-compliance",
     },
     "rule-execplan-validation": {
         "scope": "subgame_local",
@@ -76,6 +73,11 @@ RULE_BINDINGS = {
         "scope": "global_board_law",
         "bound_games": ["game-platform", "game-execplan"],
         "candidate_game": "game-finalization",
+    },
+    "rule-clean-merge-state": {
+        "scope": "domain_game",
+        "bound_games": ["game-policy-compliance"],
+        "candidate_game": "game-policy-compliance",
     },
 }
 
@@ -296,8 +298,6 @@ def run_game_rules_audit(root: str = ".") -> tuple[int, dict[str, Any]]:
             blockers.append(f"missing_rule_binding:{rule_id}")
             continue
         enforcement_status = _enforcement_status_for_rule(rule_id, rule_graph.get("edges", []))
-        if rule_id in {"rule-human-sized-commits", "rule-procedural-commit-order"} and enforcement_status == "enforced":
-            enforcement_status = "partial"
         if enforcement_status != "enforced":
             partial_or_policy_rules.append(rule_id)
         rule_audit.append(
@@ -319,21 +319,21 @@ def run_game_rules_audit(root: str = ".") -> tuple[int, dict[str, Any]]:
             }
         )
 
+    game_ids = {item["game_id"] for item in game_specs}
     commit_structure = {
         "rule_ids": ["rule-human-sized-commits", "rule-procedural-commit-order"],
-        "status": "partial",
-        "current_binding": "governed_policy",
+        "status": "enforced" if {"game-policy-compliance", "game-commit-structure"}.issubset(game_ids) else "partial",
+        "current_binding": "game-commit-structure" if {"game-policy-compliance", "game-commit-structure"}.issubset(game_ids) else "governed_policy",
         "recommended_parent_game": "game-policy-compliance",
         "recommended_subgame": "game-commit-structure",
     }
 
+    planned_follow_on_games = ["game-hostile-review"]
+    for candidate in ("game-branching", "game-citation", "game-documentation", "game-board-integrity"):
+        planned_follow_on_games.append(candidate)
     extension_readiness = {
         "ok": not blockers,
-        "planned_follow_on_games": [
-            "game-policy-compliance",
-            "game-commit-structure",
-            "game-hostile-review",
-        ],
+        "planned_follow_on_games": planned_follow_on_games,
         "partial_rules": sorted(set(partial_or_policy_rules)),
     }
 

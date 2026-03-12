@@ -182,3 +182,6 @@ invariants:
   - referee_required_moves_must_emit_evidence
   - illegal_transitions_must_be_rejected
   - planning_and_implementation_share_the_same_board
+  - governed_slice_advancement_requires_referee_chain
+  - graph_actions_required_for_governed_work
+  - stale_queue_blocks_advancement

@@ -28,12 +28,16 @@ The current executable hierarchy is:
 2. ExecPlan game
 3. planning game
 4. implementation game
-5. planning merge-readiness game
-6. implementation merge-readiness game
+5. policy-compliance game
+6. commit-structure game
+7. planning merge-readiness game
+8. implementation merge-readiness game
 
 The platform game owns the shared board and its inherited law. The
 ExecPlan game acts as the current authority-domain contract game. The
-planning and implementation games are work-domain games. Each phase ends
+planning and implementation games are work-domain games. Policy
+compliance is the current assurance-layer legality game for implementation
+branches, and commit structure is its narrower subgame. Each phase ends
 in its own merge-readiness proof game under the assurance layer.
 
 This means the platform is not a flat set of peer games. It is:
@@ -42,6 +46,11 @@ This means the platform is not a flat set of peer games. It is:
 2. inherited global board law
 3. domain games with local move sets
 4. proof/subgames that narrow local obligations further
+
+Policy compliance is where the platform currently proves that a governed
+slice cannot advance by assertion alone. Future review-layer games like
+hostile review should consume that legality surface instead of replacing
+it.
 
 ## Shared Ontology
 

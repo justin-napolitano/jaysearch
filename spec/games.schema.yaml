@@ -47,6 +47,7 @@ game_spec:
     - planning
     - implementation
     - merge_readiness
+    - policy_compliance
   allowed_layers:
     - platform
     - authority
@@ -56,6 +57,7 @@ game_spec:
     - global_board_law
     - domain_game
     - proof_game
+    - subgame_local
 game_node:
   required_fields:
     - layer
@@ -70,12 +72,15 @@ game_node:
     - global_board_law
     - domain_game
     - proof_game
+    - subgame_local
 game_graph:
   required_game_ids:
     - game-platform
     - game-execplan
     - game-planning
     - game-implementation
+    - game-policy-compliance
+    - game-commit-structure
     - game-planning-proof
     - game-implementation-proof
   root_game_id: game-platform
@@ -88,6 +93,12 @@ game_graph:
       relation: contains
     - from: game-execplan
       to: game-implementation
+      relation: contains
+    - from: game-implementation
+      to: game-policy-compliance
+      relation: contains
+    - from: game-policy-compliance
+      to: game-commit-structure
       relation: contains
     - from: game-planning
       to: game-planning-proof

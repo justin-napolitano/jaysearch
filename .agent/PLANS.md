@@ -216,6 +216,10 @@ Operational rules:
 - known item ids must be updated rather than duplicated
 - human operations and takeover state must be derivable from canonical
   local evidence without relying on session memory
+- governed branch advancement must be keyed to passing referee chains
+  rather than agent assertions alone
+- policy-compliance is the current legality gate for implementation
+  slices before later review-layer games are allowed to act
 
 Referee order:
 

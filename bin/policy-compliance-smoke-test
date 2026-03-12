@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+PLAN_PATH=".agent/execplans/20260312-game-policy-compliance-codex-01-execplan.md"
+
+PLAN_JSON="$(bin/execplan-validate "$PLAN_PATH")"
+POLICY_JSON="$(bin/policy-compliance-check --execplan-path "$PLAN_PATH")"
+AUDIT_JSON="$(bin/game-rules-audit)"
+
+python3 - "$PLAN_JSON" "$POLICY_JSON" "$AUDIT_JSON" <<'PY'
+import json
+import sys
+
+plan = json.loads(sys.argv[1])
+policy = json.loads(sys.argv[2])
+audit = json.loads(sys.argv[3])
+
+if plan.get("error_count") != 0:
+    raise SystemExit("execplan-validate failed")
+if not policy.get("ok"):
+    raise SystemExit("policy-compliance-check blocked")
+if not audit.get("ok"):
+    raise SystemExit("game-rules-audit blocked")
+rule_ids = {item["rule_id"] for item in audit.get("rules", [])}
+if "rule-procedural-commit-order" not in rule_ids:
+    raise SystemExit("missing commit-order rule")
+if audit.get("commit_structure", {}).get("status") != "enforced":
+    raise SystemExit("commit structure still partial")
+PY
