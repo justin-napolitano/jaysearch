@@ -3,8 +3,11 @@ from __future__ import annotations
 import argparse
 import json
 import subprocess
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
+
+import yaml
 
 from platform_tools.branch_policy import get_current_branch
 from platform_tools.plan_utils import parse_frontmatter, parse_plan
@@ -49,6 +52,7 @@ BOUNDED_POLICY_REPAIR_ALLOWED_FILES = {
     "src/platform_tools/policy_compliance_check.py",
     "tests/test_policy_compliance_check.py",
 }
+EXCEPTION_REGISTRY_PATH = ".agent/governance/exceptions.yaml"
 
 
 def _git(cwd: Path, *args: str) -> str:
@@ -62,11 +66,29 @@ def _load_json(path: Path) -> Any:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
+def _load_yaml(path: Path) -> dict[str, Any]:
+    if not path.exists():
+        return {}
+    data = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
+    return data if isinstance(data, dict) else {}
+
+
 def _current_branch(cwd: Path) -> str:
     try:
         return _git(cwd, "branch", "--show-current")
     except RuntimeError:
         return get_current_branch()
+
+
+def _parse_iso8601(value: str) -> datetime | None:
+    if not isinstance(value, str) or not value.strip():
+        return None
+    try:
+        if value.endswith("Z"):
+            return datetime.strptime(value, "%Y-%m-%dT%H:%M:%SZ").replace(tzinfo=timezone.utc)
+        return datetime.fromisoformat(value).astimezone(timezone.utc)
+    except ValueError:
+        return None
 
 
 def _merge_base(cwd: Path, base_ref: str) -> str:
@@ -336,6 +358,78 @@ def _branch_is_aligned_with_base(cwd: Path, base_ref: str) -> tuple[bool, str, s
     return merge_base == base_head, merge_base, base_head
 
 
+def _ref_exists(cwd: Path, ref: str) -> bool:
+    proc = subprocess.run(
+        ["git", "rev-parse", "--verify", "--quiet", ref],
+        cwd=cwd,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    return proc.returncode == 0
+
+
+def _is_ancestor(cwd: Path, ancestor_ref: str, descendant_ref: str) -> bool:
+    proc = subprocess.run(
+        ["git", "merge-base", "--is-ancestor", ancestor_ref, descendant_ref],
+        cwd=cwd,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    return proc.returncode == 0
+
+
+def _active_branch_rewrite_exception(cwd: Path, branch: str) -> str | None:
+    registry = _load_yaml(cwd / EXCEPTION_REGISTRY_PATH)
+    exceptions = registry.get("exceptions", [])
+    if not isinstance(exceptions, list):
+        return None
+    now = datetime.now(timezone.utc)
+    allowed_scopes = {f"branch_rewrite:{branch}", f"history_rewrite:{branch}"}
+    for item in exceptions:
+        if not isinstance(item, dict):
+            continue
+        status = str(item.get("status", "")).strip()
+        scope = str(item.get("scope", "")).strip()
+        if status != "active" or scope not in allowed_scopes:
+            continue
+        expires = _parse_iso8601(str(item.get("expires_at", "")))
+        if expires is not None and expires < now:
+            continue
+        return str(item.get("id", "")).strip() or scope
+    return None
+
+
+def _published_branch_rewrite_status(cwd: Path, branch: str) -> dict[str, Any]:
+    remote_ref = f"refs/remotes/origin/{branch}"
+    if not branch or not _ref_exists(cwd, remote_ref):
+        return {
+            "published_ref_exists": False,
+            "remote_ref": remote_ref,
+            "remote_head": "",
+            "local_head": _git(cwd, "rev-parse", "HEAD"),
+            "ok": True,
+            "non_fast_forward": False,
+            "authorized_exception_id": "",
+        }
+
+    remote_head = _git(cwd, "rev-parse", remote_ref)
+    local_head = _git(cwd, "rev-parse", "HEAD")
+    non_fast_forward = not _is_ancestor(cwd, remote_ref, "HEAD")
+    exception_id = _active_branch_rewrite_exception(cwd, branch) if non_fast_forward else None
+    ok = not non_fast_forward or bool(exception_id)
+    return {
+        "published_ref_exists": True,
+        "remote_ref": remote_ref,
+        "remote_head": remote_head,
+        "local_head": local_head,
+        "ok": ok,
+        "non_fast_forward": non_fast_forward,
+        "authorized_exception_id": exception_id or "",
+    }
+
+
 def check_policy_compliance(
     *,
     root: str = ".",
@@ -355,6 +449,7 @@ def check_policy_compliance(
     )
     dirty_artifacts = _dirty_generated_artifacts(cwd)
     branch_aligned, merge_base, base_head = _branch_is_aligned_with_base(cwd, base_ref)
+    rewrite_guard = _published_branch_rewrite_status(cwd, branch)
     remaining_work_code, remaining_work_report = check_remaining_work_graph(
         root=root,
         branch=branch,
@@ -367,6 +462,8 @@ def check_policy_compliance(
     blockers: list[str] = []
     if not branch_aligned:
         blockers.append("latest_main_branching_violation")
+    if not rewrite_guard["ok"]:
+        blockers.append("published_branch_history_rewrite_violation")
     if dirty_artifacts:
         blockers.append("dirty_generated_artifacts")
     blockers.extend(commit_errors)
@@ -417,6 +514,7 @@ def check_policy_compliance(
                 "merge_base": merge_base,
                 "base_head": base_head,
             },
+            "branch_rewrite_guard": rewrite_guard,
             "graph_binding": {
                 "ok": graph_node is not None and remaining_work_code == 0,
                 "graph_path": GRAPH_PATH,

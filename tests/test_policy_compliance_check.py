@@ -275,6 +275,13 @@ def _seed_repo(root: Path, *, graph_and_queue_on_main: bool, split_test_phase: b
     return execplan
 
 
+def _seed_remote(root: Path) -> Path:
+    remote = root.parent / f"{root.name}-remote.git"
+    subprocess.run(["git", "init", "--bare", remote.as_posix()], check=True, capture_output=True, text=True)
+    subprocess.run(["git", "remote", "add", "origin", remote.as_posix()], cwd=root, check=True, capture_output=True, text=True)
+    return remote
+
+
 def test_policy_compliance_passes_for_ordered_branch_with_graph_reconciliation(tmp_path: Path) -> None:
     execplan = _seed_repo(tmp_path, graph_and_queue_on_main=False)
     code, report = check_policy_compliance(
@@ -424,3 +431,80 @@ def test_policy_compliance_blocks_unbounded_late_runtime_follow_up(tmp_path: Pat
 
     assert code == 1
     assert any("procedural_commit_order_violation" in blocker for blocker in report["blockers"])
+
+
+def test_policy_compliance_blocks_published_branch_history_rewrite_without_exception(tmp_path: Path) -> None:
+    execplan = _seed_repo(tmp_path, graph_and_queue_on_main=False)
+    _seed_remote(tmp_path)
+    _git(tmp_path, "push", "-u", "origin", BRANCH)
+
+    _write(tmp_path / "docs" / "governance.md", "rewrite after publish\n")
+    _git(tmp_path, "add", "docs/governance.md")
+    _git(tmp_path, "commit", "-m", "docs(governance): rewrite after publish")
+    _git(tmp_path, "push", "origin", BRANCH)
+    _git(tmp_path, "reset", "--hard", "HEAD^")
+
+    _write(tmp_path / "docs" / "governance.md", "replacement history\n")
+    _git(tmp_path, "add", "docs/governance.md")
+    _git(tmp_path, "commit", "-m", "docs(governance): replacement history")
+
+    code, report = check_policy_compliance(
+        root=tmp_path.as_posix(),
+        execplan_path=execplan.as_posix(),
+        base_ref="main",
+    )
+
+    assert code == 1
+    assert "published_branch_history_rewrite_violation" in report["blockers"]
+    assert report["checks"]["branch_rewrite_guard"]["published_ref_exists"] is True
+    assert report["checks"]["branch_rewrite_guard"]["non_fast_forward"] is True
+    assert report["checks"]["branch_rewrite_guard"]["authorized_exception_id"] == ""
+
+
+def test_policy_compliance_allows_published_branch_history_rewrite_with_exception(tmp_path: Path) -> None:
+    execplan = _seed_repo(tmp_path, graph_and_queue_on_main=False)
+    _seed_remote(tmp_path)
+    _git(tmp_path, "push", "-u", "origin", BRANCH)
+
+    _write(tmp_path / "docs" / "governance.md", "rewrite after publish\n")
+    _git(tmp_path, "add", "docs/governance.md")
+    _git(tmp_path, "commit", "-m", "docs(governance): rewrite after publish")
+    _git(tmp_path, "push", "origin", BRANCH)
+    _git(tmp_path, "reset", "--hard", "HEAD^")
+
+    _write(
+        tmp_path / ".agent" / "governance" / "exceptions.yaml",
+        "\n".join(
+            [
+                "version: v1",
+                "last_updated: 2026-03-12",
+                "exceptions:",
+                "  - id: branch-rewrite-001",
+                f"    scope: branch_rewrite:{BRANCH}",
+                "    owner: github:justin-napolitano",
+                "    rationale: authorized history rewrite for branch repair",
+                "    approved_by: github:justin-napolitano",
+                "    created_at: 2026-03-12T00:00:00Z",
+                "    expires_at: 2026-03-19T00:00:00Z",
+                "    status: active",
+                "    bypass_evidence:",
+                "      - chat:explicit-human-authorization",
+                "",
+            ]
+        ),
+    )
+    _write(tmp_path / "docs" / "governance.md", "replacement history\n")
+    _git(tmp_path, "add", ".agent/governance/exceptions.yaml", "docs/governance.md")
+    _git(tmp_path, "commit", "-m", "docs(governance): replacement history")
+
+    code, report = check_policy_compliance(
+        root=tmp_path.as_posix(),
+        execplan_path=execplan.as_posix(),
+        base_ref="main",
+    )
+
+    assert code == 0
+    assert report["ok"] is True
+    assert report["checks"]["branch_rewrite_guard"]["published_ref_exists"] is True
+    assert report["checks"]["branch_rewrite_guard"]["non_fast_forward"] is True
+    assert report["checks"]["branch_rewrite_guard"]["authorized_exception_id"] == "branch-rewrite-001"
