@@ -87,6 +87,8 @@ def _project_item(node: dict[str, Any], *, provider: str, root: str, current_bra
             "goal_area": str(node.get("goal_area", "")).strip(),
             "dependency_summary": dependency_summary,
             "human_review_state": review_projection["human_review_state"],
+            "hostile_review_state": review_projection["hostile_review_state"],
+            "hostile_review_blocker_count": review_projection["hostile_review_blocker_count"],
             "pr_url": review_projection["pr_url"],
             "validation_status": review_projection["validation_status"],
             "smoke_status": review_projection["smoke_status"],
