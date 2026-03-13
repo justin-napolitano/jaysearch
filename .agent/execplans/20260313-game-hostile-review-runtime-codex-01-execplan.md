@@ -34,6 +34,12 @@ validation:
     - name: "execplan-validate"
       command: "bin/execplan-validate .agent/execplans/20260313-game-hostile-review-runtime-codex-01-execplan.md"
       expected_exit: 0
+    - name: "policy-compliance-check"
+      command: "bin/policy-compliance-check --execplan-path .agent/execplans/20260313-game-hostile-review-runtime-codex-01-execplan.md"
+      expected_exit: 0
+    - name: "hostile-review-smoke-test"
+      command: "bin/hostile-review-smoke-test"
+      expected_exit: 0
 tasks:
   - title: "Define hostile-review game contract and inherited legality boundaries"
     priority: "P1"
@@ -59,6 +65,7 @@ This slice should not replace policy compliance. It should consume policy-compli
 
 - [x] Materialize the hostile-review ExecPlan on a dedicated draft branch
 - [x] Reconcile the review-gated backlog node to a canonical ExecPlan id on a non-`main` planning branch
+- [x] Cut and publish the canonical hostile-review implementation branch
 - [ ] Define hostile-review game contract and artifacts
 - [ ] Implement deterministic hostile-review runtime and smoke path
 - [ ] Project hostile-review state into runtime status surfaces
@@ -69,12 +76,14 @@ This slice should not replace policy compliance. It should consume policy-compli
 - `rwg-014` was review-gated after the remaining-work ordering slice merged, but it still pointed at the placeholder id `future:game-hostile-review` rather than a canonical ExecPlan id.
 - The repository already has an older hostile-review sweep ExecPlan and a runbook, but not a governed review-layer runtime wired into the current game, graph, and branch-governance surfaces.
 - Planning and graph reconciliation should now occur on dedicated planning or implementation branches, not by direct edits on `main`.
+- Publishing the `impl-execplan/*` branch is not sufficient by itself; the active remaining-work node and queue mirror still need an explicit canonical graph action before policy compliance allows execution to proceed.
 
 ## Decision Log
 
 - 2026-03-13 / agent-codex-01 / Hostile review remains a review-layer game that depends on policy-compliance and inherited global board law rather than replacing either one.
 - 2026-03-13 / agent-codex-01 / Planning-state and remaining-work graph updates for this slice should be committed from dedicated branches and merged into `main`, not edited directly on `main`.
 - 2026-03-13 / agent-codex-01 / The hostile-review slice should promote findings and gating state into machine-readable runtime surfaces without granting projection boards any authority.
+- 2026-03-13 / agent-codex-01 / Once the canonical hostile-review implementation branch is published, the next lawful move is an explicit backlog graph action that promotes `rwg-014` from `review_gated` to `ready`; execution should not proceed on branch publication alone.
 
 ## Outcomes & Retrospective
 
@@ -116,6 +125,7 @@ The new hostile-review runtime should fit the existing layered model:
 5. Add focused tests and deterministic hostile-review artifacts under `artifacts/review/`.
 6. Before implementation begins, cut and publish:
    - `impl-execplan/20260313-game-hostile-review-runtime-codex-01-execplan-codex-01-20260313`
+7. Reconcile `rwg-014` and the queue mirror on the implementation branch so policy compliance sees the published branch as a canonical ready-state transition rather than stale gated state.
 
 ## Validation and Acceptance
 
