@@ -63,9 +63,9 @@ This document turns the remaining-work graph into an explicit near-term queue of
    - completion ref: `merged:pr-72`
 
 13. `future:game-hostile-review`
-   - status: `blocked`
+   - status: `review_gated`
    - goal: add machine hostile review before human approval gates
-   - blocker: `20260312-game-policy-compliance-codex-01-execplan` must land first
+   - gate: `canonical ExecPlan and published implementation branch required before execution`
 
 14. `future:game-branching`
    - status: `decision_gated`
@@ -89,15 +89,15 @@ This document turns the remaining-work graph into an explicit near-term queue of
    - implemented in: `20260312-game-policy-compliance-codex-01-execplan`
 
 19. `20260312-remaining-work-graph-actions-and-ordering-codex-01-execplan`
-   - status: `ready`
+   - status: `completed`
    - goal: formalize deterministic graph actions, canonical ordering fields, and governed reorder/reconciliation behavior
    - draft branch: `draft-execplan/20260312-remaining-work-graph-actions-and-ordering-codex-01-execplan-codex-01-20260312`
    - implementation branch: `impl-execplan/20260312-remaining-work-graph-actions-and-ordering-codex-01-execplan-codex-01-20260312`
-
+   - completion ref: `merged:pr-73`
 ## Mirror Metadata
 
-- canonical_last_graph_action_id: `rwg-action-20260312-004-promote-rwg-020`
-- canonical_ready_order: `20260312-remaining-work-graph-actions-and-ordering-codex-01-execplan`
+- canonical_last_graph_action_id: `rwg-action-20260312-006-unblock-rwg-014`
+- canonical_ready_order: ``
 - projection_authority: `projection_only`
 
 ## Queue Discipline

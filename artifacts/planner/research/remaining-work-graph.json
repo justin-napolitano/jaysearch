@@ -2,16 +2,22 @@
   "graph_id": "remaining-work-graph-20260311",
   "created_at": "2026-03-11T00:00:00Z",
   "ordering_policy": {
-    "ready_statuses": ["ready"],
-    "ready_sort_fields": ["ready_order", "tie_breaker", "node_id"],
+    "ready_statuses": [
+      "ready"
+    ],
+    "ready_sort_fields": [
+      "ready_order",
+      "tie_breaker",
+      "node_id"
+    ],
     "reorder_requires_explicit_action": true,
     "board_projection_authority": "projection_only"
   },
   "queue_projection": {
     "path": "docs/queued-execplans.md",
     "projection_authority": "projection_only",
-    "last_reconciled_action_id": "rwg-action-20260312-004-promote-rwg-020",
-    "ready_execplan_ids": ["20260312-remaining-work-graph-actions-and-ordering-codex-01-execplan"]
+    "last_reconciled_action_id": "rwg-action-20260312-006-unblock-rwg-014",
+    "ready_execplan_ids": []
   },
   "graph_actions": [
     {
@@ -53,6 +59,22 @@
       "rationale": "ready ordering and graph-action work is the next canonical slice after policy-compliance reconciliation",
       "evidence_ref": ".agent/execplans/20260312-remaining-work-graph-actions-and-ordering-codex-01-execplan.md",
       "queue_reconciled": true
+    },
+    {
+      "action_id": "rwg-action-20260312-005-complete-rwg-020",
+      "action": "complete",
+      "node_id": "rwg-020",
+      "rationale": "20260312-remaining-work-graph-actions-and-ordering-codex-01-execplan merged to main and is now canonical completed state",
+      "evidence_ref": "merged:pr-73",
+      "queue_reconciled": true
+    },
+    {
+      "action_id": "rwg-action-20260312-006-unblock-rwg-014",
+      "action": "unblock",
+      "node_id": "rwg-014",
+      "rationale": "20260312-remaining-work-graph-actions-and-ordering-codex-01-execplan completed on main; dependency gating is cleared for the next canonical slice",
+      "evidence_ref": "merged:pr-73",
+      "queue_reconciled": true
     }
   ],
   "nodes": [
@@ -62,10 +84,19 @@
       "status": "completed",
       "completion_ref": "merged:machine-readable-output-hardening",
       "gating_class": "auto_runnable",
-      "conflict_domains": ["planner-cli", "orchestrator-status"],
+      "conflict_domains": [
+        "planner-cli",
+        "orchestrator-status"
+      ],
       "target_execplan_id": "20260311-machine-readable-output-hardening-codex-01-execplan",
       "goal_area": "orchestrator-status",
-      "expected_artifacts": ["bin/planner", "bin/citation-check", "bin/planner-score", "bin/rule-graph-check"]
+      "expected_artifacts": [
+        "bin/planner",
+        "bin/citation-check",
+        "bin/planner-score",
+        "bin/rule-graph-check"
+      ],
+      "ordering": {}
     },
     {
       "node_id": "rwg-002",
@@ -73,11 +104,18 @@
       "status": "completed",
       "completion_ref": "merged:composite-orchestrator-status",
       "gating_class": "auto_runnable",
-      "conflict_domains": ["orchestrator-status", "merge-readiness"],
+      "conflict_domains": [
+        "orchestrator-status",
+        "merge-readiness"
+      ],
       "target_execplan_id": "20260311-composite-orchestrator-status-codex-01-execplan",
       "goal_area": "orchestrator-status",
-      "expected_artifacts": ["bin/orchestrator-status", "src/platform_tools/orchestrator_status.py"],
-      "implementation_branch": "impl-execplan/20260311-composite-orchestrator-status-codex-01-execplan-codex-01-20260311"
+      "expected_artifacts": [
+        "bin/orchestrator-status",
+        "src/platform_tools/orchestrator_status.py"
+      ],
+      "implementation_branch": "impl-execplan/20260311-composite-orchestrator-status-codex-01-execplan-codex-01-20260311",
+      "ordering": {}
     },
     {
       "node_id": "rwg-003",
@@ -85,10 +123,17 @@
       "status": "completed",
       "completion_ref": "merged:game-graph-validator-and-status",
       "gating_class": "auto_runnable",
-      "conflict_domains": ["game-graph"],
+      "conflict_domains": [
+        "game-graph"
+      ],
       "target_execplan_id": "20260311-game-graph-validator-and-status-codex-01-execplan",
       "goal_area": "game-graph",
-      "expected_artifacts": ["bin/game-graph-check", "bin/game-status", "src/platform_tools/game_graph_check.py"]
+      "expected_artifacts": [
+        "bin/game-graph-check",
+        "bin/game-status",
+        "src/platform_tools/game_graph_check.py"
+      ],
+      "ordering": {}
     },
     {
       "node_id": "rwg-004",
@@ -96,11 +141,19 @@
       "status": "completed",
       "completion_ref": "merged:implementation-orchestrator-runtime",
       "gating_class": "auto_runnable",
-      "conflict_domains": ["planner-cli", "orchestrator-status", "merge-readiness"],
+      "conflict_domains": [
+        "planner-cli",
+        "orchestrator-status",
+        "merge-readiness"
+      ],
       "target_execplan_id": "20260311-implementation-orchestrator-runtime-codex-01-execplan",
       "goal_area": "implementation-orchestrator",
-      "expected_artifacts": ["src/platform_tools/implementation_orchestrator.py", "bin/implementation-orchestrator"],
-      "implementation_branch": "impl-execplan/20260311-implementation-orchestrator-runtime-codex-01-execplan-codex-01-20260311"
+      "expected_artifacts": [
+        "src/platform_tools/implementation_orchestrator.py",
+        "bin/implementation-orchestrator"
+      ],
+      "implementation_branch": "impl-execplan/20260311-implementation-orchestrator-runtime-codex-01-execplan-codex-01-20260311",
+      "ordering": {}
     },
     {
       "node_id": "rwg-005",
@@ -108,10 +161,16 @@
       "status": "completed",
       "completion_ref": "merged:provider-sync-scaffold",
       "gating_class": "auto_runnable",
-      "conflict_domains": ["provider-sync"],
+      "conflict_domains": [
+        "provider-sync"
+      ],
       "target_execplan_id": "20260311-provider-sync-scaffold-codex-01-execplan",
       "goal_area": "provider-sync",
-      "expected_artifacts": ["src/platform_tools/integrations/", "spec/provider-adapter.schema.yaml"]
+      "expected_artifacts": [
+        "src/platform_tools/integrations/",
+        "spec/provider-adapter.schema.yaml"
+      ],
+      "ordering": {}
     },
     {
       "node_id": "rwg-006",
@@ -119,11 +178,20 @@
       "status": "completed",
       "completion_ref": "merged:runtime-constraint-canonicalization",
       "gating_class": "auto_runnable",
-      "conflict_domains": ["orchestrator-status", "implementation-orchestrator", "remaining-work-graph"],
+      "conflict_domains": [
+        "orchestrator-status",
+        "implementation-orchestrator",
+        "remaining-work-graph"
+      ],
       "target_execplan_id": "20260311-runtime-constraint-canonicalization-codex-01-execplan",
       "goal_area": "runtime-governance",
-      "expected_artifacts": ["bin/remaining-work-graph-check", "src/platform_tools/remaining_work_graph_check.py", "bin/runtime-constraint-smoke-test"],
-      "implementation_branch": "impl-execplan/20260311-runtime-constraint-canonicalization-codex-01-execplan-codex-01-20260311"
+      "expected_artifacts": [
+        "bin/remaining-work-graph-check",
+        "src/platform_tools/remaining_work_graph_check.py",
+        "bin/runtime-constraint-smoke-test"
+      ],
+      "implementation_branch": "impl-execplan/20260311-runtime-constraint-canonicalization-codex-01-execplan-codex-01-20260311",
+      "ordering": {}
     },
     {
       "node_id": "rwg-007",
@@ -131,10 +199,16 @@
       "status": "completed",
       "completion_ref": "merged:github-projects-bootstrap-runtime",
       "gating_class": "auto_runnable",
-      "conflict_domains": ["provider-sync"],
+      "conflict_domains": [
+        "provider-sync"
+      ],
       "target_execplan_id": "20260311-github-projects-bootstrap-runtime-codex-01-execplan",
       "goal_area": "provider-sync",
-      "expected_artifacts": ["bin/github-projects-bootstrap", "src/platform_tools/integrations/github_projects_bootstrap.py"]
+      "expected_artifacts": [
+        "bin/github-projects-bootstrap",
+        "src/platform_tools/integrations/github_projects_bootstrap.py"
+      ],
+      "ordering": {}
     },
     {
       "node_id": "rwg-008",
@@ -142,10 +216,17 @@
       "status": "completed",
       "completion_ref": "merged:github-projects-provider-sync-runtime",
       "gating_class": "auto_runnable",
-      "conflict_domains": ["provider-sync", "review-runtime"],
+      "conflict_domains": [
+        "provider-sync",
+        "review-runtime"
+      ],
       "target_execplan_id": "20260311-github-projects-provider-sync-runtime-codex-01-execplan",
       "goal_area": "provider-sync",
-      "expected_artifacts": ["bin/github-projects-sync", "src/platform_tools/integrations/github_projects_sync.py"]
+      "expected_artifacts": [
+        "bin/github-projects-sync",
+        "src/platform_tools/integrations/github_projects_sync.py"
+      ],
+      "ordering": {}
     },
     {
       "node_id": "rwg-009",
@@ -153,10 +234,18 @@
       "status": "completed",
       "completion_ref": "merged:execplan-finalization-completion-reconciliation",
       "gating_class": "auto_runnable",
-      "conflict_domains": ["governance", "review-runtime"],
+      "conflict_domains": [
+        "governance",
+        "review-runtime"
+      ],
       "target_execplan_id": "20260312-execplan-finalization-completion-reconciliation-codex-01-execplan",
       "goal_area": "governance",
-      "expected_artifacts": ["bin/finalize-execplan", "src/platform_tools/finalize_execplan.py", "spec/governance.yaml"]
+      "expected_artifacts": [
+        "bin/finalize-execplan",
+        "src/platform_tools/finalize_execplan.py",
+        "spec/governance.yaml"
+      ],
+      "ordering": {}
     },
     {
       "node_id": "rwg-010",
@@ -164,11 +253,20 @@
       "status": "completed",
       "completion_ref": "merged:human-operations-review-runtime",
       "gating_class": "auto_runnable",
-      "conflict_domains": ["review-runtime", "provider-sync", "governance"],
+      "conflict_domains": [
+        "review-runtime",
+        "provider-sync",
+        "governance"
+      ],
       "target_execplan_id": "20260312-human-operations-review-runtime-codex-01-execplan",
       "goal_area": "governance",
-      "expected_artifacts": ["bin/human-operations-status", "src/platform_tools/human_operations_status.py", "bin/human-operations-smoke-test"],
-      "implementation_branch": "impl-execplan/20260312-human-operations-review-runtime-codex-01-execplan-codex-01-20260312"
+      "expected_artifacts": [
+        "bin/human-operations-status",
+        "src/platform_tools/human_operations_status.py",
+        "bin/human-operations-smoke-test"
+      ],
+      "implementation_branch": "impl-execplan/20260312-human-operations-review-runtime-codex-01-execplan-codex-01-20260312",
+      "ordering": {}
     },
     {
       "node_id": "rwg-011",
@@ -176,11 +274,20 @@
       "status": "completed",
       "completion_ref": "merged:game-rules-engine-audit-and-extensibility",
       "gating_class": "auto_runnable",
-      "conflict_domains": ["game-graph", "governance", "review-runtime"],
+      "conflict_domains": [
+        "game-graph",
+        "governance",
+        "review-runtime"
+      ],
       "target_execplan_id": "20260312-game-rules-engine-audit-and-extensibility-codex-01-execplan",
       "goal_area": "runtime-governance",
-      "expected_artifacts": ["bin/game-rules-audit", "src/platform_tools/game_rules_audit.py", "bin/game-rules-audit-smoke-test"],
-      "implementation_branch": "impl-execplan/20260312-game-rules-engine-audit-and-extensibility-codex-01-execplan-codex-01-20260312"
+      "expected_artifacts": [
+        "bin/game-rules-audit",
+        "src/platform_tools/game_rules_audit.py",
+        "bin/game-rules-audit-smoke-test"
+      ],
+      "implementation_branch": "impl-execplan/20260312-game-rules-engine-audit-and-extensibility-codex-01-execplan-codex-01-20260312",
+      "ordering": {}
     },
     {
       "node_id": "rwg-012",
@@ -188,10 +295,18 @@
       "status": "completed",
       "completion_ref": "merged:pr-72",
       "gating_class": "auto_runnable",
-      "conflict_domains": ["governance", "merge-readiness", "policy-compliance"],
+      "conflict_domains": [
+        "governance",
+        "merge-readiness",
+        "policy-compliance"
+      ],
       "target_execplan_id": "20260312-game-policy-compliance-codex-01-execplan",
       "goal_area": "governance",
-      "expected_artifacts": ["bin/policy-compliance-check", "src/platform_tools/policy_compliance_check.py", "bin/policy-compliance-smoke-test"],
+      "expected_artifacts": [
+        "bin/policy-compliance-check",
+        "src/platform_tools/policy_compliance_check.py",
+        "bin/policy-compliance-smoke-test"
+      ],
       "implementation_branch": "impl-execplan/20260312-game-policy-compliance-codex-01-execplan-codex-01-20260312",
       "ordering": {
         "queue_position": 12,
@@ -212,10 +327,16 @@
       "status": "completed",
       "completion_ref": "merged:pr-72",
       "gating_class": "auto_runnable",
-      "conflict_domains": ["policy-compliance", "merge-readiness"],
+      "conflict_domains": [
+        "policy-compliance",
+        "merge-readiness"
+      ],
       "target_execplan_id": "20260312-game-policy-compliance-codex-01-execplan",
       "goal_area": "governance",
-      "expected_artifacts": ["docs/games/commit-structure-game.md", "spec/games/commit-structure-game.yaml"],
+      "expected_artifacts": [
+        "docs/games/commit-structure-game.md",
+        "spec/games/commit-structure-game.yaml"
+      ],
       "ordering": {
         "queue_position": 13,
         "tie_breaker": "20260312-game-policy-compliance-codex-01-execplan"
@@ -231,16 +352,32 @@
     {
       "node_id": "rwg-014",
       "title": "Game hostile-review runtime",
-      "status": "blocked",
-      "status_reason": "must follow remaining-work ordering so hostile review consumes canonical graph-action and reorder legality instead of inventing it",
-      "gating_class": "auto_runnable",
-      "conflict_domains": ["review-runtime", "merge-readiness", "policy-compliance"],
+      "status": "review_gated",
+      "status_reason": "20260312-remaining-work-graph-actions-and-ordering-codex-01-execplan is completed on main; this is the next canonical slice and now requires a canonical ExecPlan plus a published implementation branch before execution",
+      "gating_class": "review_gated",
+      "conflict_domains": [
+        "review-runtime",
+        "merge-readiness",
+        "policy-compliance"
+      ],
       "target_execplan_id": "future:game-hostile-review",
       "goal_area": "review-runtime",
-      "expected_artifacts": ["bin/hostile-review", "bin/hostile-review-smoke-test", "artifacts/review/hostile-review-report.json"],
+      "expected_artifacts": [
+        "bin/hostile-review",
+        "bin/hostile-review-smoke-test",
+        "artifacts/review/hostile-review-report.json"
+      ],
       "ordering": {
         "queue_position": 14,
-        "tie_breaker": "future:game-hostile-review"
+        "tie_breaker": "future:game-hostile-review",
+        "source_action_id": "rwg-action-20260312-006-unblock-rwg-014"
+      },
+      "action_state": {
+        "last_action_id": "rwg-action-20260312-006-unblock-rwg-014",
+        "last_action": "unblock",
+        "action_required": false,
+        "reorder_requires_human": false,
+        "reorder_blockers": []
       }
     },
     {
@@ -249,10 +386,16 @@
       "status": "decision_gated",
       "status_reason": "queued future game family for branch-cut legality and branching decisions after policy-compliance work",
       "gating_class": "decision_gated",
-      "conflict_domains": ["governance", "workflow"],
+      "conflict_domains": [
+        "governance",
+        "workflow"
+      ],
       "target_execplan_id": "future:game-branching",
       "goal_area": "governance",
-      "expected_artifacts": ["docs/games/branching-game.md", "spec/games/branching-game.yaml"],
+      "expected_artifacts": [
+        "docs/games/branching-game.md",
+        "spec/games/branching-game.yaml"
+      ],
       "ordering": {
         "queue_position": 15,
         "tie_breaker": "future:game-branching"
@@ -264,10 +407,16 @@
       "status": "decision_gated",
       "status_reason": "queued future truth-layer game for citation-backed claims and anti-hallucination verification",
       "gating_class": "decision_gated",
-      "conflict_domains": ["research-provenance", "documentation"],
+      "conflict_domains": [
+        "research-provenance",
+        "documentation"
+      ],
       "target_execplan_id": "future:game-citation",
       "goal_area": "research-provenance",
-      "expected_artifacts": ["docs/games/citation-game.md", "spec/games/citation-game.yaml"],
+      "expected_artifacts": [
+        "docs/games/citation-game.md",
+        "spec/games/citation-game.yaml"
+      ],
       "ordering": {
         "queue_position": 16,
         "tie_breaker": "future:game-citation"
@@ -279,10 +428,16 @@
       "status": "decision_gated",
       "status_reason": "queued future truth-layer game for code, game, and relationship documentation completeness",
       "gating_class": "decision_gated",
-      "conflict_domains": ["documentation", "research-provenance"],
+      "conflict_domains": [
+        "documentation",
+        "research-provenance"
+      ],
       "target_execplan_id": "future:game-documentation",
       "goal_area": "documentation",
-      "expected_artifacts": ["docs/games/documentation-game.md", "spec/games/documentation-game.yaml"],
+      "expected_artifacts": [
+        "docs/games/documentation-game.md",
+        "spec/games/documentation-game.yaml"
+      ],
       "ordering": {
         "queue_position": 17,
         "tie_breaker": "future:game-documentation"
@@ -294,10 +449,16 @@
       "status": "decision_gated",
       "status_reason": "queued future projection-layer game for project-board reuse, item identity reuse, and sync integrity",
       "gating_class": "decision_gated",
-      "conflict_domains": ["provider-sync", "review-runtime"],
+      "conflict_domains": [
+        "provider-sync",
+        "review-runtime"
+      ],
       "target_execplan_id": "future:game-board-integrity",
       "goal_area": "provider-sync",
-      "expected_artifacts": ["docs/games/board-integrity-game.md", "spec/games/board-integrity-game.yaml"],
+      "expected_artifacts": [
+        "docs/games/board-integrity-game.md",
+        "spec/games/board-integrity-game.yaml"
+      ],
       "ordering": {
         "queue_position": 18,
         "tie_breaker": "future:game-board-integrity"
@@ -309,10 +470,18 @@
       "status": "completed",
       "completion_ref": "merged:pr-72",
       "gating_class": "auto_runnable",
-      "conflict_domains": ["policy-compliance", "merge-readiness", "remaining-work-graph"],
+      "conflict_domains": [
+        "policy-compliance",
+        "merge-readiness",
+        "remaining-work-graph"
+      ],
       "target_execplan_id": "20260312-game-policy-compliance-codex-01-execplan",
       "goal_area": "governance",
-      "expected_artifacts": ["artifacts/planner/research/remaining-work-graph.json", "bin/remaining-work-graph-check", "src/platform_tools/policy_compliance_check.py"],
+      "expected_artifacts": [
+        "artifacts/planner/research/remaining-work-graph.json",
+        "bin/remaining-work-graph-check",
+        "src/platform_tools/policy_compliance_check.py"
+      ],
       "ordering": {
         "queue_position": 19,
         "tie_breaker": "20260312-game-policy-compliance-codex-01-execplan",
@@ -329,27 +498,35 @@
     {
       "node_id": "rwg-020",
       "title": "Remaining-work graph actions and deterministic ordering",
-      "status": "ready",
-      "status_reason": "policy-compliance is reconciled on main; deterministic graph-action and ordering legality is the next canonical slice",
+      "status": "completed",
+      "status_reason": "",
       "gating_class": "auto_runnable",
-      "conflict_domains": ["remaining-work-graph", "policy-compliance", "provider-sync"],
+      "conflict_domains": [
+        "remaining-work-graph",
+        "policy-compliance",
+        "provider-sync"
+      ],
       "target_execplan_id": "20260312-remaining-work-graph-actions-and-ordering-codex-01-execplan",
       "goal_area": "governance",
       "implementation_branch": "impl-execplan/20260312-remaining-work-graph-actions-and-ordering-codex-01-execplan-codex-01-20260312",
-      "expected_artifacts": ["artifacts/planner/research/remaining-work-graph.json", "spec/remaining-work-graph.schema.yaml", "bin/remaining-work-graph-check"],
+      "expected_artifacts": [
+        "artifacts/planner/research/remaining-work-graph.json",
+        "spec/remaining-work-graph.schema.yaml",
+        "bin/remaining-work-graph-check"
+      ],
       "ordering": {
         "queue_position": 20,
-        "ready_order": 1,
         "tie_breaker": "20260312-remaining-work-graph-actions-and-ordering-codex-01-execplan",
-        "source_action_id": "rwg-action-20260312-003-reorder-rwg-020"
+        "source_action_id": "rwg-action-20260312-005-complete-rwg-020"
       },
       "action_state": {
-        "last_action_id": "rwg-action-20260312-004-promote-rwg-020",
-        "last_action": "promote_ready",
+        "last_action_id": "rwg-action-20260312-005-complete-rwg-020",
+        "last_action": "complete",
         "action_required": false,
         "reorder_requires_human": false,
         "reorder_blockers": []
-      }
+      },
+      "completion_ref": "merged:pr-73"
     },
     {
       "node_id": "artifact-orchestrator-contract",
@@ -359,7 +536,10 @@
       "conflict_domains": [],
       "target_execplan_id": "20260310-codex-orchestrator-contract-codex-01-execplan",
       "goal_area": "reference",
-      "expected_artifacts": ["docs/codex-orchestrator-contract.md"]
+      "expected_artifacts": [
+        "docs/codex-orchestrator-contract.md"
+      ],
+      "ordering": {}
     },
     {
       "node_id": "artifact-merge-readiness-contract",
@@ -369,55 +549,242 @@
       "conflict_domains": [],
       "target_execplan_id": "20260310-merge-readiness-engine-codex-01-execplan",
       "goal_area": "reference",
-      "expected_artifacts": ["docs/merge-readiness-contract.md"]
+      "expected_artifacts": [
+        "docs/merge-readiness-contract.md"
+      ],
+      "ordering": {}
     }
   ],
   "edges": [
-    { "from": "rwg-002", "to": "rwg-001", "relation": "depends_on" },
-    { "from": "rwg-004", "to": "rwg-002", "relation": "depends_on" },
-    { "from": "rwg-004", "to": "rwg-003", "relation": "depends_on" },
-    { "from": "rwg-006", "to": "rwg-004", "relation": "depends_on" },
-    { "from": "rwg-006", "to": "rwg-002", "relation": "depends_on" },
-    { "from": "rwg-007", "to": "rwg-005", "relation": "depends_on" },
-    { "from": "rwg-008", "to": "rwg-005", "relation": "depends_on" },
-    { "from": "rwg-008", "to": "rwg-007", "relation": "depends_on" },
-    { "from": "rwg-010", "to": "rwg-008", "relation": "depends_on" },
-    { "from": "rwg-010", "to": "rwg-009", "relation": "depends_on" },
-    { "from": "rwg-010", "to": "rwg-006", "relation": "depends_on" },
-    { "from": "rwg-011", "to": "rwg-010", "relation": "depends_on" },
-    { "from": "rwg-011", "to": "rwg-009", "relation": "depends_on" },
-    { "from": "rwg-012", "to": "rwg-011", "relation": "depends_on" },
-    { "from": "rwg-012", "to": "rwg-010", "relation": "depends_on" },
-    { "from": "rwg-013", "to": "rwg-012", "relation": "depends_on" },
-    { "from": "rwg-014", "to": "rwg-012", "relation": "depends_on" },
-    { "from": "rwg-014", "to": "rwg-013", "relation": "depends_on" },
-    { "from": "rwg-014", "to": "rwg-020", "relation": "depends_on" },
-    { "from": "rwg-019", "to": "rwg-012", "relation": "depends_on" },
-    { "from": "rwg-020", "to": "rwg-012", "relation": "depends_on" },
-    { "from": "rwg-015", "to": "rwg-012", "relation": "gated_by" },
-    { "from": "rwg-016", "to": "rwg-011", "relation": "gated_by" },
-    { "from": "rwg-017", "to": "rwg-011", "relation": "gated_by" },
-    { "from": "rwg-018", "to": "rwg-010", "relation": "gated_by" },
-    { "from": "rwg-018", "to": "rwg-012", "relation": "gated_by" },
-    { "from": "rwg-019", "to": "artifact-merge-readiness-contract", "relation": "informed_by" },
-    { "from": "rwg-020", "to": "artifact-merge-readiness-contract", "relation": "informed_by" },
-    { "from": "rwg-001", "to": "rwg-002", "relation": "conflicts_with" },
-    { "from": "rwg-002", "to": "rwg-004", "relation": "conflicts_with" },
-    { "from": "rwg-006", "to": "rwg-005", "relation": "conflicts_with" },
-    { "from": "rwg-008", "to": "rwg-010", "relation": "conflicts_with" },
-    { "from": "rwg-009", "to": "rwg-010", "relation": "conflicts_with" },
-    { "from": "rwg-012", "to": "rwg-014", "relation": "conflicts_with" },
-    { "from": "rwg-001", "to": "artifact-orchestrator-contract", "relation": "informed_by" },
-    { "from": "rwg-002", "to": "artifact-orchestrator-contract", "relation": "informed_by" },
-    { "from": "rwg-004", "to": "artifact-orchestrator-contract", "relation": "informed_by" },
-    { "from": "rwg-006", "to": "artifact-orchestrator-contract", "relation": "informed_by" },
-    { "from": "rwg-010", "to": "artifact-orchestrator-contract", "relation": "informed_by" },
-    { "from": "rwg-011", "to": "artifact-orchestrator-contract", "relation": "informed_by" },
-    { "from": "rwg-002", "to": "artifact-merge-readiness-contract", "relation": "informed_by" },
-    { "from": "rwg-004", "to": "artifact-merge-readiness-contract", "relation": "informed_by" },
-    { "from": "rwg-006", "to": "artifact-merge-readiness-contract", "relation": "informed_by" },
-    { "from": "rwg-010", "to": "artifact-merge-readiness-contract", "relation": "informed_by" },
-    { "from": "rwg-012", "to": "artifact-merge-readiness-contract", "relation": "informed_by" },
-    { "from": "rwg-014", "to": "artifact-merge-readiness-contract", "relation": "informed_by" }
+    {
+      "from": "rwg-002",
+      "to": "rwg-001",
+      "relation": "depends_on"
+    },
+    {
+      "from": "rwg-004",
+      "to": "rwg-002",
+      "relation": "depends_on"
+    },
+    {
+      "from": "rwg-004",
+      "to": "rwg-003",
+      "relation": "depends_on"
+    },
+    {
+      "from": "rwg-006",
+      "to": "rwg-004",
+      "relation": "depends_on"
+    },
+    {
+      "from": "rwg-006",
+      "to": "rwg-002",
+      "relation": "depends_on"
+    },
+    {
+      "from": "rwg-007",
+      "to": "rwg-005",
+      "relation": "depends_on"
+    },
+    {
+      "from": "rwg-008",
+      "to": "rwg-005",
+      "relation": "depends_on"
+    },
+    {
+      "from": "rwg-008",
+      "to": "rwg-007",
+      "relation": "depends_on"
+    },
+    {
+      "from": "rwg-010",
+      "to": "rwg-008",
+      "relation": "depends_on"
+    },
+    {
+      "from": "rwg-010",
+      "to": "rwg-009",
+      "relation": "depends_on"
+    },
+    {
+      "from": "rwg-010",
+      "to": "rwg-006",
+      "relation": "depends_on"
+    },
+    {
+      "from": "rwg-011",
+      "to": "rwg-010",
+      "relation": "depends_on"
+    },
+    {
+      "from": "rwg-011",
+      "to": "rwg-009",
+      "relation": "depends_on"
+    },
+    {
+      "from": "rwg-012",
+      "to": "rwg-011",
+      "relation": "depends_on"
+    },
+    {
+      "from": "rwg-012",
+      "to": "rwg-010",
+      "relation": "depends_on"
+    },
+    {
+      "from": "rwg-013",
+      "to": "rwg-012",
+      "relation": "depends_on"
+    },
+    {
+      "from": "rwg-014",
+      "to": "rwg-012",
+      "relation": "depends_on"
+    },
+    {
+      "from": "rwg-014",
+      "to": "rwg-013",
+      "relation": "depends_on"
+    },
+    {
+      "from": "rwg-014",
+      "to": "rwg-020",
+      "relation": "depends_on"
+    },
+    {
+      "from": "rwg-019",
+      "to": "rwg-012",
+      "relation": "depends_on"
+    },
+    {
+      "from": "rwg-020",
+      "to": "rwg-012",
+      "relation": "depends_on"
+    },
+    {
+      "from": "rwg-015",
+      "to": "rwg-012",
+      "relation": "gated_by"
+    },
+    {
+      "from": "rwg-016",
+      "to": "rwg-011",
+      "relation": "gated_by"
+    },
+    {
+      "from": "rwg-017",
+      "to": "rwg-011",
+      "relation": "gated_by"
+    },
+    {
+      "from": "rwg-018",
+      "to": "rwg-010",
+      "relation": "gated_by"
+    },
+    {
+      "from": "rwg-018",
+      "to": "rwg-012",
+      "relation": "gated_by"
+    },
+    {
+      "from": "rwg-019",
+      "to": "artifact-merge-readiness-contract",
+      "relation": "informed_by"
+    },
+    {
+      "from": "rwg-020",
+      "to": "artifact-merge-readiness-contract",
+      "relation": "informed_by"
+    },
+    {
+      "from": "rwg-001",
+      "to": "rwg-002",
+      "relation": "conflicts_with"
+    },
+    {
+      "from": "rwg-002",
+      "to": "rwg-004",
+      "relation": "conflicts_with"
+    },
+    {
+      "from": "rwg-006",
+      "to": "rwg-005",
+      "relation": "conflicts_with"
+    },
+    {
+      "from": "rwg-008",
+      "to": "rwg-010",
+      "relation": "conflicts_with"
+    },
+    {
+      "from": "rwg-009",
+      "to": "rwg-010",
+      "relation": "conflicts_with"
+    },
+    {
+      "from": "rwg-012",
+      "to": "rwg-014",
+      "relation": "conflicts_with"
+    },
+    {
+      "from": "rwg-001",
+      "to": "artifact-orchestrator-contract",
+      "relation": "informed_by"
+    },
+    {
+      "from": "rwg-002",
+      "to": "artifact-orchestrator-contract",
+      "relation": "informed_by"
+    },
+    {
+      "from": "rwg-004",
+      "to": "artifact-orchestrator-contract",
+      "relation": "informed_by"
+    },
+    {
+      "from": "rwg-006",
+      "to": "artifact-orchestrator-contract",
+      "relation": "informed_by"
+    },
+    {
+      "from": "rwg-010",
+      "to": "artifact-orchestrator-contract",
+      "relation": "informed_by"
+    },
+    {
+      "from": "rwg-011",
+      "to": "artifact-orchestrator-contract",
+      "relation": "informed_by"
+    },
+    {
+      "from": "rwg-002",
+      "to": "artifact-merge-readiness-contract",
+      "relation": "informed_by"
+    },
+    {
+      "from": "rwg-004",
+      "to": "artifact-merge-readiness-contract",
+      "relation": "informed_by"
+    },
+    {
+      "from": "rwg-006",
+      "to": "artifact-merge-readiness-contract",
+      "relation": "informed_by"
+    },
+    {
+      "from": "rwg-010",
+      "to": "artifact-merge-readiness-contract",
+      "relation": "informed_by"
+    },
+    {
+      "from": "rwg-012",
+      "to": "artifact-merge-readiness-contract",
+      "relation": "informed_by"
+    },
+    {
+      "from": "rwg-014",
+      "to": "artifact-merge-readiness-contract",
+      "relation": "informed_by"
+    }
   ]
 }
