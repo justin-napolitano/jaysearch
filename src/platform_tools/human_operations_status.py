@@ -94,6 +94,10 @@ def get_human_operations_status(
                 "pr_url": review_projection["pr_url"],
                 "pending_reconciliation": bool(review_projection["pending_reconciliation"]),
                 "takeover_needed": bool(review_projection["takeover_needed"]),
+                "hostile_review_state": review_projection["hostile_review_state"],
+                "hostile_review_blocker_count": int(review_projection["hostile_review_blocker_count"]),
+                "hostile_review_warning_count": int(review_projection["hostile_review_warning_count"]),
+                "hostile_review_report_path": review_projection["hostile_review_report_path"],
                 "execplan_status": review_projection["execplan_state"]["status"],
                 "execplan_path": review_projection["execplan_state"]["path"],
             }
@@ -105,10 +109,21 @@ def get_human_operations_status(
         "in_review": 0,
         "merged": 0,
     }
+    hostile_review_counts = {
+        "not_applicable": 0,
+        "not_started": 0,
+        "pending": 0,
+        "clean": 0,
+        "recovery_required": 0,
+        "merged": 0,
+    }
     for node in review_nodes:
         state = str(node.get("human_review_state", "")).strip()
         if state in counts:
             counts[state] += 1
+        hostile_state = str(node.get("hostile_review_state", "")).strip()
+        if hostile_state in hostile_review_counts:
+            hostile_review_counts[hostile_state] += 1
 
     pending_reconciliation = [node for node in review_nodes if node["pending_reconciliation"]]
     takeover_candidates = [node for node in review_nodes if node["takeover_needed"]]
@@ -157,6 +172,7 @@ def get_human_operations_status(
         "board_projection": sync_summary,
         "review_summary": {
             "counts": counts,
+            "hostile_review_counts": hostile_review_counts,
             "pending_reconciliation_count": len(pending_reconciliation),
             "takeover_candidate_count": len(takeover_candidates),
         },

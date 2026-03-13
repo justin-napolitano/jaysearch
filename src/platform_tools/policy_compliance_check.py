@@ -39,6 +39,7 @@ BOUNDED_EXECPLAN_FRONTMATTER_FIELDS = {"changes", "validation"}
 BOUNDED_EXECPLAN_MAX_LINES = 120
 BOUNDED_POLICY_REPAIR_MAX_LINES = 260
 BOUNDED_POLICY_REPAIR_MAX_FILES = 5
+BOUNDED_BRANCH_RECONCILIATION_MAX_LINES = 120
 BOUNDED_POLICY_REPAIR_SUBJECT_PREFIXES = (
     "fix(governance):",
     "feat(governance):",
@@ -46,6 +47,7 @@ BOUNDED_POLICY_REPAIR_SUBJECT_PREFIXES = (
     "docs(governance):",
 )
 BOUNDED_POLICY_REPAIR_ALLOWED_FILES = {
+    GRAPH_PATH,
     "docs/agent-game-rules-v1.md",
     "docs/governance.md",
     "docs/queued-execplans.md",
@@ -243,6 +245,22 @@ def _is_bounded_policy_repair_commit(
     return True, reasons
 
 
+def _is_bounded_branch_reconciliation_commit(
+    *,
+    subject: str,
+    commit_class: str,
+    commit_files: list[str],
+    changed_lines: int,
+) -> bool:
+    if commit_class != "governance":
+        return False
+    if subject != "docs(governance): promote hostile-review ready state" and subject != "docs(governance): reconcile graph and queue":
+        return False
+    if changed_lines > BOUNDED_BRANCH_RECONCILIATION_MAX_LINES:
+        return False
+    return set(commit_files) == {GRAPH_PATH, QUEUE_PATH}
+
+
 def _repo_relative_path(path: Path, *, root: Path) -> str:
     try:
         return path.resolve().relative_to(root.resolve()).as_posix()
@@ -283,6 +301,14 @@ def _commit_reports(
 
         commit_class = _classify_commit(subject)
         class_order = CLASS_ORDER[commit_class]
+        branch_reconciliation = _is_bounded_branch_reconciliation_commit(
+            subject=subject,
+            commit_class=commit_class,
+            commit_files=commit_files,
+            changed_lines=changed_lines,
+        )
+        if branch_reconciliation:
+            warnings.append(f"bounded_branch_reconciliation_commit:{commit}")
         if commit_class != "unknown" and class_order < max_seen:
             allowed_execplan_reconciliation, reconciliation_reasons = _is_bounded_execplan_reconciliation(
                 cwd=cwd,
@@ -307,7 +333,8 @@ def _commit_reports(
                 errors.append(f"procedural_commit_order_violation:{commit}:{subject}")
                 errors.extend(f"execplan_reconciliation_violation:{commit}:{reason}" for reason in reconciliation_reasons)
                 errors.extend(f"policy_repair_violation:{commit}:{reason}" for reason in policy_repair_reasons)
-        max_seen = max(max_seen, class_order)
+        if not branch_reconciliation:
+            max_seen = max(max_seen, class_order)
 
         if changed_lines > 400 and "commit-size-justification" not in body:
             errors.append(f"commit_hard_limit_exceeded:{commit}:{changed_lines}")

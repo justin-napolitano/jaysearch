@@ -7,6 +7,7 @@ from typing import Any
 
 from platform_tools.citation_check import check_citations
 from platform_tools.game_status import get_game_status
+from platform_tools.hostile_review import run_hostile_review
 from platform_tools.human_operations_status import get_human_operations_status
 from platform_tools.merge_readiness import check_merge_readiness
 from platform_tools.plan_utils import parse_plan
@@ -112,6 +113,15 @@ def get_orchestrator_status(
         branch=current_branch or None,
         execplan_path=execplan_path,
     )
+    hostile_review_report = None
+    hostile_review_code = 1
+    if execplan_path:
+        hostile_review_code, hostile_review_report = run_hostile_review(
+            root=root,
+            branch=current_branch or None,
+            execplan_path=execplan_path,
+            write_artifacts=False,
+        )
     score_surface = _planner_score_surface(cwd, planner_graph_id)
 
     checks = {
@@ -161,6 +171,16 @@ def get_orchestrator_status(
             ok=bool(human_operations_report.get("ok", False)),
             blockers=[str(item) for item in human_operations_report.get("blockers", [])],
             payload=human_operations_report,
+        ),
+        "hostile_review": _adapt_contract(
+            command="hostile-review",
+            ok=hostile_review_code == 0 and isinstance(hostile_review_report, dict) and bool(hostile_review_report.get("ok", False)),
+            blockers=[] if not isinstance(hostile_review_report, dict) else [
+                str(item.get("finding_id", "")).strip()
+                for item in hostile_review_report.get("findings", [])
+                if isinstance(item, dict) and str(item.get("severity", "")).strip() == "blocker"
+            ],
+            payload=hostile_review_report or {},
         ),
         "planner_score": score_surface,
     }
