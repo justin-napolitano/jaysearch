@@ -62,10 +62,12 @@ This document turns the remaining-work graph into an explicit near-term queue of
    - implementation branch: `impl-execplan/20260312-game-policy-compliance-codex-01-execplan-codex-01-20260312`
    - completion ref: `merged:pr-72`
 
-13. `future:game-hostile-review`
+13. `20260313-game-hostile-review-runtime-codex-01-execplan`
    - status: `review_gated`
    - goal: add machine hostile review before human approval gates
-   - gate: `canonical ExecPlan and published implementation branch required before execution`
+   - draft branch: `draft-execplan/20260313-game-hostile-review-runtime-codex-01-execplan-codex-01-20260313`
+   - planned implementation branch: `impl-execplan/20260313-game-hostile-review-runtime-codex-01-execplan-codex-01-20260313`
+   - gate: `published implementation branch required before execution`
 
 14. `future:game-branching`
    - status: `decision_gated`
