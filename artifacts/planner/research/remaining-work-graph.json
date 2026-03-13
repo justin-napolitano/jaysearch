@@ -353,14 +353,14 @@
       "node_id": "rwg-014",
       "title": "Game hostile-review runtime",
       "status": "review_gated",
-      "status_reason": "20260312-remaining-work-graph-actions-and-ordering-codex-01-execplan is completed on main; this is the next canonical slice and now requires a canonical ExecPlan plus a published implementation branch before execution",
+      "status_reason": "hostile review is the next canonical slice; a canonical ExecPlan now exists and implementation may begin only after its dedicated impl branch is cut and published",
       "gating_class": "review_gated",
       "conflict_domains": [
         "review-runtime",
         "merge-readiness",
         "policy-compliance"
       ],
-      "target_execplan_id": "future:game-hostile-review",
+      "target_execplan_id": "20260313-game-hostile-review-runtime-codex-01-execplan",
       "goal_area": "review-runtime",
       "expected_artifacts": [
         "bin/hostile-review",
@@ -369,7 +369,7 @@
       ],
       "ordering": {
         "queue_position": 14,
-        "tie_breaker": "future:game-hostile-review",
+        "tie_breaker": "20260313-game-hostile-review-runtime-codex-01-execplan",
         "source_action_id": "rwg-action-20260312-006-unblock-rwg-014"
       },
       "action_state": {
