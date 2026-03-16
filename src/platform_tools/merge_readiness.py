@@ -176,6 +176,7 @@ def _commit_reports(
             commit_class=commit_class,
             commit_files=commit_files,
             changed_lines=changed_lines,
+            active_execplan_path=active_execplan_path,
         )
         if branch_reconciliation:
             warnings.append(f"bounded_branch_reconciliation_commit:{commit}")

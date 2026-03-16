@@ -10,6 +10,7 @@ from typing import Any
 import yaml
 
 from platform_tools.branch_policy import get_current_branch
+from platform_tools.anti_cheat_check import check_anti_cheat
 from platform_tools.plan_utils import parse_frontmatter, parse_plan
 from platform_tools.remaining_work_graph_check import check_remaining_work_graph
 
@@ -537,6 +538,11 @@ def check_policy_compliance(
         branch=branch,
         execplan_path=plan_path.as_posix(),
     )
+    anti_cheat_code, anti_cheat_report = check_anti_cheat(
+        root=root,
+        execplan_path=plan_path.as_posix(),
+        base_ref=base_ref,
+    )
 
     graph_node = _graph_node_for_execplan(cwd, execplan_id)
     queue_has_execplan = _queue_has_execplan(cwd, execplan_id)
@@ -553,6 +559,8 @@ def check_policy_compliance(
     blockers.extend(commit_errors)
     if remaining_work_code != 0:
         blockers.extend(f"remaining_work_graph:{item}" for item in remaining_work_report.get("errors", []))
+    if anti_cheat_code != 0:
+        blockers.extend(f"anti_cheat:{item}" for item in anti_cheat_report.get("blockers", []))
 
     if graph_node is None:
         blockers.append(f"missing_remaining_work_node:{execplan_id}")
@@ -611,6 +619,7 @@ def check_policy_compliance(
                 "ready_order": remaining_work_report.get("ordering", {}).get("ready_execplan_ids", []),
                 "queue_projection": remaining_work_report.get("queue_projection", {}),
             },
+            "anti_cheat": anti_cheat_report,
             "commit_structure": {
                 "ok": not commit_errors,
                 "commit_stack": commit_stack,

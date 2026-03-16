@@ -10,6 +10,7 @@ from platform_tools.game_status import get_game_status
 from platform_tools.hostile_review import run_hostile_review
 from platform_tools.human_operations_status import get_human_operations_status
 from platform_tools.merge_readiness import check_merge_readiness
+from platform_tools.anti_cheat_check import check_anti_cheat
 from platform_tools.plan_utils import parse_plan
 from platform_tools.planner_score import score_graph
 from platform_tools.policy_compliance_check import check_policy_compliance
@@ -102,6 +103,11 @@ def get_orchestrator_status(
         execplan_path=execplan_path,
         base_ref=base_ref,
     )
+    _, anti_cheat_report = check_anti_cheat(
+        root=root,
+        execplan_path=execplan_path,
+        base_ref=base_ref,
+    )
     _, merge_report = check_merge_readiness(
         root=root,
         execplan_path=execplan_path,
@@ -148,6 +154,12 @@ def get_orchestrator_status(
             ok=bool(policy_report.get("ok", False)),
             blockers=[str(item) for item in policy_report.get("blockers", [])],
             payload=policy_report,
+        ),
+        "anti_cheat": _adapt_contract(
+            command="anti-cheat-check",
+            ok=bool(anti_cheat_report.get("ok", False)),
+            blockers=[str(item) for item in anti_cheat_report.get("blockers", [])],
+            payload=anti_cheat_report,
         ),
         "game_status": _adapt_contract(
             command="game-status",
