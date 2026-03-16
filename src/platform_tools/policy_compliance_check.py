@@ -40,6 +40,7 @@ BOUNDED_EXECPLAN_MAX_LINES = 120
 BOUNDED_POLICY_REPAIR_MAX_LINES = 260
 BOUNDED_POLICY_REPAIR_MAX_FILES = 5
 BOUNDED_BRANCH_RECONCILIATION_MAX_LINES = 120
+EXCEPTION_REGISTRY_PATH = ".agent/governance/exceptions.yaml"
 BOUNDED_POLICY_REPAIR_SUBJECT_PREFIXES = (
     "fix(governance):",
     "feat(governance):",
@@ -48,6 +49,7 @@ BOUNDED_POLICY_REPAIR_SUBJECT_PREFIXES = (
 )
 BOUNDED_POLICY_REPAIR_ALLOWED_FILES = {
     GRAPH_PATH,
+    EXCEPTION_REGISTRY_PATH,
     "docs/agent-game-rules-v1.md",
     "docs/governance.md",
     "docs/queued-execplans.md",
@@ -56,7 +58,6 @@ BOUNDED_POLICY_REPAIR_ALLOWED_FILES = {
     "tests/test_execplan_lint.py",
     "tests/test_policy_compliance_check.py",
 }
-EXCEPTION_REGISTRY_PATH = ".agent/governance/exceptions.yaml"
 
 
 def _git(cwd: Path, *args: str) -> str:
@@ -337,7 +338,11 @@ def _commit_reports(
             max_seen = max(max_seen, class_order)
 
         if changed_lines > 400 and "commit-size-justification" not in body:
-            errors.append(f"commit_hard_limit_exceeded:{commit}:{changed_lines}")
+            exception_id = _active_commit_hard_limit_exception(cwd, _current_branch(cwd), commit)
+            if exception_id:
+                warnings.append(f"commit_hard_limit_exception:{commit}:{exception_id}")
+            else:
+                errors.append(f"commit_hard_limit_exceeded:{commit}:{changed_lines}")
         elif changed_lines > 250 and commit_class not in {"execplan"}:
             warnings.append(f"commit_soft_limit_exceeded:{commit}:{changed_lines}")
         if file_count > 5:
@@ -421,6 +426,30 @@ def _active_branch_rewrite_exception(cwd: Path, branch: str) -> str | None:
         return None
     now = datetime.now(timezone.utc)
     allowed_scopes = {f"branch_rewrite:{branch}", f"history_rewrite:{branch}"}
+    for item in exceptions:
+        if not isinstance(item, dict):
+            continue
+        status = str(item.get("status", "")).strip()
+        scope = str(item.get("scope", "")).strip()
+        if status != "active" or scope not in allowed_scopes:
+            continue
+        expires = _parse_iso8601(str(item.get("expires_at", "")))
+        if expires is not None and expires < now:
+            continue
+        return str(item.get("id", "")).strip() or scope
+    return None
+
+
+def _active_commit_hard_limit_exception(cwd: Path, branch: str, commit: str) -> str | None:
+    registry = _load_yaml(cwd / EXCEPTION_REGISTRY_PATH)
+    exceptions = registry.get("exceptions", [])
+    if not isinstance(exceptions, list):
+        return None
+    now = datetime.now(timezone.utc)
+    allowed_scopes = {
+        f"commit_hard_limit:{branch}",
+        f"commit_hard_limit:{branch}:{commit}",
+    }
     for item in exceptions:
         if not isinstance(item, dict):
             continue

@@ -8,6 +8,15 @@ from typing import Any
 
 from platform_tools.branch_policy import get_current_branch
 from platform_tools.plan_utils import parse_plan
+from platform_tools.policy_compliance_check import (
+    EXCEPTION_REGISTRY_PATH,
+    _active_commit_hard_limit_exception,
+    _current_branch,
+    _is_bounded_execplan_reconciliation,
+    _is_bounded_branch_reconciliation_commit,
+    _is_bounded_policy_repair_commit,
+    _repo_relative_path,
+)
 
 
 GENERATED_ARTIFACT_PREFIXES = (
@@ -129,7 +138,12 @@ def _classify_commit(subject: str) -> str:
     return "unknown"
 
 
-def _commit_reports(cwd: Path, base_ref: str) -> tuple[list[dict[str, Any]], list[str], list[str]]:
+def _commit_reports(
+    cwd: Path,
+    base_ref: str,
+    *,
+    active_execplan_path: str,
+) -> tuple[list[dict[str, Any]], list[str], list[str]]:
     merge_base = _merge_base(cwd, base_ref)
     output = _git(cwd, "rev-list", "--reverse", f"{merge_base}..HEAD")
     commits = [line.strip() for line in output.splitlines() if line.strip()]
@@ -142,6 +156,8 @@ def _commit_reports(cwd: Path, base_ref: str) -> tuple[list[dict[str, Any]], lis
         subject = _git(cwd, "show", "-s", "--format=%s", commit)
         body = _git(cwd, "show", "-s", "--format=%b", commit)
         numstat = _git(cwd, "show", "--numstat", "--format=", commit)
+        name_only = _git(cwd, "show", "--name-only", "--format=", commit)
+        commit_files = [line.strip() for line in name_only.splitlines() if line.strip()]
         file_count = 0
         changed_lines = 0
         for line in numstat.splitlines():
@@ -155,12 +171,45 @@ def _commit_reports(cwd: Path, base_ref: str) -> tuple[list[dict[str, Any]], lis
 
         commit_class = _classify_commit(subject)
         class_order = CLASS_ORDER[commit_class]
-        if commit_class != "unknown" and class_order < max_seen:
-            errors.append(f"procedural_commit_order_violation:{commit}:{subject}")
-        max_seen = max(max_seen, class_order)
+        branch_reconciliation = _is_bounded_branch_reconciliation_commit(
+            subject=subject,
+            commit_class=commit_class,
+            commit_files=commit_files,
+            changed_lines=changed_lines,
+        )
+        if branch_reconciliation:
+            warnings.append(f"bounded_branch_reconciliation_commit:{commit}")
+        if commit_class != "unknown" and class_order < max_seen and not branch_reconciliation:
+            allowed_execplan_reconciliation, _ = _is_bounded_execplan_reconciliation(
+                cwd=cwd,
+                commit=commit,
+                commit_class=commit_class,
+                commit_files=commit_files,
+                changed_lines=changed_lines,
+                active_execplan_path=active_execplan_path,
+            )
+            allowed_policy_repair, _ = _is_bounded_policy_repair_commit(
+                subject=subject,
+                commit_class=commit_class,
+                commit_files=commit_files,
+                changed_lines=changed_lines,
+                active_execplan_path=active_execplan_path,
+            )
+            if allowed_execplan_reconciliation:
+                warnings.append(f"bounded_execplan_reconciliation:{commit}")
+            elif allowed_policy_repair:
+                warnings.append(f"bounded_policy_repair_commit:{commit}")
+            else:
+                errors.append(f"procedural_commit_order_violation:{commit}:{subject}")
+        if not branch_reconciliation:
+            max_seen = max(max_seen, class_order)
 
         if changed_lines > 400 and "commit-size-justification" not in body:
-            errors.append(f"commit_hard_limit_exceeded:{commit}:{changed_lines}")
+            exception_id = _active_commit_hard_limit_exception(cwd, _current_branch(cwd), commit)
+            if exception_id:
+                warnings.append(f"commit_hard_limit_exception:{commit}:{exception_id}")
+            else:
+                errors.append(f"commit_hard_limit_exceeded:{commit}:{changed_lines}")
         elif changed_lines > 250 and commit_class not in {"execplan"}:
             warnings.append(f"commit_soft_limit_exceeded:{commit}:{changed_lines}")
         if file_count > 5:
@@ -173,6 +222,7 @@ def _commit_reports(cwd: Path, base_ref: str) -> tuple[list[dict[str, Any]], lis
                 "class": commit_class,
                 "file_count": file_count,
                 "changed_lines": changed_lines,
+                "files": commit_files,
             }
         )
     return reports, errors, warnings
@@ -251,7 +301,11 @@ def check_merge_readiness(
     if dirty_artifacts:
         failing_checks.append("dirty_generated_artifacts")
 
-    commit_reports, commit_errors, commit_warnings = _commit_reports(cwd, base_ref)
+    commit_reports, commit_errors, commit_warnings = _commit_reports(
+        cwd,
+        base_ref,
+        active_execplan_path=_repo_relative_path(plan_path, root=cwd),
+    )
     failing_checks.extend(commit_errors)
     scope_report = _scope_blocker_report(cwd, graph_id)
     if scope_report["status"] == "fail":
