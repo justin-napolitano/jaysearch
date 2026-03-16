@@ -112,14 +112,20 @@ This document turns the remaining-work graph into an explicit near-term queue of
    - completion ref: `merged:pr-80`
 
 22. `20260316-subgame-branch-state-transition-governance-codex-01-execplan`
-   - status: `ready`
+   - status: `completed`
    - goal: replace implementation-branch commit-order legality with subgame branch contracts and state-transition legality
    - draft branch: `draft-execplan/20260316-next-planning-codex-02`
    - implementation branch: `impl-execplan/20260316-subgame-branch-state-transition-governance-codex-01-execplan-codex-01-20260316`
+   - completion ref: `merged:pr-81`
+
+23. `20260316-anti-cheat-rule-surface-authority-cleanup-codex-01-execplan`
+   - status: `review_gated`
+   - goal: make governance rule-surface legality explicit in anti-cheat policy so lawful slices do not pass with warning-only ambiguity
+   - draft branch: `draft-execplan/20260316-anti-cheat-rule-surface-followup-codex-01`
 ## Mirror Metadata
 
-- canonical_last_graph_action_id: `rwg-action-20260316-010-promote-rwg-023`
-- canonical_ready_order: `20260316-subgame-branch-state-transition-governance-codex-01-execplan`
+- canonical_last_graph_action_id: `rwg-action-20260316-012-unblock-rwg-024`
+- canonical_ready_order: ` `
 - projection_authority: `projection_only`
 
 ## Queue Discipline
