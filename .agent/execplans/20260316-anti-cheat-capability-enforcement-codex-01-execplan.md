@@ -29,6 +29,9 @@ validation:
     - name: "remaining-work-graph-check"
       command: "bin/remaining-work-graph-check"
       expected_exit: 0
+    - name: "policy-compliance-check"
+      command: "bin/policy-compliance-check --execplan-path .agent/execplans/20260316-anti-cheat-capability-enforcement-codex-01-execplan.md"
+      expected_exit: 0
 tasks:
   - title: "Define protected rule and referee surfaces"
     priority: "P1"
@@ -47,21 +50,24 @@ Prevent Codex or any governed agent from “winning” by modifying the rules, v
 
 ## Progress
 
+- [x] Cut and publish the canonical implementation branch
 - [ ] Define protected surfaces and anti-cheat principles
 - [ ] Define capability classes for users, agents, and branch types
 - [ ] Define exception and escalation model
-- [ ] Queue the implementation slice behind the API contract
+- [x] Queue the implementation slice behind the API contract
 
 ## Surprises & Discoveries
 
 - The current governance model still permits fix-forward repair of the checkers that judge the active branch; that is auditable, but not yet a strong anti-cheat boundary.
 - Anti-cheat enforcement has to distinguish legitimate governance work from implementation work or it will either overblock maintainers or underblock agents.
+- Publishing the slice-2 implementation branch is not enough by itself; slice 1 completion and slice 2 promotion must be recorded as explicit graph actions before anti-cheat enforcement work can begin lawfully.
 
 ## Decision Log
 
 - 2026-03-16 / agent-codex-01 / Anti-cheat work should treat rule surfaces, validator surfaces, and exception registries as separately governed capability domains.
 - 2026-03-16 / agent-codex-01 / The system should allow explicit human-authorized exceptions without allowing agents to self-authorize them.
 - 2026-03-16 / agent-codex-01 / Slice 2 must consume the transition/action model from slice 1 rather than inventing a second mutation model for protected surfaces.
+- 2026-03-16 / agent-codex-01 / Slice 2 may only start after the merged slice-1 branch is canonically reconciled to `completed` and the published slice-2 branch is explicitly promoted to `ready`.
 
 ## Outcomes & Retrospective
 
