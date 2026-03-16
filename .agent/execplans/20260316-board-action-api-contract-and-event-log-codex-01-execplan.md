@@ -16,7 +16,9 @@ changes:
   - spec/board-action-api.yaml
   - spec/board-event-log.schema.yaml
   - src/platform_tools/board_action_api.py
+  - src/platform_tools/policy_compliance_check.py
   - tests/test_board_action_api.py
+  - tests/test_policy_compliance_check.py
 approve_policy: codeowners
 reviewers:
   - "github:justin-napolitano"
@@ -75,6 +77,7 @@ The local graph and other canonical local artifacts must remain authoritative. T
 - A usable API contract must describe both write commands and read/projection semantics, otherwise consumers will accidentally treat projections as authority.
 - Publishing the `impl-execplan/*` branch is still only half of the lawful start condition; the remaining-work graph and queue mirror must record an explicit promote-ready action before implementation can proceed.
 - This slice needs a small local runtime even though the long-term API remains contract-first, because later anti-cheat work needs a deterministic referee surface to consume rather than only prose and schema files.
+- The current policy checker needed a bounded repair to treat branch-start graph/queue reconciliation as order-neutral, otherwise this slice's lawful ready-state promotion falsely blocked later spec/runtime commits.
 
 ## Decision Log
 
@@ -83,6 +86,7 @@ The local graph and other canonical local artifacts must remain authoritative. T
 - 2026-03-16 / agent-codex-01 / `git` and `gh` should act as the operator UI and evidence transport for the game, while local canonical artifacts remain the source of truth and local referees remain the primary judges.
 - 2026-03-16 / agent-codex-01 / The implementation branch for this slice must be published and then reconciled into the canonical remaining-work graph as `ready` before runtime/spec work begins.
 - 2026-03-16 / agent-codex-01 / This slice includes a narrow local validator and event-log writer because slice 2 needs machine-consumable contract enforcement, but it still does not introduce a full mutation-serving API runtime.
+- 2026-03-16 / agent-codex-01 / The slice may repair `policy-compliance-check` in scope when the checker misclassifies the branch-start ready-state reconciliation required to begin this implementation lawfully.
 
 ## Outcomes & Retrospective
 
