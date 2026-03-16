@@ -334,6 +334,45 @@ def test_policy_compliance_allows_small_late_execplan_progress_update(tmp_path: 
     assert any("bounded_execplan_reconciliation" in warning for warning in report["warnings"])
 
 
+def test_policy_compliance_allows_late_execplan_stale_path_replacement(tmp_path: Path) -> None:
+    execplan = _seed_repo(tmp_path, graph_and_queue_on_main=False)
+
+    _write(
+        execplan,
+        _execplan_text().replace(
+            "changes:\n  - .agent/execplans/20260312-game-policy-compliance-codex-01-execplan.md\n",
+            "changes:\n"
+            "  - .agent/execplans/20260312-game-policy-compliance-codex-01-execplan.md\n"
+            "  - tests/test_missing_surface.py\n",
+        ),
+    )
+    _git(tmp_path, "add", execplan.as_posix())
+    _git(tmp_path, "commit", "-m", "docs(execplan): add stale planned path")
+
+    _write(
+        execplan,
+        _execplan_text().replace(
+            "changes:\n  - .agent/execplans/20260312-game-policy-compliance-codex-01-execplan.md\n",
+            "changes:\n"
+            "  - .agent/execplans/20260312-game-policy-compliance-codex-01-execplan.md\n"
+            "  - tests/test_real_surface.py\n",
+        ).replace("- [ ] Test", "- [x] Test"),
+    )
+    _git(tmp_path, "add", execplan.as_posix())
+    _git(tmp_path, "commit", "-m", "docs(execplan): replace stale planned path")
+
+    code, report = check_policy_compliance(
+        root=tmp_path.as_posix(),
+        execplan_path=execplan.as_posix(),
+        base_ref="main",
+    )
+
+    assert code == 0
+    assert report["ok"] is True
+    assert not any("changes_field_not_additive" in blocker for blocker in report["blockers"])
+    assert any("bounded_execplan_reconciliation" in warning for warning in report["warnings"])
+
+
 def test_policy_compliance_allows_multiple_adjacent_test_commits(tmp_path: Path) -> None:
     execplan = _seed_repo(tmp_path, graph_and_queue_on_main=False, split_test_phase=True)
 
