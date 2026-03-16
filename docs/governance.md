@@ -127,6 +127,23 @@ Policy-compliance rule:
 - `bin/remaining-work-graph-check` is the canonical legality surface for graph-action state, deterministic ready ordering, and stale queue-projection detection.
 - Reorder operations are legal only when recorded as canonical graph actions; silent queue edits or board-only reprioritization are forbidden moves.
 
+Referee-cycle escalation rule:
+
+- Governed implementation should not loop indefinitely through failing referee cycles without human review.
+- Default maximum failed repair cycles per slice: `10`.
+- A failed repair cycle means:
+  - one or more required referees run on the active slice
+  - the slice remains non-passing
+  - the agent makes a fix-forward change in response
+  - the referees are run again
+- Once the cycle limit is reached, implementation must escalate to human review before continuing.
+- The escalation checkpoint must review:
+  - the active ExecPlan
+  - the current branch state
+  - the accumulated failing referee evidence
+  - whether the slice should continue, narrow, split, exception, or be replanned
+- Future runtime/checker work should expose this checkpoint as machine-readable state rather than burying it in prose.
+
 Game layering rule:
 
 - The platform is one shared board with inherited global law.
