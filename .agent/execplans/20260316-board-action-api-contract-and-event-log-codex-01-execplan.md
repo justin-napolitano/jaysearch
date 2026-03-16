@@ -48,21 +48,24 @@ The local graph and other canonical local artifacts must remain authoritative. T
 
 ## Progress
 
+- [x] Queue the implementation slice behind hostile-review completion
+- [x] Cut and publish the canonical implementation branch
 - [ ] Draft the board-action API authority contract
 - [ ] Define typed legal actions and mutation targets
 - [ ] Define deterministic event-log and audit requirements
-- [ ] Queue the implementation slice behind hostile-review completion
 
 ## Surprises & Discoveries
 
 - The current system still lets governed agents mutate canonical files directly, which makes user and agent moves look similar even when they should be capability-distinct.
 - A usable API contract must describe both write commands and read/projection semantics, otherwise consumers will accidentally treat projections as authority.
+- Publishing the `impl-execplan/*` branch is still only half of the lawful start condition; the remaining-work graph and queue mirror must record an explicit promote-ready action before implementation can proceed.
 
 ## Decision Log
 
 - 2026-03-16 / agent-codex-01 / The API must not replace canonical local authority; it only mediates legal state transitions against it.
 - 2026-03-16 / agent-codex-01 / “Users can update everything” is reframed as “users can submit any legal action through a typed, audited interface.”
 - 2026-03-16 / agent-codex-01 / `git` and `gh` should act as the operator UI and evidence transport for the game, while local canonical artifacts remain the source of truth and local referees remain the primary judges.
+- 2026-03-16 / agent-codex-01 / The implementation branch for this slice must be published and then reconciled into the canonical remaining-work graph as `ready` before runtime/spec work begins.
 
 ## Outcomes & Retrospective
 
