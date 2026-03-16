@@ -63,10 +63,11 @@ This document turns the remaining-work graph into an explicit near-term queue of
    - completion ref: `merged:pr-72`
 
 13. `20260313-game-hostile-review-runtime-codex-01-execplan`
-   - status: `ready`
+   - status: `completed`
    - goal: add machine hostile review before human approval gates
    - draft branch: `draft-execplan/20260313-game-hostile-review-runtime-codex-01-execplan-codex-01-20260313`
    - implementation branch: `impl-execplan/20260313-game-hostile-review-runtime-codex-01-execplan-codex-01-20260313`
+   - completion ref: `merged:pr-75`
 
 14. `future:game-branching`
    - status: `decision_gated`
@@ -95,10 +96,36 @@ This document turns the remaining-work graph into an explicit near-term queue of
    - draft branch: `draft-execplan/20260312-remaining-work-graph-actions-and-ordering-codex-01-execplan-codex-01-20260312`
    - implementation branch: `impl-execplan/20260312-remaining-work-graph-actions-and-ordering-codex-01-execplan-codex-01-20260312`
    - completion ref: `merged:pr-73`
+
+20. `20260316-board-action-api-contract-and-event-log-codex-01-execplan`
+   - status: `review_gated`
+   - goal: define typed board/game actions, authority-preserving mutation rules, and a deterministic event log
+   - draft branch: `draft-execplan/20260316-next-planning-codex-02`
+   - planned implementation branch: `impl-execplan/20260316-board-action-api-contract-and-event-log-codex-01-execplan-codex-01-20260316`
+   - gate: `published implementation branch required before execution`
+
+21. `20260316-anti-cheat-capability-enforcement-codex-01-execplan`
+   - status: `blocked`
+   - goal: define protected surfaces, capability classes, and explicit exception paths so agents cannot self-authorize compliance
+   - draft branch: `draft-execplan/20260316-next-planning-codex-02`
+   - planned implementation branch: `impl-execplan/20260316-anti-cheat-capability-enforcement-codex-01-execplan-codex-01-20260316`
+   - blocked on:
+     - `20260313-game-hostile-review-runtime-codex-01-execplan`
+     - `20260316-board-action-api-contract-and-event-log-codex-01-execplan`
+
+22. `20260316-subgame-branch-state-transition-governance-codex-01-execplan`
+   - status: `blocked`
+   - goal: replace implementation-branch commit-order legality with subgame branch contracts and state-transition legality
+   - draft branch: `draft-execplan/20260316-next-planning-codex-02`
+   - planned implementation branch: `impl-execplan/20260316-subgame-branch-state-transition-governance-codex-01-execplan-codex-01-20260316`
+   - blocked on:
+     - `20260313-game-hostile-review-runtime-codex-01-execplan`
+     - `20260316-board-action-api-contract-and-event-log-codex-01-execplan`
+     - `20260316-anti-cheat-capability-enforcement-codex-01-execplan`
 ## Mirror Metadata
 
-- canonical_last_graph_action_id: `rwg-action-20260313-001-promote-rwg-014`
-- canonical_ready_order: `20260313-game-hostile-review-runtime-codex-01-execplan`
+- canonical_last_graph_action_id: `rwg-action-20260316-003-unblock-rwg-021`
+- canonical_ready_order: ``
 - projection_authority: `projection_only`
 
 ## Queue Discipline
