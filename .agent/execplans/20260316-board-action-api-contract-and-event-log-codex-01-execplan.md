@@ -29,6 +29,9 @@ validation:
     - name: "remaining-work-graph-check"
       command: "bin/remaining-work-graph-check"
       expected_exit: 0
+    - name: "policy-compliance-check"
+      command: "bin/policy-compliance-check --execplan-path .agent/execplans/20260316-board-action-api-contract-and-event-log-codex-01-execplan.md"
+      expected_exit: 0
 tasks:
   - title: "Define authority-preserving board action API contract"
     priority: "P1"
