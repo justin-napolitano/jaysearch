@@ -40,6 +40,10 @@ BOUNDED_EXECPLAN_MAX_LINES = 120
 BOUNDED_POLICY_REPAIR_MAX_LINES = 260
 BOUNDED_POLICY_REPAIR_MAX_FILES = 5
 BOUNDED_BRANCH_RECONCILIATION_MAX_LINES = 120
+BOUNDED_BRANCH_RECONCILIATION_SUBJECT_PREFIXES = (
+    "docs(governance): promote ",
+    "docs(governance): reconcile graph and queue",
+)
 EXCEPTION_REGISTRY_PATH = ".agent/governance/exceptions.yaml"
 BOUNDED_POLICY_REPAIR_SUBJECT_PREFIXES = (
     "fix(governance):",
@@ -257,14 +261,19 @@ def _is_bounded_branch_reconciliation_commit(
     commit_class: str,
     commit_files: list[str],
     changed_lines: int,
+    active_execplan_path: str,
 ) -> bool:
     if commit_class != "governance":
         return False
-    if subject != "docs(governance): promote hostile-review ready state" and subject != "docs(governance): reconcile graph and queue":
+    if not subject.startswith(BOUNDED_BRANCH_RECONCILIATION_SUBJECT_PREFIXES):
         return False
     if changed_lines > BOUNDED_BRANCH_RECONCILIATION_MAX_LINES:
         return False
-    return set(commit_files) == {GRAPH_PATH, QUEUE_PATH}
+    allowed_files = {GRAPH_PATH, QUEUE_PATH}
+    if active_execplan_path:
+        allowed_files.add(active_execplan_path)
+    commit_file_set = set(commit_files)
+    return {GRAPH_PATH, QUEUE_PATH}.issubset(commit_file_set) and commit_file_set.issubset(allowed_files)
 
 
 def _repo_relative_path(path: Path, *, root: Path) -> str:
@@ -312,6 +321,7 @@ def _commit_reports(
             commit_class=commit_class,
             commit_files=commit_files,
             changed_lines=changed_lines,
+            active_execplan_path=active_execplan_path,
         )
         if branch_reconciliation:
             warnings.append(f"bounded_branch_reconciliation_commit:{commit}")
