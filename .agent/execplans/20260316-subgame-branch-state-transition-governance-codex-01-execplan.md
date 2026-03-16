@@ -8,10 +8,21 @@ base_branch: main
 changes:
   - .agent/execplans/20260316-subgame-branch-state-transition-governance-codex-01-execplan.md
   - artifacts/planner/research/remaining-work-graph.json
+  - bin/state-transition-legality-check
+  - bin/state-transition-legality-smoke-test
   - docs/queued-execplans.md
   - docs/subgame-branch-governance.md
+  - spec/agent-capability-policy.yaml
+  - spec/protected-surfaces.schema.yaml
   - spec/subgame-branch-contract.yaml
   - spec/state-transition-legality.schema.yaml
+  - src/platform_tools/merge_readiness.py
+  - src/platform_tools/orchestrator_status.py
+  - src/platform_tools/policy_compliance_check.py
+  - src/platform_tools/state_transition_legality.py
+  - tests/test_orchestrator_status.py
+  - tests/test_policy_compliance_check.py
+  - tests/test_state_transition_legality.py
 approve_policy: codeowners
 reviewers:
   - "github:justin-napolitano"
@@ -31,6 +42,12 @@ validation:
       expected_exit: 0
     - name: "policy-compliance-check"
       command: "bin/policy-compliance-check --execplan-path .agent/execplans/20260316-subgame-branch-state-transition-governance-codex-01-execplan.md"
+      expected_exit: 0
+    - name: "state-transition-tests"
+      command: "uv run pytest tests/test_state_transition_legality.py tests/test_policy_compliance_check.py tests/test_orchestrator_status.py -q"
+      expected_exit: 0
+    - name: "state-transition-smoke-test"
+      command: "bin/state-transition-legality-smoke-test"
       expected_exit: 0
 tasks:
   - title: "Define subgame branch contracts and merge-back requirements"
@@ -52,9 +69,9 @@ Remove the assumption that an implementation branch must tell one linear procedu
 ## Progress
 
 - [x] Cut and publish the canonical implementation branch
-- [ ] Define subgame branch model and merge contracts
-- [ ] Define state-transition legality rules that replace commit-order dependence
-- [ ] Define conflict and handoff semantics for independently played subgames
+- [x] Define subgame branch model and merge contracts
+- [x] Define state-transition legality rules that replace commit-order dependence
+- [x] Define conflict and handoff semantics for independently played subgames
 - [x] Queue the implementation slice behind the API and anti-cheat slices
 
 ## Surprises & Discoveries
@@ -62,6 +79,7 @@ Remove the assumption that an implementation branch must tell one linear procedu
 - Commit order worked as a review aid, but it is structurally hostile to independent subgame execution and branch fan-out.
 - If branch-order rules are removed without a replacement legality model, the system will lose deterministic referee pressure rather than gaining flexibility.
 - Publishing the slice-3 implementation branch is only the branch-side precondition; slice 2 completion and slice 3 promotion still need explicit canonical graph actions before implementation can begin lawfully.
+- The compatibility path matters: procedural commit-order enforcement can only retire when the new referee is both installed and returning `status: ok`; deferred compatibility mode must not silently relax legacy checks.
 
 ## Decision Log
 
@@ -69,6 +87,7 @@ Remove the assumption that an implementation branch must tell one linear procedu
 - 2026-03-16 / agent-codex-01 / Independently played subgames need branch contracts, merge-back contracts, and conflict semantics before multiple agents can play them safely.
 - 2026-03-16 / agent-codex-01 / Slice 3 is only valid if the new legality model is stricter and more machine-checkable than procedural commit-order checks, not merely more flexible.
 - 2026-03-16 / agent-codex-01 / Slice 3 may only start after the merged slice-2 branch is canonically reconciled to `completed` and the published slice-3 branch is explicitly promoted to `ready`.
+- 2026-03-16 / agent-codex-01 / `policy-compliance-check` should retire implementation-branch commit-order blocking only when `state-transition-legality-check` reports `status: ok`; deferred installation compatibility remains order-enforced.
 
 ## Outcomes & Retrospective
 
@@ -78,6 +97,12 @@ On completion, the repository should have:
 - deterministic state-transition legality rules
 - merge-back and conflict semantics for independently played subgames
 - a clear path to retire commit-order rules from implementation branches
+
+Implemented:
+
+- `spec/subgame-branch-contract.yaml` defines implementation-root and subgame branch roles plus merge-back proof obligations
+- `state-transition-legality-check` now validates declared scope, dependency completion, surface legality, and handoff requirements
+- `policy-compliance-check` now retires implementation-branch commit-order blocking only when the new referee passes
 
 ## Context and Orientation
 
@@ -151,6 +176,14 @@ Expected artifacts:
 - `docs/subgame-branch-governance.md`
 - `spec/subgame-branch-contract.yaml`
 - `spec/state-transition-legality.schema.yaml`
+
+Validation evidence:
+
+- `bin/execplan-validate .agent/execplans/20260316-subgame-branch-state-transition-governance-codex-01-execplan.md`
+- `bin/remaining-work-graph-check`
+- `bin/policy-compliance-check --execplan-path .agent/execplans/20260316-subgame-branch-state-transition-governance-codex-01-execplan.md`
+- `bin/state-transition-legality-smoke-test`
+- `uv run pytest tests/test_state_transition_legality.py tests/test_policy_compliance_check.py tests/test_orchestrator_status.py -q`
 
 Non-goals for this slice:
 
