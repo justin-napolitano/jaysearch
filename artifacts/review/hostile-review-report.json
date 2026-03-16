@@ -1,0 +1,120 @@
+{
+  "active_node": {
+    "action_state": {
+      "action_required": false,
+      "last_action": "promote_ready",
+      "last_action_id": "rwg-action-20260313-001-promote-rwg-014",
+      "reorder_blockers": [],
+      "reorder_requires_human": false
+    },
+    "active": true,
+    "conflict_domains": [
+      "merge-readiness",
+      "policy-compliance",
+      "review-runtime"
+    ],
+    "dependencies_complete": true,
+    "dependency_states": [
+      {
+        "node_id": "rwg-012",
+        "status": "completed"
+      },
+      {
+        "node_id": "rwg-013",
+        "status": "completed"
+      },
+      {
+        "node_id": "rwg-020",
+        "status": "completed"
+      }
+    ],
+    "depends_on": [
+      "rwg-012",
+      "rwg-013",
+      "rwg-020"
+    ],
+    "eligible_now": true,
+    "expected_artifacts": [
+      "artifacts/review/hostile-review-report.json",
+      "bin/hostile-review",
+      "bin/hostile-review-smoke-test"
+    ],
+    "gated_by": [],
+    "gating_class": "auto_runnable",
+    "goal_area": "review-runtime",
+    "implementation_branch": "impl-execplan/20260313-game-hostile-review-runtime-codex-01-execplan-codex-01-20260313",
+    "node_id": "rwg-014",
+    "ordering": {
+      "queue_position": 14,
+      "ready_order": 1,
+      "source_action_id": "rwg-action-20260313-001-promote-rwg-014",
+      "tie_breaker": "20260313-game-hostile-review-runtime-codex-01-execplan"
+    },
+    "status": "ready",
+    "status_reason": "",
+    "target_execplan_id": "20260313-game-hostile-review-runtime-codex-01-execplan",
+    "title": "Game hostile-review runtime"
+  },
+  "artifacts": {
+    "evidence_path": "artifacts/review/validation-evidence.json",
+    "report_path": "artifacts/review/hostile-review-report.json",
+    "summary_path": "artifacts/review/hostile-review-summary.md"
+  },
+  "branch": "impl-execplan/20260313-game-hostile-review-runtime-codex-01-execplan-codex-01-20260313",
+  "command": "hostile-review",
+  "evidence_refs": [
+    ".agent/execplans/20260313-game-hostile-review-runtime-codex-01-execplan.md",
+    "artifacts/planner/research/remaining-work-graph.json",
+    "docs/merge-readiness-contract.md",
+    "docs/queued-execplans.md",
+    "spec/games/hostile-review-game.yaml"
+  ],
+  "execplan_id": "20260313-game-hostile-review-runtime-codex-01-execplan",
+  "execplan_path": ".agent/execplans/20260313-game-hostile-review-runtime-codex-01-execplan.md",
+  "finding_counts": {
+    "blocker": 0,
+    "info": 1,
+    "warning": 0
+  },
+  "findings": [
+    {
+      "details": [],
+      "evidence_refs": [
+        ".agent/execplans/20260313-game-hostile-review-runtime-codex-01-execplan.md",
+        "artifacts/planner/research/remaining-work-graph.json",
+        "docs/queued-execplans.md"
+      ],
+      "finding_id": "hostile-review-010-clean-attestation",
+      "severity": "info",
+      "summary": "The branch is policy-compliant, canonically selected, and retains human final authority for the eventual merge decision.",
+      "title": "Hostile review found no recovery-triggering issues in current canonical state"
+    }
+  ],
+  "merge_readiness": {
+    "failing_checks": [],
+    "readiness": true,
+    "validation_commands": []
+  },
+  "ok": true,
+  "policy_compliance": {
+    "blockers": [],
+    "ok": true,
+    "status": "ok"
+  },
+  "ready_order": [
+    "20260313-game-hostile-review-runtime-codex-01-execplan"
+  ],
+  "review_game": {
+    "game_id": "game-hostile-review",
+    "layer": "review",
+    "objective": "emit deterministic adversarial findings before human approval gates",
+    "parent_game": "game-implementation"
+  },
+  "review_state": "clean",
+  "status": "ok",
+  "validation_commands": [
+    "bin/execplan-validate .agent/execplans/20260313-game-hostile-review-runtime-codex-01-execplan.md",
+    "bin/hostile-review-smoke-test",
+    "bin/policy-compliance-check --execplan-path .agent/execplans/20260313-game-hostile-review-runtime-codex-01-execplan.md"
+  ]
+}
