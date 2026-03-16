@@ -16,9 +16,9 @@
   "queue_projection": {
     "path": "docs/queued-execplans.md",
     "projection_authority": "projection_only",
-    "last_reconciled_action_id": "rwg-action-20260316-004-promote-rwg-021",
+    "last_reconciled_action_id": "rwg-action-20260316-007-promote-rwg-022",
     "ready_execplan_ids": [
-      "20260316-board-action-api-contract-and-event-log-codex-01-execplan"
+      "20260316-anti-cheat-capability-enforcement-codex-01-execplan"
     ]
   },
   "graph_actions": [
@@ -108,6 +108,30 @@
       "node_id": "rwg-021",
       "rationale": "the canonical board-action API implementation branch is published, so the slice may advance from review-gated to ready with an explicit backlog action",
       "evidence_ref": ".agent/execplans/20260316-board-action-api-contract-and-event-log-codex-01-execplan.md",
+      "queue_reconciled": true
+    },
+    {
+      "action_id": "rwg-action-20260316-005-complete-rwg-021",
+      "action": "complete",
+      "node_id": "rwg-021",
+      "rationale": "the board-action API contract and event-log slice merged on main, so the canonical graph records it as completed",
+      "evidence_ref": ".agent/execplans/20260316-board-action-api-contract-and-event-log-codex-01-execplan.md",
+      "queue_reconciled": true
+    },
+    {
+      "action_id": "rwg-action-20260316-006-unblock-rwg-022",
+      "action": "unblock",
+      "node_id": "rwg-022",
+      "rationale": "board-action API completion satisfied the remaining dependency for the anti-cheat capability slice",
+      "evidence_ref": ".agent/execplans/20260316-anti-cheat-capability-enforcement-codex-01-execplan.md",
+      "queue_reconciled": true
+    },
+    {
+      "action_id": "rwg-action-20260316-007-promote-rwg-022",
+      "action": "promote_ready",
+      "node_id": "rwg-022",
+      "rationale": "the canonical anti-cheat implementation branch is published, so the slice may advance from blocked to ready on its dedicated implementation branch",
+      "evidence_ref": ".agent/execplans/20260316-anti-cheat-capability-enforcement-codex-01-execplan.md",
       "queue_reconciled": true
     }
   ],
@@ -567,7 +591,7 @@
     {
       "node_id": "rwg-021",
       "title": "Board-action API contract and event log",
-      "status": "ready",
+      "status": "completed",
       "status_reason": "",
       "gating_class": "auto_runnable",
       "conflict_domains": [
@@ -585,23 +609,23 @@
       ],
       "ordering": {
         "queue_position": 21,
-        "ready_order": 1,
-        "source_action_id": "rwg-action-20260316-004-promote-rwg-021",
+        "source_action_id": "rwg-action-20260316-005-complete-rwg-021",
         "tie_breaker": "20260316-board-action-api-contract-and-event-log-codex-01-execplan"
       },
       "action_state": {
-        "last_action_id": "rwg-action-20260316-004-promote-rwg-021",
-        "last_action": "promote_ready",
+        "last_action_id": "rwg-action-20260316-005-complete-rwg-021",
+        "last_action": "complete",
         "action_required": false,
         "reorder_requires_human": false,
         "reorder_blockers": []
-      }
+      },
+      "completion_ref": "merged:pr-79"
     },
     {
       "node_id": "rwg-022",
       "title": "Anti-cheat capability enforcement",
-      "status": "blocked",
-      "status_reason": "anti-cheat enforcement depends on the board-action API contract and hostile-review completion before it can be implemented safely",
+      "status": "ready",
+      "status_reason": "",
       "gating_class": "auto_runnable",
       "conflict_domains": [
         "governance",
@@ -610,6 +634,7 @@
       ],
       "target_execplan_id": "20260316-anti-cheat-capability-enforcement-codex-01-execplan",
       "goal_area": "governance",
+      "implementation_branch": "impl-execplan/20260316-anti-cheat-capability-enforcement-codex-01-execplan-codex-01-20260316",
       "expected_artifacts": [
         "docs/agent-capability-boundaries.md",
         "spec/agent-capability-policy.yaml",
@@ -617,14 +642,23 @@
       ],
       "ordering": {
         "queue_position": 22,
+        "ready_order": 1,
+        "source_action_id": "rwg-action-20260316-007-promote-rwg-022",
         "tie_breaker": "20260316-anti-cheat-capability-enforcement-codex-01-execplan"
+      },
+      "action_state": {
+        "last_action_id": "rwg-action-20260316-007-promote-rwg-022",
+        "last_action": "promote_ready",
+        "action_required": false,
+        "reorder_requires_human": false,
+        "reorder_blockers": []
       }
     },
     {
       "node_id": "rwg-023",
       "title": "Subgame branch and state-transition governance",
       "status": "blocked",
-      "status_reason": "state-transition governance replaces implementation-branch order only after the board-action API and anti-cheat boundary slices are complete",
+      "status_reason": "state-transition governance replaces implementation-branch order only after anti-cheat capability enforcement is complete",
       "gating_class": "auto_runnable",
       "conflict_domains": [
         "governance",
