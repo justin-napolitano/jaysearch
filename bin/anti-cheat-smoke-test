@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+EXECPLAN_PATH=".agent/execplans/20260316-anti-cheat-capability-enforcement-codex-01-execplan.md"
+
+echo "[1/3] anti-cheat report"
+REPORT_JSON="$(bin/anti-cheat-check --execplan-path "$EXECPLAN_PATH")"
+echo "$REPORT_JSON"
+printf '%s\n' "$REPORT_JSON" | python3 -c 'import json,sys; data=json.load(sys.stdin); assert data["command"]=="anti-cheat-check"; assert data["status"]=="ok"; assert data["capability_rule_id"]=="agent_impl_governance"; assert data["active_node"]["node_id"]=="rwg-022"'
+
+echo "[2/3] policy compliance anti-cheat integration"
+POLICY_JSON="$(bin/policy-compliance-check --execplan-path "$EXECPLAN_PATH")"
+echo "$POLICY_JSON"
+printf '%s\n' "$POLICY_JSON" | python3 -c 'import json,sys; data=json.load(sys.stdin); assert data["status"]=="ok"; assert data["checks"]["anti_cheat"]["ok"] is True'
+
+echo "[3/3] orchestrator anti-cheat surface"
+STATUS_JSON="$(bin/orchestrator-status --execplan "$EXECPLAN_PATH" || true)"
+echo "$STATUS_JSON"
+printf '%s\n' "$STATUS_JSON" | python3 -c 'import json,sys; data=json.load(sys.stdin); assert data["checks"]["anti_cheat"]["status"]=="ok"'
+
+echo "anti-cheat smoke test completed"

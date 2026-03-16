@@ -561,6 +561,31 @@ def test_policy_compliance_blocks_unbounded_late_runtime_follow_up(tmp_path: Pat
     assert any("procedural_commit_order_violation" in blocker for blocker in report["blockers"])
 
 
+def test_policy_compliance_surfaces_anti_cheat_blockers(monkeypatch, tmp_path: Path) -> None:
+    execplan = _seed_repo(tmp_path, graph_and_queue_on_main=False)
+
+    monkeypatch.setattr(
+        "platform_tools.policy_compliance_check.check_anti_cheat",
+        lambda **kwargs: (
+            1,
+            {
+                "ok": False,
+                "blockers": ["protected_surface_denied:src/platform_tools/policy_compliance_check.py:referee_surface"],
+            },
+        ),
+    )
+
+    code, report = check_policy_compliance(
+        root=tmp_path.as_posix(),
+        execplan_path=execplan.as_posix(),
+        base_ref="main",
+    )
+
+    assert code == 1
+    assert "anti_cheat:protected_surface_denied:src/platform_tools/policy_compliance_check.py:referee_surface" in report["blockers"]
+    assert report["checks"]["anti_cheat"]["ok"] is False
+
+
 def test_policy_compliance_blocks_published_branch_history_rewrite_without_exception(tmp_path: Path) -> None:
     execplan = _seed_repo(tmp_path, graph_and_queue_on_main=False)
 
