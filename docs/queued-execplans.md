@@ -145,6 +145,8 @@ When execution findings require updates to the active ExecPlan, Codex may make a
 
 When branch-level governance or checker defects are discovered mid-slice, Codex should repair them with new bounded follow-up commits on the active branch. History rewrites are not the normal compliance path and require explicit human authorization.
 
+When a governed implementation slice accumulates 10 failed repair cycles against its required referees, execution should stop for human review of the active ExecPlan, branch state, and failure evidence before the slice continues.
+
 ## Relationship to the Graph
 
 This queue is a human-readable mirror of `artifacts/planner/research/remaining-work-graph.json` and `bin/remaining-work-graph-check`. If the two disagree, the canonical artifact and validator are authoritative.
