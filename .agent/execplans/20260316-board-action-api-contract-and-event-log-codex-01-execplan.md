@@ -16,7 +16,7 @@ approve_policy: codeowners
 reviewers:
   - "github:justin-napolitano"
 draft_by: "agent/codex-01"
-draft_branch: "draft-execplan/20260316-next-planning-codex-01"
+draft_branch: "draft-execplan/20260316-next-planning-codex-02"
 draft_created: "2026-03-16T00:00:00Z"
 finalized_by: ""
 finalized_at: ""
