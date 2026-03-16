@@ -16,8 +16,10 @@
   "queue_projection": {
     "path": "docs/queued-execplans.md",
     "projection_authority": "projection_only",
-    "last_reconciled_action_id": "rwg-action-20260316-003-unblock-rwg-021",
-    "ready_execplan_ids": []
+    "last_reconciled_action_id": "rwg-action-20260316-004-promote-rwg-021",
+    "ready_execplan_ids": [
+      "20260316-board-action-api-contract-and-event-log-codex-01-execplan"
+    ]
   },
   "graph_actions": [
     {
@@ -97,6 +99,14 @@
       "action": "unblock",
       "node_id": "rwg-021",
       "rationale": "hostile-review completed on main, so the board-action API contract becomes the next canonical queued slice pending implementation-branch publication",
+      "evidence_ref": ".agent/execplans/20260316-board-action-api-contract-and-event-log-codex-01-execplan.md",
+      "queue_reconciled": true
+    },
+    {
+      "action_id": "rwg-action-20260316-004-promote-rwg-021",
+      "action": "promote_ready",
+      "node_id": "rwg-021",
+      "rationale": "the canonical board-action API implementation branch is published, so the slice may advance from review-gated to ready with an explicit backlog action",
       "evidence_ref": ".agent/execplans/20260316-board-action-api-contract-and-event-log-codex-01-execplan.md",
       "queue_reconciled": true
     }
@@ -557,9 +567,9 @@
     {
       "node_id": "rwg-021",
       "title": "Board-action API contract and event log",
-      "status": "review_gated",
-      "status_reason": "the board-action API contract is the next canonical slice, but implementation may begin only after its dedicated impl branch is cut and published",
-      "gating_class": "review_gated",
+      "status": "ready",
+      "status_reason": "",
+      "gating_class": "auto_runnable",
       "conflict_domains": [
         "governance",
         "orchestrator-status",
@@ -567,6 +577,7 @@
       ],
       "target_execplan_id": "20260316-board-action-api-contract-and-event-log-codex-01-execplan",
       "goal_area": "governance",
+      "implementation_branch": "impl-execplan/20260316-board-action-api-contract-and-event-log-codex-01-execplan-codex-01-20260316",
       "expected_artifacts": [
         "docs/board-action-api.md",
         "spec/board-action-api.yaml",
@@ -574,12 +585,13 @@
       ],
       "ordering": {
         "queue_position": 21,
-        "source_action_id": "rwg-action-20260316-003-unblock-rwg-021",
+        "ready_order": 1,
+        "source_action_id": "rwg-action-20260316-004-promote-rwg-021",
         "tie_breaker": "20260316-board-action-api-contract-and-event-log-codex-01-execplan"
       },
       "action_state": {
-        "last_action_id": "rwg-action-20260316-003-unblock-rwg-021",
-        "last_action": "unblock",
+        "last_action_id": "rwg-action-20260316-004-promote-rwg-021",
+        "last_action": "promote_ready",
         "action_required": false,
         "reorder_requires_human": false,
         "reorder_blockers": []

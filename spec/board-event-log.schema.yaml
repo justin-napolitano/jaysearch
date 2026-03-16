@@ -1,0 +1,43 @@
+version: v1
+event_log:
+  storage_format: jsonl
+  required_record_fields:
+    - event_id
+    - transition_id
+    - timestamp
+    - actor_id
+    - actor_class
+    - action_id
+    - action_family
+    - object_id
+    - source_state
+    - target_state
+    - decision
+    - decision_reason
+    - requested_mutation_surfaces
+    - applied_mutation_surfaces
+    - canonical_artifact_refs
+    - git_evidence_refs
+    - github_evidence_refs
+  decisions_allowed:
+    - accepted
+    - rejected
+  actor_classes_allowed:
+    - human
+    - agent
+    - referee
+  action_families_allowed:
+    - backlog_graph_action
+    - queue_projection_reconcile
+    - implementation_branch_publish
+    - merge_completion_reconcile
+    - exception_record
+  deterministic_rules:
+    list_fields_sorted:
+      - requested_mutation_surfaces
+      - applied_mutation_surfaces
+      - canonical_artifact_refs
+      - git_evidence_refs
+      - github_evidence_refs
+    json_keys_sorted: true
+    timestamp_format: iso8601_utc
