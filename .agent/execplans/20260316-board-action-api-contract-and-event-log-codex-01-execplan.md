@@ -8,10 +8,15 @@ base_branch: main
 changes:
   - .agent/execplans/20260316-board-action-api-contract-and-event-log-codex-01-execplan.md
   - artifacts/planner/research/remaining-work-graph.json
+  - bin/board-action-api-check
+  - bin/board-action-api-smoke-test
+  - bin/board-action-event-log-write
   - docs/queued-execplans.md
   - docs/board-action-api.md
   - spec/board-action-api.yaml
   - spec/board-event-log.schema.yaml
+  - src/platform_tools/board_action_api.py
+  - tests/test_board_action_api.py
 approve_policy: codeowners
 reviewers:
   - "github:justin-napolitano"
@@ -31,6 +36,12 @@ validation:
       expected_exit: 0
     - name: "policy-compliance-check"
       command: "bin/policy-compliance-check --execplan-path .agent/execplans/20260316-board-action-api-contract-and-event-log-codex-01-execplan.md"
+      expected_exit: 0
+    - name: "board-action-api-tests"
+      command: "uv run pytest tests/test_board_action_api.py -q"
+      expected_exit: 0
+    - name: "board-action-api-smoke-test"
+      command: "bin/board-action-api-smoke-test"
       expected_exit: 0
 tasks:
   - title: "Define authority-preserving board action API contract"
@@ -53,15 +64,17 @@ The local graph and other canonical local artifacts must remain authoritative. T
 
 - [x] Queue the implementation slice behind hostile-review completion
 - [x] Cut and publish the canonical implementation branch
-- [ ] Draft the board-action API authority contract
-- [ ] Define typed legal actions and mutation targets
-- [ ] Define deterministic event-log and audit requirements
+- [x] Draft the board-action API authority contract
+- [x] Define typed legal actions and mutation targets
+- [x] Define deterministic event-log and audit requirements
+- [x] Add a local validator and deterministic event-log writer for downstream referee use
 
 ## Surprises & Discoveries
 
 - The current system still lets governed agents mutate canonical files directly, which makes user and agent moves look similar even when they should be capability-distinct.
 - A usable API contract must describe both write commands and read/projection semantics, otherwise consumers will accidentally treat projections as authority.
 - Publishing the `impl-execplan/*` branch is still only half of the lawful start condition; the remaining-work graph and queue mirror must record an explicit promote-ready action before implementation can proceed.
+- This slice needs a small local runtime even though the long-term API remains contract-first, because later anti-cheat work needs a deterministic referee surface to consume rather than only prose and schema files.
 
 ## Decision Log
 
@@ -69,6 +82,7 @@ The local graph and other canonical local artifacts must remain authoritative. T
 - 2026-03-16 / agent-codex-01 / “Users can update everything” is reframed as “users can submit any legal action through a typed, audited interface.”
 - 2026-03-16 / agent-codex-01 / `git` and `gh` should act as the operator UI and evidence transport for the game, while local canonical artifacts remain the source of truth and local referees remain the primary judges.
 - 2026-03-16 / agent-codex-01 / The implementation branch for this slice must be published and then reconciled into the canonical remaining-work graph as `ready` before runtime/spec work begins.
+- 2026-03-16 / agent-codex-01 / This slice includes a narrow local validator and event-log writer because slice 2 needs machine-consumable contract enforcement, but it still does not introduce a full mutation-serving API runtime.
 
 ## Outcomes & Retrospective
 
@@ -78,6 +92,7 @@ On completion, the repository should have:
 - typed action families for graph, queue, review, and governance mutations
 - a deterministic event-log schema for every applied action
 - explicit rules for which surfaces are mutable through the API versus projection-only
+- a local referee command that validates the contract and writes deterministic event records
 
 ## Context and Orientation
 
@@ -161,7 +176,7 @@ Expected artifacts:
 
 Non-goals for this slice:
 
-- implementing the API runtime
+- implementing a full mutation-serving API runtime
 - externalizing the canonical board to another repo or service
 - redefining protected-surface policy
 - replacing implementation-branch order rules
