@@ -1,0 +1,209 @@
+version: v1
+authority_model:
+  canonical_backend: local_repo_artifacts
+  local_referees_authoritative: true
+  github_projects_authority: projection_only
+  git_authority: evidence_only
+  future_backend_modes:
+    - local_repo_artifacts
+    - external_control_plane
+actor_classes:
+  - id: human
+    label: Human operator
+    may_request_actions: true
+  - id: agent
+    label: Governed automation agent
+    may_request_actions: true
+  - id: referee
+    label: Local referee
+    may_request_actions: false
+surface_classes:
+  - id: remaining_work_graph
+    authority_tier: canonical_local
+    mutable_via_api: true
+    path_refs:
+      - artifacts/planner/research/remaining-work-graph.json
+  - id: execplan_registry
+    authority_tier: canonical_local
+    mutable_via_api: true
+    path_refs:
+      - .agent/execplans
+  - id: queue_projection
+    authority_tier: projection_only
+    mutable_via_api: true
+    path_refs:
+      - docs/queued-execplans.md
+  - id: github_projects_board
+    authority_tier: projection_only
+    mutable_via_api: true
+    path_refs:
+      - artifacts/provider-sync
+      - spec/providers/github-projects.schema.yaml
+  - id: git_branch_ref
+    authority_tier: evidence_only
+    mutable_via_api: false
+    path_refs:
+      - .git/refs/heads
+  - id: github_pull_request
+    authority_tier: evidence_only
+    mutable_via_api: false
+    path_refs: []
+action_envelope:
+  required_fields:
+    - action_id
+    - action_family
+    - actor_id
+    - actor_class
+    - object_id
+    - source_state
+    - target_state
+    - requested_mutation_surfaces
+    - canonical_artifact_refs
+    - git_evidence_refs
+    - github_evidence_refs
+  response_fields:
+    - action_id
+    - decision
+    - decision_reason
+    - transition_id
+    - event_id
+    - mutated_surfaces
+    - canonical_artifact_refs
+  decisions_allowed:
+    - accepted
+    - rejected
+action_families:
+  - id: backlog_graph_action
+    governed_objects:
+      - remaining_work_node
+      - graph_action_record
+    mutable_surfaces:
+      - remaining_work_graph
+    required_evidence:
+      canonical_artifact_refs:
+        min_items: 1
+      git_evidence_refs:
+        min_items: 0
+      github_evidence_refs:
+        min_items: 0
+    request_fields:
+      - action_id
+      - object_id
+      - source_state
+      - target_state
+    rejection_reasons:
+      - stale_graph_state
+      - unknown_node
+      - illegal_transition
+  - id: queue_projection_reconcile
+    governed_objects:
+      - queue_projection
+    mutable_surfaces:
+      - queue_projection
+    required_evidence:
+      canonical_artifact_refs:
+        min_items: 1
+      git_evidence_refs:
+        min_items: 0
+      github_evidence_refs:
+        min_items: 0
+    request_fields:
+      - action_id
+      - object_id
+      - source_state
+      - target_state
+    rejection_reasons:
+      - stale_graph_state
+      - projection_mismatch
+  - id: implementation_branch_publish
+    governed_objects:
+      - implementation_branch
+    mutable_surfaces:
+      - remaining_work_graph
+      - queue_projection
+    required_evidence:
+      canonical_artifact_refs:
+        min_items: 1
+      git_evidence_refs:
+        min_items: 1
+      github_evidence_refs:
+        min_items: 0
+    request_fields:
+      - action_id
+      - object_id
+      - source_state
+      - target_state
+    rejection_reasons:
+      - unpublished_branch
+      - stale_graph_state
+      - illegal_transition
+  - id: merge_completion_reconcile
+    governed_objects:
+      - implementation_slice
+    mutable_surfaces:
+      - remaining_work_graph
+      - queue_projection
+      - execplan_registry
+    required_evidence:
+      canonical_artifact_refs:
+        min_items: 1
+      git_evidence_refs:
+        min_items: 1
+      github_evidence_refs:
+        min_items: 0
+    request_fields:
+      - action_id
+      - object_id
+      - source_state
+      - target_state
+    rejection_reasons:
+      - missing_merge_evidence
+      - stale_graph_state
+      - illegal_transition
+  - id: exception_record
+    governed_objects:
+      - governance_exception
+    mutable_surfaces:
+      - execplan_registry
+    required_evidence:
+      canonical_artifact_refs:
+        min_items: 1
+      git_evidence_refs:
+        min_items: 0
+      github_evidence_refs:
+        min_items: 0
+    request_fields:
+      - action_id
+      - object_id
+      - source_state
+      - target_state
+    rejection_reasons:
+      - missing_human_authority
+      - exception_scope_mismatch
+evidence_mapping:
+  git:
+    branch_creation:
+      refs:
+        - branch_ref
+        - merge_base
+    commit_state:
+      refs:
+        - commit_sha
+        - tree_sha
+    merge_completion:
+      refs:
+        - merge_commit_sha
+  github:
+    pull_request:
+      refs:
+        - pr_number
+        - review_state
+        - merge_state
+    checks:
+      refs:
+        - check_run_id
+        - conclusion
+event_log:
+  storage_format: jsonl
+  deterministic_serialization: canonical_json
+  schema_path: spec/board-event-log.schema.yaml
