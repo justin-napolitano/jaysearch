@@ -1,3 +1,13 @@
 version: v1
-last_updated: 2026-03-05
-exceptions: []
+last_updated: 2026-03-13
+exceptions:
+  - id: hostile-review-runtime-commit-limit-001
+    scope: commit_hard_limit:impl-execplan/20260313-game-hostile-review-runtime-codex-01-execplan-codex-01-20260313:ee7f9c21d97b0bb0471cc0eff90d8c4bc47202a8
+    owner: github:justin-napolitano
+    rationale: explicit human approval to tolerate one oversized hostile-review runtime commit on the active implementation branch
+    approved_by: github:justin-napolitano
+    created_at: 2026-03-13T00:00:00Z
+    expires_at: 2026-03-20T00:00:00Z
+    status: active
+    bypass_evidence:
+      - chat:explicit-human-authorization
