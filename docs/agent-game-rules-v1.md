@@ -258,6 +258,23 @@ Policy-compliance rule:
 - Policy-compliance is the legality surface for implementation branches before hostile review or human review.
 - Governed work must record the corresponding graph action and queue reconciliation on-branch; stale queue or graph state blocks advancement.
 - Reorder moves must be explicit canonical graph actions. Editing queue prose or board order without a matching graph action is an illegal move.
+
+Referee-cycle escalation rule:
+
+- Agents must not thrash indefinitely through failing referee loops on one governed slice.
+- Default maximum failed repair cycles per slice: `10`.
+- A failed repair cycle requires all of the following:
+  1. required referee commands run for the active slice
+  2. the slice remains non-passing
+  3. the agent applies a fix-forward change in response
+  4. the referee chain is run again
+- When the cycle limit is reached, the match state becomes `ESCALATE_TO_HUMAN`.
+- After escalation, the next legal move is human review of:
+  - the active ExecPlan
+  - current branch state
+  - accumulated referee failures
+  - whether execution should continue, narrow, split, exception, or replan
+- Agents must not bypass this checkpoint by renaming the failure, suppressing the referee, or continuing implementation as if the cycle counter did not exist.
 - The queue mirror must advertise the latest reconciled graph action id and canonical ready order from the graph before advancement may continue.
 
 ## 10. Match Flow and Stop Conditions
