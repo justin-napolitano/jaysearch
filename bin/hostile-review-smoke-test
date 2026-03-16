@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+EXECPLAN_PATH=".agent/execplans/20260313-game-hostile-review-runtime-codex-01-execplan.md"
+
+echo "[1/3] hostile review report"
+REPORT_JSON="$(bin/hostile-review --execplan "$EXECPLAN_PATH")"
+echo "$REPORT_JSON"
+printf '%s\n' "$REPORT_JSON" | python3 -c 'import json,sys; data=json.load(sys.stdin); assert data["command"]=="hostile-review"; assert data["status"]=="ok"; assert data["execplan_id"]=="20260313-game-hostile-review-runtime-codex-01-execplan"; assert data["review_state"]=="clean"; assert data["active_node"]["node_id"]=="rwg-014"'
+
+echo "[2/3] hostile review artifacts"
+python3 - <<'PY'
+import json
+from pathlib import Path
+
+report = json.loads(Path("artifacts/review/hostile-review-report.json").read_text(encoding="utf-8"))
+evidence = json.loads(Path("artifacts/review/validation-evidence.json").read_text(encoding="utf-8"))
+summary = Path("artifacts/review/hostile-review-summary.md").read_text(encoding="utf-8")
+assert report["review_state"] == "clean"
+assert evidence["checks"][0]["name"] == "policy-compliance-check"
+assert "# Hostile Review Summary" in summary
+PY
+
+echo "[3/3] orchestrator surface"
+STATUS_JSON="$(bin/orchestrator-status --execplan "$EXECPLAN_PATH" || true)"
+echo "$STATUS_JSON"
+printf '%s\n' "$STATUS_JSON" | python3 -c 'import json,sys; data=json.load(sys.stdin); assert data["command"]=="orchestrator-status"; assert data["checks"]["hostile_review"]["status"]=="ok"; assert data["checks"]["hostile_review"]["payload"]["review_state"]=="clean"'
+
+echo "hostile review smoke test completed"
