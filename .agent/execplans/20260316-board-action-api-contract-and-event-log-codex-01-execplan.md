@@ -34,6 +34,8 @@ tasks:
     priority: "P1"
   - title: "Define deterministic board event log and mutation audit surface"
     priority: "P1"
+  - title: "Map canonical transitions to Git and GitHub evidence without promoting GitHub to authority"
+    priority: "P1"
 depends_on:
   - "20260313-game-hostile-review-runtime-codex-01-execplan"
 ---
@@ -60,6 +62,7 @@ The local graph and other canonical local artifacts must remain authoritative. T
 
 - 2026-03-16 / agent-codex-01 / The API must not replace canonical local authority; it only mediates legal state transitions against it.
 - 2026-03-16 / agent-codex-01 / “Users can update everything” is reframed as “users can submit any legal action through a typed, audited interface.”
+- 2026-03-16 / agent-codex-01 / `git` and `gh` should act as the operator UI and evidence transport for the game, while local canonical artifacts remain the source of truth and local referees remain the primary judges.
 
 ## Outcomes & Retrospective
 
@@ -80,20 +83,49 @@ The API contract needs to cover both machine and human callers without collapsin
 - projection surfaces stay non-authoritative
 - users and agents both act through typed actions
 - validators/referees still decide whether a requested state transition is legal
+- Git and GitHub may provide evidence for transitions, but neither may become the authority source for transition legality
 
 ## Plan of Work
 
-1. Define the board-action API domain and its authority model.
-2. Define action families, required fields, deterministic outputs, and rejection semantics.
-3. Define the event-log schema for every applied action.
-4. Bind the contract to existing canonical artifacts and queue/graph governance.
+1. Define the board-action API domain, storage authority model, and non-authoritative projections.
+2. Define action families, required fields, deterministic outputs, rejection semantics, and idempotence rules.
+3. Define the event-log schema for every accepted or rejected action.
+4. Define how Git and GitHub events attach evidence to actions without becoming authority sources.
+5. Bind the contract to existing canonical artifacts and queue/graph governance.
 
 ## Concrete Steps
 
-1. Add `spec/board-action-api.yaml` for typed actions, responses, and authority rules.
-2. Add `spec/board-event-log.schema.yaml` for deterministic applied-action records.
-3. Document the model in `docs/board-action-api.md`.
-4. Reconcile the remaining-work graph and queue mirror so the API slice is queued canonically after hostile review.
+1. Add `spec/board-action-api.yaml` for:
+   - action envelopes
+   - actor classes
+   - governed object identifiers
+   - source-state / target-state declarations
+   - allowed mutation surfaces
+   - authority/projection fields
+   - deterministic success and rejection payloads
+2. Add `spec/board-event-log.schema.yaml` for:
+   - transition ids
+   - requested / accepted / rejected action records
+   - canonical artifact refs
+   - git evidence refs
+   - optional GitHub evidence refs
+   - replay-safe timestamps and actor ids
+3. Document the model in `docs/board-action-api.md`, including:
+   - current canonical backend: local repo artifacts
+   - future-compatible backend abstraction: external control-plane repo/service
+   - non-goal: promoting GitHub Projects, PR state, or checks to authority
+4. Define the minimum action families this slice must cover:
+   - backlog graph actions
+   - queue projection reconciliation
+   - implementation branch publication
+   - merge completion reconciliation
+   - exception request / denial / approval records
+5. Define the minimum Git/GitHub evidence mapping this slice must cover:
+   - branch creation
+   - commit / tree / merge-base evidence
+   - PR open / review / merge evidence
+   - check-run evidence as projection only
+6. Reconcile the remaining-work graph and queue mirror so the API slice is queued canonically after hostile review.
 
 ## Validation and Acceptance
 
@@ -102,6 +134,9 @@ Acceptance criteria:
 - the API contract makes canonical authority boundaries explicit
 - typed actions are machine-readable and deterministic
 - event-log records are structured enough for downstream referees to consume
+- the contract distinguishes canonical authority, projection-only surfaces, and evidence-only surfaces
+- each required transition type has a declared Git/GitHub evidence mapping
+- the contract is strong enough that slice 2 can consume it without inventing new authority concepts
 - the queue and graph reflect the slice without promoting it early
 
 ## Idempotence and Recovery
@@ -118,6 +153,13 @@ Expected artifacts:
 - `spec/board-action-api.yaml`
 - `spec/board-event-log.schema.yaml`
 
+Non-goals for this slice:
+
+- implementing the API runtime
+- externalizing the canonical board to another repo or service
+- redefining protected-surface policy
+- replacing implementation-branch order rules
+
 ## Interfaces and Dependencies
 
 Primary interfaces:
@@ -127,6 +169,12 @@ Primary interfaces:
 - `docs/governance.md`
 - `docs/games/README.md`
 - `bin/remaining-work-graph-check`
+
+Implementation expectations for the later implementation branch:
+
+- add a local referee-facing contract validator for board actions
+- add a deterministic event-log writer/validator
+- expose transition types that later slices can enforce without schema churn
 
 Planned implementation branch:
 
