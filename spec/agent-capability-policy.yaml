@@ -1,0 +1,60 @@
+version: v1
+actor_classes:
+  - id: human
+    label: Human operator
+  - id: agent
+    label: Governed automation agent
+  - id: referee
+    label: Local referee
+branch_classes:
+  - id: impl_execplan
+  - id: draft_execplan
+  - id: queue_execplan
+  - id: other
+goal_area_classes:
+  - id: governance
+  - id: non_governance
+capability_rules:
+  - id: agent_impl_non_governance
+    actor_class: agent
+    branch_class: impl_execplan
+    goal_area_class: non_governance
+    allowed_surface_classes:
+      - canonical_state_surface
+      - projection_surface
+    forbidden_surface_classes:
+      - rule_surface
+      - referee_surface
+      - capability_policy_surface
+      - exception_registry
+    allowed_referee_paths: []
+    requires_execplan_declaration_for_protected_surfaces: true
+  - id: agent_impl_governance
+    actor_class: agent
+    branch_class: impl_execplan
+    goal_area_class: governance
+    allowed_surface_classes:
+      - canonical_state_surface
+      - projection_surface
+      - capability_policy_surface
+      - referee_surface
+    forbidden_surface_classes:
+      - exception_registry
+    allowed_referee_paths:
+      - bin/anti-cheat-check
+      - src/platform_tools/anti_cheat_check.py
+      - src/platform_tools/orchestrator_status.py
+      - src/platform_tools/policy_compliance_check.py
+      - tests/test_anti_cheat_check.py
+      - tests/test_orchestrator_status.py
+      - tests/test_policy_compliance_check.py
+    requires_execplan_declaration_for_protected_surfaces: true
+denial_rules:
+  - id: agent_exception_self_authorization
+    blocker: agent_exception_self_authorization_denied
+    surface_class: exception_registry
+  - id: github_authority_promotion
+    blocker: github_authority_promotion_denied
+    required_projection_only_fields:
+      - spec/board-action-api.yaml:authority_model.github_projects_authority
+      - spec/governance.yaml:board_review_runtime.authority_mode
