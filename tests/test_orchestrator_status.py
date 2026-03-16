@@ -139,6 +139,17 @@ def test_orchestrator_status_reports_active_ready_slice(monkeypatch, tmp_path: P
         ),
     )
     monkeypatch.setattr(
+        "platform_tools.orchestrator_status.check_anti_cheat",
+        lambda **kwargs: (
+            0,
+            {
+                "ok": True,
+                "blockers": [],
+                "status": "ok",
+            },
+        ),
+    )
+    monkeypatch.setattr(
         "platform_tools.orchestrator_status.get_human_operations_status",
         lambda **kwargs: (
             0,
@@ -176,6 +187,7 @@ def test_orchestrator_status_reports_active_ready_slice(monkeypatch, tmp_path: P
     assert report["ready_order"] == ["20260311-composite-orchestrator-status-codex-01-execplan"]
     assert report["checks"]["planner_score"]["status"] == "deferred"
     assert report["checks"]["remaining_work_graph"]["status"] == "ok"
+    assert report["checks"]["anti_cheat"]["status"] == "ok"
 
 
 def test_orchestrator_status_recommends_starting_ready_slice(monkeypatch, tmp_path: Path) -> None:
@@ -249,6 +261,17 @@ def test_orchestrator_status_recommends_starting_ready_slice(monkeypatch, tmp_pa
             {
                 "ok": True,
                 "blockers": [],
+            },
+        ),
+    )
+    monkeypatch.setattr(
+        "platform_tools.orchestrator_status.check_anti_cheat",
+        lambda **kwargs: (
+            0,
+            {
+                "ok": True,
+                "blockers": [],
+                "status": "ok",
             },
         ),
     )
