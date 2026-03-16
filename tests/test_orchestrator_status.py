@@ -149,6 +149,19 @@ def test_orchestrator_status_reports_active_ready_slice(monkeypatch, tmp_path: P
             },
         ),
     )
+    monkeypatch.setattr(
+        "platform_tools.orchestrator_status.run_hostile_review",
+        lambda **kwargs: (
+            0,
+            {
+                "command": "hostile-review",
+                "ok": True,
+                "status": "ok",
+                "findings": [],
+                "review_state": "clean",
+            },
+        ),
+    )
 
     code, report = get_orchestrator_status(
         root=tmp_path.as_posix(),
@@ -247,6 +260,19 @@ def test_orchestrator_status_recommends_starting_ready_slice(monkeypatch, tmp_pa
                 "status": "ok",
                 "ok": True,
                 "blockers": [],
+            },
+        ),
+    )
+    monkeypatch.setattr(
+        "platform_tools.orchestrator_status.run_hostile_review",
+        lambda **kwargs: (
+            0,
+            {
+                "command": "hostile-review",
+                "ok": True,
+                "status": "ok",
+                "findings": [],
+                "review_state": "clean",
             },
         ),
     )
