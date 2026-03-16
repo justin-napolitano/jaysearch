@@ -42,12 +42,16 @@ capability_rules:
       - exception_registry
     allowed_referee_paths:
       - bin/anti-cheat-check
+      - bin/state-transition-legality-check
+      - bin/state-transition-legality-smoke-test
       - src/platform_tools/anti_cheat_check.py
       - src/platform_tools/orchestrator_status.py
       - src/platform_tools/policy_compliance_check.py
+      - src/platform_tools/state_transition_legality.py
       - tests/test_anti_cheat_check.py
       - tests/test_orchestrator_status.py
       - tests/test_policy_compliance_check.py
+      - tests/test_state_transition_legality.py
     requires_execplan_declaration_for_protected_surfaces: true
 denial_rules:
   - id: agent_exception_self_authorization
