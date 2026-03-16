@@ -171,7 +171,7 @@ def _frontmatter_changed_keys(before_text: str, after_text: str) -> set[str]:
     return {key for key in keys if before_frontmatter.get(key) != after_frontmatter.get(key)}
 
 
-def _changes_field_is_additive(before_text: str, after_text: str) -> bool:
+def _changes_field_is_additive_or_stale_replacement(before_text: str, after_text: str, *, cwd: Path) -> bool:
     before_frontmatter, _ = parse_frontmatter(before_text)
     after_frontmatter, _ = parse_frontmatter(after_text)
     before_changes = before_frontmatter.get("changes", [])
@@ -180,7 +180,8 @@ def _changes_field_is_additive(before_text: str, after_text: str) -> bool:
         return False
     before_set = {str(item).strip() for item in before_changes if str(item).strip()}
     after_set = {str(item).strip() for item in after_changes if str(item).strip()}
-    return before_set.issubset(after_set)
+    removed_paths = before_set - after_set
+    return all(not (cwd / path).exists() for path in removed_paths)
 
 
 def _is_bounded_execplan_reconciliation(
@@ -211,7 +212,11 @@ def _is_bounded_execplan_reconciliation(
     if disallowed_keys:
         reasons.extend(f"disallowed_frontmatter_change:{key}" for key in disallowed_keys)
         return False, reasons
-    if "changes" in changed_keys and not _changes_field_is_additive(before_text, after_text):
+    if "changes" in changed_keys and not _changes_field_is_additive_or_stale_replacement(
+        before_text,
+        after_text,
+        cwd=cwd,
+    ):
         reasons.append("changes_field_not_additive")
         return False, reasons
     return True, reasons
