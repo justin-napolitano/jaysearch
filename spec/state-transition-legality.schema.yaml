@@ -1,0 +1,79 @@
+version: v1
+type: object
+required:
+  - transition_id
+  - branch
+  - branch_role
+  - source_state
+  - target_state
+  - changed_files
+  - declared_changes
+  - surface_matches
+  - decision
+  - blockers
+properties:
+  transition_id:
+    type: string
+    minLength: 1
+  branch:
+    type: string
+    minLength: 1
+  branch_role:
+    type: string
+    enum:
+      - impl_execplan_root
+      - subgame_branch
+      - unknown
+  source_state:
+    type: string
+    minLength: 1
+  target_state:
+    type: string
+    minLength: 1
+  changed_files:
+    type: array
+    items:
+      type: string
+  declared_changes:
+    type: array
+    items:
+      type: string
+  surface_matches:
+    type: array
+    items:
+      type: object
+      required:
+        - path
+        - surface_id
+        - surface_class
+        - match_type
+      properties:
+        path:
+          type: string
+        surface_id:
+          type: string
+        surface_class:
+          type: string
+        match_type:
+          type: string
+          enum:
+            - exact
+            - prefix
+            - none
+  decision:
+    type: string
+    enum:
+      - accepted
+      - rejected
+  blockers:
+    type: array
+    items:
+      type: string
+  warnings:
+    type: array
+    items:
+      type: string
+  evidence_refs:
+    type: array
+    items:
+      type: string

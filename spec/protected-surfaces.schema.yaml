@@ -21,8 +21,11 @@ surface_entries:
     path_exact:
       - docs/governance.md
       - docs/agent-game-rules-v1.md
+      - docs/subgame-branch-governance.md
       - spec/governance.yaml
       - spec/ruleset.yaml
+      - spec/state-transition-legality.schema.yaml
+      - spec/subgame-branch-contract.yaml
       - spec/workflow.yaml
   - id: capability_policy_surface
     surface_class: capability_policy_surface
@@ -36,12 +39,16 @@ surface_entries:
     authority_role: governance_local
     path_exact:
       - bin/anti-cheat-check
+      - bin/state-transition-legality-check
+      - bin/state-transition-legality-smoke-test
       - src/platform_tools/anti_cheat_check.py
       - src/platform_tools/orchestrator_status.py
       - src/platform_tools/policy_compliance_check.py
+      - src/platform_tools/state_transition_legality.py
       - tests/test_anti_cheat_check.py
       - tests/test_orchestrator_status.py
       - tests/test_policy_compliance_check.py
+      - tests/test_state_transition_legality.py
   - id: exception_registry
     surface_class: exception_registry
     authority_role: human_only
