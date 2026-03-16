@@ -98,11 +98,10 @@ This document turns the remaining-work graph into an explicit near-term queue of
    - completion ref: `merged:pr-73`
 
 20. `20260316-board-action-api-contract-and-event-log-codex-01-execplan`
-   - status: `review_gated`
+   - status: `ready`
    - goal: define typed board/game actions, authority-preserving mutation rules, and a deterministic event log
    - draft branch: `draft-execplan/20260316-next-planning-codex-02`
-   - planned implementation branch: `impl-execplan/20260316-board-action-api-contract-and-event-log-codex-01-execplan-codex-01-20260316`
-   - gate: `published implementation branch required before execution`
+   - implementation branch: `impl-execplan/20260316-board-action-api-contract-and-event-log-codex-01-execplan-codex-01-20260316`
 
 21. `20260316-anti-cheat-capability-enforcement-codex-01-execplan`
    - status: `blocked`
@@ -124,8 +123,8 @@ This document turns the remaining-work graph into an explicit near-term queue of
      - `20260316-anti-cheat-capability-enforcement-codex-01-execplan`
 ## Mirror Metadata
 
-- canonical_last_graph_action_id: `rwg-action-20260316-003-unblock-rwg-021`
-- canonical_ready_order: ``
+- canonical_last_graph_action_id: `rwg-action-20260316-004-promote-rwg-021`
+- canonical_ready_order: `20260316-board-action-api-contract-and-event-log-codex-01-execplan`
 - projection_authority: `projection_only`
 
 ## Queue Discipline
