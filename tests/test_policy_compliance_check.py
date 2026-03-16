@@ -498,6 +498,52 @@ def test_policy_compliance_allows_late_graph_queue_reconciliation_repair(tmp_pat
     assert any("bounded_branch_reconciliation_commit" in warning for warning in report["warnings"])
 
 
+def test_policy_compliance_allows_branch_reconciliation_with_active_execplan(tmp_path: Path) -> None:
+    _git(tmp_path, "init", "-b", "main")
+    _git(tmp_path, "config", "user.name", "Tests")
+    _git(tmp_path, "config", "user.email", "tests@example.com")
+    _write(tmp_path / "README.md", "base\n")
+    _write(tmp_path / "spec" / "remaining-work-graph.schema.yaml", _remaining_work_schema_text())
+    _git(tmp_path, "add", ".")
+    _git(tmp_path, "commit", "-m", "docs: base")
+    _git(tmp_path, "checkout", "-b", BRANCH)
+
+    execplan = tmp_path / ".agent" / "execplans" / f"{EXECPLAN_ID}.md"
+    _write(execplan, _execplan_text())
+    _git(tmp_path, "add", execplan.as_posix())
+    _git(tmp_path, "commit", "-m", "docs(execplan): add policy plan")
+
+    _write_json(tmp_path / "artifacts/planner/research/remaining-work-graph.json", _remaining_work_graph())
+    _write(tmp_path / "docs/queued-execplans.md", _queue_text())
+    _write(execplan, _execplan_text().replace("- [ ] Test", "- [x] Test"))
+    _git(
+        tmp_path,
+        "add",
+        "artifacts/planner/research/remaining-work-graph.json",
+        "docs/queued-execplans.md",
+        execplan.as_posix(),
+    )
+    _git(tmp_path, "commit", "-m", "docs(governance): promote board-action api slice ready")
+
+    _write(tmp_path / "spec" / "policy.yaml", "policy: true\n")
+    _git(tmp_path, "add", "spec/policy.yaml")
+    _git(tmp_path, "commit", "-m", "spec(policy): add policy spec")
+
+    _seed_remote(tmp_path)
+    _git(tmp_path, "push", "-u", "origin", BRANCH)
+
+    code, report = check_policy_compliance(
+        root=tmp_path.as_posix(),
+        execplan_path=execplan.as_posix(),
+        base_ref="main",
+    )
+
+    assert code == 0
+    assert report["ok"] is True
+    assert not any("procedural_commit_order_violation" in blocker for blocker in report["blockers"])
+    assert any("bounded_branch_reconciliation_commit" in warning for warning in report["warnings"])
+
+
 def test_policy_compliance_blocks_unbounded_late_runtime_follow_up(tmp_path: Path) -> None:
     execplan = _seed_repo(tmp_path, graph_and_queue_on_main=False)
 
