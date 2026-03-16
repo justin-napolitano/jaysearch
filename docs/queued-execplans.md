@@ -63,11 +63,10 @@ This document turns the remaining-work graph into an explicit near-term queue of
    - completion ref: `merged:pr-72`
 
 13. `20260313-game-hostile-review-runtime-codex-01-execplan`
-   - status: `review_gated`
+   - status: `ready`
    - goal: add machine hostile review before human approval gates
    - draft branch: `draft-execplan/20260313-game-hostile-review-runtime-codex-01-execplan-codex-01-20260313`
-   - planned implementation branch: `impl-execplan/20260313-game-hostile-review-runtime-codex-01-execplan-codex-01-20260313`
-   - gate: `published implementation branch required before execution`
+   - implementation branch: `impl-execplan/20260313-game-hostile-review-runtime-codex-01-execplan-codex-01-20260313`
 
 14. `future:game-branching`
    - status: `decision_gated`
@@ -98,8 +97,8 @@ This document turns the remaining-work graph into an explicit near-term queue of
    - completion ref: `merged:pr-73`
 ## Mirror Metadata
 
-- canonical_last_graph_action_id: `rwg-action-20260312-006-unblock-rwg-014`
-- canonical_ready_order: ``
+- canonical_last_graph_action_id: `rwg-action-20260313-001-promote-rwg-014`
+- canonical_ready_order: `20260313-game-hostile-review-runtime-codex-01-execplan`
 - projection_authority: `projection_only`
 
 ## Queue Discipline

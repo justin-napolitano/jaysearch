@@ -7,6 +7,7 @@ import sys
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
 from platform_tools.merge_readiness import check_merge_readiness
+from platform_tools.policy_compliance_check import EXCEPTION_REGISTRY_PATH
 
 
 def _write(path: Path, text: str) -> None:
@@ -272,3 +273,181 @@ Test.
     )
     assert code == 1
     assert any("procedural_commit_order_violation:" in item for item in report["failing_checks"])
+
+
+def test_merge_readiness_allows_bounded_branch_reconciliation_commit(tmp_path: Path) -> None:
+    execplan = _seed_repo(tmp_path)
+    _write(tmp_path / "artifacts" / "planner" / "research" / "remaining-work-graph.json", "{}\n")
+    _write(tmp_path / "docs" / "queued-execplans.md", "queue\n")
+    _git(tmp_path, "add", "artifacts/planner/research/remaining-work-graph.json", "docs/queued-execplans.md")
+    _git(tmp_path, "commit", "-m", "docs(governance): promote hostile-review ready state")
+
+    code, report = check_merge_readiness(
+        root=tmp_path.as_posix(),
+        execplan_path=execplan.as_posix(),
+        base_ref="main",
+        include_validation_runs=False,
+    )
+
+    assert code == 0
+    assert report["readiness"] is True
+    assert not any("procedural_commit_order_violation" in item for item in report["failing_checks"])
+    assert any("bounded_branch_reconciliation_commit" in item for item in report["warnings"])
+
+
+def test_merge_readiness_allows_commit_hard_limit_with_active_exception(tmp_path: Path) -> None:
+    _git(tmp_path, "init", "-b", "main")
+    _git(tmp_path, "config", "user.name", "Tests")
+    _git(tmp_path, "config", "user.email", "tests@example.com")
+    _write(tmp_path / "README.md", "base\n")
+    _git(tmp_path, "add", "README.md")
+    _git(tmp_path, "commit", "-m", "docs: base")
+    _git(tmp_path, "checkout", "-b", "feature/merge-readiness-test")
+
+    execplan = tmp_path / ".agent" / "execplans" / "20260310-test-plan-codex-01-execplan.md"
+    _write(
+        execplan,
+        """---
+id: "20260310-test-plan-codex-01-execplan"
+title: "Test plan"
+owner: "agent/codex-01"
+created: "2026-03-10T00:00:00Z"
+status: draft
+base_branch: main
+changes:
+  - .agent/execplans/20260310-test-plan-codex-01-execplan.md
+approve_policy: codeowners
+reviewers:
+  - "github:justin-napolitano"
+draft_by: "agent/codex-01"
+draft_branch: "draft-execplan/test"
+draft_created: "2026-03-10T00:00:00Z"
+finalized_by: ""
+finalized_at: ""
+finalized_in_pr: ""
+validation:
+  tests:
+    - name: "execplan-validate"
+      command: "bin/execplan-validate .agent/execplans/20260310-test-plan-codex-01-execplan.md"
+      expected_exit: 0
+    - name: "smoke"
+      command: "bin/smoke-pass"
+      expected_exit: 0
+tasks:
+  - title: "Test"
+    priority: "P1"
+depends_on: []
+---
+
+# Purpose / Big Picture
+
+Test.
+
+## Progress
+
+- [ ] Test
+
+## Surprises & Discoveries
+
+None.
+
+## Decision Log
+
+None.
+
+## Outcomes & Retrospective
+
+Test.
+
+## Context and Orientation
+
+Test.
+
+## Plan of Work
+
+Test.
+
+## Concrete Steps
+
+1. Test.
+
+## Validation and Acceptance
+
+Test.
+
+## Idempotence and Recovery
+
+Test.
+
+## Artifacts and Notes
+
+Test.
+
+## Interfaces and Dependencies
+
+Test.
+""",
+    )
+    _write(tmp_path / "spec" / "slice.yaml", "slice: true\n")
+    _write(tmp_path / "bin" / "execplan-validate", "#!/usr/bin/env bash\nexit 0\n")
+    _write(tmp_path / "bin" / "smoke-pass", "#!/usr/bin/env bash\nexit 0\n")
+    _write(tmp_path / "bin" / "rule-graph-check", "#!/usr/bin/env bash\nexit 0\n")
+    _write(tmp_path / "bin" / "citation-check", "#!/usr/bin/env bash\nexit 0\n")
+    for script in ["execplan-validate", "smoke-pass", "rule-graph-check", "citation-check"]:
+        subprocess.run(["chmod", "+x", str(tmp_path / "bin" / script)], check=True)
+
+    _git(tmp_path, "add", ".agent/execplans/20260310-test-plan-codex-01-execplan.md")
+    _git(tmp_path, "commit", "-m", "docs(execplan): add test plan")
+    _git(tmp_path, "add", "spec/slice.yaml")
+    _git(tmp_path, "commit", "-m", "spec(test): add slice spec")
+    branch = subprocess.run(
+        ["git", "branch", "--show-current"],
+        cwd=tmp_path,
+        check=True,
+        capture_output=True,
+        text=True,
+    ).stdout.strip()
+    oversized_path = tmp_path / "src" / "big_runtime.py"
+    _write(oversized_path, "".join(f"line_{index} = {index}\n" for index in range(410)))
+    _git(tmp_path, "add", "src/big_runtime.py")
+    _git(tmp_path, "commit", "-m", "feat(runtime): add oversized runtime")
+    oversized_commit = subprocess.run(
+        ["git", "rev-parse", "HEAD"],
+        cwd=tmp_path,
+        check=True,
+        capture_output=True,
+        text=True,
+    ).stdout.strip()
+    _write(
+        tmp_path / EXCEPTION_REGISTRY_PATH,
+        "\n".join(
+            [
+                "exceptions:",
+                "  - id: commit-limit-001",
+                "    status: active",
+                f"    scope: commit_hard_limit:{branch}:{oversized_commit}",
+                '    owner: "github:test-owner"',
+                '    approved_by: "github:test-owner"',
+                '    rationale: "Allow one bounded oversized runtime commit during transition."',
+                '    created_at: "2026-03-13T00:00:00Z"',
+                '    expires_at: "2026-03-20T00:00:00Z"',
+                "    bypass_evidence:",
+                '      - "chat:explicit-human-authorization"',
+                "",
+            ]
+        ),
+    )
+    _git(tmp_path, "add", EXCEPTION_REGISTRY_PATH)
+    _git(tmp_path, "commit", "-m", "docs(governance): allow active commit limit exception")
+
+    code, report = check_merge_readiness(
+        root=tmp_path.as_posix(),
+        execplan_path=execplan.as_posix(),
+        base_ref="main",
+        include_validation_runs=False,
+    )
+
+    assert code == 0
+    assert report["readiness"] is True
+    assert not any("commit_hard_limit_exceeded" in item for item in report["failing_checks"])
+    assert any("commit_hard_limit_exception" in item for item in report["warnings"])

@@ -32,6 +32,7 @@ The current executable hierarchy is:
 6. commit-structure game
 7. planning merge-readiness game
 8. implementation merge-readiness game
+9. hostile-review game
 
 The platform game owns the shared board and its inherited law. The
 ExecPlan game acts as the current authority-domain contract game. The
@@ -48,9 +49,9 @@ This means the platform is not a flat set of peer games. It is:
 4. proof/subgames that narrow local obligations further
 
 Policy compliance is where the platform currently proves that a governed
-slice cannot advance by assertion alone. Future review-layer games like
-hostile review should consume that legality surface instead of replacing
-it.
+slice cannot advance by assertion alone. Hostile review is the current
+review-layer game that consumes that legality surface rather than
+replacing it.
 
 ## Shared Ontology
 

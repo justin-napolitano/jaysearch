@@ -17,6 +17,11 @@ from platform_tools.integrations.github_projects_runtime import (
 )
 from platform_tools.integrations.provider_adapter import build_provider_projection
 
+OPTIONAL_FIELD_NAMES = {
+    "hostile_review_blocker_count",
+    "hostile_review_state",
+}
+
 
 def _provider_status_name(*, mapping: dict[str, Any], canonical_value: str) -> str:
     sync = mapping.get("sync", {}) if isinstance(mapping.get("sync"), dict) else {}
@@ -72,6 +77,8 @@ def _field_updates_for_item(
         if field_name == "title":
             continue
         if not field_id:
+            if field_name in OPTIONAL_FIELD_NAMES:
+                continue
             blockers.append(f"missing_field_id:{field_name}")
             continue
         if data_type == "text":

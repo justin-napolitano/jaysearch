@@ -1,0 +1,48 @@
+game_id: game-hostile-review
+type: hostile_review
+title: Hostile-Review Game
+layer: review
+rule_scope: domain_game
+parent_game: game-implementation
+objective: emit deterministic adversarial findings before human approval gates
+board: canonical-graph-plus-review-evidence
+players:
+  - hostile_reviewer
+  - implementation_orchestrator
+  - human_operator
+inherits_board_law: true
+local_rule_focus:
+  - deterministic_findings
+  - fail_closed_when_evidence_missing
+  - policy_compliance_prerequisite
+  - review_artifact_reproducibility
+  - projection_surfaces_remain_non_authoritative
+referees:
+  - bin/policy-compliance-check
+  - bin/hostile-review
+  - bin/hostile-review-smoke-test
+referee_order:
+  - global_board_law
+  - active_domain_game
+  - active_subgame
+required_inputs:
+  - .agent/execplans/<active-execplan>.md
+  - artifacts/planner/research/remaining-work-graph.json
+  - docs/queued-execplans.md
+required_artifacts:
+  - artifacts/review/hostile-review-report.json
+  - artifacts/review/hostile-review-summary.md
+  - artifacts/review/validation-evidence.json
+legal_moves:
+  - inspect
+  - challenge
+  - emit_findings
+  - request_recovery
+  - attest_clean_review
+illegal_moves:
+  - bypass_policy_compliance
+  - invent_evidence
+  - treat_projection_board_as_authority
+  - approve_for_human_finalization
+win_condition: hostile review emits deterministic machine-readable findings or a clean attestation from canonical local evidence
+loss_condition: review claims are non-deterministic, unsupported by evidence, or attempt to replace human final authority

@@ -336,6 +336,8 @@ def test_build_sync_plan_maps_canonical_status_to_provider_status(tmp_path: Path
     assert code == 0
     assert report["ok"] is True
     assert report["create_count"] == 2
+    assert not any("missing_field_id:hostile_review_state" in blocker for blocker in report["blockers"])
+    assert not any("missing_field_id:hostile_review_blocker_count" in blocker for blocker in report["blockers"])
     ready_op = next(item for item in report["operations"] if item["node_id"] == "rwg-005")
     status_update = next(item for item in ready_op["field_updates"] if item["field_name"] == "status")
     assert status_update["provider_value"] == "Todo"
