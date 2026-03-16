@@ -29,6 +29,9 @@ validation:
     - name: "remaining-work-graph-check"
       command: "bin/remaining-work-graph-check"
       expected_exit: 0
+    - name: "policy-compliance-check"
+      command: "bin/policy-compliance-check --execplan-path .agent/execplans/20260316-subgame-branch-state-transition-governance-codex-01-execplan.md"
+      expected_exit: 0
 tasks:
   - title: "Define subgame branch contracts and merge-back requirements"
     priority: "P1"
@@ -48,21 +51,24 @@ Remove the assumption that an implementation branch must tell one linear procedu
 
 ## Progress
 
+- [x] Cut and publish the canonical implementation branch
 - [ ] Define subgame branch model and merge contracts
 - [ ] Define state-transition legality rules that replace commit-order dependence
 - [ ] Define conflict and handoff semantics for independently played subgames
-- [ ] Queue the implementation slice behind the API and anti-cheat slices
+- [x] Queue the implementation slice behind the API and anti-cheat slices
 
 ## Surprises & Discoveries
 
 - Commit order worked as a review aid, but it is structurally hostile to independent subgame execution and branch fan-out.
 - If branch-order rules are removed without a replacement legality model, the system will lose deterministic referee pressure rather than gaining flexibility.
+- Publishing the slice-3 implementation branch is only the branch-side precondition; slice 2 completion and slice 3 promotion still need explicit canonical graph actions before implementation can begin lawfully.
 
 ## Decision Log
 
 - 2026-03-16 / agent-codex-01 / The replacement for branch-order legality must be explicit state-transition legality, not “anything goes as long as the end state looks okay.”
 - 2026-03-16 / agent-codex-01 / Independently played subgames need branch contracts, merge-back contracts, and conflict semantics before multiple agents can play them safely.
 - 2026-03-16 / agent-codex-01 / Slice 3 is only valid if the new legality model is stricter and more machine-checkable than procedural commit-order checks, not merely more flexible.
+- 2026-03-16 / agent-codex-01 / Slice 3 may only start after the merged slice-2 branch is canonically reconciled to `completed` and the published slice-3 branch is explicitly promoted to `ready`.
 
 ## Outcomes & Retrospective
 
