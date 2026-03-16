@@ -1,0 +1,41 @@
+version: v1
+branch_roles:
+  - id: impl_execplan_root
+    branch_patterns:
+      - impl-execplan/*
+    scope_source: execplan_changes
+    allowed_surface_classes:
+      - canonical_state_surface
+      - projection_surface
+      - rule_surface
+      - capability_policy_surface
+      - referee_surface
+    requires_handoff: false
+    handoff_paths: []
+    merge_back_requires_local_referee: true
+  - id: subgame_branch
+    branch_patterns:
+      - subgame/*
+    scope_source: execplan_changes
+    allowed_surface_classes:
+      - canonical_state_surface
+      - projection_surface
+    requires_handoff: true
+    handoff_paths:
+      - .agent/handoffs/
+    merge_back_requires_local_referee: true
+merge_back_contract:
+  required_proofs:
+    - dependencies_complete
+    - changes_declared_in_execplan
+    - surfaces_within_branch_scope
+    - protected_surfaces_respected
+    - required_handoff_present
+  deterministic_reject_reasons:
+    - dependencies_incomplete
+    - changed_file_not_declared
+    - surface_outside_branch_scope
+    - protected_surface_violation
+    - missing_handoff_artifact
+    - missing_branch_contract
+    - unknown_surface_class

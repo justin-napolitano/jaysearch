@@ -13,6 +13,7 @@ from platform_tools.branch_policy import get_current_branch
 from platform_tools.anti_cheat_check import check_anti_cheat
 from platform_tools.plan_utils import parse_frontmatter, parse_plan
 from platform_tools.remaining_work_graph_check import check_remaining_work_graph
+from platform_tools.state_transition_legality import check_state_transition_legality
 
 
 COMMAND = "policy-compliance-check"
@@ -289,6 +290,7 @@ def _commit_reports(
     base_ref: str,
     *,
     active_execplan_path: str,
+    enforce_procedural_order: bool,
 ) -> tuple[list[dict[str, Any]], list[str], list[str]]:
     merge_base = _merge_base(cwd, base_ref)
     output = _git(cwd, "rev-list", "--reverse", f"{merge_base}..HEAD")
@@ -326,7 +328,7 @@ def _commit_reports(
         )
         if branch_reconciliation:
             warnings.append(f"bounded_branch_reconciliation_commit:{commit}")
-        if commit_class != "unknown" and class_order < max_seen:
+        if enforce_procedural_order and commit_class != "unknown" and class_order < max_seen:
             allowed_execplan_reconciliation, reconciliation_reasons = _is_bounded_execplan_reconciliation(
                 cwd=cwd,
                 commit=commit,
@@ -525,10 +527,18 @@ def check_policy_compliance(
     parsed = parse_plan(plan_path)
     execplan_id = str(parsed.frontmatter.get("id", "")).strip()
     changed_files = _changed_files(cwd, base_ref)
+    state_transition_code, state_transition_report = check_state_transition_legality(
+        root=root,
+        execplan_path=plan_path.as_posix(),
+        base_ref=base_ref,
+    )
+    state_transition_ok = state_transition_code == 0 and state_transition_report.get("status") == "ok"
+    enforce_procedural_order = not branch.startswith("impl-execplan/") or not state_transition_ok
     commit_stack, commit_errors, commit_warnings = _commit_reports(
         cwd,
         base_ref,
         active_execplan_path=_repo_relative_path(plan_path, root=cwd),
+        enforce_procedural_order=enforce_procedural_order,
     )
     dirty_artifacts = _dirty_generated_artifacts(cwd)
     branch_aligned, merge_base, base_head = _branch_is_aligned_with_base(cwd, base_ref)
@@ -561,6 +571,8 @@ def check_policy_compliance(
         blockers.extend(f"remaining_work_graph:{item}" for item in remaining_work_report.get("errors", []))
     if anti_cheat_code != 0:
         blockers.extend(f"anti_cheat:{item}" for item in anti_cheat_report.get("blockers", []))
+    if state_transition_code != 0:
+        blockers.extend(f"state_transition:{item}" for item in state_transition_report.get("blockers", []))
 
     if graph_node is None:
         blockers.append(f"missing_remaining_work_node:{execplan_id}")
@@ -620,8 +632,10 @@ def check_policy_compliance(
                 "queue_projection": remaining_work_report.get("queue_projection", {}),
             },
             "anti_cheat": anti_cheat_report,
+            "state_transition": state_transition_report,
             "commit_structure": {
                 "ok": not commit_errors,
+                "enforced": enforce_procedural_order,
                 "commit_stack": commit_stack,
                 "warnings": commit_warnings,
             },

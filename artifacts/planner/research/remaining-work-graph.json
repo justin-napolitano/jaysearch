@@ -16,9 +16,9 @@
   "queue_projection": {
     "path": "docs/queued-execplans.md",
     "projection_authority": "projection_only",
-    "last_reconciled_action_id": "rwg-action-20260316-007-promote-rwg-022",
+    "last_reconciled_action_id": "rwg-action-20260316-010-promote-rwg-023",
     "ready_execplan_ids": [
-      "20260316-anti-cheat-capability-enforcement-codex-01-execplan"
+      "20260316-subgame-branch-state-transition-governance-codex-01-execplan"
     ]
   },
   "graph_actions": [
@@ -132,6 +132,30 @@
       "node_id": "rwg-022",
       "rationale": "the canonical anti-cheat implementation branch is published, so the slice may advance from blocked to ready on its dedicated implementation branch",
       "evidence_ref": ".agent/execplans/20260316-anti-cheat-capability-enforcement-codex-01-execplan.md",
+      "queue_reconciled": true
+    },
+    {
+      "action_id": "rwg-action-20260316-008-complete-rwg-022",
+      "action": "complete",
+      "node_id": "rwg-022",
+      "rationale": "the anti-cheat capability enforcement slice merged on main, so the canonical graph records it as completed",
+      "evidence_ref": ".agent/execplans/20260316-anti-cheat-capability-enforcement-codex-01-execplan.md",
+      "queue_reconciled": true
+    },
+    {
+      "action_id": "rwg-action-20260316-009-unblock-rwg-023",
+      "action": "unblock",
+      "node_id": "rwg-023",
+      "rationale": "anti-cheat capability enforcement completed, satisfying the remaining dependency for subgame branch and state-transition governance",
+      "evidence_ref": ".agent/execplans/20260316-subgame-branch-state-transition-governance-codex-01-execplan.md",
+      "queue_reconciled": true
+    },
+    {
+      "action_id": "rwg-action-20260316-010-promote-rwg-023",
+      "action": "promote_ready",
+      "node_id": "rwg-023",
+      "rationale": "the canonical slice-3 implementation branch is published, so the subgame branch governance slice may advance from blocked to ready on its dedicated implementation branch",
+      "evidence_ref": ".agent/execplans/20260316-subgame-branch-state-transition-governance-codex-01-execplan.md",
       "queue_reconciled": true
     }
   ],
@@ -624,7 +648,7 @@
     {
       "node_id": "rwg-022",
       "title": "Anti-cheat capability enforcement",
-      "status": "ready",
+      "status": "completed",
       "status_reason": "",
       "gating_class": "auto_runnable",
       "conflict_domains": [
@@ -642,23 +666,23 @@
       ],
       "ordering": {
         "queue_position": 22,
-        "ready_order": 1,
-        "source_action_id": "rwg-action-20260316-007-promote-rwg-022",
+        "source_action_id": "rwg-action-20260316-008-complete-rwg-022",
         "tie_breaker": "20260316-anti-cheat-capability-enforcement-codex-01-execplan"
       },
       "action_state": {
-        "last_action_id": "rwg-action-20260316-007-promote-rwg-022",
-        "last_action": "promote_ready",
+        "last_action_id": "rwg-action-20260316-008-complete-rwg-022",
+        "last_action": "complete",
         "action_required": false,
         "reorder_requires_human": false,
         "reorder_blockers": []
-      }
+      },
+      "completion_ref": "merged:pr-80"
     },
     {
       "node_id": "rwg-023",
       "title": "Subgame branch and state-transition governance",
-      "status": "blocked",
-      "status_reason": "state-transition governance replaces implementation-branch order only after anti-cheat capability enforcement is complete",
+      "status": "ready",
+      "status_reason": "",
       "gating_class": "auto_runnable",
       "conflict_domains": [
         "governance",
@@ -667,6 +691,7 @@
       ],
       "target_execplan_id": "20260316-subgame-branch-state-transition-governance-codex-01-execplan",
       "goal_area": "governance",
+      "implementation_branch": "impl-execplan/20260316-subgame-branch-state-transition-governance-codex-01-execplan-codex-01-20260316",
       "expected_artifacts": [
         "docs/subgame-branch-governance.md",
         "spec/subgame-branch-contract.yaml",
@@ -674,7 +699,16 @@
       ],
       "ordering": {
         "queue_position": 23,
+        "ready_order": 1,
+        "source_action_id": "rwg-action-20260316-010-promote-rwg-023",
         "tie_breaker": "20260316-subgame-branch-state-transition-governance-codex-01-execplan"
+      },
+      "action_state": {
+        "last_action_id": "rwg-action-20260316-010-promote-rwg-023",
+        "last_action": "promote_ready",
+        "action_required": false,
+        "reorder_requires_human": false,
+        "reorder_blockers": []
       }
     },
     {

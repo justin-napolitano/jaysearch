@@ -105,24 +105,21 @@ This document turns the remaining-work graph into an explicit near-term queue of
    - completion ref: `merged:pr-79`
 
 21. `20260316-anti-cheat-capability-enforcement-codex-01-execplan`
-   - status: `ready`
+   - status: `completed`
    - goal: define protected surfaces, capability classes, and explicit exception paths so agents cannot self-authorize compliance
    - draft branch: `draft-execplan/20260316-next-planning-codex-02`
    - implementation branch: `impl-execplan/20260316-anti-cheat-capability-enforcement-codex-01-execplan-codex-01-20260316`
+   - completion ref: `merged:pr-80`
 
 22. `20260316-subgame-branch-state-transition-governance-codex-01-execplan`
-   - status: `blocked`
+   - status: `ready`
    - goal: replace implementation-branch commit-order legality with subgame branch contracts and state-transition legality
    - draft branch: `draft-execplan/20260316-next-planning-codex-02`
-   - planned implementation branch: `impl-execplan/20260316-subgame-branch-state-transition-governance-codex-01-execplan-codex-01-20260316`
-   - blocked on:
-     - `20260313-game-hostile-review-runtime-codex-01-execplan`
-     - `20260316-board-action-api-contract-and-event-log-codex-01-execplan`
-     - `20260316-anti-cheat-capability-enforcement-codex-01-execplan`
+   - implementation branch: `impl-execplan/20260316-subgame-branch-state-transition-governance-codex-01-execplan-codex-01-20260316`
 ## Mirror Metadata
 
-- canonical_last_graph_action_id: `rwg-action-20260316-007-promote-rwg-022`
-- canonical_ready_order: `20260316-anti-cheat-capability-enforcement-codex-01-execplan`
+- canonical_last_graph_action_id: `rwg-action-20260316-010-promote-rwg-023`
+- canonical_ready_order: `20260316-subgame-branch-state-transition-governance-codex-01-execplan`
 - projection_authority: `projection_only`
 
 ## Queue Discipline

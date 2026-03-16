@@ -745,3 +745,38 @@ def test_policy_compliance_allows_commit_hard_limit_with_active_exception(tmp_pa
     assert report["ok"] is True
     assert not any("commit_hard_limit_exceeded" in blocker for blocker in report["blockers"])
     assert any("commit_hard_limit_exception" in warning for warning in report["warnings"])
+
+
+def test_policy_compliance_replaces_impl_branch_commit_order_with_state_transition(tmp_path: Path, monkeypatch) -> None:
+    execplan = _seed_repo(tmp_path, graph_and_queue_on_main=False)
+
+    _write(
+        execplan,
+        _execplan_text().replace("- [ ] Test", "- [x] Test"),
+    )
+    _git(tmp_path, "add", execplan.as_posix())
+    _git(tmp_path, "commit", "-m", "docs(execplan): update policy progress")
+
+    monkeypatch.setattr(
+        "platform_tools.policy_compliance_check.check_state_transition_legality",
+        lambda **kwargs: (
+            0,
+            {
+                "ok": True,
+                "blockers": [],
+                "status": "ok",
+            },
+        ),
+    )
+
+    code, report = check_policy_compliance(
+        root=tmp_path.as_posix(),
+        execplan_path=execplan.as_posix(),
+        base_ref="main",
+    )
+
+    assert code == 0
+    assert report["ok"] is True
+    assert report["checks"]["state_transition"]["ok"] is True
+    assert report["checks"]["commit_structure"]["enforced"] is False
+    assert not any("procedural_commit_order_violation" in blocker for blocker in report["blockers"])
