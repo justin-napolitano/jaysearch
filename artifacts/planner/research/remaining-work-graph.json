@@ -16,10 +16,8 @@
   "queue_projection": {
     "path": "docs/queued-execplans.md",
     "projection_authority": "projection_only",
-    "last_reconciled_action_id": "rwg-action-20260313-001-promote-rwg-014",
-    "ready_execplan_ids": [
-      "20260313-game-hostile-review-runtime-codex-01-execplan"
-    ]
+    "last_reconciled_action_id": "rwg-action-20260316-003-unblock-rwg-021",
+    "ready_execplan_ids": []
   },
   "graph_actions": [
     {
@@ -84,6 +82,22 @@
       "node_id": "rwg-014",
       "rationale": "the canonical hostile-review implementation branch is published, so the slice may advance from review-gated to ready with an explicit backlog action",
       "evidence_ref": ".agent/execplans/20260313-game-hostile-review-runtime-codex-01-execplan.md",
+      "queue_reconciled": true
+    },
+    {
+      "action_id": "rwg-action-20260316-002-complete-rwg-014",
+      "action": "complete",
+      "node_id": "rwg-014",
+      "rationale": "20260313-game-hostile-review-runtime-codex-01-execplan merged to main and is now canonical completed state",
+      "evidence_ref": "merged:pr-75",
+      "queue_reconciled": true
+    },
+    {
+      "action_id": "rwg-action-20260316-003-unblock-rwg-021",
+      "action": "unblock",
+      "node_id": "rwg-021",
+      "rationale": "hostile-review completed on main, so the board-action API contract becomes the next canonical queued slice pending implementation-branch publication",
+      "evidence_ref": ".agent/execplans/20260316-board-action-api-contract-and-event-log-codex-01-execplan.md",
       "queue_reconciled": true
     }
   ],
@@ -362,7 +376,7 @@
     {
       "node_id": "rwg-014",
       "title": "Game hostile-review runtime",
-      "status": "ready",
+      "status": "completed",
       "status_reason": "",
       "gating_class": "auto_runnable",
       "conflict_domains": [
@@ -380,17 +394,17 @@
       ],
       "ordering": {
         "queue_position": 14,
-        "ready_order": 1,
         "tie_breaker": "20260313-game-hostile-review-runtime-codex-01-execplan",
-        "source_action_id": "rwg-action-20260313-001-promote-rwg-014"
+        "source_action_id": "rwg-action-20260316-002-complete-rwg-014"
       },
       "action_state": {
-        "last_action_id": "rwg-action-20260313-001-promote-rwg-014",
-        "last_action": "promote_ready",
+        "last_action_id": "rwg-action-20260316-002-complete-rwg-014",
+        "last_action": "complete",
         "action_required": false,
         "reorder_requires_human": false,
         "reorder_blockers": []
-      }
+      },
+      "completion_ref": "merged:pr-75"
     },
     {
       "node_id": "rwg-015",
@@ -539,6 +553,83 @@
         "reorder_blockers": []
       },
       "completion_ref": "merged:pr-73"
+    },
+    {
+      "node_id": "rwg-021",
+      "title": "Board-action API contract and event log",
+      "status": "review_gated",
+      "status_reason": "the board-action API contract is the next canonical slice, but implementation may begin only after its dedicated impl branch is cut and published",
+      "gating_class": "review_gated",
+      "conflict_domains": [
+        "governance",
+        "orchestrator-status",
+        "provider-sync"
+      ],
+      "target_execplan_id": "20260316-board-action-api-contract-and-event-log-codex-01-execplan",
+      "goal_area": "governance",
+      "expected_artifacts": [
+        "docs/board-action-api.md",
+        "spec/board-action-api.yaml",
+        "spec/board-event-log.schema.yaml"
+      ],
+      "ordering": {
+        "queue_position": 21,
+        "source_action_id": "rwg-action-20260316-003-unblock-rwg-021",
+        "tie_breaker": "20260316-board-action-api-contract-and-event-log-codex-01-execplan"
+      },
+      "action_state": {
+        "last_action_id": "rwg-action-20260316-003-unblock-rwg-021",
+        "last_action": "unblock",
+        "action_required": false,
+        "reorder_requires_human": false,
+        "reorder_blockers": []
+      }
+    },
+    {
+      "node_id": "rwg-022",
+      "title": "Anti-cheat capability enforcement",
+      "status": "blocked",
+      "status_reason": "anti-cheat enforcement depends on the board-action API contract and hostile-review completion before it can be implemented safely",
+      "gating_class": "auto_runnable",
+      "conflict_domains": [
+        "governance",
+        "policy-compliance",
+        "review-runtime"
+      ],
+      "target_execplan_id": "20260316-anti-cheat-capability-enforcement-codex-01-execplan",
+      "goal_area": "governance",
+      "expected_artifacts": [
+        "docs/agent-capability-boundaries.md",
+        "spec/agent-capability-policy.yaml",
+        "spec/protected-surfaces.schema.yaml"
+      ],
+      "ordering": {
+        "queue_position": 22,
+        "tie_breaker": "20260316-anti-cheat-capability-enforcement-codex-01-execplan"
+      }
+    },
+    {
+      "node_id": "rwg-023",
+      "title": "Subgame branch and state-transition governance",
+      "status": "blocked",
+      "status_reason": "state-transition governance replaces implementation-branch order only after the board-action API and anti-cheat boundary slices are complete",
+      "gating_class": "auto_runnable",
+      "conflict_domains": [
+        "governance",
+        "workflow",
+        "policy-compliance"
+      ],
+      "target_execplan_id": "20260316-subgame-branch-state-transition-governance-codex-01-execplan",
+      "goal_area": "governance",
+      "expected_artifacts": [
+        "docs/subgame-branch-governance.md",
+        "spec/subgame-branch-contract.yaml",
+        "spec/state-transition-legality.schema.yaml"
+      ],
+      "ordering": {
+        "queue_position": 23,
+        "tie_breaker": "20260316-subgame-branch-state-transition-governance-codex-01-execplan"
+      }
     },
     {
       "node_id": "artifact-orchestrator-contract",
@@ -797,6 +888,36 @@
       "from": "rwg-014",
       "to": "artifact-merge-readiness-contract",
       "relation": "informed_by"
+    },
+    {
+      "from": "rwg-021",
+      "to": "rwg-014",
+      "relation": "depends_on"
+    },
+    {
+      "from": "rwg-022",
+      "to": "rwg-014",
+      "relation": "depends_on"
+    },
+    {
+      "from": "rwg-022",
+      "to": "rwg-021",
+      "relation": "depends_on"
+    },
+    {
+      "from": "rwg-023",
+      "to": "rwg-014",
+      "relation": "depends_on"
+    },
+    {
+      "from": "rwg-023",
+      "to": "rwg-021",
+      "relation": "depends_on"
+    },
+    {
+      "from": "rwg-023",
+      "to": "rwg-022",
+      "relation": "depends_on"
     }
   ]
 }
