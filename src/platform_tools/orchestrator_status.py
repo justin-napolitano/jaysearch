@@ -16,6 +16,7 @@ from platform_tools.planner_score import score_graph
 from platform_tools.policy_compliance_check import check_policy_compliance
 from platform_tools.remaining_work_graph_check import check_remaining_work_graph
 from platform_tools.rule_graph_check import check_rule_graph
+from platform_tools.state_transition_legality import check_state_transition_legality
 
 
 COMMAND = "orchestrator-status"
@@ -108,6 +109,11 @@ def get_orchestrator_status(
         execplan_path=execplan_path,
         base_ref=base_ref,
     )
+    _, state_transition_report = check_state_transition_legality(
+        root=root,
+        execplan_path=execplan_path,
+        base_ref=base_ref,
+    )
     _, merge_report = check_merge_readiness(
         root=root,
         execplan_path=execplan_path,
@@ -160,6 +166,12 @@ def get_orchestrator_status(
             ok=bool(anti_cheat_report.get("ok", False)),
             blockers=[str(item) for item in anti_cheat_report.get("blockers", [])],
             payload=anti_cheat_report,
+        ),
+        "state_transition": _adapt_contract(
+            command="state-transition-legality-check",
+            ok=bool(state_transition_report.get("ok", False)),
+            blockers=[str(item) for item in state_transition_report.get("blockers", [])],
+            payload=state_transition_report,
         ),
         "game_status": _adapt_contract(
             command="game-status",
