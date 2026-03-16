@@ -34,6 +34,8 @@ tasks:
     priority: "P1"
   - title: "Define capability classes for users, agents, and branches"
     priority: "P1"
+  - title: "Define enforcement boundaries so agents cannot self-authorize compliance"
+    priority: "P1"
 depends_on:
   - "20260313-game-hostile-review-runtime-codex-01-execplan"
   - "20260316-board-action-api-contract-and-event-log-codex-01-execplan"
@@ -59,6 +61,7 @@ Prevent Codex or any governed agent from “winning” by modifying the rules, v
 
 - 2026-03-16 / agent-codex-01 / Anti-cheat work should treat rule surfaces, validator surfaces, and exception registries as separately governed capability domains.
 - 2026-03-16 / agent-codex-01 / The system should allow explicit human-authorized exceptions without allowing agents to self-authorize them.
+- 2026-03-16 / agent-codex-01 / Slice 2 must consume the transition/action model from slice 1 rather than inventing a second mutation model for protected surfaces.
 
 ## Outcomes & Retrospective
 
@@ -79,20 +82,46 @@ The target model is:
 - agents may execute only within granted capabilities
 - protected surfaces require stronger authority than normal implementation work
 - exception records remain explicit, bounded, and human-authorized
+- a branch that is seeking policy compliance may not redefine its own protected-surface allowances without stronger authority than that branch already has
 
 ## Plan of Work
 
 1. Define capability classes and protected-surface categories.
-2. Define which branch/game contexts may touch which surfaces.
-3. Define the exception path for protected-surface changes.
-4. Queue the anti-cheat slice canonically after the API contract slice.
+2. Define which actor, branch, and game contexts may request which transition types from slice 1.
+3. Define hard denials for self-authorization paths and policy-judge self-modification paths.
+4. Define the exception path for protected-surface changes.
+5. Queue the anti-cheat slice canonically after the API contract slice.
 
 ## Concrete Steps
 
-1. Add `spec/agent-capability-policy.yaml`.
-2. Add `spec/protected-surfaces.schema.yaml`.
-3. Document capability boundaries in `docs/agent-capability-boundaries.md`.
-4. Reconcile the remaining-work graph and queue mirror so the anti-cheat slice is canonically blocked behind the API contract and hostile review.
+1. Add `spec/agent-capability-policy.yaml` for:
+   - actor classes
+   - branch classes
+   - game/slice classes
+   - allowed transition families
+   - forbidden transition families
+   - escalation requirements
+2. Add `spec/protected-surfaces.schema.yaml` for:
+   - rules surfaces
+   - referee surfaces
+   - exception registries
+   - canonical state surfaces
+   - projection-only surfaces
+3. Document capability boundaries in `docs/agent-capability-boundaries.md`, including:
+   - what an implementation agent may change
+   - what requires governance authority
+   - what requires explicit human approval
+   - how Git/GitHub evidence participates without granting new authority
+4. Define the minimum denial cases this slice must settle:
+   - agent changes rule surfaces on the branch it is trying to pass
+   - agent changes referee logic that would legalize its own branch
+   - agent writes exception records that authorize itself
+   - agent treats GitHub state as authority rather than evidence
+5. Define the minimum allowed exception cases this slice must preserve:
+   - explicit human-authorized governance repair
+   - separate governance branch changes
+   - bounded exception records with expiry and evidence
+6. Reconcile the remaining-work graph and queue mirror so the anti-cheat slice is canonically blocked behind the API contract and hostile review.
 
 ## Validation and Acceptance
 
@@ -101,6 +130,8 @@ Acceptance criteria:
 - protected surfaces are machine-identifiable
 - capability classes are explicit and actor-aware
 - exception paths do not allow self-authorization by governed agents
+- the plan identifies which current fix-forward repair patterns remain legal and which become illegal under stronger anti-cheat rules
+- the slice is explicit about how local referees and Git/GitHub evidence interact
 - the graph and queue reflect the dependency chain cleanly
 
 ## Idempotence and Recovery
@@ -117,6 +148,13 @@ Expected artifacts:
 - `spec/agent-capability-policy.yaml`
 - `spec/protected-surfaces.schema.yaml`
 
+Non-goals for this slice:
+
+- building the full API runtime
+- externalizing board authority
+- replacing branch-order legality
+- preventing all governance changes everywhere; the goal is scoped capability control, not permanent freeze
+
 ## Interfaces and Dependencies
 
 Primary interfaces:
@@ -125,6 +163,12 @@ Primary interfaces:
 - `docs/agent-game-rules-v1.md`
 - `artifacts/planner/research/remaining-work-graph.json`
 - `docs/queued-execplans.md`
+
+Implementation expectations for the later implementation branch:
+
+- capability evaluation must be machine-checkable from local repo state
+- protected-surface denials must emit deterministic evidence
+- exception handling must remain bounded, expiring, and human-authorized
 
 Planned implementation branch:
 
