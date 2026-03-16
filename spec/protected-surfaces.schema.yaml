@@ -1,0 +1,55 @@
+version: v1
+surface_entries:
+  - id: execplan_surface
+    surface_class: canonical_state_surface
+    authority_role: canonical_local
+    path_prefixes:
+      - .agent/execplans/
+  - id: remaining_work_graph_surface
+    surface_class: canonical_state_surface
+    authority_role: canonical_local
+    path_exact:
+      - artifacts/planner/research/remaining-work-graph.json
+  - id: queue_projection_surface
+    surface_class: projection_surface
+    authority_role: projection_only
+    path_exact:
+      - docs/queued-execplans.md
+  - id: rule_surface
+    surface_class: rule_surface
+    authority_role: governance_local
+    path_exact:
+      - docs/governance.md
+      - docs/agent-game-rules-v1.md
+      - spec/governance.yaml
+      - spec/ruleset.yaml
+      - spec/workflow.yaml
+  - id: capability_policy_surface
+    surface_class: capability_policy_surface
+    authority_role: governance_local
+    path_exact:
+      - docs/agent-capability-boundaries.md
+      - spec/agent-capability-policy.yaml
+      - spec/protected-surfaces.schema.yaml
+  - id: referee_surface
+    surface_class: referee_surface
+    authority_role: governance_local
+    path_exact:
+      - bin/anti-cheat-check
+      - src/platform_tools/anti_cheat_check.py
+      - src/platform_tools/orchestrator_status.py
+      - src/platform_tools/policy_compliance_check.py
+      - tests/test_anti_cheat_check.py
+      - tests/test_orchestrator_status.py
+      - tests/test_policy_compliance_check.py
+  - id: exception_registry
+    surface_class: exception_registry
+    authority_role: human_only
+    path_exact:
+      - .agent/governance/exceptions.yaml
+  - id: provider_projection_surface
+    surface_class: projection_surface
+    authority_role: projection_only
+    path_prefixes:
+      - artifacts/provider-sync/
+      - src/platform_tools/integrations/

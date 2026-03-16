@@ -8,10 +8,19 @@ base_branch: main
 changes:
   - .agent/execplans/20260316-anti-cheat-capability-enforcement-codex-01-execplan.md
   - artifacts/planner/research/remaining-work-graph.json
+  - bin/anti-cheat-check
+  - bin/anti-cheat-smoke-test
   - docs/queued-execplans.md
   - docs/agent-capability-boundaries.md
   - spec/agent-capability-policy.yaml
   - spec/protected-surfaces.schema.yaml
+  - src/platform_tools/anti_cheat_check.py
+  - src/platform_tools/merge_readiness.py
+  - src/platform_tools/orchestrator_status.py
+  - src/platform_tools/policy_compliance_check.py
+  - tests/test_anti_cheat_check.py
+  - tests/test_orchestrator_status.py
+  - tests/test_policy_compliance_check.py
 approve_policy: codeowners
 reviewers:
   - "github:justin-napolitano"
@@ -28,6 +37,15 @@ validation:
       expected_exit: 0
     - name: "remaining-work-graph-check"
       command: "bin/remaining-work-graph-check"
+      expected_exit: 0
+    - name: "policy-compliance-check"
+      command: "bin/policy-compliance-check --execplan-path .agent/execplans/20260316-anti-cheat-capability-enforcement-codex-01-execplan.md"
+      expected_exit: 0
+    - name: "anti-cheat-tests"
+      command: "uv run pytest tests/test_anti_cheat_check.py tests/test_policy_compliance_check.py tests/test_orchestrator_status.py -q"
+      expected_exit: 0
+    - name: "anti-cheat-smoke-test"
+      command: "bin/anti-cheat-smoke-test"
       expected_exit: 0
 tasks:
   - title: "Define protected rule and referee surfaces"
@@ -47,21 +65,28 @@ Prevent Codex or any governed agent from “winning” by modifying the rules, v
 
 ## Progress
 
-- [ ] Define protected surfaces and anti-cheat principles
-- [ ] Define capability classes for users, agents, and branch types
-- [ ] Define exception and escalation model
-- [ ] Queue the implementation slice behind the API contract
+- [x] Cut and publish the canonical implementation branch
+- [x] Define protected surfaces and anti-cheat principles
+- [x] Define capability classes for users, agents, and branch types
+- [x] Define exception and escalation model
+- [x] Queue the implementation slice behind the API contract
+- [x] Add a local anti-cheat referee and wire it into policy-compliance and orchestrator status
 
 ## Surprises & Discoveries
 
 - The current governance model still permits fix-forward repair of the checkers that judge the active branch; that is auditable, but not yet a strong anti-cheat boundary.
 - Anti-cheat enforcement has to distinguish legitimate governance work from implementation work or it will either overblock maintainers or underblock agents.
+- Publishing the slice-2 implementation branch is not enough by itself; slice 1 completion and slice 2 promotion must be recorded as explicit graph actions before anti-cheat enforcement work can begin lawfully.
+- `orchestrator-status` reaches anti-cheat through `merge_readiness`, so the shared bounded-reconciliation helper update had to be reconciled there as well or the smoke path crashed.
 
 ## Decision Log
 
 - 2026-03-16 / agent-codex-01 / Anti-cheat work should treat rule surfaces, validator surfaces, and exception registries as separately governed capability domains.
 - 2026-03-16 / agent-codex-01 / The system should allow explicit human-authorized exceptions without allowing agents to self-authorize them.
 - 2026-03-16 / agent-codex-01 / Slice 2 must consume the transition/action model from slice 1 rather than inventing a second mutation model for protected surfaces.
+- 2026-03-16 / agent-codex-01 / Slice 2 may only start after the merged slice-1 branch is canonically reconciled to `completed` and the published slice-2 branch is explicitly promoted to `ready`.
+- 2026-03-16 / agent-codex-01 / A governance implementation branch may modify a bounded allow-list of referee surfaces when the active slice goal area is `governance`, but it may never write the exception registry.
+- 2026-03-16 / agent-codex-01 / Anti-cheat legality must flow through both `policy-compliance-check` and `orchestrator-status`; a local referee that is not consumed by those surfaces is insufficient.
 
 ## Outcomes & Retrospective
 
@@ -71,6 +96,7 @@ On completion, the repository should have:
 - a capability model by actor and branch/game type
 - explicit rules for when an implementation branch may or may not change referee surfaces
 - an exception/escalation model that keeps human authority explicit
+- a local anti-cheat referee consumed by branch-level and orchestrator-level legality surfaces
 
 ## Context and Orientation
 
