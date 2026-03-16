@@ -334,6 +334,45 @@ def test_policy_compliance_allows_small_late_execplan_progress_update(tmp_path: 
     assert any("bounded_execplan_reconciliation" in warning for warning in report["warnings"])
 
 
+def test_policy_compliance_allows_late_execplan_stale_path_replacement(tmp_path: Path) -> None:
+    execplan = _seed_repo(tmp_path, graph_and_queue_on_main=False)
+
+    _write(
+        execplan,
+        _execplan_text().replace(
+            "changes:\n  - .agent/execplans/20260312-game-policy-compliance-codex-01-execplan.md\n",
+            "changes:\n"
+            "  - .agent/execplans/20260312-game-policy-compliance-codex-01-execplan.md\n"
+            "  - tests/test_missing_surface.py\n",
+        ),
+    )
+    _git(tmp_path, "add", execplan.as_posix())
+    _git(tmp_path, "commit", "-m", "docs(execplan): add stale planned path")
+
+    _write(
+        execplan,
+        _execplan_text().replace(
+            "changes:\n  - .agent/execplans/20260312-game-policy-compliance-codex-01-execplan.md\n",
+            "changes:\n"
+            "  - .agent/execplans/20260312-game-policy-compliance-codex-01-execplan.md\n"
+            "  - tests/test_real_surface.py\n",
+        ).replace("- [ ] Test", "- [x] Test"),
+    )
+    _git(tmp_path, "add", execplan.as_posix())
+    _git(tmp_path, "commit", "-m", "docs(execplan): replace stale planned path")
+
+    code, report = check_policy_compliance(
+        root=tmp_path.as_posix(),
+        execplan_path=execplan.as_posix(),
+        base_ref="main",
+    )
+
+    assert code == 0
+    assert report["ok"] is True
+    assert not any("changes_field_not_additive" in blocker for blocker in report["blockers"])
+    assert any("bounded_execplan_reconciliation" in warning for warning in report["warnings"])
+
+
 def test_policy_compliance_allows_multiple_adjacent_test_commits(tmp_path: Path) -> None:
     execplan = _seed_repo(tmp_path, graph_and_queue_on_main=False, split_test_phase=True)
 
@@ -418,6 +457,45 @@ def test_policy_compliance_allows_bounded_late_policy_repair_sequence(tmp_path: 
     assert report["ok"] is True
     assert not any("procedural_commit_order_violation" in blocker for blocker in report["blockers"])
     assert len([warning for warning in report["warnings"] if "bounded_policy_repair_commit" in warning]) == 3
+
+
+def test_policy_compliance_allows_late_graph_queue_reconciliation_repair(tmp_path: Path) -> None:
+    _git(tmp_path, "init", "-b", "main")
+    _git(tmp_path, "config", "user.name", "Tests")
+    _git(tmp_path, "config", "user.email", "tests@example.com")
+    _write(tmp_path / "README.md", "base\n")
+    _write(tmp_path / "spec" / "remaining-work-graph.schema.yaml", _remaining_work_schema_text())
+    _git(tmp_path, "add", ".")
+    _git(tmp_path, "commit", "-m", "docs: base")
+    _git(tmp_path, "checkout", "-b", BRANCH)
+
+    execplan = tmp_path / ".agent" / "execplans" / f"{EXECPLAN_ID}.md"
+    _write(execplan, _execplan_text())
+    _git(tmp_path, "add", execplan.as_posix())
+    _git(tmp_path, "commit", "-m", "docs(execplan): add policy plan")
+
+    _write_json(tmp_path / "artifacts/planner/research/remaining-work-graph.json", _remaining_work_graph())
+    _write(tmp_path / "docs/queued-execplans.md", _queue_text())
+    _git(tmp_path, "add", "artifacts/planner/research/remaining-work-graph.json", "docs/queued-execplans.md")
+    _git(tmp_path, "commit", "-m", "docs(governance): reconcile graph and queue")
+
+    _write(tmp_path / "spec" / "policy.yaml", "policy: true\n")
+    _git(tmp_path, "add", "spec/policy.yaml")
+    _git(tmp_path, "commit", "-m", "spec(policy): add policy spec")
+
+    _seed_remote(tmp_path)
+    _git(tmp_path, "push", "-u", "origin", BRANCH)
+
+    code, report = check_policy_compliance(
+        root=tmp_path.as_posix(),
+        execplan_path=execplan.as_posix(),
+        base_ref="main",
+    )
+
+    assert code == 0
+    assert report["ok"] is True
+    assert not any("procedural_commit_order_violation" in blocker for blocker in report["blockers"])
+    assert any("bounded_branch_reconciliation_commit" in warning for warning in report["warnings"])
 
 
 def test_policy_compliance_blocks_unbounded_late_runtime_follow_up(tmp_path: Path) -> None:
@@ -522,3 +600,77 @@ def test_policy_compliance_blocks_unpublished_impl_branch(tmp_path: Path) -> Non
     assert code == 1
     assert "implementation_branch_not_published" in report["blockers"]
     assert report["checks"]["branch_rewrite_guard"]["published_ref_exists"] is False
+
+
+def test_policy_compliance_allows_commit_hard_limit_with_active_exception(tmp_path: Path) -> None:
+    _git(tmp_path, "init", "-b", "main")
+    _git(tmp_path, "config", "user.name", "Tests")
+    _git(tmp_path, "config", "user.email", "tests@example.com")
+    _write(tmp_path / "README.md", "base\n")
+    _write(tmp_path / "spec" / "remaining-work-graph.schema.yaml", _remaining_work_schema_text())
+    _git(tmp_path, "add", ".")
+    _git(tmp_path, "commit", "-m", "docs: base")
+    _git(tmp_path, "checkout", "-b", BRANCH)
+
+    execplan = tmp_path / ".agent" / "execplans" / f"{EXECPLAN_ID}.md"
+    _write(execplan, _execplan_text())
+    _git(tmp_path, "add", execplan.as_posix())
+    _git(tmp_path, "commit", "-m", "docs(execplan): add policy plan")
+
+    _write_json(tmp_path / "artifacts/planner/research/remaining-work-graph.json", _remaining_work_graph())
+    _write(tmp_path / "docs/queued-execplans.md", _queue_text())
+    _git(tmp_path, "add", "artifacts/planner/research/remaining-work-graph.json", "docs/queued-execplans.md")
+    _git(tmp_path, "commit", "-m", "docs(governance): reconcile graph and queue")
+
+    _write(tmp_path / "spec" / "policy.yaml", "policy: true\n")
+    _git(tmp_path, "add", "spec/policy.yaml")
+    _git(tmp_path, "commit", "-m", "spec(policy): add policy spec")
+
+    large_text = "A = True\n" * 450
+    _write(tmp_path / "src" / "policy_runtime.py", large_text)
+    _git(tmp_path, "add", "src/policy_runtime.py")
+    _git(tmp_path, "commit", "-m", "feat(policy): add oversized runtime")
+    oversized_commit = subprocess.run(
+        ["git", "rev-parse", "HEAD"],
+        cwd=tmp_path,
+        check=True,
+        capture_output=True,
+        text=True,
+    ).stdout.strip()
+
+    _write(
+        tmp_path / ".agent" / "governance" / "exceptions.yaml",
+        "\n".join(
+            [
+                "version: v1",
+                "last_updated: 2026-03-13",
+                "exceptions:",
+                "  - id: commit-limit-001",
+                f"    scope: commit_hard_limit:{BRANCH}:{oversized_commit}",
+                "    owner: github:justin-napolitano",
+                "    rationale: explicit human approval to tolerate one oversized runtime commit on the active branch",
+                "    approved_by: github:justin-napolitano",
+                "    created_at: 2026-03-13T00:00:00Z",
+                "    expires_at: 2026-03-20T00:00:00Z",
+                "    status: active",
+                "    bypass_evidence:",
+                "      - chat:explicit-human-authorization",
+                "",
+            ]
+        ),
+    )
+    _git(tmp_path, "add", ".agent/governance/exceptions.yaml")
+    _git(tmp_path, "commit", "-m", "docs(governance): allow active commit limit exception")
+    _seed_remote(tmp_path)
+    _git(tmp_path, "push", "-u", "origin", BRANCH)
+
+    code, report = check_policy_compliance(
+        root=tmp_path.as_posix(),
+        execplan_path=execplan.as_posix(),
+        base_ref="main",
+    )
+
+    assert code == 0
+    assert report["ok"] is True
+    assert not any("commit_hard_limit_exceeded" in blocker for blocker in report["blockers"])
+    assert any("commit_hard_limit_exception" in warning for warning in report["warnings"])

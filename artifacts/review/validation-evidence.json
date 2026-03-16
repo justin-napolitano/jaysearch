@@ -1,0 +1,32 @@
+{
+  "branch": "impl-execplan/20260313-game-hostile-review-runtime-codex-01-execplan-codex-01-20260313",
+  "checks": [
+    {
+      "blockers": [],
+      "name": "policy-compliance-check",
+      "ok": true,
+      "status": "ok"
+    },
+    {
+      "blockers": [],
+      "name": "remaining-work-graph-check",
+      "ok": true,
+      "status": "ok"
+    },
+    {
+      "blockers": [],
+      "name": "merge-readiness-check",
+      "ok": true,
+      "status": "ok"
+    }
+  ],
+  "command": "hostile-review-validation-evidence",
+  "evidence_refs": [
+    ".agent/execplans/20260313-game-hostile-review-runtime-codex-01-execplan.md",
+    "artifacts/planner/research/remaining-work-graph.json",
+    "docs/merge-readiness-contract.md",
+    "docs/queued-execplans.md",
+    "spec/games/hostile-review-game.yaml"
+  ],
+  "execplan_id": "20260313-game-hostile-review-runtime-codex-01-execplan"
+}

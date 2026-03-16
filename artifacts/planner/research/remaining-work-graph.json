@@ -16,8 +16,10 @@
   "queue_projection": {
     "path": "docs/queued-execplans.md",
     "projection_authority": "projection_only",
-    "last_reconciled_action_id": "rwg-action-20260312-006-unblock-rwg-014",
-    "ready_execplan_ids": []
+    "last_reconciled_action_id": "rwg-action-20260313-001-promote-rwg-014",
+    "ready_execplan_ids": [
+      "20260313-game-hostile-review-runtime-codex-01-execplan"
+    ]
   },
   "graph_actions": [
     {
@@ -74,6 +76,14 @@
       "node_id": "rwg-014",
       "rationale": "20260312-remaining-work-graph-actions-and-ordering-codex-01-execplan completed on main; dependency gating is cleared for the next canonical slice",
       "evidence_ref": "merged:pr-73",
+      "queue_reconciled": true
+    },
+    {
+      "action_id": "rwg-action-20260313-001-promote-rwg-014",
+      "action": "promote_ready",
+      "node_id": "rwg-014",
+      "rationale": "the canonical hostile-review implementation branch is published, so the slice may advance from review-gated to ready with an explicit backlog action",
+      "evidence_ref": ".agent/execplans/20260313-game-hostile-review-runtime-codex-01-execplan.md",
       "queue_reconciled": true
     }
   ],
@@ -352,9 +362,9 @@
     {
       "node_id": "rwg-014",
       "title": "Game hostile-review runtime",
-      "status": "review_gated",
-      "status_reason": "hostile review is the next canonical slice; a canonical ExecPlan now exists and implementation may begin only after its dedicated impl branch is cut and published",
-      "gating_class": "review_gated",
+      "status": "ready",
+      "status_reason": "",
+      "gating_class": "auto_runnable",
       "conflict_domains": [
         "review-runtime",
         "merge-readiness",
@@ -362,6 +372,7 @@
       ],
       "target_execplan_id": "20260313-game-hostile-review-runtime-codex-01-execplan",
       "goal_area": "review-runtime",
+      "implementation_branch": "impl-execplan/20260313-game-hostile-review-runtime-codex-01-execplan-codex-01-20260313",
       "expected_artifacts": [
         "bin/hostile-review",
         "bin/hostile-review-smoke-test",
@@ -369,12 +380,13 @@
       ],
       "ordering": {
         "queue_position": 14,
+        "ready_order": 1,
         "tie_breaker": "20260313-game-hostile-review-runtime-codex-01-execplan",
-        "source_action_id": "rwg-action-20260312-006-unblock-rwg-014"
+        "source_action_id": "rwg-action-20260313-001-promote-rwg-014"
       },
       "action_state": {
-        "last_action_id": "rwg-action-20260312-006-unblock-rwg-014",
-        "last_action": "unblock",
+        "last_action_id": "rwg-action-20260313-001-promote-rwg-014",
+        "last_action": "promote_ready",
         "action_required": false,
         "reorder_requires_human": false,
         "reorder_blockers": []

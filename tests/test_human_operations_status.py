@@ -115,6 +115,10 @@ def test_human_operations_status_reports_board_reuse_and_review_states(monkeypat
         "platform_tools.human_operations_runtime.github_repo_http_url",
         lambda **kwargs: "https://github.com/JNA31A_AIT/codex_platform",
     )
+    monkeypatch.setattr(
+        "platform_tools.human_operations_status.check_policy_compliance",
+        lambda **kwargs: (0, {"ok": True, "blockers": []}),
+    )
 
     code, report = get_human_operations_status(root=tmp_path.as_posix(), branch=branch)
 
@@ -169,6 +173,10 @@ def test_human_operations_status_blocks_on_duplicate_item_ids(monkeypatch, tmp_p
                 "blockers": [],
             },
         ),
+    )
+    monkeypatch.setattr(
+        "platform_tools.human_operations_status.check_policy_compliance",
+        lambda **kwargs: (0, {"ok": True, "blockers": []}),
     )
 
     code, report = get_human_operations_status(root=tmp_path.as_posix())

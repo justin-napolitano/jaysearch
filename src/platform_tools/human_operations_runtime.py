@@ -7,6 +7,7 @@ import subprocess
 from typing import Any
 
 from platform_tools.plan_utils import parse_plan
+from platform_tools.hostile_review import load_hostile_review_state
 
 
 DEFAULT_FIELD_MAP_PATH = "artifacts/provider-sync/github-projects-field-map.json"
@@ -172,6 +173,13 @@ def review_projection_for_node(
         and implementation_branch != current_branch
         and node_status in {"ready", "review_gated", "decision_gated"}
     )
+    hostile_review = load_hostile_review_state(
+        root=root,
+        target_execplan_id=target_execplan_id,
+        implementation_branch=implementation_branch,
+        current_branch=current_branch,
+        node_status=node_status,
+    )
 
     return {
         "human_review_state": human_review_state,
@@ -183,4 +191,8 @@ def review_projection_for_node(
         "pending_reconciliation": pending_reconciliation,
         "takeover_needed": takeover_needed,
         "execplan_state": plan_state,
+        "hostile_review_state": hostile_review["state"],
+        "hostile_review_blocker_count": hostile_review["blocker_count"],
+        "hostile_review_warning_count": hostile_review["warning_count"],
+        "hostile_review_report_path": hostile_review["report_path"],
     }
