@@ -16,7 +16,7 @@
   "queue_projection": {
     "path": "docs/queued-execplans.md",
     "projection_authority": "projection_only",
-    "last_reconciled_action_id": "rwg-action-20260316-012-unblock-rwg-024",
+    "last_reconciled_action_id": "rwg-action-20260318-001-unblock-rwg-025",
     "ready_execplan_ids": []
   },
   "graph_actions": [
@@ -170,6 +170,14 @@
       "node_id": "rwg-024",
       "rationale": "slice 3 completion exposed a narrow anti-cheat contract inconsistency, so a focused cleanup slice is queued for explicit rule-surface authority treatment",
       "evidence_ref": ".agent/execplans/20260316-anti-cheat-rule-surface-authority-cleanup-codex-01-execplan.md",
+      "queue_reconciled": true
+    },
+    {
+      "action_id": "rwg-action-20260318-001-unblock-rwg-025",
+      "action": "unblock",
+      "node_id": "rwg-025",
+      "rationale": "rule authority consolidation is queued for draft review so the repository can formalize the governed draft-to-PR-to-implementation procedure before broader governance implementation continues",
+      "evidence_ref": ".agent/execplans/20260318-rule-authority-consolidation-codex-01-execplan.md",
       "queue_reconciled": true
     }
   ],
@@ -750,6 +758,38 @@
       },
       "action_state": {
         "last_action_id": "rwg-action-20260316-012-unblock-rwg-024",
+        "last_action": "unblock",
+        "action_required": false,
+        "reorder_requires_human": false,
+        "reorder_blockers": []
+      }
+    },
+    {
+      "node_id": "rwg-025",
+      "title": "Rule authority consolidation and governed draft PR procedure",
+      "status": "review_gated",
+      "status_reason": "draft ExecPlan is under review and formalizes canonical rule authority, additive PR structure, and graph-visible draft-to-implementation handoff before implementation execution begins",
+      "gating_class": "review_gated",
+      "conflict_domains": [
+        "governance",
+        "workflow",
+        "review-runtime"
+      ],
+      "target_execplan_id": "20260318-rule-authority-consolidation-codex-01-execplan",
+      "goal_area": "governance",
+      "implementation_branch": "impl-execplan/20260318-rule-authority-consolidation-codex-01-execplan-codex-01-20260318",
+      "expected_artifacts": [
+        ".github/PULL_REQUEST_TEMPLATE.md",
+        "spec/rule-registry.yaml",
+        "spec/workflow.yaml"
+      ],
+      "ordering": {
+        "queue_position": 25,
+        "source_action_id": "rwg-action-20260318-001-unblock-rwg-025",
+        "tie_breaker": "20260318-rule-authority-consolidation-codex-01-execplan"
+      },
+      "action_state": {
+        "last_action_id": "rwg-action-20260318-001-unblock-rwg-025",
         "last_action": "unblock",
         "action_required": false,
         "reorder_requires_human": false,

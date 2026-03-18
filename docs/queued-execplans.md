@@ -122,9 +122,16 @@ This document turns the remaining-work graph into an explicit near-term queue of
    - status: `review_gated`
    - goal: make governance rule-surface legality explicit in anti-cheat policy so lawful slices do not pass with warning-only ambiguity
    - draft branch: `draft-execplan/20260316-anti-cheat-rule-surface-followup-codex-01`
+
+24. `20260318-rule-authority-consolidation-codex-01-execplan`
+   - status: `review_gated`
+   - goal: consolidate canonical rule authority, formalize draft self-review and additive PR structure, and keep the draft-to-implementation handoff visible in canonical graph state
+   - draft branch: `draft-execplan/20260318-rule-authority-consolidation-codex-01-20260318`
+   - implementation branch: `impl-execplan/20260318-rule-authority-consolidation-codex-01-execplan-codex-01-20260318`
+   - gate: `human review and finalization of the draft ExecPlan required before implementation execution`
 ## Mirror Metadata
 
-- canonical_last_graph_action_id: `rwg-action-20260316-012-unblock-rwg-024`
+- canonical_last_graph_action_id: `rwg-action-20260318-001-unblock-rwg-025`
 - canonical_ready_order: ` `
 - projection_authority: `projection_only`
 
