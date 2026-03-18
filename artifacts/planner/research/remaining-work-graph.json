@@ -16,10 +16,8 @@
   "queue_projection": {
     "path": "docs/queued-execplans.md",
     "projection_authority": "projection_only",
-    "last_reconciled_action_id": "rwg-action-20260318-002-promote-rwg-025",
-    "ready_execplan_ids": [
-      "20260318-rule-authority-consolidation-codex-01-execplan"
-    ]
+    "last_reconciled_action_id": "rwg-action-20260318-003-complete-rwg-025",
+    "ready_execplan_ids": []
   },
   "graph_actions": [
     {
@@ -188,6 +186,14 @@
       "node_id": "rwg-025",
       "rationale": "the draft ExecPlan was human-finalized on main in PR 82, so the implementation slice may advance from review-gated to ready on its dedicated implementation branch",
       "evidence_ref": "merged:pr-82",
+      "queue_reconciled": true
+    },
+    {
+      "action_id": "rwg-action-20260318-003-complete-rwg-025",
+      "action": "complete",
+      "node_id": "rwg-025",
+      "rationale": "20260318-rule-authority-consolidation-codex-01-execplan merged to main and is now canonical completed state",
+      "evidence_ref": "merged:pr-83",
       "queue_reconciled": true
     }
   ],
@@ -777,8 +783,8 @@
     {
       "node_id": "rwg-025",
       "title": "Rule authority consolidation and governed draft PR procedure",
-      "status": "ready",
-      "status_reason": "draft ExecPlan was human-finalized on main, and the slice is now ready for execution on its dedicated implementation branch",
+      "status": "completed",
+      "status_reason": "",
       "gating_class": "auto_runnable",
       "conflict_domains": [
         "governance",
@@ -795,17 +801,17 @@
       ],
       "ordering": {
         "queue_position": 25,
-        "ready_order": 1,
-        "source_action_id": "rwg-action-20260318-002-promote-rwg-025",
+        "source_action_id": "rwg-action-20260318-003-complete-rwg-025",
         "tie_breaker": "20260318-rule-authority-consolidation-codex-01-execplan"
       },
       "action_state": {
-        "last_action_id": "rwg-action-20260318-002-promote-rwg-025",
-        "last_action": "promote_ready",
+        "last_action_id": "rwg-action-20260318-003-complete-rwg-025",
+        "last_action": "complete",
         "action_required": false,
         "reorder_requires_human": false,
         "reorder_blockers": []
-      }
+      },
+      "completion_ref": "merged:pr-83"
     },
     {
       "node_id": "artifact-orchestrator-contract",
