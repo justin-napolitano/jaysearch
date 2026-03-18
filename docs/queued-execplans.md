@@ -139,16 +139,17 @@ This document turns the remaining-work graph into an explicit near-term queue of
    - canonical evidence: `merged:pr-86`
    - completion ref: `merged:pr-86`
 
-26. `future:graph-transition-automation-and-merge-gating`
-   - status: `decision_gated`
+26. `20260318-graph-transition-automation-and-merge-gating-codex-01-execplan`
+   - status: `review_gated`
    - goal: make routine graph state machine-derived from branch, PR, merge, and check evidence, and fail closed when merges would leave graph reconciliation missing or illegal
+   - draft branch: `draft-execplan/20260318-graph-transition-automation-and-merge-gating-codex-01-20260318`
 
 27. `future:graph-priority-ranking-and-traversal-engine`
    - status: `decision_gated`
    - goal: add machine-readable priority and cost signals so the graph can emit deterministic sequential, parallel-safe, and lowest-cost execution plans
 ## Mirror Metadata
 
-- canonical_last_graph_action_id: `rwg-action-20260318-007-unblock-rwg-028`
+- canonical_last_graph_action_id: `rwg-action-20260318-008-unblock-rwg-027`
 - canonical_ready_order: ``
 - projection_authority: `projection_only`
 
