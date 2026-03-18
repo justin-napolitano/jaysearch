@@ -31,6 +31,15 @@ def _parse_iso8601(value: str) -> datetime | None:
         return None
 
 
+def _canonical_check_id(value: str) -> str:
+    cleaned = re.sub(r"[^a-z0-9]+", "_", str(value).strip().lower()).strip("_")
+    return cleaned
+
+
+def _command_signature(command: str) -> str:
+    return str(command).strip().split()[0] if str(command).strip() else ""
+
+
 def _collect_execplan_tests() -> list[dict[str, Any]]:
     tests: list[dict[str, Any]] = []
     for path in list_execplans(tracked_only=True):
@@ -53,6 +62,7 @@ def _collect_execplan_tests() -> list[dict[str, Any]]:
                     "plan_id": plan_id,
                     "order": idx,
                     "name": str(item.get("name", "")).strip(),
+                    "check_id": _canonical_check_id(str(item.get("name", "")).strip()),
                     "command": str(item.get("command", "")).strip(),
                     "expected_exit": int(item.get("expected_exit", 0)),
                 }
@@ -78,7 +88,8 @@ def check_governance() -> tuple[int, dict[str, Any]]:
         for item in contract:
             if not isinstance(item, dict):
                 continue
-            name = str(item.get("name", "")).strip()
+            raw_name = str(item.get("name", "")).strip()
+            name = _canonical_check_id(raw_name)
             command = str(item.get("command", "")).strip()
             expected_exit = int(item.get("expected_exit", 0))
             if name and command:
@@ -90,20 +101,21 @@ def check_governance() -> tuple[int, dict[str, Any]]:
         raw_names = effective.get("required_check_names", [])
         if isinstance(raw_names, list):
             effective_required_names = sorted(
-                {str(item).strip() for item in raw_names if str(item).strip()}
+                {_canonical_check_id(str(item).strip()) for item in raw_names if str(item).strip()}
             )
 
     tests = _collect_execplan_tests()
     by_name: dict[str, set[str]] = {}
     by_tuple: set[tuple[str, str, int]] = set()
     for item in tests:
-        name = item["name"]
+        raw_name = item["name"]
+        name = item["check_id"]
         command = item["command"]
         expected_exit = item["expected_exit"]
-        by_name.setdefault(name, set()).add(command)
-        by_tuple.add((name, command, expected_exit))
-        if not pattern.match(name):
-            findings.append(f"required_check_name_invalid:{name}")
+        by_name.setdefault(name, set()).add(_command_signature(command))
+        by_tuple.add((name, _command_signature(command), expected_exit))
+        if raw_name and not pattern.match(name):
+            findings.append(f"required_check_name_invalid:{raw_name}")
 
     for name, commands in by_name.items():
         if len(commands) > 1:
@@ -116,7 +128,7 @@ def check_governance() -> tuple[int, dict[str, Any]]:
             findings.append(f"required_check_name_invalid:{name}")
         if name in local_contract_map:
             cmd, expected_exit = local_contract_map[name]
-            if (name, cmd, expected_exit) not in by_tuple:
+            if (name, _command_signature(cmd), expected_exit) not in by_tuple:
                 findings.append(f"required_check_contract_missing:{name}")
         elif name not in by_name:
             findings.append(f"required_check_contract_missing:{name}")

@@ -21,6 +21,65 @@ def _write_text(path: Path, text: str) -> None:
 
 def _seed_repo(root: Path, *, missing_rule: bool = False) -> None:
     _write_text(
+        root / "spec" / "rule-registry.yaml",
+        "\n".join(
+            [
+                "version: v1",
+                "rules:",
+                "  - rule_id: rule-smoke-test-required",
+                "    title: smoke",
+                "    class: enforced",
+                "    scope: merge_readiness",
+                "    authority: referee",
+                "    source_artifacts: [docs/agent-game-rules-v1.md]",
+                "    graph_required: true",
+                "  - rule_id: rule-clean-merge-state",
+                "    title: clean",
+                "    class: enforced",
+                "    scope: merge_readiness",
+                "    authority: referee",
+                "    source_artifacts: [docs/governance.md]",
+                "    graph_required: true",
+                "  - rule_id: rule-human-sized-commits",
+                "    title: commit",
+                "    class: enforced",
+                "    scope: policy",
+                "    authority: referee",
+                "    source_artifacts: [docs/governance.md]",
+                "    graph_required: true",
+                "  - rule_id: rule-procedural-commit-order",
+                "    title: order",
+                "    class: enforced",
+                "    scope: policy",
+                "    authority: referee",
+                "    source_artifacts: [docs/governance.md]",
+                "    graph_required: true",
+                "  - rule_id: rule-latest-main-branching",
+                "    title: branch",
+                "    class: enforced",
+                "    scope: workflow",
+                "    authority: referee",
+                "    source_artifacts: [spec/workflow.yaml]",
+                "    graph_required: true",
+                "  - rule_id: rule-execplan-validation",
+                "    title: execplan",
+                "    class: enforced",
+                "    scope: execplan",
+                "    authority: referee",
+                "    source_artifacts: [spec/governance.yaml]",
+                "    graph_required: true",
+                "  - rule_id: rule-human-finalization",
+                "    title: human",
+                "    class: human_gated",
+                "    scope: finalization",
+                "    authority: human",
+                "    source_artifacts: [spec/governance.yaml]",
+                "    graph_required: true",
+            ]
+        )
+        + "\n",
+    )
+    _write_text(
         root / "spec" / "rule-graph.schema.yaml",
         "\n".join(
             [
@@ -133,3 +192,11 @@ def test_rule_graph_check_fails_for_missing_required_rule(tmp_path: Path) -> Non
     assert report["status"] == "blocked"
     assert report["blockers"]
     assert any("missing_required_rule:rule-clean-merge-state" == err for err in report["errors"])
+
+
+def test_rule_graph_check_fails_when_rule_registry_missing(tmp_path: Path) -> None:
+    _seed_repo(tmp_path)
+    (tmp_path / "spec" / "rule-registry.yaml").unlink()
+    code, report = check_rule_graph(tmp_path.as_posix())
+    assert code == 1
+    assert "missing_rule_registry" in report["errors"]

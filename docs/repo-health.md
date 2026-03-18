@@ -4,7 +4,7 @@
 Health checks validate:
 
 • ExecPlan structure
-• TODO integrity
+• TODO projection freshness (non-blocking; canonical source is the graph)
 • security scanning
 • governance files
 

@@ -1,0 +1,187 @@
+version: v1
+last_updated: 2026-03-18
+registry:
+  required_fields:
+    - rule_id
+    - title
+    - class
+    - scope
+    - authority
+    - source_artifacts
+rule_classes:
+  - enforced
+  - derived
+  - human_gated
+  - backlog
+  - deprecated
+rules:
+  - rule_id: rule-smoke-test-required
+    title: Every implementation slice must define and pass a smoke-test command.
+    class: enforced
+    scope: merge_readiness
+    authority: referee
+    source_artifacts:
+      - docs/merge-readiness-contract.md
+      - docs/agent-game-rules-v1.md
+      - artifacts/planner/research/rule-graph.json
+    enforced_by:
+      - bin/merge-readiness-check
+      - bin/policy-compliance-check
+    graph_required: true
+  - rule_id: rule-clean-merge-state
+    title: Generated smoke artifacts must be removed, committed intentionally, or stashed before merge.
+    class: enforced
+    scope: merge_readiness
+    authority: referee
+    source_artifacts:
+      - docs/merge-readiness-contract.md
+      - docs/governance.md
+      - artifacts/planner/research/rule-graph.json
+    enforced_by:
+      - bin/merge-readiness-check
+      - bin/policy-compliance-check
+    graph_required: true
+  - rule_id: rule-human-sized-commits
+    title: Implementation commits must remain human-sized and mapped to one reviewable task.
+    class: enforced
+    scope: policy_compliance
+    authority: referee
+    source_artifacts:
+      - docs/games/commit-structure-game.md
+      - docs/governance.md
+      - artifacts/planner/research/rule-graph.json
+    enforced_by:
+      - bin/policy-compliance-check
+    graph_required: true
+  - rule_id: rule-procedural-commit-order
+    title: Codex-authored slices should be committed in procedural order from ExecPlan through governance updates.
+    class: enforced
+    scope: policy_compliance
+    authority: referee
+    source_artifacts:
+      - docs/games/commit-structure-game.md
+      - docs/governance.md
+      - artifacts/planner/research/rule-graph.json
+    enforced_by:
+      - bin/policy-compliance-check
+    graph_required: true
+  - rule_id: rule-latest-main-branching
+    title: New work branches must be created from the latest main unless a human explicitly states otherwise.
+    class: enforced
+    scope: workflow
+    authority: referee
+    source_artifacts:
+      - docs/governance.md
+      - spec/workflow.yaml
+      - artifacts/planner/research/rule-graph.json
+    enforced_by:
+      - bin/policy-compliance-check
+    graph_required: true
+  - rule_id: rule-execplan-validation
+    title: ExecPlans must validate before merge readiness is claimed.
+    class: enforced
+    scope: execplan
+    authority: referee
+    source_artifacts:
+      - .agent/PLANS.md
+      - spec/governance.yaml
+      - artifacts/planner/research/rule-graph.json
+    enforced_by:
+      - bin/execplan-validate
+      - bin/merge-readiness-check
+    graph_required: true
+  - rule_id: rule-human-finalization
+    title: Human authority is required for finalization and overrides.
+    class: human_gated
+    scope: finalization
+    authority: human
+    source_artifacts:
+      - .agent/PLANS.md
+      - spec/governance.yaml
+      - artifacts/planner/research/rule-graph.json
+    enforced_by:
+      - bin/finalize-execplan
+      - bin/human-operations-status
+    graph_required: true
+  - rule_id: rule-governance-required-check-contract
+    title: Governance-required checks must use canonical identifiers mapped separately from executable command strings.
+    class: enforced
+    scope: governance
+    authority: referee
+    source_artifacts:
+      - spec/governance.yaml
+      - src/platform_tools/governance_check.py
+    enforced_by:
+      - bin/governance-check
+    graph_required: true
+  - rule_id: rule-queue-projection-authority
+    title: Queue and board projections remain projection-only and must reconcile to canonical graph state.
+    class: enforced
+    scope: projection
+    authority: referee
+    source_artifacts:
+      - spec/governance.yaml
+      - spec/workflow.yaml
+      - artifacts/planner/research/remaining-work-graph.json
+    enforced_by:
+      - bin/remaining-work-graph-check
+      - bin/policy-compliance-check
+    graph_required: true
+  - rule_id: rule-draft-self-review-before-pr
+    title: Governed draft ExecPlans require agent self-review on the draft branch before PR creation.
+    class: enforced
+    scope: workflow
+    authority: referee
+    source_artifacts:
+      - spec/workflow.yaml
+      - docs/execplans.md
+      - .github/PULL_REQUEST_TEMPLATE.md
+    enforced_by:
+      - bin/policy-compliance-check
+    graph_required: true
+  - rule_id: rule-additive-pr-template
+    title: Governed PRs must keep baseline template sections and may only add sections, not subtract them.
+    class: enforced
+    scope: workflow
+    authority: referee
+    source_artifacts:
+      - spec/workflow.yaml
+      - .github/PULL_REQUEST_TEMPLATE.md
+    enforced_by:
+      - bin/policy-compliance-check
+    graph_required: true
+  - rule_id: rule-implementation-after-finalized-draft
+    title: Governed implementation execution requires a human-finalized draft ExecPlan and reconciled graph state.
+    class: human_gated
+    scope: workflow
+    authority: human
+    source_artifacts:
+      - spec/workflow.yaml
+      - docs/execplans.md
+      - artifacts/planner/research/remaining-work-graph.json
+    enforced_by:
+      - bin/human-operations-status
+      - bin/remaining-work-graph-check
+    graph_required: true
+  - rule_id: rule-capability-matrix-completeness
+    title: Documented branch, actor, and goal-area classes must have complete capability coverage.
+    class: backlog
+    scope: capability_policy
+    authority: referee
+    source_artifacts:
+      - spec/agent-capability-policy.yaml
+      - docs/agent-capability-boundaries.md
+    enforced_by:
+      - bin/anti-cheat-check
+    graph_required: false
+  - rule_id: rule-todo-required-health-gate
+    title: TODO completeness is no longer a required health gate once canonical graph state supersedes it.
+    class: deprecated
+    scope: projection
+    authority: repository
+    source_artifacts:
+      - docs/platform-definition-v1.md
+      - docs/todos.md
+      - src/platform_tools/repo_health.py
+    enforced_by: []
+    graph_required: false
