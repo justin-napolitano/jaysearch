@@ -133,7 +133,7 @@ This document turns the remaining-work graph into an explicit near-term queue of
 
 25. `20260318-rule-registry-drift-and-provider-sync-hardening-codex-01-execplan`
    - status: `review_gated`
-   - goal: add rule-registry drift enforcement, standardize provider-sync token and preflight contracts, validate field-map completeness, and harden merge reconciliation evidence selection
+   - goal: add rule-registry drift enforcement, introduce governed `initiative/*` parent branches for graph-backed multi-slice work, standardize provider-sync token and preflight contracts, validate field-map completeness, and harden merge reconciliation evidence selection
    - draft branch: `draft-execplan/20260318-rule-registry-drift-and-provider-sync-hardening-codex-01-20260318`
 ## Mirror Metadata
 
