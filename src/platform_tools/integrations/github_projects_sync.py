@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 from pathlib import Path
 from typing import Any
 
@@ -21,6 +22,42 @@ OPTIONAL_FIELD_NAMES = {
     "hostile_review_blocker_count",
     "hostile_review_state",
 }
+
+
+def _scope_blockers(errors: list[str]) -> list[str]:
+    scopes: set[str] = set()
+    for message in errors:
+        for chunk in re.findall(r"\['([^]]+)'\]", message):
+            for scope in chunk.split("', '"):
+                value = scope.strip(" '")
+                if value:
+                    scopes.add(value)
+    if not scopes:
+        return []
+    return [f"github_token_insufficient_scopes:{','.join(sorted(scopes))}"]
+
+
+def _field_map_integrity(field_map: dict[str, Any], projected_node_ids: set[str]) -> tuple[list[str], list[str]]:
+    blockers: list[str] = []
+    item_ids = field_map.get("item_ids_by_node_id", {}) if isinstance(field_map.get("item_ids_by_node_id"), dict) else {}
+    seen_item_ids: dict[str, str] = {}
+    for node_id, item_id_raw in item_ids.items():
+        item_id = str(item_id_raw).strip()
+        node_id = str(node_id).strip()
+        if not node_id:
+            blockers.append("field_map_invalid_node_id")
+            continue
+        if not item_id:
+            blockers.append(f"field_map_missing_item_id:{node_id}")
+            continue
+        if node_id not in projected_node_ids:
+            blockers.append(f"field_map_unknown_node_id:{node_id}")
+        previous = seen_item_ids.get(item_id)
+        if previous and previous != node_id:
+            blockers.append(f"field_map_duplicate_item_id:{item_id}")
+        seen_item_ids[item_id] = node_id
+    missing = sorted(projected_node_ids - {str(node_id).strip() for node_id in item_ids})
+    return sorted(set(blockers)), missing
 
 
 def _provider_status_name(*, mapping: dict[str, Any], canonical_value: str) -> str:
@@ -185,10 +222,13 @@ def build_github_projects_sync_plan(
 
     item_ids = field_map.get("item_ids_by_node_id", {}) if isinstance(field_map.get("item_ids_by_node_id"), dict) else {}
     operations: list[dict[str, Any]] = []
+    projected_node_ids: set[str] = set()
     for item in projection.get("items", []):
         if not isinstance(item, dict):
             continue
         node_id = str(item.get("identity", "")).strip()
+        if node_id:
+            projected_node_ids.add(node_id)
         item_id = str(item_ids.get(node_id, "")).strip()
         updates, update_blockers = _field_updates_for_item(mapping=mapping, field_map=field_map, item=item)
         blockers.extend(f"{node_id}:{value}" for value in update_blockers)
@@ -203,6 +243,8 @@ def build_github_projects_sync_plan(
             }
         )
         operations[-1]["summary_body"] = _item_summary_body(operations[-1])
+    integrity_blockers, missing_item_ids = _field_map_integrity(field_map, projected_node_ids)
+    blockers.extend(integrity_blockers)
 
     report = {
         "command": "github-projects-sync",
@@ -212,6 +254,7 @@ def build_github_projects_sync_plan(
         "blockers": sorted(set(blockers)),
         "project_id": project_id,
         "field_map_path": field_map_path,
+        "missing_item_ids": missing_item_ids,
         "board_reuse_required": bool(project_id),
         "prefer_update_when_item_id_known": bool(item_ids),
         "operation_count": len(operations),
@@ -255,7 +298,7 @@ def execute_github_projects_sync(
     if not token:
         plan["status"] = "blocked"
         plan["ok"] = False
-        plan["blockers"] = ["github_token_required"]
+        plan["blockers"] = ["github_token_required:GITHUB_TOKEN"]
         return 1, plan
 
     project_id = str(plan.get("project_id", "")).strip()
@@ -277,9 +320,10 @@ def execute_github_projects_sync(
             )
             errors = graphql_errors(response)
             if errors:
+                blockers = _scope_blockers(errors) or [f"github_graphql:{message}" for message in errors]
                 plan["status"] = "blocked"
                 plan["ok"] = False
-                plan["blockers"] = [f"github_graphql:{message}" for message in errors]
+                plan["blockers"] = blockers
                 plan["execution_results"] = execution_results + [
                     {"action": "create_draft_item", "node_id": operation.get("node_id", ""), "response": response}
                 ]
@@ -315,9 +359,10 @@ def execute_github_projects_sync(
                 )
             errors = graphql_errors(response)
             if errors:
+                blockers = _scope_blockers(errors) or [f"github_graphql:{message}" for message in errors]
                 plan["status"] = "blocked"
                 plan["ok"] = False
-                plan["blockers"] = [f"github_graphql:{message}" for message in errors]
+                plan["blockers"] = blockers
                 plan["execution_results"] = execution_results + [
                     {
                         "action": "update_field",

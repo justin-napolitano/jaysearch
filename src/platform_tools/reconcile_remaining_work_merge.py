@@ -199,22 +199,6 @@ def reconcile_remaining_work_merge(
     if not execplan_id:
         raise ValueError("missing_execplan_id")
 
-    if merge_evidence is None:
-        draft_branch = str(plan.frontmatter.get("draft_branch", "")).strip()
-        candidates = _merge_candidates(repo_root, main_ref, execplan_id, draft_branch)
-        if not candidates:
-            raise ValueError("missing_merge_commit")
-        candidates.sort(
-            key=lambda item: (
-                0 if item.get("merge_role") == "impl-execplan" else 1,
-                item.get("committed_at", ""),
-                item.get("commit", ""),
-            ),
-            reverse=True,
-        )
-        merge_evidence = candidates[0]
-    completion_ref = f"merged:pr-{merge_evidence['pull_request']}" if merge_evidence.get("pull_request", "").strip() else f"merged:{merge_evidence['commit']}"
-
     graph_path = repo_root / GRAPH_PATH
     queue_path = repo_root / QUEUE_PATH
     graph = _load_json(graph_path)
@@ -227,6 +211,24 @@ def reconcile_remaining_work_merge(
     node = next((item for item in nodes if str(item.get("target_execplan_id", "")).strip() == execplan_id), None)
     if node is None:
         raise ValueError("remaining_work_node_not_found")
+
+    if merge_evidence is None:
+        draft_branch = str(plan.frontmatter.get("draft_branch", "")).strip()
+        candidates = _merge_candidates(repo_root, main_ref, execplan_id, draft_branch)
+        if not candidates:
+            raise ValueError("missing_merge_commit")
+        implementation_branch = str(node.get("implementation_branch", "")).strip()
+        candidates.sort(
+            key=lambda item: (
+                1 if implementation_branch and str(item.get("branch_ref", "")).strip() == implementation_branch else 0,
+                1 if item.get("merge_role") == "impl-execplan" else 0,
+                item.get("committed_at", ""),
+                item.get("commit", ""),
+            ),
+            reverse=True,
+        )
+        merge_evidence = candidates[0]
+    completion_ref = f"merged:pr-{merge_evidence['pull_request']}" if merge_evidence.get("pull_request", "").strip() else f"merged:{merge_evidence['commit']}"
 
     node_id = str(node.get("node_id", "")).strip()
     existing_complete_action = None

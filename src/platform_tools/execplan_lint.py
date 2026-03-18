@@ -76,6 +76,14 @@ def validate_execplan(path: str | Path) -> dict[str, Any]:
             if not isinstance(branch, str) or not branch.startswith("draft-execplan/"):
                 errors.append("invalid_draft_branch")
 
+        initiative_branch = str(frontmatter.get("initiative_branch", "")).strip()
+        initiative_node_id = str(frontmatter.get("initiative_node_id", "")).strip()
+        if initiative_branch or initiative_node_id:
+            if not initiative_branch.startswith("initiative/"):
+                errors.append("invalid_initiative_branch")
+            if not initiative_node_id:
+                errors.append("missing_initiative_node_id")
+
         if (
             isinstance(current_branch, str)
             and current_branch.startswith("impl-execplan/")

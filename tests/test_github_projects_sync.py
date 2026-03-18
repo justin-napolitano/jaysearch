@@ -429,3 +429,54 @@ def test_build_sync_plan_maps_goal_area_to_existing_provider_options(tmp_path: P
     assert goal_area["option_id"] == "OPT_ORCH"
     assert "target_execplan_id" in operation["summary_body"]
     assert "ready_order" in operation["summary_body"]
+
+
+def test_execute_sync_reports_required_github_token_name(tmp_path: Path, monkeypatch) -> None:
+    _seed_specs(tmp_path)
+    _seed_remaining_work(tmp_path)
+    execplan = _seed_execplan(tmp_path)
+    field_map_path = _seed_field_map(tmp_path)
+
+    monkeypatch.setattr(sync, "github_token_from_env", lambda: "")
+
+    code, report = sync.execute_github_projects_sync(
+        root=tmp_path.as_posix(),
+        field_map_path=field_map_path.as_posix(),
+        branch="impl-execplan/provider-sync",
+        execplan_path=execplan.as_posix(),
+        dry_run=False,
+    )
+
+    assert code == 1
+    assert report["blockers"] == ["github_token_required:GITHUB_TOKEN"]
+
+
+def test_execute_sync_reports_scope_blocker(tmp_path: Path, monkeypatch) -> None:
+    _seed_specs(tmp_path)
+    _seed_remaining_work(tmp_path)
+    execplan = _seed_execplan(tmp_path)
+    field_map_path = _seed_field_map(tmp_path)
+
+    monkeypatch.setattr(sync, "github_token_from_env", lambda: "token")
+    monkeypatch.setattr(
+        sync,
+        "add_project_draft_item",
+        lambda **kwargs: {
+            "errors": [
+                {
+                    "message": "Your token has not been granted the required scopes to execute this query. The 'addProjectV2DraftIssue' field requires one of the following scopes: ['project'], but your token has only been granted the: ['repo'] scopes."
+                }
+            ]
+        },
+    )
+
+    code, report = sync.execute_github_projects_sync(
+        root=tmp_path.as_posix(),
+        field_map_path=field_map_path.as_posix(),
+        branch="impl-execplan/provider-sync",
+        execplan_path=execplan.as_posix(),
+        dry_run=False,
+    )
+
+    assert code == 1
+    assert report["blockers"] == ["github_token_insufficient_scopes:project,repo"]
