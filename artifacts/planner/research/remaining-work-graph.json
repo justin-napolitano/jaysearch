@@ -16,10 +16,8 @@
   "queue_projection": {
     "path": "docs/queued-execplans.md",
     "projection_authority": "projection_only",
-    "last_reconciled_action_id": "rwg-action-20260316-010-promote-rwg-023",
-    "ready_execplan_ids": [
-      "20260316-subgame-branch-state-transition-governance-codex-01-execplan"
-    ]
+    "last_reconciled_action_id": "rwg-action-20260318-001-unblock-rwg-025",
+    "ready_execplan_ids": []
   },
   "graph_actions": [
     {
@@ -157,6 +155,30 @@
       "rationale": "the canonical slice-3 implementation branch is published, so the subgame branch governance slice may advance from blocked to ready on its dedicated implementation branch",
       "evidence_ref": ".agent/execplans/20260316-subgame-branch-state-transition-governance-codex-01-execplan.md",
       "queue_reconciled": true
+    },
+    {
+      "action_id": "rwg-action-20260316-011-complete-rwg-023",
+      "action": "complete",
+      "node_id": "rwg-023",
+      "rationale": "the subgame branch and state-transition governance slice merged on main, so the canonical graph records it as completed",
+      "evidence_ref": "merged:pr-81",
+      "queue_reconciled": true
+    },
+    {
+      "action_id": "rwg-action-20260316-012-unblock-rwg-024",
+      "action": "unblock",
+      "node_id": "rwg-024",
+      "rationale": "slice 3 completion exposed a narrow anti-cheat contract inconsistency, so a focused cleanup slice is queued for explicit rule-surface authority treatment",
+      "evidence_ref": ".agent/execplans/20260316-anti-cheat-rule-surface-authority-cleanup-codex-01-execplan.md",
+      "queue_reconciled": true
+    },
+    {
+      "action_id": "rwg-action-20260318-001-unblock-rwg-025",
+      "action": "unblock",
+      "node_id": "rwg-025",
+      "rationale": "rule authority consolidation is queued for draft review so the repository can formalize the governed draft-to-PR-to-implementation procedure before broader governance implementation continues",
+      "evidence_ref": ".agent/execplans/20260318-rule-authority-consolidation-codex-01-execplan.md",
+      "queue_reconciled": true
     }
   ],
   "nodes": [
@@ -185,7 +207,7 @@
       "title": "Composite orchestrator status command",
       "status": "completed",
       "completion_ref": "merged:composite-orchestrator-status",
-      "gating_class": "auto_runnable",
+      "gating_class": "review_gated",
       "conflict_domains": [
         "orchestrator-status",
         "merge-readiness"
@@ -681,7 +703,7 @@
     {
       "node_id": "rwg-023",
       "title": "Subgame branch and state-transition governance",
-      "status": "ready",
+      "status": "completed",
       "status_reason": "",
       "gating_class": "auto_runnable",
       "conflict_domains": [
@@ -699,13 +721,76 @@
       ],
       "ordering": {
         "queue_position": 23,
-        "ready_order": 1,
-        "source_action_id": "rwg-action-20260316-010-promote-rwg-023",
+        "source_action_id": "rwg-action-20260316-011-complete-rwg-023",
         "tie_breaker": "20260316-subgame-branch-state-transition-governance-codex-01-execplan"
       },
       "action_state": {
-        "last_action_id": "rwg-action-20260316-010-promote-rwg-023",
-        "last_action": "promote_ready",
+        "last_action_id": "rwg-action-20260316-011-complete-rwg-023",
+        "last_action": "complete",
+        "action_required": false,
+        "reorder_requires_human": false,
+        "reorder_blockers": []
+      },
+      "completion_ref": "merged:pr-81"
+    },
+    {
+      "node_id": "rwg-024",
+      "title": "Anti-cheat rule-surface authority cleanup",
+      "status": "review_gated",
+      "status_reason": "queued narrow follow-up to make governance rule-surface legality explicit in anti-cheat policy after the merged state-transition slice",
+      "gating_class": "review_gated",
+      "conflict_domains": [
+        "governance",
+        "policy-compliance"
+      ],
+      "target_execplan_id": "20260316-anti-cheat-rule-surface-authority-cleanup-codex-01-execplan",
+      "goal_area": "governance",
+      "implementation_branch": "",
+      "expected_artifacts": [
+        "spec/agent-capability-policy.yaml",
+        "spec/protected-surfaces.schema.yaml",
+        "src/platform_tools/anti_cheat_check.py"
+      ],
+      "ordering": {
+        "queue_position": 24,
+        "source_action_id": "rwg-action-20260316-012-unblock-rwg-024",
+        "tie_breaker": "20260316-anti-cheat-rule-surface-authority-cleanup-codex-01-execplan"
+      },
+      "action_state": {
+        "last_action_id": "rwg-action-20260316-012-unblock-rwg-024",
+        "last_action": "unblock",
+        "action_required": false,
+        "reorder_requires_human": false,
+        "reorder_blockers": []
+      }
+    },
+    {
+      "node_id": "rwg-025",
+      "title": "Rule authority consolidation and governed draft PR procedure",
+      "status": "review_gated",
+      "status_reason": "draft ExecPlan is under review and formalizes canonical rule authority, additive PR structure, and graph-visible draft-to-implementation handoff before implementation execution begins",
+      "gating_class": "review_gated",
+      "conflict_domains": [
+        "governance",
+        "workflow",
+        "review-runtime"
+      ],
+      "target_execplan_id": "20260318-rule-authority-consolidation-codex-01-execplan",
+      "goal_area": "governance",
+      "implementation_branch": "impl-execplan/20260318-rule-authority-consolidation-codex-01-execplan-codex-01-20260318",
+      "expected_artifacts": [
+        ".github/PULL_REQUEST_TEMPLATE.md",
+        "spec/rule-registry.yaml",
+        "spec/workflow.yaml"
+      ],
+      "ordering": {
+        "queue_position": 25,
+        "source_action_id": "rwg-action-20260318-001-unblock-rwg-025",
+        "tie_breaker": "20260318-rule-authority-consolidation-codex-01-execplan"
+      },
+      "action_state": {
+        "last_action_id": "rwg-action-20260318-001-unblock-rwg-025",
+        "last_action": "unblock",
         "action_required": false,
         "reorder_requires_human": false,
         "reorder_blockers": []
@@ -997,6 +1082,16 @@
     {
       "from": "rwg-023",
       "to": "rwg-022",
+      "relation": "depends_on"
+    },
+    {
+      "from": "rwg-024",
+      "to": "rwg-022",
+      "relation": "depends_on"
+    },
+    {
+      "from": "rwg-024",
+      "to": "rwg-023",
       "relation": "depends_on"
     }
   ]
