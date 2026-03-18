@@ -29,6 +29,16 @@ Draft Review Procedure:
 7. Only after that finalization should governed implementation execution proceed on the dedicated `impl-execplan/*` branch.
 8. Canonical graph and queue state must reflect the merged draft-plan status before the next implementation slice advances.
 
+Initiative Branch Procedure:
+
+1. Use `initiative/*` only for one higher-level graph-backed initiative node.
+2. Treat the initiative branch as a parent integration branch, not as a replacement for child ExecPlan authority.
+3. Child `draft-execplan/*` and `impl-execplan/*` slices may branch from and merge back into that initiative branch when the initiative workflow is in use.
+4. Initiative branch legality is fail-closed:
+   - if the branch does not map to one parent graph node, the workflow should block rather than warn
+   - unknown initiative parent/child relationships are not valid governed execution
+5. Merge to `main` should occur from the initiative branch only when the parent initiative node is complete.
+
 Template:
 
 Use `examples/execplan-template.md` as the starting point for new ExecPlan drafts.
