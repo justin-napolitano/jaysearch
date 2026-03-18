@@ -16,7 +16,7 @@
   "queue_projection": {
     "path": "docs/queued-execplans.md",
     "projection_authority": "projection_only",
-    "last_reconciled_action_id": "rwg-action-20260318-003-complete-rwg-025",
+    "last_reconciled_action_id": "rwg-action-20260318-004-unblock-rwg-026",
     "ready_execplan_ids": []
   },
   "graph_actions": [
@@ -194,6 +194,14 @@
       "node_id": "rwg-025",
       "rationale": "20260318-rule-authority-consolidation-codex-01-execplan merged to main and is now canonical completed state",
       "evidence_ref": "merged:pr-83",
+      "queue_reconciled": true
+    },
+    {
+      "action_id": "rwg-action-20260318-004-unblock-rwg-026",
+      "action": "unblock",
+      "node_id": "rwg-026",
+      "rationale": "rule-registry drift enforcement and provider-sync hardening are queued for draft review so the new canonical rule authority and project projection runtime remain durable",
+      "evidence_ref": ".agent/execplans/20260318-rule-registry-drift-and-provider-sync-hardening-codex-01-execplan.md",
       "queue_reconciled": true
     }
   ],
@@ -812,6 +820,40 @@
         "reorder_blockers": []
       },
       "completion_ref": "merged:pr-83"
+    },
+    {
+      "node_id": "rwg-026",
+      "title": "Rule-registry drift enforcement, initiative-branch governance, and provider-sync hardening",
+      "status": "review_gated",
+      "status_reason": "queued follow-up to make the new rule registry durable, introduce governed initiative branches for multi-slice work, and harden provider-sync and completion reconciliation around the canonical graph",
+      "gating_class": "review_gated",
+      "conflict_domains": [
+        "governance",
+        "provider-sync",
+        "review-runtime",
+        "workflow"
+      ],
+      "target_execplan_id": "20260318-rule-registry-drift-and-provider-sync-hardening-codex-01-execplan",
+      "goal_area": "governance",
+      "implementation_branch": "",
+      "expected_artifacts": [
+        "spec/rule-registry.yaml",
+        "src/platform_tools/rule_registry_check.py",
+        "src/platform_tools/integrations/github_projects_sync.py",
+        "spec/workflow.yaml"
+      ],
+      "ordering": {
+        "queue_position": 26,
+        "source_action_id": "rwg-action-20260318-004-unblock-rwg-026",
+        "tie_breaker": "20260318-rule-registry-drift-and-provider-sync-hardening-codex-01-execplan"
+      },
+      "action_state": {
+        "last_action_id": "rwg-action-20260318-004-unblock-rwg-026",
+        "last_action": "unblock",
+        "action_required": false,
+        "reorder_requires_human": false,
+        "reorder_blockers": []
+      }
     },
     {
       "node_id": "artifact-orchestrator-contract",
