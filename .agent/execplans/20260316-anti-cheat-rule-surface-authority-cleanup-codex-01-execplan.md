@@ -18,8 +18,8 @@ approve_policy: codeowners
 reviewers:
   - "github:justin-napolitano"
 draft_by: "agent/codex-01"
-draft_branch: "draft-execplan/20260316-anti-cheat-rule-surface-followup-codex-01"
-draft_created: "2026-03-16T00:00:00Z"
+draft_branch: "draft-execplan/20260318-anti-cheat-rule-surface-authority-cleanup-codex-01-20260318"
+draft_created: "2026-03-18T00:00:00Z"
 finalized_by: ""
 finalized_at: ""
 finalized_in_pr: ""
@@ -47,7 +47,7 @@ Close the remaining anti-cheat contract gap exposed by slice 3: governance imple
 
 ## Progress
 
-- [ ] Reconcile the merged slice-3 branch to `completed`
+- [x] Reconcile the merged slice-3 branch to `completed`
 - [ ] Make rule-surface legality explicit for governance implementation slices
 - [ ] Remove warning-only handling for this case from anti-cheat outputs
 
@@ -74,21 +74,21 @@ This slice exists because the merged subgame/state-transition work is correct bu
 
 ## Plan of Work
 
-1. Reconcile the canonical graph and queue for the merged slice-3 branch.
-2. Update the anti-cheat capability policy so lawful governance rule-surface edits are explicit.
+1. Update the anti-cheat capability policy so lawful governance rule-surface edits are explicit.
+2. Update the protected-surface classification or anti-cheat runtime as needed so that lawful governance rule-surface edits resolve through explicit allow rules rather than warning-only fallback.
 3. Update the anti-cheat referee/tests so the output is deterministic and non-ambiguous.
 
 ## Concrete Steps
 
-1. Mark the merged slice-3 node completed in the remaining-work graph and queue mirror.
-2. Add explicit `rule_surface` legality to the appropriate governance capability rule.
-3. Tighten anti-cheat outputs/tests so lawful rule-surface edits do not degrade to warning-only behavior.
+1. Add explicit `rule_surface` legality to the appropriate governance capability rule.
+2. Tighten anti-cheat classification/output rules so lawful rule-surface edits do not degrade to warning-only behavior.
+3. Extend tests to cover a governance implementation slice that edits rule-surface files lawfully.
 
 ## Validation and Acceptance
 
 Acceptance criteria:
 
-- the follow-on is canonically queued after merged slice 3
+- the follow-on remains canonically queued after merged slice 3
 - governance implementation slices have explicit `rule_surface` treatment in capability policy
 - anti-cheat output no longer relies on warning-only fallback for lawful rule-surface edits
 
