@@ -163,6 +163,20 @@ rules:
       - bin/human-operations-status
       - bin/remaining-work-graph-check
     graph_required: true
+  - rule_id: rule-initiative-parent-branch-governance
+    title: Governed initiative branches must map to one parent graph node and remain integration-only rather than replacing child ExecPlan authority.
+    class: enforced
+    scope: workflow
+    authority: referee
+    source_artifacts:
+      - spec/workflow.yaml
+      - spec/ruleset.yaml
+      - docs/execplans.md
+      - artifacts/planner/research/rule-graph.json
+    enforced_by:
+      - bin/governance-loader-check
+      - bin/execplan-validate
+    graph_required: true
   - rule_id: rule-capability-matrix-completeness
     title: Documented branch, actor, and goal-area classes must have complete capability coverage.
     class: backlog

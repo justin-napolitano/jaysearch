@@ -38,6 +38,7 @@ execution_constraints:
   governed_slice_advancement_requires_referee_chain: true
   execplan_branch_review_required: true
   required_branch_format: "draft-execplan/<plan-id>-<agent>-YYYYMMDD"
+  initiative_branch_format: "initiative/<initiative-id>"
   implementation_branch_format: "impl-execplan/<plan-id>-<agent>-YYYYMMDD"
   queue_branch_format: "queue-execplan/<queue-name>-<agent>-YYYYMMDD"
   disallow_execplan_changes_on_main: true
@@ -55,11 +56,14 @@ execution_constraints:
   policy_compliance_blocks_review_and_merge_progression: true
   graph_actions_required_for_governed_work: true
   stale_queue_blocks_advancement: true
+  initiative_branches_are_parent_integration_only: true
+  initiative_branch_requires_parent_graph_node: true
+  initiative_branch_missing_mapping_blocks_execution: true
   allowed_branch_patterns:
+    - initiative/*
     - draft-execplan/*
     - impl-execplan/*
     - queue-execplan/*
-    - feature/*
     - docs/*
     - hotfix/*
     - release/*

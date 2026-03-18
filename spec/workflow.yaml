@@ -24,15 +24,19 @@ execution_requirements:
   parallel_execplans_require_distinct_implementation_branches: true
   queue_branches_are_integration_only: true
   workflow_branch_patterns:
+    initiative: "initiative/*"
     draft_execplan: "draft-execplan/*"
     implementation_execplan: "impl-execplan/*"
     queue_execplan: "queue-execplan/*"
     hostile_review: "draft-execplan/hostile-review-*"
     docs: "docs/*"
-    feature: "feature/*"
     hotfix: "hotfix/*"
     release: "release/*"
   execution_branch_roles:
+    initiative:
+      purpose: "integrate one graph-backed initiative through child governed slices before merge to main"
+      parent_integration_branch: true
+      not_canonical_for_individual_slice_execution: true
     draft_execplan:
       purpose: "draft and review the ExecPlan artifact"
       not_canonical_for_slice_execution: true
@@ -59,6 +63,12 @@ execution_requirements:
       - handoff
     implementation_execution_requires_human_finalized_draft_execplan: true
     merged_draft_execplans_must_be_reflected_in_canonical_graph_and_queue_state: true
+  initiative_requirements:
+    governed_initiative_branches_require_parent_graph_node: true
+    governed_initiative_branches_are_integration_only: true
+    governed_child_slices_may_branch_from_initiative: true
+    initiative_to_main_requires_parent_node_completion: true
+    fail_closed_on_missing_initiative_mapping: true
   board_runtime_requirements:
     board_review_surface_is_projection_only: true
     provider_sync_field_map_required_for_live_board_sync: true
