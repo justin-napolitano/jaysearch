@@ -7,6 +7,7 @@ from pathlib import Path
 from typing import Any
 
 from platform_tools.branch_policy import get_current_branch
+from platform_tools.execplan_discovery import discover_execplan
 from platform_tools.plan_utils import parse_plan
 from platform_tools.policy_compliance_check import (
     EXCEPTION_REGISTRY_PATH,
@@ -73,10 +74,11 @@ def _changed_files(cwd: Path, base_ref: str) -> list[str]:
 
 
 def _discover_execplan(cwd: Path, base_ref: str) -> Path:
-    candidates = [path for path in _changed_files(cwd, base_ref) if path.startswith(".agent/execplans/") and path.endswith(".md")]
-    if len(candidates) != 1:
-        raise RuntimeError("active_execplan_not_deterministic")
-    return cwd / candidates[0]
+    branch = _git(cwd, "branch", "--show-current")
+    selected, _candidates, strategy = discover_execplan(cwd, branch, base_ref)
+    if selected is None:
+        raise RuntimeError(f"active_execplan_not_deterministic:{strategy}")
+    return selected
 
 
 def _validation_entries(execplan_path: Path) -> list[dict[str, str]]:
@@ -265,7 +267,7 @@ def check_merge_readiness(
     include_validation_runs: bool = True,
 ) -> tuple[int, dict[str, Any]]:
     cwd = Path(root)
-    branch = get_current_branch()
+    branch = _git(cwd, "branch", "--show-current")
     plan_path = Path(execplan_path) if execplan_path else _discover_execplan(cwd, base_ref)
     parsed = parse_plan(plan_path)
     execplan_id = str(parsed.frontmatter.get("id", "")).strip()

@@ -16,8 +16,10 @@
   "queue_projection": {
     "path": "docs/queued-execplans.md",
     "projection_authority": "projection_only",
-    "last_reconciled_action_id": "rwg-action-20260318-001-unblock-rwg-025",
-    "ready_execplan_ids": []
+    "last_reconciled_action_id": "rwg-action-20260318-002-promote-rwg-025",
+    "ready_execplan_ids": [
+      "20260318-rule-authority-consolidation-codex-01-execplan"
+    ]
   },
   "graph_actions": [
     {
@@ -179,6 +181,14 @@
       "rationale": "rule authority consolidation is queued for draft review so the repository can formalize the governed draft-to-PR-to-implementation procedure before broader governance implementation continues",
       "evidence_ref": ".agent/execplans/20260318-rule-authority-consolidation-codex-01-execplan.md",
       "queue_reconciled": true
+    },
+    {
+      "action_id": "rwg-action-20260318-002-promote-rwg-025",
+      "action": "promote_ready",
+      "node_id": "rwg-025",
+      "rationale": "the draft ExecPlan was human-finalized on main in PR 82, so the implementation slice may advance from review-gated to ready on its dedicated implementation branch",
+      "evidence_ref": "merged:pr-82",
+      "queue_reconciled": true
     }
   ],
   "nodes": [
@@ -187,7 +197,7 @@
       "title": "Machine-readable output hardening",
       "status": "completed",
       "completion_ref": "merged:machine-readable-output-hardening",
-      "gating_class": "auto_runnable",
+      "gating_class": "review_gated",
       "conflict_domains": [
         "planner-cli",
         "orchestrator-status"
@@ -767,9 +777,9 @@
     {
       "node_id": "rwg-025",
       "title": "Rule authority consolidation and governed draft PR procedure",
-      "status": "review_gated",
-      "status_reason": "draft ExecPlan is under review and formalizes canonical rule authority, additive PR structure, and graph-visible draft-to-implementation handoff before implementation execution begins",
-      "gating_class": "review_gated",
+      "status": "ready",
+      "status_reason": "draft ExecPlan was human-finalized on main, and the slice is now ready for execution on its dedicated implementation branch",
+      "gating_class": "auto_runnable",
       "conflict_domains": [
         "governance",
         "workflow",
@@ -785,12 +795,13 @@
       ],
       "ordering": {
         "queue_position": 25,
-        "source_action_id": "rwg-action-20260318-001-unblock-rwg-025",
+        "ready_order": 1,
+        "source_action_id": "rwg-action-20260318-002-promote-rwg-025",
         "tie_breaker": "20260318-rule-authority-consolidation-codex-01-execplan"
       },
       "action_state": {
-        "last_action_id": "rwg-action-20260318-001-unblock-rwg-025",
-        "last_action": "unblock",
+        "last_action_id": "rwg-action-20260318-002-promote-rwg-025",
+        "last_action": "promote_ready",
         "action_required": false,
         "reorder_requires_human": false,
         "reorder_blockers": []

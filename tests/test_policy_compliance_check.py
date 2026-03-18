@@ -780,3 +780,17 @@ def test_policy_compliance_replaces_impl_branch_commit_order_with_state_transiti
     assert report["checks"]["state_transition"]["ok"] is True
     assert report["checks"]["commit_structure"]["enforced"] is False
     assert not any("procedural_commit_order_violation" in blocker for blocker in report["blockers"])
+
+
+def test_policy_compliance_discovers_execplan_from_implementation_branch_mapping(tmp_path: Path) -> None:
+    execplan = _seed_repo(tmp_path, graph_and_queue_on_main=False)
+
+    code, report = check_policy_compliance(
+        root=tmp_path.as_posix(),
+        base_ref="main",
+    )
+
+    assert code == 0
+    assert report["ok"] is True
+    assert report["execplan_id"] == EXECPLAN_ID
+    assert report["execplan_path"] == execplan.as_posix()
