@@ -75,6 +75,12 @@
       "title": "Governed implementation execution requires a human-finalized draft ExecPlan and reconciled graph state."
     },
     {
+      "id": "rule-initiative-parent-branch-governance",
+      "type": "rule",
+      "label": "Initiative Parent Branch Governance",
+      "title": "Governed initiative branches must map to one parent graph node and remain integration-only rather than replacing child ExecPlan authority."
+    },
+    {
       "id": "artifact-agent-game-rules",
       "type": "artifact",
       "label": "Agent Game Rules",
@@ -159,6 +165,12 @@
       "title": "bin/human-operations-status"
     },
     {
+      "id": "validator-governance-loader-check",
+      "type": "validator",
+      "label": "Governance Loader Check",
+      "title": "bin/governance-loader-check"
+    },
+    {
       "id": "validator-smoke-test",
       "type": "validator",
       "label": "Smoke Test",
@@ -220,6 +232,10 @@
     { "from": "rule-implementation-after-finalized-draft", "to": "authority-human", "relation": "requires" },
     { "from": "rule-implementation-after-finalized-draft", "to": "validator-human-operations-status", "relation": "enforced_by" },
     { "from": "rule-implementation-after-finalized-draft", "to": "artifact-remaining-work-graph", "relation": "satisfied_by" },
+    { "from": "rule-initiative-parent-branch-governance", "to": "artifact-workflow-spec", "relation": "applies_to" },
+    { "from": "rule-initiative-parent-branch-governance", "to": "artifact-ruleset-spec", "relation": "satisfied_by" },
+    { "from": "rule-initiative-parent-branch-governance", "to": "validator-governance-loader-check", "relation": "enforced_by" },
+    { "from": "rule-initiative-parent-branch-governance", "to": "validator-execplan-validate", "relation": "enforced_by" },
     { "from": "phase-merge-readiness", "to": "validator-run-local-ci", "relation": "depends_on" }
   ]
 }

@@ -44,6 +44,9 @@ validation:
     - name: "rule-graph-check"
       command: "bin/rule-graph-check"
       expected_exit: 0
+    - name: "policy-compliance-check"
+      command: "bin/policy-compliance-check --execplan-path .agent/execplans/20260318-rule-registry-drift-and-provider-sync-hardening-codex-01-execplan.md"
+      expected_exit: 0
     - name: "remaining-work-graph-check"
       command: "bin/remaining-work-graph-check"
       expected_exit: 0

@@ -75,6 +75,14 @@ def _seed_repo(root: Path, *, missing_rule: bool = False) -> None:
                 "    authority: human",
                 "    source_artifacts: [spec/governance.yaml]",
                 "    graph_required: true",
+                "  - rule_id: rule-initiative-parent-branch-governance",
+                "    title: initiative",
+                "    class: enforced",
+                "    scope: workflow",
+                "    authority: referee",
+                "    source_artifacts: [spec/workflow.yaml, spec/ruleset.yaml]",
+                "    enforced_by: [bin/governance-loader-check]",
+                "    graph_required: true",
             ]
         )
         + "\n",
@@ -127,6 +135,7 @@ def _seed_repo(root: Path, *, missing_rule: bool = False) -> None:
     _write_text(root / "spec/workflow.yaml", "workflow: true\n")
     _write_text(root / "bin/execplan-validate", "#!/usr/bin/env bash\n")
     _write_text(root / "bin/run-local-ci", "#!/usr/bin/env bash\n")
+    _write_text(root / "bin/governance-loader-check", "#!/usr/bin/env bash\n")
     rule_nodes = [
         {"id": "rule-smoke-test-required", "type": "rule", "label": "smoke", "title": "smoke"},
         {"id": "rule-clean-merge-state", "type": "rule", "label": "clean", "title": "clean"},
@@ -135,12 +144,14 @@ def _seed_repo(root: Path, *, missing_rule: bool = False) -> None:
         {"id": "rule-latest-main-branching", "type": "rule", "label": "branch", "title": "branch"},
         {"id": "rule-execplan-validation", "type": "rule", "label": "execplan", "title": "execplan"},
         {"id": "rule-human-finalization", "type": "rule", "label": "human", "title": "human"},
+        {"id": "rule-initiative-parent-branch-governance", "type": "rule", "label": "initiative", "title": "initiative"},
         {"id": "artifact-agent-game-rules", "type": "artifact", "label": "rules", "title": "docs/agent-game-rules-v1.md"},
         {"id": "artifact-governance-doc", "type": "artifact", "label": "gov", "title": "docs/governance.md"},
         {"id": "artifact-governance-spec", "type": "artifact", "label": "govspec", "title": "spec/governance.yaml"},
         {"id": "artifact-ruleset-spec", "type": "artifact", "label": "rulespec", "title": "spec/ruleset.yaml"},
         {"id": "artifact-workflow-spec", "type": "artifact", "label": "work", "title": "spec/workflow.yaml"},
         {"id": "validator-execplan-validate", "type": "validator", "label": "execval", "title": "bin/execplan-validate"},
+        {"id": "validator-governance-loader-check", "type": "validator", "label": "govload", "title": "bin/governance-loader-check"},
         {"id": "validator-smoke-test", "type": "validator", "label": "smokeval", "title": "bin/run-local-ci"},
         {"id": "phase-merge-readiness", "type": "phase", "label": "merge", "title": "merge"},
         {"id": "authority-human", "type": "authority", "label": "human", "title": "human"},
@@ -168,6 +179,8 @@ def _seed_repo(root: Path, *, missing_rule: bool = False) -> None:
                 {"from": "rule-execplan-validation", "to": "validator-execplan-validate", "relation": "enforced_by"},
                 {"from": "rule-human-finalization", "to": "authority-human", "relation": "requires"},
                 {"from": "rule-human-finalization", "to": "artifact-ruleset-spec", "relation": "satisfied_by"},
+                {"from": "rule-initiative-parent-branch-governance", "to": "artifact-workflow-spec", "relation": "applies_to"},
+                {"from": "rule-initiative-parent-branch-governance", "to": "validator-governance-loader-check", "relation": "enforced_by"},
             ],
         },
     )
