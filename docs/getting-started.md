@@ -15,7 +15,7 @@ This repository is meant to be the starting point for new Codex-operated reposit
    - `bin/distribution-check`
    - `bin/run-local-ci`
 6. Create the first ExecPlan in `.agent/execplans/`.
-7. Run `bin/sync-todos`.
+7. If you want a local task projection, run `bin/sync-todos`.
 8. Implement work on a compliant non-`main` branch.
 9. Human-finalize with a signed commit.
 
@@ -24,7 +24,7 @@ This repository is meant to be the starting point for new Codex-operated reposit
 Every spawned repository is expected to preserve:
 
 - ExecPlan-first execution
-- deterministic TODO generation
+- canonical graph-backed work state
 - local validation entrypoints in `bin/`
 - human-only finalization
 - branch and governance enforcement

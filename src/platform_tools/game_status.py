@@ -10,6 +10,7 @@ from typing import Any
 import yaml
 
 from platform_tools.branch_policy import evaluate_branch_policy, get_current_branch
+from platform_tools.execplan_discovery import discover_execplan
 from platform_tools.game_graph_check import check_game_graph
 from platform_tools.plan_utils import parse_plan
 
@@ -87,28 +88,8 @@ def _lineage(game_id: str, parents: dict[str, str]) -> list[str]:
 
 
 def _discover_execplan(root: Path, branch: str, base_ref: str) -> tuple[str | None, list[str], str]:
-    execplan_dir = root / ".agent" / "execplans"
-    matches_by_branch: list[str] = []
-    if execplan_dir.exists():
-        for path in sorted(execplan_dir.glob("*.md")):
-            parsed = parse_plan(path)
-            draft_branch = str(parsed.frontmatter.get("draft_branch", "")).strip()
-            if draft_branch and draft_branch == branch:
-                matches_by_branch.append(path.as_posix())
-    if len(matches_by_branch) == 1:
-        return matches_by_branch[0], matches_by_branch, "draft_branch"
-    if len(matches_by_branch) > 1:
-        return None, matches_by_branch, "ambiguous_draft_branch"
-
-    code, output = _git(root, "diff", "--name-only", base_ref + "...HEAD", "--", ".agent/execplans")
-    if code != 0:
-        return None, [], "git_diff_failed"
-    changed = sorted(line.strip() for line in output.splitlines() if line.strip())
-    if len(changed) == 1:
-        return (root / changed[0]).as_posix(), changed, "changed_files"
-    if len(changed) > 1:
-        return None, changed, "ambiguous_changed_files"
-    return None, [], "not_found"
+    selected, candidates, strategy = discover_execplan(root, branch, base_ref)
+    return (selected.as_posix() if selected else None), candidates, strategy
 
 
 def get_game_status(

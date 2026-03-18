@@ -45,6 +45,36 @@
       "title": "Human authority is required for finalization and overrides."
     },
     {
+      "id": "rule-governance-required-check-contract",
+      "type": "rule",
+      "label": "Governance Required Check Contract",
+      "title": "Governance-required checks must use canonical identifiers mapped separately from executable command strings."
+    },
+    {
+      "id": "rule-queue-projection-authority",
+      "type": "rule",
+      "label": "Queue Projection Authority",
+      "title": "Queue and board projections remain projection-only and must reconcile to canonical graph state."
+    },
+    {
+      "id": "rule-draft-self-review-before-pr",
+      "type": "rule",
+      "label": "Draft Self Review Before PR",
+      "title": "Governed draft ExecPlans require agent self-review on the draft branch before PR creation."
+    },
+    {
+      "id": "rule-additive-pr-template",
+      "type": "rule",
+      "label": "Additive PR Template",
+      "title": "Governed PRs must keep baseline template sections and may only add sections, not subtract them."
+    },
+    {
+      "id": "rule-implementation-after-finalized-draft",
+      "type": "rule",
+      "label": "Implementation After Finalized Draft",
+      "title": "Governed implementation execution requires a human-finalized draft ExecPlan and reconciled graph state."
+    },
+    {
       "id": "artifact-agent-game-rules",
       "type": "artifact",
       "label": "Agent Game Rules",
@@ -75,6 +105,24 @@
       "title": "spec/workflow.yaml"
     },
     {
+      "id": "artifact-pr-template",
+      "type": "artifact",
+      "label": "PR Template",
+      "title": ".github/PULL_REQUEST_TEMPLATE.md"
+    },
+    {
+      "id": "artifact-execplans-doc",
+      "type": "artifact",
+      "label": "ExecPlans Doc",
+      "title": "docs/execplans.md"
+    },
+    {
+      "id": "artifact-remaining-work-graph",
+      "type": "artifact",
+      "label": "Remaining Work Graph",
+      "title": "artifacts/planner/research/remaining-work-graph.json"
+    },
+    {
       "id": "validator-execplan-validate",
       "type": "validator",
       "label": "ExecPlan Validate",
@@ -91,6 +139,24 @@
       "type": "validator",
       "label": "Policy Compliance Check",
       "title": "bin/policy-compliance-check"
+    },
+    {
+      "id": "validator-governance-check",
+      "type": "validator",
+      "label": "Governance Check",
+      "title": "bin/governance-check"
+    },
+    {
+      "id": "validator-remaining-work-graph-check",
+      "type": "validator",
+      "label": "Remaining Work Graph Check",
+      "title": "bin/remaining-work-graph-check"
+    },
+    {
+      "id": "validator-human-operations-status",
+      "type": "validator",
+      "label": "Human Operations Status",
+      "title": "bin/human-operations-status"
     },
     {
       "id": "validator-smoke-test",
@@ -139,6 +205,21 @@
     { "from": "rule-human-finalization", "to": "authority-human", "relation": "requires" },
     { "from": "rule-human-finalization", "to": "artifact-ruleset-spec", "relation": "satisfied_by" },
     { "from": "rule-human-finalization", "to": "artifact-workflow-spec", "relation": "satisfied_by" },
+    { "from": "rule-governance-required-check-contract", "to": "artifact-governance-spec", "relation": "applies_to" },
+    { "from": "rule-governance-required-check-contract", "to": "validator-governance-check", "relation": "enforced_by" },
+    { "from": "rule-governance-required-check-contract", "to": "artifact-governance-spec", "relation": "satisfied_by" },
+    { "from": "rule-queue-projection-authority", "to": "artifact-remaining-work-graph", "relation": "applies_to" },
+    { "from": "rule-queue-projection-authority", "to": "validator-remaining-work-graph-check", "relation": "enforced_by" },
+    { "from": "rule-queue-projection-authority", "to": "artifact-workflow-spec", "relation": "satisfied_by" },
+    { "from": "rule-draft-self-review-before-pr", "to": "artifact-pr-template", "relation": "applies_to" },
+    { "from": "rule-draft-self-review-before-pr", "to": "validator-policy-compliance-check", "relation": "enforced_by" },
+    { "from": "rule-draft-self-review-before-pr", "to": "artifact-execplans-doc", "relation": "satisfied_by" },
+    { "from": "rule-additive-pr-template", "to": "artifact-pr-template", "relation": "applies_to" },
+    { "from": "rule-additive-pr-template", "to": "validator-policy-compliance-check", "relation": "enforced_by" },
+    { "from": "rule-additive-pr-template", "to": "artifact-workflow-spec", "relation": "satisfied_by" },
+    { "from": "rule-implementation-after-finalized-draft", "to": "authority-human", "relation": "requires" },
+    { "from": "rule-implementation-after-finalized-draft", "to": "validator-human-operations-status", "relation": "enforced_by" },
+    { "from": "rule-implementation-after-finalized-draft", "to": "artifact-remaining-work-graph", "relation": "satisfied_by" },
     { "from": "phase-merge-readiness", "to": "validator-run-local-ci", "relation": "depends_on" }
   ]
 }

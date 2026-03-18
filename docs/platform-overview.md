@@ -6,7 +6,7 @@ Its purpose is to serve as the canonical repository shape for Codex-operated pro
 
 Workflow:
 
-ExecPlan -> Tasks -> TODO -> PR -> Human Finalization -> ADR -> Metrics
+ExecPlan -> Graph/Queue State -> PR -> Human Finalization -> Reconciliation -> Metrics
 
 Agents draft work through ExecPlans. Humans finalize work with signed commits.
 

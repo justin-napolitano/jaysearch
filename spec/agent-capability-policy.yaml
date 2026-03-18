@@ -15,6 +15,20 @@ goal_area_classes:
   - id: governance
   - id: non_governance
 capability_rules:
+  - id: agent_draft_governance
+    actor_class: agent
+    branch_class: draft_execplan
+    goal_area_class: governance
+    allowed_surface_classes:
+      - canonical_state_surface
+      - projection_surface
+    forbidden_surface_classes:
+      - rule_surface
+      - referee_surface
+      - capability_policy_surface
+      - exception_registry
+    allowed_referee_paths: []
+    requires_execplan_declaration_for_protected_surfaces: true
   - id: agent_impl_non_governance
     actor_class: agent
     branch_class: impl_execplan
@@ -42,15 +56,28 @@ capability_rules:
       - exception_registry
     allowed_referee_paths:
       - bin/anti-cheat-check
+      - bin/merge-readiness-check
+      - bin/policy-compliance-check
+      - bin/rule-graph-check
       - bin/state-transition-legality-check
       - bin/state-transition-legality-smoke-test
       - src/platform_tools/anti_cheat_check.py
+      - src/platform_tools/execplan_discovery.py
+      - src/platform_tools/game_status.py
+      - src/platform_tools/governance_check.py
+      - src/platform_tools/governance_loader.py
+      - src/platform_tools/merge_readiness.py
       - src/platform_tools/orchestrator_status.py
       - src/platform_tools/policy_compliance_check.py
+      - src/platform_tools/repo_health.py
+      - src/platform_tools/rule_graph_check.py
       - src/platform_tools/state_transition_legality.py
       - tests/test_anti_cheat_check.py
+      - tests/test_merge_readiness.py
       - tests/test_orchestrator_status.py
       - tests/test_policy_compliance_check.py
+      - tests/test_repo_health.py
+      - tests/test_rule_graph_check.py
       - tests/test_state_transition_legality.py
     requires_execplan_declaration_for_protected_surfaces: true
 denial_rules:

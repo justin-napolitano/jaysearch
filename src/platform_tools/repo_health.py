@@ -122,8 +122,12 @@ def check_repository_health(root: str = ".") -> tuple[int, dict[str, Any]]:
                 "ok": execplan_ok,
                 "error_count": lint_report["error_count"],
             },
-            "todo_integrity": {
-                "ok": todo_ok,
+            "todo_projection": {
+                "ok": True,
+                "deprecated": True,
+                "authoritative": False,
+                "canonical_source": "remaining_work_graph",
+                "projection_status": "stale" if not todo_ok else "current",
                 **todo_details,
             },
             "security": {
@@ -158,7 +162,6 @@ def check_repository_health(root: str = ".") -> tuple[int, dict[str, Any]]:
         return 2, report
     if not (
         execplan_ok
-        and todo_ok
         and governance_ok
         and governance_contract_ok
         and distribution_contract_ok

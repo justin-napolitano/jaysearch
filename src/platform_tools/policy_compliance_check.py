@@ -10,6 +10,7 @@ from typing import Any
 import yaml
 
 from platform_tools.branch_policy import get_current_branch
+from platform_tools.execplan_discovery import discover_execplan
 from platform_tools.anti_cheat_check import check_anti_cheat
 from platform_tools.plan_utils import parse_frontmatter, parse_plan
 from platform_tools.remaining_work_graph_check import check_remaining_work_graph
@@ -113,14 +114,10 @@ def _changed_files(cwd: Path, base_ref: str) -> list[str]:
 
 
 def _discover_execplan(cwd: Path, base_ref: str) -> Path:
-    candidates = [
-        path
-        for path in _changed_files(cwd, base_ref)
-        if path.startswith(".agent/execplans/") and path.endswith(".md")
-    ]
-    if len(candidates) != 1:
-        raise RuntimeError("active_execplan_not_deterministic")
-    return cwd / candidates[0]
+    selected, _candidates, strategy = discover_execplan(cwd, _current_branch(cwd), base_ref)
+    if selected is None:
+        raise RuntimeError(f"active_execplan_not_deterministic:{strategy}")
+    return selected
 
 
 def _classify_commit(subject: str) -> str:
