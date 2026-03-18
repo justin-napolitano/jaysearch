@@ -8,6 +8,12 @@ This repository separates rules into three layers:
 
 If a rule is enforced by code, it must be defined in `spec/`.
 
+Canonical rule inventory:
+
+- `spec/rule-registry.yaml` is the canonical machine-readable inventory of active rules and their enforcement class.
+- `artifacts/planner/research/rule-graph.json` is a validated projection over that registry.
+- `docs/` may explain rules, but must not be the only normative source for an enforced rule.
+
 ## Locked Platform Architecture Contract
 
 Canonical contract file: `spec/platform-architecture.yaml`

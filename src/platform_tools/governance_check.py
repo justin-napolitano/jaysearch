@@ -88,7 +88,7 @@ def check_governance() -> tuple[int, dict[str, Any]]:
         for item in contract:
             if not isinstance(item, dict):
                 continue
-            raw_name = str(item.get("name", "")).strip()
+            raw_name = str(item.get("check_id", "")).strip() or str(item.get("name", "")).strip()
             name = _canonical_check_id(raw_name)
             command = str(item.get("command", "")).strip()
             expected_exit = int(item.get("expected_exit", 0))

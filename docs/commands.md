@@ -14,5 +14,13 @@ bin/execplan-validate
 bin/sync-todos
 bin/repo-health-check
 bin/execplan-test
+bin/rule-graph-check
+bin/remaining-work-graph-check
 bin/finalize-execplan
 bin/codex-commit
+
+Notes:
+
+- `bin/sync-todos` is a projection command, not a canonical workflow authority.
+- `bin/rule-graph-check` validates the rule-graph projection against the canonical rule registry.
+- `bin/remaining-work-graph-check` validates canonical work-state and queue projection reconciliation.

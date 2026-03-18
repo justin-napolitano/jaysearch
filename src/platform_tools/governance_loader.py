@@ -51,7 +51,7 @@ def _load_local_policy() -> dict[str, Any]:
     required_names = []
     for item in required_contract:
         if isinstance(item, dict):
-            name = str(item.get("name", "")).strip()
+            name = str(item.get("check_id", "")).strip() or str(item.get("name", "")).strip()
             if name:
                 required_names.append(name)
 
