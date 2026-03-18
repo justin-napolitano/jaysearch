@@ -16,7 +16,7 @@
   "queue_projection": {
     "path": "docs/queued-execplans.md",
     "projection_authority": "projection_only",
-    "last_reconciled_action_id": "rwg-action-20260318-007-unblock-rwg-028",
+    "last_reconciled_action_id": "rwg-action-20260318-008-unblock-rwg-027",
     "ready_execplan_ids": []
   },
   "graph_actions": [
@@ -226,6 +226,14 @@
       "node_id": "rwg-028",
       "rationale": "capture the planned traversal engine so the graph can recommend sequential, parallel-safe, and lowest-cost execution order using machine-readable priority and cost signals",
       "evidence_ref": "chat:2026-03-18-graph-priority-ranking",
+      "queue_reconciled": true
+    },
+    {
+      "action_id": "rwg-action-20260318-008-unblock-rwg-027",
+      "action": "unblock",
+      "node_id": "rwg-027",
+      "rationale": "graph transition automation is now drafted for review so routine lifecycle changes can become deterministic and merge-gated instead of relying on manual graph bookkeeping",
+      "evidence_ref": ".agent/execplans/20260318-graph-transition-automation-and-merge-gating-codex-01-execplan.md",
       "queue_reconciled": true
     }
   ],
@@ -883,19 +891,20 @@
     {
       "node_id": "rwg-027",
       "title": "Graph transition automation and merge-gated reconciliation",
-      "status": "decision_gated",
-      "status_reason": "captured next as a governance design slice so routine graph state can become machine-derived from PR, merge, and check evidence instead of requiring manual reconciliation updates",
-      "gating_class": "decision_gated",
+      "status": "review_gated",
+      "status_reason": "drafted next as a governance design slice so routine graph state can become machine-derived from PR, merge, and check evidence instead of requiring manual reconciliation updates",
+      "gating_class": "review_gated",
       "conflict_domains": [
         "governance",
         "provider-sync",
         "review-runtime",
         "workflow"
       ],
-      "target_execplan_id": "future:graph-transition-automation-and-merge-gating",
+      "target_execplan_id": "20260318-graph-transition-automation-and-merge-gating-codex-01-execplan",
       "goal_area": "governance",
       "implementation_branch": "",
       "expected_artifacts": [
+        ".agent/execplans/20260318-graph-transition-automation-and-merge-gating-codex-01-execplan.md",
         "spec/workflow.yaml",
         "spec/governance.yaml",
         "src/platform_tools/reconcile_remaining_work_merge.py",
@@ -903,11 +912,11 @@
       ],
       "ordering": {
         "queue_position": 27,
-        "source_action_id": "rwg-action-20260318-006-unblock-rwg-027",
-        "tie_breaker": "future:graph-transition-automation-and-merge-gating"
+        "source_action_id": "rwg-action-20260318-008-unblock-rwg-027",
+        "tie_breaker": "20260318-graph-transition-automation-and-merge-gating-codex-01-execplan"
       },
       "action_state": {
-        "last_action_id": "rwg-action-20260318-006-unblock-rwg-027",
+        "last_action_id": "rwg-action-20260318-008-unblock-rwg-027",
         "last_action": "unblock",
         "action_required": false,
         "reorder_requires_human": false,
