@@ -10,6 +10,7 @@ surface_entries:
     authority_role: canonical_local
     path_exact:
       - artifacts/planner/research/remaining-work-graph.json
+      - artifacts/planner/research/rule-graph.json
   - id: queue_projection_surface
     surface_class: projection_surface
     authority_role: projection_only
@@ -19,10 +20,19 @@ surface_entries:
     surface_class: rule_surface
     authority_role: governance_local
     path_exact:
+      - docs/commands.md
+      - docs/getting-started.md
       - docs/governance.md
       - docs/agent-game-rules-v1.md
+      - docs/platform-definition-v1.md
+      - docs/platform-overview.md
+      - docs/repo-health.md
+      - docs/rules-architecture.md
       - docs/subgame-branch-governance.md
+      - docs/todos.md
       - spec/governance.yaml
+      - spec/rule-graph.schema.yaml
+      - spec/rule-registry.yaml
       - spec/ruleset.yaml
       - spec/state-transition-legality.schema.yaml
       - spec/subgame-branch-contract.yaml
@@ -39,15 +49,30 @@ surface_entries:
     authority_role: governance_local
     path_exact:
       - bin/anti-cheat-check
+      - bin/merge-readiness-check
+      - bin/policy-compliance-check
+      - bin/policy-compliance-smoke-test
+      - bin/rule-graph-check
+      - bin/rule-graph-smoke-test
       - bin/state-transition-legality-check
       - bin/state-transition-legality-smoke-test
       - src/platform_tools/anti_cheat_check.py
+      - src/platform_tools/execplan_discovery.py
+      - src/platform_tools/game_status.py
+      - src/platform_tools/governance_check.py
+      - src/platform_tools/governance_loader.py
+      - src/platform_tools/merge_readiness.py
       - src/platform_tools/orchestrator_status.py
       - src/platform_tools/policy_compliance_check.py
+      - src/platform_tools/repo_health.py
+      - src/platform_tools/rule_graph_check.py
       - src/platform_tools/state_transition_legality.py
       - tests/test_anti_cheat_check.py
+      - tests/test_merge_readiness.py
       - tests/test_orchestrator_status.py
       - tests/test_policy_compliance_check.py
+      - tests/test_repo_health.py
+      - tests/test_rule_graph_check.py
       - tests/test_state_transition_legality.py
   - id: exception_registry
     surface_class: exception_registry

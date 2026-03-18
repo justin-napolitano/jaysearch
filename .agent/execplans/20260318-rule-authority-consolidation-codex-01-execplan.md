@@ -10,6 +10,8 @@ changes:
   - artifacts/planner/research/rule-graph.json
   - artifacts/planner/research/remaining-work-graph.json
   - .github/PULL_REQUEST_TEMPLATE.md
+  - docs/commands.md
+  - docs/getting-started.md
   - docs/agent-capability-boundaries.md
   - docs/execplans.md
   - docs/platform-definition-v1.md
@@ -17,18 +19,26 @@ changes:
   - docs/queued-execplans.md
   - docs/remaining-work-graph.md
   - docs/repo-health.md
+  - docs/rules-architecture.md
   - docs/todos.md
   - spec/agent-capability-policy.yaml
   - spec/governance.yaml
+  - spec/protected-surfaces.schema.yaml
   - spec/rule-graph.schema.yaml
   - spec/rule-registry.yaml
   - spec/workflow.yaml
   - src/platform_tools/anti_cheat_check.py
+  - src/platform_tools/execplan_discovery.py
+  - src/platform_tools/game_status.py
   - src/platform_tools/governance_check.py
+  - src/platform_tools/governance_loader.py
+  - src/platform_tools/merge_readiness.py
+  - src/platform_tools/policy_compliance_check.py
   - src/platform_tools/repo_health.py
   - src/platform_tools/rule_graph_check.py
   - tests/test_anti_cheat_check.py
-  - tests/test_governance_check.py
+  - tests/test_merge_readiness.py
+  - tests/test_policy_compliance_check.py
   - tests/test_repo_health.py
   - tests/test_rule_graph_check.py
 approve_policy: codeowners
@@ -44,6 +54,12 @@ validation:
   tests:
     - name: "execplan-validate"
       command: "bin/execplan-validate .agent/execplans/20260318-rule-authority-consolidation-codex-01-execplan.md"
+      expected_exit: 0
+    - name: "policy-compliance-check"
+      command: "bin/policy-compliance-check --execplan-path .agent/execplans/20260318-rule-authority-consolidation-codex-01-execplan.md"
+      expected_exit: 0
+    - name: "board-action-api-smoke-test"
+      command: "bin/board-action-api-smoke-test"
       expected_exit: 0
     - name: "rule-graph-check"
       command: "bin/rule-graph-check"
