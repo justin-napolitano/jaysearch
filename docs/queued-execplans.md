@@ -130,9 +130,14 @@ This document turns the remaining-work graph into an explicit near-term queue of
    - implementation branch: `impl-execplan/20260318-rule-authority-consolidation-codex-01-execplan-codex-01-20260318`
    - canonical evidence: `merged:pr-83`
    - completion ref: `merged:pr-83`
+
+25. `20260318-rule-registry-drift-and-provider-sync-hardening-codex-01-execplan`
+   - status: `review_gated`
+   - goal: add rule-registry drift enforcement, standardize provider-sync token and preflight contracts, validate field-map completeness, and harden merge reconciliation evidence selection
+   - draft branch: `draft-execplan/20260318-rule-registry-drift-and-provider-sync-hardening-codex-01-20260318`
 ## Mirror Metadata
 
-- canonical_last_graph_action_id: `rwg-action-20260318-003-complete-rwg-025`
+- canonical_last_graph_action_id: `rwg-action-20260318-004-unblock-rwg-026`
 - canonical_ready_order: ``
 - projection_authority: `projection_only`
 
