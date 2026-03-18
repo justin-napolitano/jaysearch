@@ -45,6 +45,20 @@ execution_requirements:
   finalization_requirements:
     governed_execplans_require_signed_merge_commit_on_main: true
     governed_execplans_merge_commit_is_canonical_finalization_event: true
+  draft_review_requirements:
+    governed_draft_execplans_require_dedicated_draft_branch: true
+    governed_draft_execplans_require_agent_self_review_before_pr: true
+    governed_draft_execplan_pr_requires_stable_template: true
+    governed_draft_execplan_pr_template_mode: additive_only
+    governed_draft_execplan_pr_required_sections:
+      - execplan
+      - purpose
+      - scope
+      - self_review
+      - validation
+      - handoff
+    implementation_execution_requires_human_finalized_draft_execplan: true
+    merged_draft_execplans_must_be_reflected_in_canonical_graph_and_queue_state: true
   board_runtime_requirements:
     board_review_surface_is_projection_only: true
     provider_sync_field_map_required_for_live_board_sync: true
