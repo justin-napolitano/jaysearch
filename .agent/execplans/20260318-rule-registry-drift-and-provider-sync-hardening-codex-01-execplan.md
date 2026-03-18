@@ -15,6 +15,8 @@ changes:
   - spec/governance.yaml
   - spec/providers/github-projects.schema.yaml
   - spec/rule-registry.yaml
+  - spec/workflow.yaml
+  - spec/ruleset.yaml
   - src/platform_tools/governance_check.py
   - src/platform_tools/integrations/github_projects_runtime.py
   - src/platform_tools/integrations/github_projects_sync.py
@@ -59,6 +61,8 @@ tasks:
     priority: "P1"
   - title: "Harden merge reconciliation so implementation merge evidence is selected deterministically"
     priority: "P1"
+  - title: "Introduce initiative branches as governed parent integration branches tied to graph nodes"
+    priority: "P1"
 depends_on:
   - "20260318-rule-authority-consolidation-codex-01-execplan"
   - "20260312-human-operations-review-runtime-codex-01-execplan"
@@ -75,6 +79,7 @@ This slice exists because the repository now has a canonical rule registry, a gr
 - provider-sync token handling is operationally brittle even though the runtime itself works
 - the local field-map can drift away from the graph and board state without one focused completeness check
 - merge reconciliation can still choose the wrong merge evidence if multiple related PRs exist for one ExecPlan lifecycle
+- larger feature families still have no governed parent-branch model, which forces repeated direct merges to `main` even when work naturally belongs to one higher-level graph node
 
 ## Progress
 
@@ -98,6 +103,7 @@ This slice exists because the repository now has a canonical rule registry, a gr
 - 2026-03-18 / agent-codex-01 / GitHub provider-sync runtime should standardize on `GITHUB_TOKEN` as the live execution contract and emit scope-specific blockers before mutation attempts.
 - 2026-03-18 / agent-codex-01 / Field-map completeness is governed local state and should be validated against the canonical graph rather than treated as a passive bootstrap artifact.
 - 2026-03-18 / agent-codex-01 / Merge reconciliation should prefer implementation-finalization evidence when both draft and implementation merges exist for a slice lifecycle.
+- 2026-03-18 / agent-codex-01 / `initiative/*` should replace generic `feature/*` as the governed parent integration branch role for one higher-level graph node with child ExecPlan slices beneath it.
 
 ## Outcomes & Retrospective
 
@@ -108,6 +114,7 @@ On completion, the repository should have:
 - one explicit live token contract for GitHub provider sync
 - clearer provider-sync blockers for missing token, missing scopes, and incomplete field-map state
 - deterministic merge reconciliation that selects the correct finalization evidence for implementation slices
+- a first-class `initiative/*` branch role that can accumulate related child slices under one governed parent node instead of repeatedly merging partial feature state into `main`
 
 Expected implemented outcome:
 
@@ -115,6 +122,7 @@ Expected implemented outcome:
 - the provider-sync runtime can be run procedurally without token-name guesswork
 - field-map artifacts and graph state stay aligned enough to trust update-vs-create decisions
 - completion reconciliation no longer needs manual evidence correction when the intended implementation merge is unambiguous
+- larger multi-slice work can be grouped under one governed initiative branch that remains graph-visible and does not weaken per-slice auditability
 
 ## Context and Orientation
 
@@ -134,6 +142,7 @@ This slice is the follow-through that prevents those surfaces from drifting apar
 4. Standardize provider-sync token and preflight error semantics around `GITHUB_TOKEN`.
 5. Add field-map completeness checks that protect provider item reuse.
 6. Harden merge reconciliation evidence selection for completed implementation slices.
+7. Update branch governance so `initiative/*` is the parent integration branch role for one graph-backed initiative node with child ExecPlan slices.
 
 ## Concrete Steps
 
@@ -150,7 +159,13 @@ This slice is the follow-through that prevents those surfaces from drifting apar
    - insufficient project scopes yield a clearer blocker
 5. Add field-map hygiene checks that fail when required graph nodes lack stable provider item ids after live sync has established a reusable board.
 6. Update merge reconciliation so implementation merge evidence is chosen deterministically when both draft and implementation merges are present.
-7. Update docs for the new checker and runtime preflight contract.
+7. Update `spec/workflow.yaml`, `spec/ruleset.yaml`, and related docs so:
+   - `initiative/*` is an allowed governed branch pattern
+   - each initiative branch maps to one parent graph node
+   - child `draft-execplan/*` and `impl-execplan/*` slices may branch from and merge back into that initiative branch
+   - `initiative/*` is integration authority only, not a replacement for child ExecPlan authority
+   - merge to `main` occurs from the initiative branch once the parent node is complete
+8. Update docs for the new checker, initiative-branch model, and runtime preflight contract.
 
 ## Validation and Acceptance
 
@@ -161,12 +176,14 @@ Acceptance criteria:
 - GitHub provider-sync emits precise blockers for missing `GITHUB_TOKEN` and missing project scopes
 - field-map completeness can be validated mechanically once a board exists
 - merge reconciliation chooses implementation merge evidence for governed implementation slices without manual correction when the evidence is unambiguous
+- workflow policy distinguishes `initiative/*` parent integration branches from child draft and implementation branches without weakening branch legality checks
 
 ## Idempotence and Recovery
 
 - rerunning the registry checker should be deterministic for the same repo state
 - provider-sync preflight should fail before remote mutation when required token/scopes are absent
 - merge reconciliation should remain safe to rerun and should not duplicate completion actions once canonical completion is already recorded
+- initiative-branch introduction must remain additive to existing draft/implementation governance rather than silently changing branch authority semantics
 
 ## Artifacts and Notes
 
@@ -176,6 +193,8 @@ Expected artifacts:
 - updated `src/platform_tools/integrations/github_projects_sync.py`
 - updated `src/platform_tools/integrations/github_projects_runtime.py`
 - updated `src/platform_tools/reconcile_remaining_work_merge.py`
+- updated `spec/workflow.yaml`
+- updated `spec/ruleset.yaml`
 - updated docs and tests for the new contracts
 
 Planned implementation branch:

@@ -823,14 +823,15 @@
     },
     {
       "node_id": "rwg-026",
-      "title": "Rule-registry drift enforcement and provider-sync hardening",
+      "title": "Rule-registry drift enforcement, initiative-branch governance, and provider-sync hardening",
       "status": "review_gated",
-      "status_reason": "queued follow-up to make the new rule registry durable and harden provider-sync and completion reconciliation around the canonical graph",
+      "status_reason": "queued follow-up to make the new rule registry durable, introduce governed initiative branches for multi-slice work, and harden provider-sync and completion reconciliation around the canonical graph",
       "gating_class": "review_gated",
       "conflict_domains": [
         "governance",
         "provider-sync",
-        "review-runtime"
+        "review-runtime",
+        "workflow"
       ],
       "target_execplan_id": "20260318-rule-registry-drift-and-provider-sync-hardening-codex-01-execplan",
       "goal_area": "governance",
@@ -838,7 +839,8 @@
       "expected_artifacts": [
         "spec/rule-registry.yaml",
         "src/platform_tools/rule_registry_check.py",
-        "src/platform_tools/integrations/github_projects_sync.py"
+        "src/platform_tools/integrations/github_projects_sync.py",
+        "spec/workflow.yaml"
       ],
       "ordering": {
         "queue_position": 26,
