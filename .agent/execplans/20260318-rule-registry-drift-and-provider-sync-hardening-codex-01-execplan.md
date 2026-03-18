@@ -104,6 +104,7 @@ This slice exists because the repository now has a canonical rule registry, a gr
 - 2026-03-18 / agent-codex-01 / Field-map completeness is governed local state and should be validated against the canonical graph rather than treated as a passive bootstrap artifact.
 - 2026-03-18 / agent-codex-01 / Merge reconciliation should prefer implementation-finalization evidence when both draft and implementation merges exist for a slice lifecycle.
 - 2026-03-18 / agent-codex-01 / `initiative/*` should replace generic `feature/*` as the governed parent integration branch role for one higher-level graph node with child ExecPlan slices beneath it.
+- 2026-03-18 / agent-codex-01 / Initiative-branch governance must be fail-closed: unrecognized parent-branch flows should block rather than silently falling back to informal branch behavior.
 
 ## Outcomes & Retrospective
 
@@ -165,6 +166,8 @@ This slice is the follow-through that prevents those surfaces from drifting apar
    - child `draft-execplan/*` and `impl-execplan/*` slices may branch from and merge back into that initiative branch
    - `initiative/*` is integration authority only, not a replacement for child ExecPlan authority
    - merge to `main` occurs from the initiative branch once the parent node is complete
+   - branch legality and governance loaders fail closed when an initiative-branch relationship or parent-node mapping is missing
+   - repository branch-protection or equivalent protected-branch policy can be aligned to the governed initiative workflow rather than relying on convention alone
 8. Update docs for the new checker, initiative-branch model, and runtime preflight contract.
 
 ## Validation and Acceptance
@@ -177,6 +180,8 @@ Acceptance criteria:
 - field-map completeness can be validated mechanically once a board exists
 - merge reconciliation chooses implementation merge evidence for governed implementation slices without manual correction when the evidence is unambiguous
 - workflow policy distinguishes `initiative/*` parent integration branches from child draft and implementation branches without weakening branch legality checks
+- missing or illegal initiative parent/child branch relationships produce blocking findings rather than warnings
+- the governed branch model can be represented in machine-readable policy that is suitable for branch protection alignment
 
 ## Idempotence and Recovery
 
@@ -184,6 +189,7 @@ Acceptance criteria:
 - provider-sync preflight should fail before remote mutation when required token/scopes are absent
 - merge reconciliation should remain safe to rerun and should not duplicate completion actions once canonical completion is already recorded
 - initiative-branch introduction must remain additive to existing draft/implementation governance rather than silently changing branch authority semantics
+- fail-closed initiative enforcement must not allow unknown branch shapes to proceed as if they were lawful governed work
 
 ## Artifacts and Notes
 
@@ -193,6 +199,7 @@ Expected artifacts:
 - updated `src/platform_tools/integrations/github_projects_sync.py`
 - updated `src/platform_tools/integrations/github_projects_runtime.py`
 - updated `src/platform_tools/reconcile_remaining_work_merge.py`
+- updated `src/platform_tools/governance_loader.py`
 - updated `spec/workflow.yaml`
 - updated `spec/ruleset.yaml`
 - updated docs and tests for the new contracts
