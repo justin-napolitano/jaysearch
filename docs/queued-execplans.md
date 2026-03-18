@@ -124,15 +124,16 @@ This document turns the remaining-work graph into an explicit near-term queue of
    - draft branch: `draft-execplan/20260316-anti-cheat-rule-surface-followup-codex-01`
 
 24. `20260318-rule-authority-consolidation-codex-01-execplan`
-   - status: `ready`
+   - status: `completed`
    - goal: consolidate canonical rule authority, formalize draft self-review and additive PR structure, and execute the now-finalized slice on its dedicated implementation branch
    - draft branch: `draft-execplan/20260318-rule-authority-consolidation-codex-01-20260318`
    - implementation branch: `impl-execplan/20260318-rule-authority-consolidation-codex-01-execplan-codex-01-20260318`
-   - canonical evidence: `merged:pr-82`
+   - canonical evidence: `merged:pr-83`
+   - completion ref: `merged:pr-83`
 ## Mirror Metadata
 
-- canonical_last_graph_action_id: `rwg-action-20260318-002-promote-rwg-025`
-- canonical_ready_order: `20260318-rule-authority-consolidation-codex-01-execplan`
+- canonical_last_graph_action_id: `rwg-action-20260318-003-complete-rwg-025`
+- canonical_ready_order: ``
 - projection_authority: `projection_only`
 
 ## Queue Discipline
