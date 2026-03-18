@@ -16,7 +16,7 @@
   "queue_projection": {
     "path": "docs/queued-execplans.md",
     "projection_authority": "projection_only",
-    "last_reconciled_action_id": "rwg-action-20260318-004-unblock-rwg-026",
+    "last_reconciled_action_id": "rwg-action-20260318-007-unblock-rwg-028",
     "ready_execplan_ids": []
   },
   "graph_actions": [
@@ -202,6 +202,30 @@
       "node_id": "rwg-026",
       "rationale": "rule-registry drift enforcement and provider-sync hardening are queued for draft review so the new canonical rule authority and project projection runtime remain durable",
       "evidence_ref": ".agent/execplans/20260318-rule-registry-drift-and-provider-sync-hardening-codex-01-execplan.md",
+      "queue_reconciled": true
+    },
+    {
+      "action_id": "rwg-action-20260318-005-complete-rwg-026",
+      "action": "complete",
+      "node_id": "rwg-026",
+      "rationale": "rule-registry drift enforcement, initiative-branch governance, and provider-sync hardening merged to main and the surviving GitHub Project item is now canonical board evidence",
+      "evidence_ref": "merged:pr-86",
+      "queue_reconciled": true
+    },
+    {
+      "action_id": "rwg-action-20260318-006-unblock-rwg-027",
+      "action": "unblock",
+      "node_id": "rwg-027",
+      "rationale": "capture the planned move from manual graph bookkeeping to deterministic event-driven reconciliation and merge-gated graph transitions before the design drifts back into prose only",
+      "evidence_ref": "chat:2026-03-18-graph-transition-automation",
+      "queue_reconciled": true
+    },
+    {
+      "action_id": "rwg-action-20260318-007-unblock-rwg-028",
+      "action": "unblock",
+      "node_id": "rwg-028",
+      "rationale": "capture the planned traversal engine so the graph can recommend sequential, parallel-safe, and lowest-cost execution order using machine-readable priority and cost signals",
+      "evidence_ref": "chat:2026-03-18-graph-priority-ranking",
       "queue_reconciled": true
     }
   ],
@@ -824,9 +848,9 @@
     {
       "node_id": "rwg-026",
       "title": "Rule-registry drift enforcement, initiative-branch governance, and provider-sync hardening",
-      "status": "review_gated",
-      "status_reason": "queued follow-up to make the new rule registry durable, introduce governed initiative branches for multi-slice work, and harden provider-sync and completion reconciliation around the canonical graph",
-      "gating_class": "review_gated",
+      "status": "completed",
+      "status_reason": "",
+      "gating_class": "auto_runnable",
       "conflict_domains": [
         "governance",
         "provider-sync",
@@ -835,7 +859,7 @@
       ],
       "target_execplan_id": "20260318-rule-registry-drift-and-provider-sync-hardening-codex-01-execplan",
       "goal_area": "governance",
-      "implementation_branch": "",
+      "implementation_branch": "impl-execplan/20260318-rule-registry-drift-and-provider-sync-hardening-codex-01-execplan-codex-01-20260318",
       "expected_artifacts": [
         "spec/rule-registry.yaml",
         "src/platform_tools/rule_registry_check.py",
@@ -844,11 +868,78 @@
       ],
       "ordering": {
         "queue_position": 26,
-        "source_action_id": "rwg-action-20260318-004-unblock-rwg-026",
+        "source_action_id": "rwg-action-20260318-005-complete-rwg-026",
         "tie_breaker": "20260318-rule-registry-drift-and-provider-sync-hardening-codex-01-execplan"
       },
       "action_state": {
-        "last_action_id": "rwg-action-20260318-004-unblock-rwg-026",
+        "last_action_id": "rwg-action-20260318-005-complete-rwg-026",
+        "last_action": "complete",
+        "action_required": false,
+        "reorder_requires_human": false,
+        "reorder_blockers": []
+      },
+      "completion_ref": "merged:pr-86"
+    },
+    {
+      "node_id": "rwg-027",
+      "title": "Graph transition automation and merge-gated reconciliation",
+      "status": "decision_gated",
+      "status_reason": "captured next as a governance design slice so routine graph state can become machine-derived from PR, merge, and check evidence instead of requiring manual reconciliation updates",
+      "gating_class": "decision_gated",
+      "conflict_domains": [
+        "governance",
+        "provider-sync",
+        "review-runtime",
+        "workflow"
+      ],
+      "target_execplan_id": "future:graph-transition-automation-and-merge-gating",
+      "goal_area": "governance",
+      "implementation_branch": "",
+      "expected_artifacts": [
+        "spec/workflow.yaml",
+        "spec/governance.yaml",
+        "src/platform_tools/reconcile_remaining_work_merge.py",
+        "src/platform_tools/integrations/github_projects_sync.py"
+      ],
+      "ordering": {
+        "queue_position": 27,
+        "source_action_id": "rwg-action-20260318-006-unblock-rwg-027",
+        "tie_breaker": "future:graph-transition-automation-and-merge-gating"
+      },
+      "action_state": {
+        "last_action_id": "rwg-action-20260318-006-unblock-rwg-027",
+        "last_action": "unblock",
+        "action_required": false,
+        "reorder_requires_human": false,
+        "reorder_blockers": []
+      }
+    },
+    {
+      "node_id": "rwg-028",
+      "title": "Graph priority ranking and traversal planning",
+      "status": "decision_gated",
+      "status_reason": "captured next as a planning-engine slice so the graph can recommend sequential, parallel-safe, and lowest-cost worksets using explicit dependency, conflict, priority, and cost signals",
+      "gating_class": "decision_gated",
+      "conflict_domains": [
+        "governance",
+        "planner-runtime",
+        "workflow"
+      ],
+      "target_execplan_id": "future:graph-priority-ranking-and-traversal-engine",
+      "goal_area": "governance",
+      "implementation_branch": "",
+      "expected_artifacts": [
+        "spec/remaining-work-graph.schema.yaml",
+        "docs/remaining-work-graph.md",
+        "src/platform_tools/remaining_work_graph_check.py"
+      ],
+      "ordering": {
+        "queue_position": 28,
+        "source_action_id": "rwg-action-20260318-007-unblock-rwg-028",
+        "tie_breaker": "future:graph-priority-ranking-and-traversal-engine"
+      },
+      "action_state": {
+        "last_action_id": "rwg-action-20260318-007-unblock-rwg-028",
         "last_action": "unblock",
         "action_required": false,
         "reorder_requires_human": false,
