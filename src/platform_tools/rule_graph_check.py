@@ -8,15 +8,6 @@ from typing import Any
 import yaml
 
 
-REQUIRED_RULES = {
-    "rule-smoke-test-required",
-    "rule-clean-merge-state",
-    "rule-human-sized-commits",
-    "rule-procedural-commit-order",
-    "rule-latest-main-branching",
-    "rule-execplan-validation",
-    "rule-human-finalization",
-}
 COMMAND = "rule-graph-check"
 
 
@@ -56,12 +47,29 @@ def _report(
     }
 
 
+def _required_rule_ids(registry: dict[str, Any]) -> set[str]:
+    entries = registry.get("rules", [])
+    if not isinstance(entries, list):
+        return set()
+    required: set[str] = set()
+    for item in entries:
+        if not isinstance(item, dict):
+            continue
+        rule_id = str(item.get("rule_id", "")).strip()
+        rule_class = str(item.get("class", "")).strip()
+        graph_required = bool(item.get("graph_required", False))
+        if rule_id and graph_required and rule_class in {"enforced", "human_gated"}:
+            required.add(rule_id)
+    return required
+
+
 def check_rule_graph(root: str = ".") -> tuple[int, dict[str, Any]]:
     base = Path(root)
     graph_path = base / "artifacts" / "planner" / "research" / "rule-graph.json"
     schema_path = base / "spec" / "rule-graph.schema.yaml"
+    registry_path = base / "spec" / "rule-registry.yaml"
     errors: list[str] = []
-    evidence_refs = [path.as_posix() for path in (graph_path, schema_path) if path.exists()]
+    evidence_refs = [path.as_posix() for path in (graph_path, schema_path, registry_path) if path.exists()]
     if not graph_path.exists():
         return 1, _report(
             ok=False,
@@ -82,9 +90,20 @@ def check_rule_graph(root: str = ".") -> tuple[int, dict[str, Any]]:
             blockers=["missing_rule_graph_schema"],
             evidence_refs=evidence_refs,
         )
+    if not registry_path.exists():
+        return 1, _report(
+            ok=False,
+            graph_id=None,
+            graph_path=graph_path.as_posix(),
+            node_count=0,
+            edge_count=0,
+            blockers=["missing_rule_registry"],
+            evidence_refs=evidence_refs,
+        )
 
     graph = _load_json(graph_path)
     schema = _load_yaml(schema_path)
+    registry = _load_yaml(registry_path)
 
     for field in schema.get("graph", {}).get("required_fields", []):
         if field not in graph:
@@ -124,7 +143,8 @@ def check_rule_graph(root: str = ".") -> tuple[int, dict[str, Any]]:
             errors.append(f"edge_missing_to_node:{edge.get('to')}")
 
     seen_rules = {node_id for node_id, node in node_map.items() if node.get("type") == "rule"}
-    for rule_id in sorted(REQUIRED_RULES - seen_rules):
+    required_rules = _required_rule_ids(registry)
+    for rule_id in sorted(required_rules - seen_rules):
         errors.append(f"missing_required_rule:{rule_id}")
 
     for node_id, node in node_map.items():
@@ -144,7 +164,7 @@ def check_rule_graph(root: str = ".") -> tuple[int, dict[str, Any]]:
             if edge.get("from") == node_id and (relation is None or edge.get("relation") == relation)
         ]
 
-    for rule_id in REQUIRED_RULES:
+    for rule_id in required_rules:
         applies = _edges_from(rule_id, "applies_to")
         requires = _edges_from(rule_id, "requires")
         satisfied = _edges_from(rule_id, "satisfied_by")

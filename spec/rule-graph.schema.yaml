@@ -1,7 +1,9 @@
 version: v1
-last_updated: 2026-03-10
+last_updated: 2026-03-18
 artifact:
   path: artifacts/planner/research/rule-graph.json
+registry:
+  path: spec/rule-registry.yaml
 graph:
   required_fields:
     - graph_id
@@ -36,8 +38,10 @@ edge:
     - satisfied_by
     - exception_for
 invariants:
-  - required_rules_must_reference_artifacts_or_phases
+  - required_registry_rules_must_reference_artifacts_or_phases
   - merge_rules_must_reference_validators_or_authorities
   - validators_must_reference_existing_commands
+  - enforced_and_human_gated_registry_rules_must_exist_in_graph
 notes:
   - rule graph exists to make governance relationships machine-readable
+  - rule graph is a projection over the canonical rule registry
