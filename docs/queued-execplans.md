@@ -124,15 +124,15 @@ This document turns the remaining-work graph into an explicit near-term queue of
    - draft branch: `draft-execplan/20260316-anti-cheat-rule-surface-followup-codex-01`
 
 24. `20260318-rule-authority-consolidation-codex-01-execplan`
-   - status: `review_gated`
-   - goal: consolidate canonical rule authority, formalize draft self-review and additive PR structure, and keep the draft-to-implementation handoff visible in canonical graph state
+   - status: `ready`
+   - goal: consolidate canonical rule authority, formalize draft self-review and additive PR structure, and execute the now-finalized slice on its dedicated implementation branch
    - draft branch: `draft-execplan/20260318-rule-authority-consolidation-codex-01-20260318`
    - implementation branch: `impl-execplan/20260318-rule-authority-consolidation-codex-01-execplan-codex-01-20260318`
-   - gate: `human review and finalization of the draft ExecPlan required before implementation execution`
+   - canonical evidence: `merged:pr-82`
 ## Mirror Metadata
 
-- canonical_last_graph_action_id: `rwg-action-20260318-001-unblock-rwg-025`
-- canonical_ready_order: ` `
+- canonical_last_graph_action_id: `rwg-action-20260318-002-promote-rwg-025`
+- canonical_ready_order: `20260318-rule-authority-consolidation-codex-01-execplan`
 - projection_authority: `projection_only`
 
 ## Queue Discipline
