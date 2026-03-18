@@ -258,3 +258,39 @@ def test_reconcile_remaining_work_merge_updates_graph_and_queue(tmp_path: Path) 
     assert "   - completion ref: `merged:pr-73`" in queue_text
     assert "13. `future:game-hostile-review`" in queue_text
     assert "   - status: `review_gated`" in queue_text
+
+
+def test_reconcile_prefers_matching_implementation_branch_merge(monkeypatch, tmp_path: Path) -> None:
+    plan = tmp_path / ".agent" / "execplans" / "20260312-remaining-work-graph-actions-and-ordering-codex-01-execplan.md"
+    _write(plan, _plan_text())
+    _write_json(tmp_path / "artifacts" / "planner" / "research" / "remaining-work-graph.json", _graph_data())
+    _write(tmp_path / "docs" / "queued-execplans.md", _queue_text())
+    _write(tmp_path / "spec" / "remaining-work-graph.schema.yaml", _schema_text())
+    _write(tmp_path / "docs" / "remaining-work-graph.md", "# Remaining Work Graph\n")
+
+    monkeypatch.setattr(
+        "platform_tools.reconcile_remaining_work_merge._merge_candidates",
+        lambda *args, **kwargs: [
+            {
+                "pull_request": "82",
+                "commit": "draftmerge",
+                "committed_at": "2026-03-12T10:00:00Z",
+                "branch_ref": "draft-execplan/20260312-remaining-work-graph-actions-and-ordering-codex-01-execplan-codex-01-20260312",
+                "merge_role": "draft-execplan",
+            },
+            {
+                "pull_request": "83",
+                "commit": "implmerge",
+                "committed_at": "2026-03-12T09:00:00Z",
+                "branch_ref": "impl-execplan/20260312-remaining-work-graph-actions-and-ordering-codex-01-execplan-codex-01-20260312",
+                "merge_role": "impl-execplan",
+            },
+        ],
+    )
+
+    report = reconcile_remaining_work_merge(
+        execplan_path=plan,
+        repo_root=tmp_path,
+    )
+
+    assert report["completion_ref"] == "merged:pr-83"
