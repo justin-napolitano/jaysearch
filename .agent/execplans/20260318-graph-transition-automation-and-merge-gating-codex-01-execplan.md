@@ -8,23 +8,29 @@ base_branch: main
 changes:
   - .agent/execplans/20260318-graph-transition-automation-and-merge-gating-codex-01-execplan.md
   - artifacts/planner/research/remaining-work-graph.json
+  - bin/reconcile-remaining-work-transition
   - docs/queued-execplans.md
   - spec/agent-capability-policy.yaml
+  - spec/board-action-api.yaml
   - spec/governance.yaml
   - spec/protected-surfaces.schema.yaml
   - spec/remaining-work-graph.schema.yaml
   - spec/ruleset.yaml
   - spec/workflow.yaml
   - src/platform_tools/branch_policy.py
+  - src/platform_tools/board_action_api.py
   - src/platform_tools/integrations/github_projects_sync.py
   - src/platform_tools/integrations/provider_adapter.py
   - src/platform_tools/merge_readiness.py
   - src/platform_tools/reconcile_remaining_work_merge.py
+  - src/platform_tools/reconcile_remaining_work_transition.py
   - src/platform_tools/remaining_work_graph_check.py
   - tests/test_branch_policy.py
+  - tests/test_board_action_api.py
   - tests/test_merge_readiness.py
   - tests/test_policy_compliance_check.py
   - tests/test_reconcile_remaining_work_merge.py
+  - tests/test_reconcile_remaining_work_transition.py
   - tests/test_remaining_work_graph_check.py
 approve_policy: codeowners
 reviewers:

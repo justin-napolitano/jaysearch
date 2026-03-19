@@ -53,6 +53,7 @@ surface_entries:
       - bin/merge-readiness-check
       - bin/policy-compliance-check
       - bin/policy-compliance-smoke-test
+      - bin/reconcile-remaining-work-transition
       - bin/rule-graph-check
       - bin/rule-graph-smoke-test
       - bin/state-transition-legality-check
@@ -67,6 +68,7 @@ surface_entries:
       - src/platform_tools/orchestrator_status.py
       - src/platform_tools/policy_compliance_check.py
       - src/platform_tools/reconcile_remaining_work_merge.py
+      - src/platform_tools/reconcile_remaining_work_transition.py
       - src/platform_tools/repo_health.py
       - src/platform_tools/rule_graph_check.py
       - src/platform_tools/remaining_work_graph_check.py
@@ -77,6 +79,7 @@ surface_entries:
       - tests/test_orchestrator_status.py
       - tests/test_policy_compliance_check.py
       - tests/test_reconcile_remaining_work_merge.py
+      - tests/test_reconcile_remaining_work_transition.py
       - tests/test_repo_health.py
       - tests/test_rule_graph_check.py
       - tests/test_remaining_work_graph_check.py
