@@ -50,6 +50,7 @@ surface_entries:
     authority_role: governance_local
     path_exact:
       - bin/anti-cheat-check
+      - bin/managed-repo-status
       - bin/merge-readiness-check
       - bin/orchestrate-governed-slice
       - bin/policy-compliance-check
@@ -71,6 +72,7 @@ surface_entries:
       - src/platform_tools/human_operations_runtime.py
       - src/platform_tools/human_operations_status.py
       - src/platform_tools/merge_readiness.py
+      - src/platform_tools/managed_repo_status.py
       - src/platform_tools/orchestrate_governed_slice.py
       - src/platform_tools/orchestrator_status.py
       - src/platform_tools/policy_compliance_check.py
@@ -85,6 +87,7 @@ surface_entries:
       - tests/test_anti_cheat_check.py
       - tests/test_branch_policy.py
       - tests/test_human_operations_status.py
+      - tests/test_managed_repo_status.py
       - tests/test_merge_readiness.py
       - tests/test_orchestrate_governed_slice.py
       - tests/test_orchestrator_status.py

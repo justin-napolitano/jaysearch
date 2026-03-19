@@ -29,10 +29,10 @@ def _dedup_strings(items: list[str]) -> list[str]:
     return out
 
 
-def _load_local_policy() -> dict[str, Any]:
-    ruleset = _load_yaml(Path("spec/ruleset.yaml"))
-    workflow = _load_yaml(Path("spec/workflow.yaml"))
-    governance = _load_yaml(Path("spec/governance.yaml"))
+def _load_local_policy(root: Path) -> dict[str, Any]:
+    ruleset = _load_yaml(root / "spec" / "ruleset.yaml")
+    workflow = _load_yaml(root / "spec" / "workflow.yaml")
+    governance = _load_yaml(root / "spec" / "governance.yaml")
 
     allowed: list[str] = []
     exec_constraints = ruleset.get("execution_constraints", {})
@@ -54,6 +54,11 @@ def _load_local_policy() -> dict[str, Any]:
             name = str(item.get("check_id", "")).strip() or str(item.get("name", "")).strip()
             if name:
                 required_names.append(name)
+
+    if not allowed and isinstance(workflow.get("allowed_branch_patterns"), list):
+        allowed.extend(str(p).strip() for p in workflow.get("allowed_branch_patterns", []) or [])
+    if forbidden == {""} and isinstance(workflow.get("forbidden_branches"), list):
+        forbidden.update(str(v).strip() for v in workflow.get("forbidden_branches", []) if str(v).strip())
 
     return {
         "allowed_branch_patterns": _dedup_strings(allowed),
@@ -90,8 +95,8 @@ def _load_external_baseline(path: Path) -> dict[str, Any]:
     }
 
 
-def _load_rule_layering_spec() -> dict[str, Any]:
-    return _load_yaml(Path("spec/rule-layering.yaml"))
+def _load_rule_layering_spec(root: Path) -> dict[str, Any]:
+    return _load_yaml(root / "spec" / "rule-layering.yaml")
 
 
 def _load_project_overlay(path: Path) -> dict[str, Any]:
@@ -132,14 +137,17 @@ def resolve_runtime_mode(
 def build_effective_policy(
     mode_override: str | None = None,
     source_override: str | None = None,
+    *,
+    root: str | Path = ".",
 ) -> tuple[int, dict[str, Any]]:
+    root_path = Path(root)
     runtime = resolve_runtime_mode(mode_override=mode_override, source_override=source_override)
     mode = runtime["mode"]
     source = runtime["governance_source"]
     project_rules_source = runtime["project_rules_source"]
     findings: list[str] = []
 
-    local = _load_local_policy()
+    local = _load_local_policy(root_path)
     effective = {
         "allowed_branch_patterns": list(local["allowed_branch_patterns"]),
         "forbidden_branches": list(local["forbidden_branches"]),
@@ -172,8 +180,8 @@ def build_effective_policy(
                         findings.append(f"managed_mode_weakening_missing_local_required_check:{check}")
                 effective["required_check_names"] = sorted(local_checks | ext_checks)
 
-    layering = _load_rule_layering_spec()
-    project_overlay_path = Path(project_rules_source)
+    layering = _load_rule_layering_spec(root_path)
+    project_overlay_path = root_path / project_rules_source
     if project_overlay_path.exists():
         project_overlay = _load_project_overlay(project_overlay_path)
         allowed_keys = set(
@@ -217,7 +225,8 @@ def build_effective_policy(
             pattern for pattern in effective["allowed_branch_patterns"] if pattern not in remove_set
         ]
     else:
-        findings.append(f"project_rules_source_missing:{project_rules_source}")
+        if (root_path / "platform.engine.yaml").exists():
+            findings.append(f"project_rules_source_missing:{project_rules_source}")
 
     report = {
         "tool": "governance_loader",

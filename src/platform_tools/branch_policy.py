@@ -11,20 +11,41 @@ import yaml
 from platform_tools.governance_loader import build_effective_policy
 
 
-def get_current_branch() -> str:
+def get_current_branch(*, root: str | Path = ".") -> str:
     proc = subprocess.run(
         ["git", "branch", "--show-current"],
         check=False,
         capture_output=True,
         text=True,
+        cwd=Path(root),
     )
     if proc.returncode != 0:
         return ""
     return proc.stdout.strip()
 
 
-def _load_effective_branch_policy() -> tuple[list[str], list[str], list[str]]:
-    _, report = build_effective_policy()
+def _lightweight_policy(root: Path) -> tuple[list[str], list[str], list[str]] | None:
+    workflow_path = root / "spec" / "workflow.yaml"
+    if not workflow_path.exists():
+        return None
+    workflow = yaml.safe_load(workflow_path.read_text(encoding="utf-8")) or {}
+    if not isinstance(workflow, dict):
+        return None
+    allowed = workflow.get("allowed_branch_patterns")
+    forbidden = workflow.get("forbidden_branches")
+    if not isinstance(allowed, list) and not isinstance(forbidden, list):
+        return None
+    allowed_patterns = [str(item).strip() for item in (allowed or []) if str(item).strip()]
+    forbidden_branches = [str(item).strip() for item in (forbidden or []) if str(item).strip() or item == ""]
+    return allowed_patterns, sorted(set(forbidden_branches or [""])), []
+
+
+def _load_effective_branch_policy(*, root: str | Path = ".") -> tuple[list[str], list[str], list[str]]:
+    root_path = Path(root)
+    lightweight = _lightweight_policy(root_path)
+    if lightweight is not None and not (root_path / "spec" / "ruleset.yaml").exists():
+        return lightweight
+    _, report = build_effective_policy(root=root_path)
     findings = list(report.get("findings", []))
     effective = report.get("effective_policy", {}) if isinstance(report.get("effective_policy"), dict) else {}
     allowed = effective.get("allowed_branch_patterns", [])
@@ -34,12 +55,13 @@ def _load_effective_branch_policy() -> tuple[list[str], list[str], list[str]]:
     return allowed_patterns, sorted(set(forbidden_branches)), findings
 
 
-def _initiative_findings(branch: str) -> list[str]:
+def _initiative_findings(branch: str, *, root: str | Path = ".") -> list[str]:
     if not branch.startswith("initiative/"):
         return []
 
-    workflow_path = Path("spec/workflow.yaml")
-    graph_path = Path("artifacts/planner/research/remaining-work-graph.json")
+    root_path = Path(root)
+    workflow_path = root_path / "spec" / "workflow.yaml"
+    graph_path = root_path / "artifacts" / "planner" / "research" / "remaining-work-graph.json"
     if not workflow_path.exists():
         return ["branch_policy_violation:initiative_policy_missing"]
     if not graph_path.exists():
@@ -74,12 +96,13 @@ def _initiative_findings(branch: str) -> list[str]:
     return []
 
 
-def _implementation_findings(branch: str) -> list[str]:
+def _implementation_findings(branch: str, *, root: str | Path = ".") -> list[str]:
     if not branch.startswith("impl-execplan/"):
         return []
 
-    workflow_path = Path("spec/workflow.yaml")
-    graph_path = Path("artifacts/planner/research/remaining-work-graph.json")
+    root_path = Path(root)
+    workflow_path = root_path / "spec" / "workflow.yaml"
+    graph_path = root_path / "artifacts" / "planner" / "research" / "remaining-work-graph.json"
     if not workflow_path.exists() or not graph_path.exists():
         return []
 
@@ -131,9 +154,9 @@ def _implementation_findings(branch: str) -> list[str]:
     return findings
 
 
-def evaluate_branch_policy(branch: str) -> dict[str, Any]:
+def evaluate_branch_policy(branch: str, *, root: str | Path = ".") -> dict[str, Any]:
     # Universal governance requirement: all actions run on a dedicated non-protected branch.
-    allowed_patterns, forbidden_branches, loader_findings = _load_effective_branch_policy()
+    allowed_patterns, forbidden_branches, loader_findings = _load_effective_branch_policy(root=root)
     forbidden = set(forbidden_branches) if forbidden_branches else {"main", "master", ""}
     ok = branch not in forbidden and not loader_findings
     findings: list[str] = list(loader_findings)
@@ -143,11 +166,11 @@ def evaluate_branch_policy(branch: str) -> dict[str, Any]:
         if not any(fnmatch.fnmatch(branch, pattern) for pattern in allowed_patterns):
             ok = False
             findings.append("branch_policy_violation:branch_pattern_mismatch")
-    initiative_findings = _initiative_findings(branch)
+    initiative_findings = _initiative_findings(branch, root=root)
     if initiative_findings:
         ok = False
         findings.extend(initiative_findings)
-    implementation_findings = _implementation_findings(branch)
+    implementation_findings = _implementation_findings(branch, root=root)
     if implementation_findings:
         ok = False
         findings.extend(implementation_findings)

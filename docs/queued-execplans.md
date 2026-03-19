@@ -140,10 +140,11 @@ This document turns the remaining-work graph into an explicit near-term queue of
    - completion ref: `merged:pr-86`
 
 26. `20260318-graph-transition-automation-and-merge-gating-codex-01-execplan`
-   - status: `ready`
+   - status: `completed`
    - goal: make routine graph state machine-derived from branch, PR, merge, and check evidence, and fail closed when merges would leave graph reconciliation missing or illegal
    - draft branch: `draft-execplan/20260318-graph-transition-automation-and-merge-gating-codex-01-20260318`
    - implementation branch: `impl-execplan/20260318-graph-transition-automation-and-merge-gating-codex-01-execplan-codex-01-20260319`
+   - completion ref: `merged:pr-91`
 
 27. `future:graph-priority-ranking-and-traversal-engine`
    - status: `decision_gated`
@@ -155,8 +156,8 @@ This document turns the remaining-work graph into an explicit near-term queue of
    - draft branch: `draft-execplan/20260319-managed-repo-orchestration-codex-01-20260319`
 ## Mirror Metadata
 
-- canonical_last_graph_action_id: `rwg-action-20260319-010-unblock-rwg-029`
-- canonical_ready_order: `20260318-graph-transition-automation-and-merge-gating-codex-01-execplan`
+- canonical_last_graph_action_id: `rwg-action-20260319-011-complete-rwg-027`
+- canonical_ready_order: ``
 - projection_authority: `projection_only`
 
 ## Queue Discipline

@@ -9,13 +9,25 @@ changes:
   - .agent/execplans/20260319-managed-repo-orchestration-codex-01-execplan.md
   - artifacts/planner/research/remaining-work-graph.json
   - docs/queued-execplans.md
-  - spec/workflow.yaml
   - docs/codex-orchestrator-contract.md
+  - spec/agent-capability-policy.yaml
+  - spec/protected-surfaces.schema.yaml
+  - spec/workflow.yaml
+  - bin/managed-repo-status
+  - src/platform_tools/branch_policy.py
   - src/platform_tools/execplan_discovery.py
+  - src/platform_tools/game_status.py
+  - src/platform_tools/governance_loader.py
+  - src/platform_tools/managed_repo_status.py
   - src/platform_tools/orchestrate_governed_slice.py
+  - tests/test_branch_policy.py
+  - tests/test_managed_repo_status.py
+  - tests/test_orchestrate_governed_slice.py
 approve_policy: codeowners
 reviewers:
   - "github:justin-napolitano"
+initiative_branch: "initiative/managed-repo-orchestration"
+initiative_node_id: "initiative-managed-repo-orchestration"
 draft_by: "agent/codex-01"
 draft_branch: "draft-execplan/20260319-managed-repo-orchestration-codex-01-20260319"
 draft_created: "2026-03-19T00:00:00Z"
@@ -29,6 +41,9 @@ validation:
       expected_exit: 0
     - name: "remaining-work-graph-check"
       command: "bin/remaining-work-graph-check"
+      expected_exit: 0
+    - name: "policy-compliance-check"
+      command: "bin/policy-compliance-check --execplan-path .agent/execplans/20260319-managed-repo-orchestration-codex-01-execplan.md"
       expected_exit: 0
 tasks:
   - title: "Define the managed-repo contract so canonical state stays in the target repo while runtime authority stays in platform-template-bootstrap"
