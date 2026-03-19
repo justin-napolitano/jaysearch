@@ -63,9 +63,72 @@ def _initiative_findings(branch: str) -> list[str]:
     ]
     if not matches:
         return ["branch_policy_violation:initiative_parent_graph_node_missing"]
-    if len(matches) > 1:
+    parent_matches = [
+        node
+        for node in matches
+        if str(node.get("node_id", "")).strip() == str(node.get("parent_initiative_node", "")).strip()
+        or str(node.get("node_id", "")).strip().startswith("initiative-")
+    ]
+    if len(parent_matches) != 1:
         return ["branch_policy_violation:initiative_parent_graph_node_ambiguous"]
     return []
+
+
+def _implementation_findings(branch: str) -> list[str]:
+    if not branch.startswith("impl-execplan/"):
+        return []
+
+    workflow_path = Path("spec/workflow.yaml")
+    graph_path = Path("artifacts/planner/research/remaining-work-graph.json")
+    if not workflow_path.exists() or not graph_path.exists():
+        return []
+
+    workflow = yaml.safe_load(workflow_path.read_text(encoding="utf-8")) or {}
+    if not isinstance(workflow, dict):
+        return []
+    requirements = (
+        workflow.get("execution_requirements", {}).get("initiative_requirements", {})
+        if isinstance(workflow.get("execution_requirements", {}), dict)
+        else {}
+    )
+    if not isinstance(requirements, dict) or not requirements.get("normal_governed_work_requires_initiative_branch", False):
+        return []
+
+    graph = json.loads(graph_path.read_text(encoding="utf-8"))
+    nodes = graph.get("nodes", []) if isinstance(graph.get("nodes", []), list) else []
+    matches = [
+        node for node in nodes if isinstance(node, dict) and str(node.get("implementation_branch", "")).strip() == branch
+    ]
+    if not matches:
+        return ["branch_policy_violation:implementation_graph_node_missing"]
+    if len(matches) > 1:
+        return ["branch_policy_violation:implementation_graph_node_ambiguous"]
+
+    node = matches[0]
+    integration_mode = str(node.get("integration_mode", "")).strip()
+    if integration_mode != "via_initiative":
+        if integration_mode in {"direct_to_main_hotfix", "direct_to_main_patch"}:
+            return ["branch_policy_violation:direct_to_main_mode_not_allowed_on_impl_branch"]
+        return ["branch_policy_violation:implementation_integration_mode_missing"]
+    findings: list[str] = []
+    if not str(node.get("initiative_branch", "")).strip():
+        findings.append("branch_policy_violation:implementation_initiative_branch_missing")
+    parent_initiative_node = str(node.get("parent_initiative_node", "")).strip()
+    if not parent_initiative_node:
+        findings.append("branch_policy_violation:implementation_parent_initiative_missing")
+    else:
+        parent_matches = [
+            item
+            for item in nodes
+            if isinstance(item, dict) and str(item.get("node_id", "")).strip() == parent_initiative_node
+        ]
+        if len(parent_matches) != 1:
+            findings.append("branch_policy_violation:implementation_parent_initiative_not_found")
+        else:
+            parent_branch = str(parent_matches[0].get("initiative_branch", "")).strip()
+            if parent_branch != str(node.get("initiative_branch", "")).strip():
+                findings.append("branch_policy_violation:implementation_parent_initiative_branch_mismatch")
+    return findings
 
 
 def evaluate_branch_policy(branch: str) -> dict[str, Any]:
@@ -84,6 +147,10 @@ def evaluate_branch_policy(branch: str) -> dict[str, Any]:
     if initiative_findings:
         ok = False
         findings.extend(initiative_findings)
+    implementation_findings = _implementation_findings(branch)
+    if implementation_findings:
+        ok = False
+        findings.extend(implementation_findings)
     return {
         "ok": ok,
         "current_branch": branch,

@@ -166,7 +166,13 @@ def review_projection_for_node(
         smoke_status = "pending"
         merge_readiness = "local_only"
 
-    pending_reconciliation = node_status == "completed" and plan_state["status"] != "completed"
+    branch_ref = f"origin/{implementation_branch}" if implementation_branch else ""
+    branch_published = bool(implementation_branch and _git(root, "rev-parse", "--verify", f"refs/remotes/{branch_ref}"))
+    pending_reconciliation = bool(
+        (node_status == "completed" and plan_state["status"] != "completed")
+        or (node_status == "decision_gated" and plan_state["finalized_in_pr"])
+        or (node_status == "review_gated" and branch_published)
+    )
     takeover_needed = bool(
         implementation_branch
         and not merged
@@ -191,6 +197,7 @@ def review_projection_for_node(
         "pending_reconciliation": pending_reconciliation,
         "takeover_needed": takeover_needed,
         "execplan_state": plan_state,
+        "branch_published": branch_published,
         "hostile_review_state": hostile_review["state"],
         "hostile_review_blocker_count": hostile_review["blocker_count"],
         "hostile_review_warning_count": hostile_review["warning_count"],

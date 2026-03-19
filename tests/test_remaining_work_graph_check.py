@@ -78,6 +78,12 @@ def _seed_schema(root: Path) -> None:
                 "          type: string",
                 "        implementation_branch:",
                 "          type: string",
+                "        initiative_branch:",
+                "          type: string",
+                "        parent_initiative_node:",
+                "          type: string",
+                "        integration_mode:",
+                '          enum: ["via_initiative", "direct_to_main_hotfix", "direct_to_main_patch"]',
                 "        expected_artifacts:",
                 "          type: array",
                 "          items:",
@@ -140,6 +146,18 @@ def test_remaining_work_graph_check_reports_active_ready_slice(tmp_path: Path) -
             ],
             "nodes": [
                 {
+                    "node_id": "initiative-runtime-constraint-canonicalization",
+                    "title": "Initiative / Runtime constraint canonicalization",
+                    "status": "ready",
+                    "gating_class": "auto_runnable",
+                    "conflict_domains": ["remaining-work-graph"],
+                    "target_execplan_id": "initiative:runtime-constraint-canonicalization",
+                    "goal_area": "reference",
+                    "initiative_branch": "initiative/runtime-constraint-canonicalization",
+                    "parent_initiative_node": "initiative-runtime-constraint-canonicalization",
+                    "ordering": {},
+                },
+                {
                     "node_id": "rwg-001",
                     "title": "Composite orchestrator status",
                     "status": "completed",
@@ -166,6 +184,9 @@ def test_remaining_work_graph_check_reports_active_ready_slice(tmp_path: Path) -
                     "target_execplan_id": "20260311-runtime-constraint-canonicalization-codex-01-execplan",
                     "goal_area": "runtime-governance",
                     "implementation_branch": "impl-execplan/20260311-runtime-constraint-canonicalization-codex-01-execplan-codex-01-20260311",
+                    "initiative_branch": "initiative/runtime-constraint-canonicalization",
+                    "parent_initiative_node": "initiative-runtime-constraint-canonicalization",
+                    "integration_mode": "via_initiative",
                     "ordering": {
                         "queue_position": 2,
                         "ready_order": 1,
@@ -227,6 +248,173 @@ def test_remaining_work_graph_check_reports_active_ready_slice(tmp_path: Path) -
     assert report["active_node"]["node_id"] == "rwg-006"
     assert report["ready_nodes"][0]["node_id"] == "rwg-006"
     assert report["ordering"]["ready_execplan_ids"] == ["20260311-runtime-constraint-canonicalization-codex-01-execplan"]
+
+
+def test_remaining_work_graph_check_rejects_missing_parent_initiative_node(tmp_path: Path) -> None:
+    _seed_schema(tmp_path)
+    _write_json(
+        tmp_path / "artifacts" / "planner" / "research" / "remaining-work-graph.json",
+        {
+            "graph_id": "remaining-work-graph-20260311",
+            "created_at": "2026-03-11T00:00:00Z",
+            "ordering_policy": {
+                "ready_statuses": ["ready"],
+                "ready_sort_fields": ["ready_order", "tie_breaker", "node_id"],
+                "reorder_requires_explicit_action": True,
+                "board_projection_authority": "projection_only",
+            },
+            "queue_projection": {
+                "path": "docs/queued-execplans.md",
+                "projection_authority": "projection_only",
+                "last_reconciled_action_id": "act-2",
+                "ready_execplan_ids": ["20260311-runtime-constraint-canonicalization-codex-01-execplan"],
+            },
+            "graph_actions": [
+                {
+                    "action_id": "act-2",
+                    "action": "promote_ready",
+                    "node_id": "rwg-006",
+                    "rationale": "ready slice",
+                }
+            ],
+            "nodes": [
+                {
+                    "node_id": "rwg-006",
+                    "title": "Runtime constraint canonicalization",
+                    "status": "ready",
+                    "gating_class": "auto_runnable",
+                    "conflict_domains": ["remaining-work-graph"],
+                    "target_execplan_id": "20260311-runtime-constraint-canonicalization-codex-01-execplan",
+                    "goal_area": "runtime-governance",
+                    "implementation_branch": "impl-execplan/20260311-runtime-constraint-canonicalization-codex-01-execplan-codex-01-20260311",
+                    "initiative_branch": "initiative/runtime-constraint-canonicalization",
+                    "parent_initiative_node": "initiative-runtime-constraint-canonicalization",
+                    "integration_mode": "via_initiative",
+                    "ordering": {
+                        "queue_position": 2,
+                        "ready_order": 1,
+                        "tie_breaker": "20260311-runtime-constraint-canonicalization-codex-01-execplan",
+                        "source_action_id": "act-2",
+                    },
+                    "action_state": {
+                        "last_action_id": "act-2",
+                        "last_action": "promote_ready",
+                        "action_required": False,
+                        "reorder_requires_human": False,
+                        "reorder_blockers": [],
+                    },
+                }
+            ],
+            "edges": [],
+        },
+    )
+    _write_text(
+        tmp_path / "docs" / "queued-execplans.md",
+        "\n".join(
+            [
+                "# Queued ExecPlans",
+                "",
+                "## Mirror Metadata",
+                "",
+                "- canonical_last_graph_action_id: `act-2`",
+                "- canonical_ready_order: `20260311-runtime-constraint-canonicalization-codex-01-execplan`",
+                "- projection_authority: `projection_only`",
+            ]
+        )
+        + "\n",
+    )
+
+    code, report = check_remaining_work_graph(
+        root=tmp_path.as_posix(),
+        branch="impl-execplan/20260311-runtime-constraint-canonicalization-codex-01-execplan-codex-01-20260311",
+    )
+
+    assert code == 1
+    assert (
+        "missing_parent_initiative_node:rwg-006:initiative-runtime-constraint-canonicalization"
+        in report["errors"]
+    )
+
+
+def test_remaining_work_graph_check_blocks_ready_slice_missing_initiative_metadata(tmp_path: Path) -> None:
+    _seed_schema(tmp_path)
+    _write_json(
+        tmp_path / "artifacts" / "planner" / "research" / "remaining-work-graph.json",
+        {
+            "graph_id": "remaining-work-graph-20260311",
+            "created_at": "2026-03-11T00:00:00Z",
+            "ordering_policy": {
+                "ready_statuses": ["ready"],
+                "ready_sort_fields": ["ready_order", "tie_breaker", "node_id"],
+                "reorder_requires_explicit_action": True,
+                "board_projection_authority": "projection_only",
+            },
+            "queue_projection": {
+                "path": "docs/queued-execplans.md",
+                "projection_authority": "projection_only",
+                "last_reconciled_action_id": "act-2",
+                "ready_execplan_ids": ["20260311-runtime-constraint-canonicalization-codex-01-execplan"],
+            },
+            "graph_actions": [
+                {
+                    "action_id": "act-2",
+                    "action": "promote_ready",
+                    "node_id": "rwg-006",
+                    "rationale": "ready slice",
+                }
+            ],
+            "nodes": [
+                {
+                    "node_id": "rwg-006",
+                    "title": "Runtime constraint canonicalization",
+                    "status": "ready",
+                    "gating_class": "auto_runnable",
+                    "conflict_domains": ["remaining-work-graph"],
+                    "target_execplan_id": "20260311-runtime-constraint-canonicalization-codex-01-execplan",
+                    "goal_area": "runtime-governance",
+                    "implementation_branch": "impl-execplan/20260311-runtime-constraint-canonicalization-codex-01-execplan-codex-01-20260311",
+                    "ordering": {
+                        "queue_position": 2,
+                        "ready_order": 1,
+                        "tie_breaker": "20260311-runtime-constraint-canonicalization-codex-01-execplan",
+                        "source_action_id": "act-2",
+                    },
+                    "action_state": {
+                        "last_action_id": "act-2",
+                        "last_action": "promote_ready",
+                        "action_required": False,
+                        "reorder_requires_human": False,
+                        "reorder_blockers": [],
+                    },
+                },
+            ],
+            "edges": [],
+        },
+    )
+    _write_text(
+        tmp_path / "docs" / "queued-execplans.md",
+        "\n".join(
+            [
+                "# Queued ExecPlans",
+                "",
+                "## Mirror Metadata",
+                "",
+                "- canonical_last_graph_action_id: `act-2`",
+                "- canonical_ready_order: `20260311-runtime-constraint-canonicalization-codex-01-execplan`",
+                "- projection_authority: `projection_only`",
+            ]
+        )
+        + "\n",
+    )
+
+    code, report = check_remaining_work_graph(
+        root=tmp_path.as_posix(),
+        branch="impl-execplan/20260311-runtime-constraint-canonicalization-codex-01-execplan-codex-01-20260311",
+    )
+
+    assert code == 1
+    assert "slice_missing_integration_mode:rwg-006" in report["errors"]
+    assert "ready_slice_wrong_integration_mode:rwg-006:" in report["errors"]
 
 
 def test_remaining_work_graph_check_rejects_stale_blocked_state(tmp_path: Path) -> None:

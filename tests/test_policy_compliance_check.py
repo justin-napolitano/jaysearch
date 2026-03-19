@@ -147,6 +147,9 @@ def _remaining_work_graph() -> dict[str, object]:
                 "goal_area": "governance",
                 "expected_artifacts": ["bin/policy-compliance-check"],
                 "implementation_branch": BRANCH,
+                "initiative_branch": "initiative/game-policy-compliance",
+                "parent_initiative_node": "initiative-game-policy-compliance",
+                "integration_mode": "via_initiative",
                 "ordering": {
                     "queue_position": 1,
                     "ready_order": 1,
@@ -634,7 +637,7 @@ def test_policy_compliance_allows_published_branch_history_rewrite_with_exceptio
                 "    rationale: authorized history rewrite for branch repair",
                 "    approved_by: github:justin-napolitano",
                 "    created_at: 2026-03-12T00:00:00Z",
-                "    expires_at: 2026-03-19T00:00:00Z",
+                "    expires_at: 2026-03-20T00:00:00Z",
                 "    status: active",
                 "    bypass_evidence:",
                 "      - chat:explicit-human-authorization",

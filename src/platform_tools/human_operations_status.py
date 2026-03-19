@@ -100,6 +100,7 @@ def get_human_operations_status(
                 "hostile_review_report_path": review_projection["hostile_review_report_path"],
                 "execplan_status": review_projection["execplan_state"]["status"],
                 "execplan_path": review_projection["execplan_state"]["path"],
+                "branch_published": bool(review_projection["branch_published"]),
             }
         )
 
@@ -132,8 +133,8 @@ def get_human_operations_status(
     if pending_reconciliation:
         next_actions.append(
             {
-                "action": "reconcile_completed_execplans",
-                "reason": "merged_slice_missing_completed_metadata",
+                "action": "reconcile_governed_graph_events",
+                "reason": "graph_transition_reconciliation_pending",
             }
         )
     if field_map_state["board_bootstrapped"] and sync_summary["operation_count"] > 0:

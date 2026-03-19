@@ -187,6 +187,25 @@ def _cleanup_queue_tail(text: str) -> str:
     return "\n".join(cleaned) + ("\n" if text.endswith("\n") else "")
 
 
+def _merge_search_ref(node: dict[str, Any], main_ref: str) -> str:
+    integration_mode = str(node.get("integration_mode", "")).strip()
+    initiative_branch = str(node.get("initiative_branch", "")).strip()
+    if integration_mode == "via_initiative" and initiative_branch:
+        return initiative_branch
+    return main_ref
+
+
+def _transition_event(node: dict[str, Any], *, completion_target_ref: str, main_ref: str) -> str:
+    integration_mode = str(node.get("integration_mode", "")).strip()
+    if str(node.get("node_id", "")).strip().startswith("initiative-"):
+        return "initiative_merge_to_main"
+    if integration_mode == "via_initiative" and completion_target_ref != main_ref:
+        return "impl_execplan_merge_to_initiative"
+    if integration_mode in {"direct_to_main_hotfix", "direct_to_main_patch"}:
+        return "impl_execplan_merge_to_main_exception"
+    return "impl_execplan_merge_to_main"
+
+
 def reconcile_remaining_work_merge(
     *,
     execplan_path: Path,
@@ -214,7 +233,8 @@ def reconcile_remaining_work_merge(
 
     if merge_evidence is None:
         draft_branch = str(plan.frontmatter.get("draft_branch", "")).strip()
-        candidates = _merge_candidates(repo_root, main_ref, execplan_id, draft_branch)
+        merge_ref = _merge_search_ref(node, main_ref)
+        candidates = _merge_candidates(repo_root, merge_ref, execplan_id, draft_branch)
         if not candidates:
             raise ValueError("missing_merge_commit")
         implementation_branch = str(node.get("implementation_branch", "")).strip()
@@ -229,6 +249,8 @@ def reconcile_remaining_work_merge(
         )
         merge_evidence = candidates[0]
     completion_ref = f"merged:pr-{merge_evidence['pull_request']}" if merge_evidence.get("pull_request", "").strip() else f"merged:{merge_evidence['commit']}"
+    completion_target_ref = _merge_search_ref(node, main_ref)
+    transition_event = _transition_event(node, completion_target_ref=completion_target_ref, main_ref=main_ref)
 
     node_id = str(node.get("node_id", "")).strip()
     existing_complete_action = None
@@ -247,7 +269,9 @@ def reconcile_remaining_work_merge(
                 "action_id": complete_action_id,
                 "action": "complete",
                 "node_id": node_id,
-                "rationale": f"{execplan_id} merged to main and is now canonical completed state",
+                "rationale": (
+                    f"{execplan_id} merged to {completion_target_ref} and is now canonical completed state"
+                ),
                 "evidence_ref": completion_ref,
                 "queue_reconciled": True,
             }
@@ -278,7 +302,7 @@ def reconcile_remaining_work_merge(
         next_node["status"] = "review_gated"
         next_node["gating_class"] = "review_gated"
         next_node["status_reason"] = (
-            f"{execplan_id} is completed on main; this is the next canonical slice and now requires "
+            f"{execplan_id} is completed on {completion_target_ref}; this is the next canonical slice and now requires "
             "a canonical ExecPlan plus a published implementation branch before execution"
         )
         next_ordering = next_node.get("ordering", {}) if isinstance(next_node.get("ordering"), dict) else {}
@@ -299,7 +323,10 @@ def reconcile_remaining_work_merge(
                     "action_id": next_action_id,
                     "action": "unblock",
                     "node_id": next_node_id,
-                    "rationale": f"{execplan_id} completed on main; dependency gating is cleared for the next canonical slice",
+                    "rationale": (
+                        f"{execplan_id} completed on {completion_target_ref}; dependency gating is cleared "
+                        "for the next canonical slice"
+                    ),
                     "evidence_ref": completion_ref,
                     "queue_reconciled": True,
                 }
@@ -348,6 +375,8 @@ def reconcile_remaining_work_merge(
         "execplan_id": execplan_id,
         "completed_node_id": node_id,
         "completion_ref": completion_ref,
+        "completion_target_ref": completion_target_ref,
+        "transition_event": transition_event,
         "merge_commit": str(merge_evidence.get("commit", "")).strip(),
         "merge_signature_status": str(merge_evidence.get("signature_status", "")).strip(),
         "graph_action_ids": [complete_action_id] + ([next_action_id] if next_node is not None else []),

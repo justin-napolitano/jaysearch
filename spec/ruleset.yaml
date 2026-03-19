@@ -59,6 +59,11 @@ execution_constraints:
   initiative_branches_are_parent_integration_only: true
   initiative_branch_requires_parent_graph_node: true
   initiative_branch_missing_mapping_blocks_execution: true
+  default_integration_mode: via_initiative
+  direct_to_main_exception_modes:
+    - direct_to_main_hotfix
+    - direct_to_main_patch
+  normal_governed_work_requires_initiative_branch: true
   allowed_branch_patterns:
     - initiative/*
     - draft-execplan/*

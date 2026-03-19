@@ -258,6 +258,46 @@ def _scope_blocker_report(cwd: Path, graph_id: str | None) -> dict[str, Any]:
     }
 
 
+def _active_remaining_work_node(cwd: Path, *, branch: str, execplan_id: str) -> dict[str, Any] | None:
+    graph_path = cwd / "artifacts" / "planner" / "research" / "remaining-work-graph.json"
+    if not graph_path.exists():
+        return None
+    graph = json.loads(graph_path.read_text(encoding="utf-8"))
+    nodes = graph.get("nodes", [])
+    if not isinstance(nodes, list):
+        return None
+
+    candidates = [
+        node
+        for node in nodes
+        if isinstance(node, dict)
+        and (
+            str(node.get("implementation_branch", "")).strip() == branch
+            or str(node.get("target_execplan_id", "")).strip() == execplan_id
+            or str(node.get("initiative_branch", "")).strip() == branch
+        )
+    ]
+    if len(candidates) != 1:
+        return None
+    return candidates[0]
+
+
+def _expected_merge_target(branch: str, node: dict[str, Any] | None, base_ref: str) -> str:
+    if not branch:
+        return ""
+    if branch.startswith("initiative/"):
+        return "main"
+    if not branch.startswith("impl-execplan/") or node is None:
+        return ""
+    integration_mode = str(node.get("integration_mode", "")).strip()
+    initiative_branch = str(node.get("initiative_branch", "")).strip()
+    if integration_mode == "via_initiative":
+        return initiative_branch
+    if integration_mode in {"direct_to_main_hotfix", "direct_to_main_patch"}:
+        return "main"
+    return ""
+
+
 def check_merge_readiness(
     *,
     root: str = ".",
@@ -304,6 +344,16 @@ def check_merge_readiness(
     if dirty_artifacts:
         failing_checks.append("dirty_generated_artifacts")
 
+    graph_node = _active_remaining_work_node(cwd, branch=branch, execplan_id=execplan_id)
+    expected_merge_target = _expected_merge_target(branch, graph_node, base_ref)
+    if branch.startswith("impl-execplan/"):
+        if not expected_merge_target:
+            failing_checks.append("missing_merge_target_contract")
+        elif base_ref != expected_merge_target:
+            failing_checks.append(f"merge_target_mismatch:{expected_merge_target}:{base_ref}")
+    elif branch.startswith("initiative/") and expected_merge_target and base_ref != expected_merge_target:
+        failing_checks.append(f"merge_target_mismatch:{expected_merge_target}:{base_ref}")
+
     commit_reports, commit_errors, commit_warnings = _commit_reports(
         cwd,
         base_ref,
@@ -335,6 +385,13 @@ def check_merge_readiness(
             "validations": validation_results,
             "validation_runs_included": include_validation_runs,
             "smoke_test_present": smoke_present,
+            "graph_merge_target": {
+                "expected_target": expected_merge_target,
+                "active_node_id": str(graph_node.get("node_id", "")).strip() if isinstance(graph_node, dict) else "",
+                "active_integration_mode": (
+                    str(graph_node.get("integration_mode", "")).strip() if isinstance(graph_node, dict) else ""
+                ),
+            },
             "commit_stack": commit_reports,
             "scope_blockers": scope_report,
         },
