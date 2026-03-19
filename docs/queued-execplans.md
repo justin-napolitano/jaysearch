@@ -161,9 +161,14 @@ This document turns the remaining-work graph into an explicit near-term queue of
    - goal: make merged implementation evidence trigger deterministic local completion reconciliation so the graph does not stay stale after PR merge
    - draft branch: `draft-execplan/20260319-post-merge-graph-reconciliation-automation-codex-01-20260319`
    - completion ref: `merged:pr-94`
+
+30. `20260319-local-git-hook-automation-codex-01-execplan`
+   - status: `review_gated`
+   - goal: install versioned local git hooks that invoke deterministic repo-owned reconciliation and governed pre-push checks instead of requiring manual command chains
+   - draft branch: `draft-execplan/20260319-local-git-hook-automation-codex-01-20260319`
 ## Mirror Metadata
 
-- canonical_last_graph_action_id: `rwg-action-20260319-014-complete-rwg-030`
+- canonical_last_graph_action_id: `rwg-action-20260319-015-unblock-rwg-031`
 - canonical_ready_order: ``
 - projection_authority: `projection_only`
 
