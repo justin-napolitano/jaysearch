@@ -9,6 +9,7 @@ changes:
   - .agent/execplans/20260318-graph-transition-automation-and-merge-gating-codex-01-execplan.md
   - artifacts/planner/research/remaining-work-graph.json
   - bin/register-remaining-work-node
+  - bin/orchestrate-governed-slice
   - bin/reconcile-governed-graph-events
   - bin/reconcile-remaining-work-transition
   - docs/queued-execplans.md
@@ -27,6 +28,7 @@ changes:
   - src/platform_tools/human_operations_runtime.py
   - src/platform_tools/human_operations_status.py
   - src/platform_tools/merge_readiness.py
+  - src/platform_tools/orchestrate_governed_slice.py
   - src/platform_tools/orchestrator_status.py
   - src/platform_tools/register_remaining_work_node.py
   - src/platform_tools/reconcile_governed_graph_events.py
@@ -37,6 +39,7 @@ changes:
   - tests/test_board_action_api.py
   - tests/test_human_operations_status.py
   - tests/test_merge_readiness.py
+  - tests/test_orchestrate_governed_slice.py
   - tests/test_register_remaining_work_node.py
   - tests/test_policy_compliance_check.py
   - tests/test_reconcile_governed_graph_events.py

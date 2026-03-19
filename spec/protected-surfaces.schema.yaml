@@ -51,6 +51,7 @@ surface_entries:
     path_exact:
       - bin/anti-cheat-check
       - bin/merge-readiness-check
+      - bin/orchestrate-governed-slice
       - bin/policy-compliance-check
       - bin/policy-compliance-smoke-test
       - bin/register-remaining-work-node
@@ -70,6 +71,7 @@ surface_entries:
       - src/platform_tools/human_operations_runtime.py
       - src/platform_tools/human_operations_status.py
       - src/platform_tools/merge_readiness.py
+      - src/platform_tools/orchestrate_governed_slice.py
       - src/platform_tools/orchestrator_status.py
       - src/platform_tools/policy_compliance_check.py
       - src/platform_tools/register_remaining_work_node.py
@@ -82,7 +84,9 @@ surface_entries:
       - src/platform_tools/state_transition_legality.py
       - tests/test_anti_cheat_check.py
       - tests/test_branch_policy.py
+      - tests/test_human_operations_status.py
       - tests/test_merge_readiness.py
+      - tests/test_orchestrate_governed_slice.py
       - tests/test_orchestrator_status.py
       - tests/test_policy_compliance_check.py
       - tests/test_register_remaining_work_node.py
