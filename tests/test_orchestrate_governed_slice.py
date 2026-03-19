@@ -29,6 +29,10 @@ def test_orchestrate_governed_slice_runs_reconciliation_then_reports_status(monk
         lambda **kwargs: {"command": "reconcile-governed-graph-events", "ok": True, "status": "ok", "steps": []},
     )
     monkeypatch.setattr(
+        "platform_tools.orchestrate_governed_slice.reconcile_pending_merge_completions",
+        lambda **kwargs: {"command": "reconcile-pending-merge-completions", "ok": True, "status": "ok", "reconciled_count": 0, "results": []},
+    )
+    monkeypatch.setattr(
         "platform_tools.orchestrate_governed_slice.check_merge_readiness",
         lambda **kwargs: (0, {"readiness": True, "failing_checks": []}),
     )
@@ -46,6 +50,7 @@ def test_orchestrate_governed_slice_runs_reconciliation_then_reports_status(monk
     assert code == 0
     assert report["ok"] is True
     assert report["reconciliation"]["status"] == "ok"
+    assert report["post_merge_reconciliation"]["reconciled_count"] == 0
     assert report["next_actions"][0]["action"] == "continue_active_slice"
 
 

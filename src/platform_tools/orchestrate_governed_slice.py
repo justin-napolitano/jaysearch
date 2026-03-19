@@ -11,6 +11,7 @@ from platform_tools.managed_repo_status import get_managed_repo_status
 from platform_tools.merge_readiness import check_merge_readiness
 from platform_tools.orchestrator_status import get_orchestrator_status
 from platform_tools.reconcile_governed_graph_events import reconcile_governed_graph_events
+from platform_tools.reconcile_remaining_work_merge import reconcile_pending_merge_completions
 
 
 COMMAND = "orchestrate-governed-slice"
@@ -45,6 +46,8 @@ def run_orchestrate_governed_slice(
             "next_actions": managed_report.get("next_actions", []),
         }
         return managed_code, report
+
+    post_merge_reconciliation = reconcile_pending_merge_completions(repo_root=root_path, main_ref=base_ref)
 
     game_code, game_report = get_game_status(
         root=root,
@@ -116,6 +119,7 @@ def run_orchestrate_governed_slice(
         "branch": current_branch,
         "execplan_path": resolved_execplan_path,
         "reconciliation": reconcile_report,
+        "post_merge_reconciliation": post_merge_reconciliation,
         "merge_readiness": {
             "readiness": bool(merge_report.get("readiness", False)),
             "failing_checks": merge_report.get("failing_checks", []),
