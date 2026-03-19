@@ -9,6 +9,7 @@ changes:
   - .agent/execplans/20260318-graph-transition-automation-and-merge-gating-codex-01-execplan.md
   - artifacts/planner/research/remaining-work-graph.json
   - bin/register-remaining-work-node
+  - bin/reconcile-governed-graph-events
   - bin/reconcile-remaining-work-transition
   - docs/queued-execplans.md
   - spec/agent-capability-policy.yaml
@@ -20,18 +21,25 @@ changes:
   - spec/workflow.yaml
   - src/platform_tools/branch_policy.py
   - src/platform_tools/board_action_api.py
+  - src/platform_tools/execplan_lint.py
   - src/platform_tools/integrations/github_projects_sync.py
   - src/platform_tools/integrations/provider_adapter.py
+  - src/platform_tools/human_operations_runtime.py
+  - src/platform_tools/human_operations_status.py
   - src/platform_tools/merge_readiness.py
+  - src/platform_tools/orchestrator_status.py
   - src/platform_tools/register_remaining_work_node.py
+  - src/platform_tools/reconcile_governed_graph_events.py
   - src/platform_tools/reconcile_remaining_work_merge.py
   - src/platform_tools/reconcile_remaining_work_transition.py
   - src/platform_tools/remaining_work_graph_check.py
   - tests/test_branch_policy.py
   - tests/test_board_action_api.py
+  - tests/test_human_operations_status.py
   - tests/test_merge_readiness.py
   - tests/test_register_remaining_work_node.py
   - tests/test_policy_compliance_check.py
+  - tests/test_reconcile_governed_graph_events.py
   - tests/test_reconcile_remaining_work_merge.py
   - tests/test_reconcile_remaining_work_transition.py
   - tests/test_remaining_work_graph_check.py

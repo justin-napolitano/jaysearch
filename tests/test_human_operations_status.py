@@ -184,3 +184,52 @@ def test_human_operations_status_blocks_on_duplicate_item_ids(monkeypatch, tmp_p
     assert code == 1
     assert report["status"] == "blocked"
     assert "board_runtime:duplicate_item_id:ITEM_DUP" in report["blockers"]
+
+
+def test_human_operations_status_surfaces_graph_reconciliation_action(monkeypatch, tmp_path: Path) -> None:
+    branch = "impl-execplan/20260319-graph-transition-runtime"
+    _seed_plan(
+        tmp_path / ".agent" / "execplans" / "20260319-graph-transition-runtime-codex-01-execplan.md",
+        plan_id="20260319-graph-transition-runtime-codex-01-execplan",
+        status="draft",
+        finalized_in_pr="91",
+    )
+    monkeypatch.setattr(
+        "platform_tools.human_operations_status.check_remaining_work_graph",
+        lambda **kwargs: (
+            0,
+            {
+                "branch": branch,
+                "execplan_id": "20260319-graph-transition-runtime-codex-01-execplan",
+                "active_node": None,
+                "ready_nodes": [],
+                "blocked_nodes": [],
+                "completed_nodes": [
+                    {
+                        "node_id": "rwg-027",
+                        "title": "Graph transition runtime",
+                        "status": "decision_gated",
+                        "target_execplan_id": "20260319-graph-transition-runtime-codex-01-execplan",
+                        "implementation_branch": branch,
+                    }
+                ],
+            },
+        ),
+    )
+    monkeypatch.setattr(
+        "platform_tools.human_operations_status.build_github_projects_sync_plan",
+        lambda **kwargs: (
+            0,
+            {"status": "ok", "ok": True, "operation_count": 0, "create_count": 0, "update_count": 0, "blockers": []},
+        ),
+    )
+    monkeypatch.setattr(
+        "platform_tools.human_operations_status.check_policy_compliance",
+        lambda **kwargs: (0, {"ok": True, "blockers": []}),
+    )
+
+    code, report = get_human_operations_status(root=tmp_path.as_posix(), branch=branch)
+
+    assert code == 0
+    assert report["ok"] is True
+    assert report["next_actions"][0]["action"] == "reconcile_governed_graph_events"
