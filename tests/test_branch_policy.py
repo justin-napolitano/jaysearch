@@ -115,6 +115,11 @@ def test_impl_branch_accepts_via_initiative_mapping(tmp_path: Path, monkeypatch)
             {
                 "nodes": [
                     {
+                        "node_id": "initiative-graph-transition",
+                        "initiative_branch": "initiative/graph-transition",
+                        "parent_initiative_node": "initiative-graph-transition",
+                    },
+                    {
                         "node_id": "rwg-027",
                         "implementation_branch": "impl-execplan/graph-transition",
                         "integration_mode": "via_initiative",
@@ -133,3 +138,48 @@ def test_impl_branch_accepts_via_initiative_mapping(tmp_path: Path, monkeypatch)
 
     assert report["ok"] is True
     assert report["findings"] == []
+
+
+def test_impl_branch_rejects_missing_parent_initiative_node(tmp_path: Path, monkeypatch) -> None:
+    _write(
+        tmp_path / "spec" / "workflow.yaml",
+        "\n".join(
+            [
+                "execution_requirements:",
+                "  initiative_requirements:",
+                "    fail_closed_on_missing_initiative_mapping: true",
+                "    normal_governed_work_requires_initiative_branch: true",
+            ]
+        )
+        + "\n",
+    )
+    _write(
+        tmp_path / "spec" / "ruleset.yaml",
+        "execution_constraints:\n  allowed_branch_patterns: [impl-execplan/*]\n",
+    )
+    _write(tmp_path / "spec" / "governance.yaml", "required_checks: {}\n")
+    _write(tmp_path / "project.rules.yaml", "overlay:\n  required_check_names_add: []\n  forbidden_branches_add: []\n  allowed_branch_patterns_remove: []\n")
+    (tmp_path / "artifacts" / "planner" / "research").mkdir(parents=True, exist_ok=True)
+    (tmp_path / "artifacts" / "planner" / "research" / "remaining-work-graph.json").write_text(
+        json.dumps(
+            {
+                "nodes": [
+                    {
+                        "node_id": "rwg-027",
+                        "implementation_branch": "impl-execplan/graph-transition",
+                        "integration_mode": "via_initiative",
+                        "initiative_branch": "initiative/graph-transition",
+                        "parent_initiative_node": "initiative-graph-transition",
+                    }
+                ]
+            }
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+    monkeypatch.chdir(tmp_path)
+
+    report = evaluate_branch_policy("impl-execplan/graph-transition")
+
+    assert report["ok"] is False
+    assert "branch_policy_violation:implementation_parent_initiative_not_found" in report["findings"]

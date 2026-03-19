@@ -63,7 +63,13 @@ def _initiative_findings(branch: str) -> list[str]:
     ]
     if not matches:
         return ["branch_policy_violation:initiative_parent_graph_node_missing"]
-    if len(matches) > 1:
+    parent_matches = [
+        node
+        for node in matches
+        if str(node.get("node_id", "")).strip() == str(node.get("parent_initiative_node", "")).strip()
+        or str(node.get("node_id", "")).strip().startswith("initiative-")
+    ]
+    if len(parent_matches) != 1:
         return ["branch_policy_violation:initiative_parent_graph_node_ambiguous"]
     return []
 
@@ -107,8 +113,21 @@ def _implementation_findings(branch: str) -> list[str]:
     findings: list[str] = []
     if not str(node.get("initiative_branch", "")).strip():
         findings.append("branch_policy_violation:implementation_initiative_branch_missing")
-    if not str(node.get("parent_initiative_node", "")).strip():
+    parent_initiative_node = str(node.get("parent_initiative_node", "")).strip()
+    if not parent_initiative_node:
         findings.append("branch_policy_violation:implementation_parent_initiative_missing")
+    else:
+        parent_matches = [
+            item
+            for item in nodes
+            if isinstance(item, dict) and str(item.get("node_id", "")).strip() == parent_initiative_node
+        ]
+        if len(parent_matches) != 1:
+            findings.append("branch_policy_violation:implementation_parent_initiative_not_found")
+        else:
+            parent_branch = str(parent_matches[0].get("initiative_branch", "")).strip()
+            if parent_branch != str(node.get("initiative_branch", "")).strip():
+                findings.append("branch_policy_violation:implementation_parent_initiative_branch_mismatch")
     return findings
 
 

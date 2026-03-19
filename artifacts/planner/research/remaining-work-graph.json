@@ -899,6 +899,25 @@
       "completion_ref": "merged:pr-86"
     },
     {
+      "node_id": "initiative-graph-transition-automation",
+      "title": "Initiative / Graph transition automation",
+      "status": "ready",
+      "gating_class": "auto_runnable",
+      "conflict_domains": [
+        "governance",
+        "workflow"
+      ],
+      "target_execplan_id": "initiative:graph-transition-automation",
+      "goal_area": "reference",
+      "initiative_branch": "initiative/graph-transition-automation",
+      "parent_initiative_node": "initiative-graph-transition-automation",
+      "expected_artifacts": [
+        "artifacts/planner/research/remaining-work-graph.json",
+        "spec/workflow.yaml"
+      ],
+      "ordering": {}
+    },
+    {
       "node_id": "rwg-027",
       "title": "Graph transition automation and merge-gated reconciliation",
       "status": "ready",
