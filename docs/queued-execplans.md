@@ -119,9 +119,10 @@ This document turns the remaining-work graph into an explicit near-term queue of
    - completion ref: `merged:pr-81`
 
 23. `20260316-anti-cheat-rule-surface-authority-cleanup-codex-01-execplan`
-   - status: `review_gated`
+   - status: `completed`
    - goal: make governance rule-surface legality explicit in anti-cheat policy so lawful slices do not pass with warning-only ambiguity
    - draft branch: `draft-execplan/20260316-anti-cheat-rule-surface-followup-codex-01`
+   - completion ref: `merged:pr-88`
 
 24. `20260318-rule-authority-consolidation-codex-01-execplan`
    - status: `completed`
@@ -156,13 +157,13 @@ This document turns the remaining-work graph into an explicit near-term queue of
    - draft branch: `draft-execplan/20260319-managed-repo-orchestration-codex-01-20260319`
 
 29. `20260319-post-merge-graph-reconciliation-automation-codex-01-execplan`
-   - status: `review_gated`
+   - status: `ready`
    - goal: make merged implementation evidence trigger deterministic local completion reconciliation so the graph does not stay stale after PR merge
    - draft branch: `draft-execplan/20260319-post-merge-graph-reconciliation-automation-codex-01-20260319`
 ## Mirror Metadata
 
-- canonical_last_graph_action_id: `rwg-action-20260319-012-unblock-rwg-030`
-- canonical_ready_order: ``
+- canonical_last_graph_action_id: `rwg-action-20260319-013-promote_ready-rwg-030`
+- canonical_ready_order: `20260319-post-merge-graph-reconciliation-automation-codex-01-execplan`
 - projection_authority: `projection_only`
 
 ## Queue Discipline

@@ -16,8 +16,9 @@
   "queue_projection": {
     "path": "docs/queued-execplans.md",
     "projection_authority": "projection_only",
-    "last_reconciled_action_id": "rwg-action-20260319-012-unblock-rwg-030",
+    "last_reconciled_action_id": "rwg-action-20260319-013-promote_ready-rwg-030",
     "ready_execplan_ids": [
+      "20260319-post-merge-graph-reconciliation-automation-codex-01-execplan"
     ]
   },
   "graph_actions": [
@@ -267,6 +268,38 @@
       "node_id": "rwg-030",
       "rationale": "capture automatic post-merge graph reconciliation as its own slice so merged implementation evidence cannot sit stale in the repo until a manual follow-up branch updates canonical state",
       "evidence_ref": ".agent/execplans/20260319-post-merge-graph-reconciliation-automation-codex-01-execplan.md",
+      "queue_reconciled": true
+    },
+    {
+      "action_id": "rwg-action-20260318-009-complete-rwg-024",
+      "action": "complete",
+      "node_id": "rwg-024",
+      "rationale": "20260316-anti-cheat-rule-surface-authority-cleanup-codex-01-execplan merged to main and is now canonical completed state",
+      "evidence_ref": "merged:pr-88",
+      "queue_reconciled": true
+    },
+    {
+      "action_id": "rwg-action-20260310-001-complete-artifact-orchestrator-contract",
+      "action": "complete",
+      "node_id": "artifact-orchestrator-contract",
+      "rationale": "20260310-codex-orchestrator-contract-codex-01-execplan merged to main and is now canonical completed state",
+      "evidence_ref": "merged:pr-43",
+      "queue_reconciled": true
+    },
+    {
+      "action_id": "rwg-action-20260311-001-complete-artifact-merge-readiness-contract",
+      "action": "complete",
+      "node_id": "artifact-merge-readiness-contract",
+      "rationale": "20260310-merge-readiness-engine-codex-01-execplan merged to main and is now canonical completed state",
+      "evidence_ref": "merged:pr-44",
+      "queue_reconciled": true
+    },
+    {
+      "action_id": "rwg-action-20260319-013-promote_ready-rwg-030",
+      "action": "promote_ready",
+      "node_id": "rwg-030",
+      "rationale": "implementation_branch_publish derived deterministically from canonical branch and ExecPlan evidence",
+      "evidence_ref": "branch:origin/impl-execplan/20260319-post-merge-graph-reconciliation-automation-codex-01-execplan-codex-01-20260319",
       "queue_reconciled": true
     }
   ],
@@ -825,8 +858,8 @@
     {
       "node_id": "rwg-024",
       "title": "Anti-cheat rule-surface authority cleanup",
-      "status": "review_gated",
-      "status_reason": "queued narrow follow-up to make governance rule-surface legality explicit in anti-cheat policy after the merged state-transition slice",
+      "status": "completed",
+      "status_reason": "",
       "gating_class": "review_gated",
       "conflict_domains": [
         "governance",
@@ -842,16 +875,17 @@
       ],
       "ordering": {
         "queue_position": 24,
-        "source_action_id": "rwg-action-20260316-012-unblock-rwg-024",
+        "source_action_id": "rwg-action-20260318-009-complete-rwg-024",
         "tie_breaker": "20260316-anti-cheat-rule-surface-authority-cleanup-codex-01-execplan"
       },
       "action_state": {
-        "last_action_id": "rwg-action-20260316-012-unblock-rwg-024",
-        "last_action": "unblock",
+        "last_action_id": "rwg-action-20260318-009-complete-rwg-024",
+        "last_action": "complete",
         "action_required": false,
         "reorder_requires_human": false,
         "reorder_blockers": []
-      }
+      },
+      "completion_ref": "merged:pr-88"
     },
     {
       "node_id": "rwg-025",
@@ -1070,9 +1104,9 @@
     {
       "node_id": "rwg-030",
       "title": "Automatic post-merge graph reconciliation",
-      "status": "review_gated",
-      "status_reason": "draft the runtime slice that should consume merged implementation evidence automatically and reconcile canonical completion without a manual cleanup branch",
-      "gating_class": "review_gated",
+      "status": "ready",
+      "status_reason": "",
+      "gating_class": "auto_runnable",
       "conflict_domains": [
         "governance",
         "orchestrator-runtime",
@@ -1092,12 +1126,13 @@
       ],
       "ordering": {
         "queue_position": 30,
-        "source_action_id": "rwg-action-20260319-012-unblock-rwg-030",
-        "tie_breaker": "20260319-post-merge-graph-reconciliation-automation-codex-01-execplan"
+        "source_action_id": "rwg-action-20260319-013-promote_ready-rwg-030",
+        "tie_breaker": "20260319-post-merge-graph-reconciliation-automation-codex-01-execplan",
+        "ready_order": 1
       },
       "action_state": {
-        "last_action_id": "rwg-action-20260319-012-unblock-rwg-030",
-        "last_action": "unblock",
+        "last_action_id": "rwg-action-20260319-013-promote_ready-rwg-030",
+        "last_action": "promote_ready",
         "action_required": false,
         "reorder_requires_human": false,
         "reorder_blockers": []
@@ -1106,7 +1141,7 @@
     {
       "node_id": "artifact-orchestrator-contract",
       "title": "Codex orchestrator contract",
-      "status": "ready",
+      "status": "completed",
       "gating_class": "auto_runnable",
       "conflict_domains": [],
       "target_execplan_id": "20260310-codex-orchestrator-contract-codex-01-execplan",
@@ -1114,12 +1149,23 @@
       "expected_artifacts": [
         "docs/codex-orchestrator-contract.md"
       ],
-      "ordering": {}
+      "ordering": {
+        "source_action_id": "rwg-action-20260310-001-complete-artifact-orchestrator-contract"
+      },
+      "completion_ref": "merged:pr-43",
+      "status_reason": "",
+      "action_state": {
+        "last_action_id": "rwg-action-20260310-001-complete-artifact-orchestrator-contract",
+        "last_action": "complete",
+        "action_required": false,
+        "reorder_requires_human": false,
+        "reorder_blockers": []
+      }
     },
     {
       "node_id": "artifact-merge-readiness-contract",
       "title": "Merge-readiness contract",
-      "status": "ready",
+      "status": "completed",
       "gating_class": "auto_runnable",
       "conflict_domains": [],
       "target_execplan_id": "20260310-merge-readiness-engine-codex-01-execplan",
@@ -1127,7 +1173,18 @@
       "expected_artifacts": [
         "docs/merge-readiness-contract.md"
       ],
-      "ordering": {}
+      "ordering": {
+        "source_action_id": "rwg-action-20260311-001-complete-artifact-merge-readiness-contract"
+      },
+      "completion_ref": "merged:pr-44",
+      "status_reason": "",
+      "action_state": {
+        "last_action_id": "rwg-action-20260311-001-complete-artifact-merge-readiness-contract",
+        "last_action": "complete",
+        "action_required": false,
+        "reorder_requires_human": false,
+        "reorder_blockers": []
+      }
     }
   ],
   "edges": [
