@@ -154,9 +154,14 @@ This document turns the remaining-work graph into an explicit near-term queue of
    - status: `review_gated`
    - goal: allow external repos such as `jayrun` to keep canonical graph and ExecPlan state locally while platform-template-bootstrap supplies deterministic orchestration and control-loop runtime by explicit repo-root targeting
    - draft branch: `draft-execplan/20260319-managed-repo-orchestration-codex-01-20260319`
+
+29. `20260319-post-merge-graph-reconciliation-automation-codex-01-execplan`
+   - status: `review_gated`
+   - goal: make merged implementation evidence trigger deterministic local completion reconciliation so the graph does not stay stale after PR merge
+   - draft branch: `draft-execplan/20260319-post-merge-graph-reconciliation-automation-codex-01-20260319`
 ## Mirror Metadata
 
-- canonical_last_graph_action_id: `rwg-action-20260319-011-complete-rwg-027`
+- canonical_last_graph_action_id: `rwg-action-20260319-012-unblock-rwg-030`
 - canonical_ready_order: ``
 - projection_authority: `projection_only`
 
