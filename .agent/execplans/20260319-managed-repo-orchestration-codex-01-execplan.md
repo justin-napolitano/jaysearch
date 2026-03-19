@@ -7,10 +7,13 @@ status: draft
 base_branch: main
 changes:
   - .agent/execplans/20260319-managed-repo-orchestration-codex-01-execplan.md
+  - artifacts/governance/board-action-events.jsonl
   - artifacts/planner/research/remaining-work-graph.json
+  - docs/commands.md
   - docs/queued-execplans.md
   - docs/codex-orchestrator-contract.md
   - spec/agent-capability-policy.yaml
+  - spec/providers/github-projects.schema.yaml
   - spec/protected-surfaces.schema.yaml
   - spec/workflow.yaml
   - bin/bootstrap-managed-repo
@@ -22,13 +25,18 @@ changes:
   - src/platform_tools/game_status.py
   - src/platform_tools/governance_loader.py
   - src/platform_tools/integrations/github_projects_bootstrap.py
+  - src/platform_tools/integrations/github_projects_runtime.py
+  - src/platform_tools/integrations/provider_adapter.py
   - src/platform_tools/managed_repo_status.py
   - src/platform_tools/orchestrate_governed_slice.py
   - artifacts/provider-sync/
   - tests/test_bootstrap_managed_repo.py
   - tests/test_branch_policy.py
+  - tests/test_github_projects_bootstrap.py
+  - tests/test_github_projects_sync.py
   - tests/test_managed_repo_status.py
   - tests/test_orchestrate_governed_slice.py
+  - tests/test_provider_adapter_contract.py
 approve_policy: codeowners
 reviewers:
   - "github:justin-napolitano"
