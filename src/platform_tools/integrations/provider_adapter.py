@@ -30,6 +30,27 @@ def load_provider_mapping(*, root: str = ".", provider: str) -> dict[str, Any]:
     return _load_yaml(Path(root) / "spec" / "providers" / filename)
 
 
+def _load_raw_graph_nodes(*, root: str = ".") -> dict[str, dict[str, Any]]:
+    path = Path(root) / "artifacts" / "planner" / "research" / "remaining-work-graph.json"
+    if not path.exists():
+        return {}
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError:
+        return {}
+    nodes = payload.get("nodes", [])
+    if not isinstance(nodes, list):
+        return {}
+    result: dict[str, dict[str, Any]] = {}
+    for node in nodes:
+        if not isinstance(node, dict):
+            continue
+        node_id = str(node.get("node_id", "")).strip()
+        if node_id:
+            result[node_id] = node
+    return result
+
+
 def _execplan_path_for_target(*, root: str, target_execplan_id: str) -> str:
     if not target_execplan_id:
         return ""
@@ -69,11 +90,23 @@ def _provider_projection_blockers(
     return blockers
 
 
-def _project_item(node: dict[str, Any], *, provider: str, root: str, current_branch: str) -> dict[str, Any]:
+def _project_item(
+    node: dict[str, Any],
+    *,
+    provider: str,
+    root: str,
+    current_branch: str,
+    raw_node: dict[str, Any] | None = None,
+) -> dict[str, Any]:
     dependency_summary = ", ".join(
         f"{item['node_id']}={item['status']}" for item in node.get("dependency_states", [])
     )
     review_projection = review_projection_for_node(node, root=root, current_branch=current_branch)
+    source_node = raw_node if isinstance(raw_node, dict) else node
+    completion_ref = str(source_node.get("completion_ref", "")).strip()
+    completion_pr = ""
+    if completion_ref.startswith("merged:pr-"):
+        completion_pr = completion_ref.removeprefix("merged:")
     return {
         "provider": provider,
         "identity": str(node.get("node_id", "")).strip(),
@@ -84,6 +117,7 @@ def _project_item(node: dict[str, Any], *, provider: str, root: str, current_bra
             "status": str(node.get("status", "")).strip(),
             "gating_class": str(node.get("gating_class", "")).strip(),
             "implementation_branch": str(node.get("implementation_branch", "")).strip(),
+            "completion_pr": completion_pr,
             "goal_area": str(node.get("goal_area", "")).strip(),
             "dependency_summary": dependency_summary,
             "human_review_state": review_projection["human_review_state"],
@@ -115,6 +149,14 @@ def _project_item(node: dict[str, Any], *, provider: str, root: str, current_bra
     }
 
 
+def _is_projectable_slice_node(node: dict[str, Any]) -> bool:
+    node_type = str(node.get("type", "")).strip()
+    if node_type == "initiative":
+        return False
+    node_id = str(node.get("node_id", "")).strip()
+    return not node_id.startswith("initiative-")
+
+
 def build_provider_projection(
     *,
     root: str = ".",
@@ -129,6 +171,7 @@ def build_provider_projection(
         branch=branch,
         execplan_path=execplan_path,
     )
+    raw_graph_nodes = _load_raw_graph_nodes(root=root)
     blockers: list[str] = []
     blockers.extend(_provider_projection_blockers(contract=contract, mapping=mapping, provider=provider))
     if remaining_work_code != 0:
@@ -139,7 +182,17 @@ def build_provider_projection(
         for node in remaining_work_report.get(collection_name, []):
             if not isinstance(node, dict):
                 continue
-            items.append(_project_item(node, provider=provider, root=root, current_branch=str(remaining_work_report.get("branch", branch or "")).strip()))
+            if not _is_projectable_slice_node(node):
+                continue
+            items.append(
+                _project_item(
+                    node,
+                    provider=provider,
+                    root=root,
+                    current_branch=str(remaining_work_report.get("branch", branch or "")).strip(),
+                    raw_node=raw_graph_nodes.get(str(node.get("node_id", "")).strip(), {}),
+                )
+            )
     items = sorted(
         items,
         key=lambda item: (

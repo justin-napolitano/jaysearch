@@ -15,6 +15,7 @@ required_board_fields:
   - status
   - gating_class
   - implementation_branch
+  - completion_pr
   - goal_area
   - dependency_summary
   - human_review_state
@@ -25,6 +26,7 @@ field_map:
   status: single_select
   gating_class: single_select
   implementation_branch: text
+  completion_pr: text
   goal_area: single_select
   dependency_summary: text
   human_review_state: single_select
