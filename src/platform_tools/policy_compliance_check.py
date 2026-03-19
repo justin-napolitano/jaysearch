@@ -550,7 +550,6 @@ def check_policy_compliance(
         execplan_path=plan_path.as_posix(),
         base_ref=base_ref,
     )
-
     graph_node = _graph_node_for_execplan(cwd, execplan_id)
     queue_has_execplan = _queue_has_execplan(cwd, execplan_id)
 

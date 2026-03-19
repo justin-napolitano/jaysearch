@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+uv run pytest -q \
+  tests/test_reconcile_governed_graph_events.py \
+  tests/test_reconcile_pending_merge_completions.py \
+  tests/test_orchestrate_governed_slice.py

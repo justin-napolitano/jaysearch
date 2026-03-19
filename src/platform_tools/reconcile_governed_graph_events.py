@@ -10,6 +10,26 @@ from platform_tools.reconcile_remaining_work_merge import reconcile_remaining_wo
 from platform_tools.reconcile_remaining_work_transition import reconcile_remaining_work_transition
 from platform_tools.register_remaining_work_node import register_remaining_work_node
 
+GRAPH_PATH = Path("artifacts/planner/research/remaining-work-graph.json")
+
+
+def _load_registered_node(repo_root: Path, execplan_id: str) -> dict[str, Any] | None:
+    graph_path = repo_root / GRAPH_PATH
+    if not graph_path.exists():
+        return None
+    data = json.loads(graph_path.read_text(encoding="utf-8"))
+    nodes = data.get("nodes", [])
+    if not isinstance(nodes, list):
+        return None
+    return next(
+        (
+            item
+            for item in nodes
+            if isinstance(item, dict) and str(item.get("target_execplan_id", "")).strip() == execplan_id
+        ),
+        None,
+    )
+
 
 def reconcile_governed_graph_events(
     *,
@@ -20,7 +40,20 @@ def reconcile_governed_graph_events(
     execplan_id = str(plan.frontmatter.get("id", "")).strip()
     steps: list[dict[str, Any]] = []
 
-    register_report = register_remaining_work_node(execplan_path=execplan_path, repo_root=repo_root)
+    try:
+        register_report = register_remaining_work_node(execplan_path=execplan_path, repo_root=repo_root)
+    except ValueError as exc:
+        if str(exc).strip() == "missing_graph_registration" and _load_registered_node(repo_root, execplan_id) is not None:
+            register_report = {
+                "command": "register-remaining-work-node",
+                "status": "ok",
+                "ok": True,
+                "action": "noop",
+                "execplan_id": execplan_id,
+                "reason": "already_registered_in_graph",
+            }
+        else:
+            raise
     steps.append(register_report)
     if not register_report.get("ok", False):
         return {

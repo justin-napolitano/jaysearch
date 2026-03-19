@@ -137,6 +137,18 @@ def _remaining_work_graph() -> dict[str, object]:
         ],
         "nodes": [
             {
+                "node_id": "initiative-game-policy-compliance",
+                "title": "Initiative / game policy compliance",
+                "status": "ready",
+                "gating_class": "auto_runnable",
+                "conflict_domains": ["governance"],
+                "target_execplan_id": "initiative:game-policy-compliance",
+                "goal_area": "reference",
+                "initiative_branch": "initiative/game-policy-compliance",
+                "parent_initiative_node": "initiative-game-policy-compliance",
+                "ordering": {},
+            },
+            {
                 "node_id": "rwg-012",
                 "title": "Game policy-compliance runtime",
                 "status": "ready",
