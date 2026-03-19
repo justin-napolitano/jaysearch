@@ -11,9 +11,15 @@ changes:
   - docs/queued-execplans.md
   - docs/codex-orchestrator-contract.md
   - spec/workflow.yaml
+  - spec/agent-capability-policy.yaml
+  - spec/protected-surfaces.schema.yaml
+  - bin/reconcile-pending-merge-completions
   - src/platform_tools/orchestrate_governed_slice.py
+  - src/platform_tools/reconcile_pending_merge_completions.py
   - src/platform_tools/reconcile_remaining_work_merge.py
   - src/platform_tools/human_operations_runtime.py
+  - tests/test_orchestrate_governed_slice.py
+  - tests/test_reconcile_pending_merge_completions.py
 approve_policy: codeowners
 reviewers:
   - "github:justin-napolitano"
@@ -83,6 +89,7 @@ Close the gap between deterministic merge reconciliation logic and actual automa
 1. define the exact post-merge evidence contract and stale-state blocker
 2. wire the local orchestrator to run completion reconciliation automatically
 3. surface unreconciled merged evidence as an explicit runtime blocker
+4. add a dedicated post-merge reconciliation command so the automation path stays auditable and reusable
 
 ## Concrete Steps
 

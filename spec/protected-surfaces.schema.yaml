@@ -56,6 +56,7 @@ surface_entries:
       - bin/policy-compliance-check
       - bin/policy-compliance-smoke-test
       - bin/register-remaining-work-node
+      - bin/reconcile-pending-merge-completions
       - bin/reconcile-governed-graph-events
       - bin/reconcile-remaining-work-transition
       - bin/rule-graph-check
@@ -77,6 +78,7 @@ surface_entries:
       - src/platform_tools/orchestrator_status.py
       - src/platform_tools/policy_compliance_check.py
       - src/platform_tools/register_remaining_work_node.py
+      - src/platform_tools/reconcile_pending_merge_completions.py
       - src/platform_tools/reconcile_governed_graph_events.py
       - src/platform_tools/reconcile_remaining_work_merge.py
       - src/platform_tools/reconcile_remaining_work_transition.py
@@ -93,6 +95,7 @@ surface_entries:
       - tests/test_orchestrator_status.py
       - tests/test_policy_compliance_check.py
       - tests/test_register_remaining_work_node.py
+      - tests/test_reconcile_pending_merge_completions.py
       - tests/test_reconcile_governed_graph_events.py
       - tests/test_reconcile_remaining_work_merge.py
       - tests/test_reconcile_remaining_work_transition.py

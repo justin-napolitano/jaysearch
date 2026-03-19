@@ -206,6 +206,95 @@ def _transition_event(node: dict[str, Any], *, completion_target_ref: str, main_
     return "impl_execplan_merge_to_main"
 
 
+def _select_merge_candidate(
+    *,
+    candidates: list[dict[str, str]],
+    implementation_branch: str,
+) -> dict[str, str] | None:
+    if not candidates:
+        return None
+    candidates.sort(
+        key=lambda item: (
+            1 if implementation_branch and str(item.get("branch_ref", "")).strip() == implementation_branch else 0,
+            1 if item.get("merge_role") == "impl-execplan" else 0,
+            item.get("committed_at", ""),
+            item.get("commit", ""),
+        ),
+        reverse=True,
+    )
+    return candidates[0]
+
+
+def _plan_path_for_execplan(repo_root: Path, execplan_id: str) -> Path | None:
+    candidate = repo_root / ".agent" / "execplans" / f"{execplan_id}.md"
+    return candidate if candidate.exists() else None
+
+
+def find_pending_merge_reconciliations(
+    *,
+    repo_root: Path,
+    main_ref: str = "main",
+) -> list[dict[str, Any]]:
+    graph = _load_json(repo_root / GRAPH_PATH)
+    nodes = graph.get("nodes", [])
+    pending: list[dict[str, Any]] = []
+    for node in nodes:
+        if not isinstance(node, dict):
+            continue
+        if str(node.get("status", "")).strip() == "completed":
+            continue
+        execplan_id = str(node.get("target_execplan_id", "")).strip()
+        if not execplan_id:
+            continue
+        plan_path = _plan_path_for_execplan(repo_root, execplan_id)
+        if plan_path is None:
+            continue
+        plan = parse_plan(plan_path)
+        draft_branch = str(plan.frontmatter.get("draft_branch", "")).strip()
+        merge_ref = _merge_search_ref(node, main_ref)
+        candidates = _merge_candidates(repo_root, merge_ref, execplan_id, draft_branch)
+        selected = _select_merge_candidate(
+            candidates=candidates,
+            implementation_branch=str(node.get("implementation_branch", "")).strip(),
+        )
+        if selected is None:
+            continue
+        pending.append(
+            {
+                "node_id": str(node.get("node_id", "")).strip(),
+                "execplan_id": execplan_id,
+                "execplan_path": plan_path,
+                "merge_evidence": selected,
+            }
+        )
+    return pending
+
+
+def reconcile_pending_merge_completions(
+    *,
+    repo_root: Path,
+    main_ref: str = "main",
+) -> dict[str, Any]:
+    pending = find_pending_merge_reconciliations(repo_root=repo_root, main_ref=main_ref)
+    results: list[dict[str, Any]] = []
+    for item in pending:
+        results.append(
+            reconcile_remaining_work_merge(
+                execplan_path=item["execplan_path"],
+                repo_root=repo_root,
+                main_ref=main_ref,
+                merge_evidence=item["merge_evidence"],
+            )
+        )
+    return {
+        "command": "reconcile-pending-merge-completions",
+        "status": "ok",
+        "ok": True,
+        "reconciled_count": len(results),
+        "results": results,
+    }
+
+
 def reconcile_remaining_work_merge(
     *,
     execplan_path: Path,
@@ -238,16 +327,9 @@ def reconcile_remaining_work_merge(
         if not candidates:
             raise ValueError("missing_merge_commit")
         implementation_branch = str(node.get("implementation_branch", "")).strip()
-        candidates.sort(
-            key=lambda item: (
-                1 if implementation_branch and str(item.get("branch_ref", "")).strip() == implementation_branch else 0,
-                1 if item.get("merge_role") == "impl-execplan" else 0,
-                item.get("committed_at", ""),
-                item.get("commit", ""),
-            ),
-            reverse=True,
-        )
-        merge_evidence = candidates[0]
+        merge_evidence = _select_merge_candidate(candidates=candidates, implementation_branch=implementation_branch)
+        if merge_evidence is None:
+            raise ValueError("missing_merge_commit")
     completion_ref = f"merged:pr-{merge_evidence['pull_request']}" if merge_evidence.get("pull_request", "").strip() else f"merged:{merge_evidence['commit']}"
     completion_target_ref = _merge_search_ref(node, main_ref)
     transition_event = _transition_event(node, completion_target_ref=completion_target_ref, main_ref=main_ref)
