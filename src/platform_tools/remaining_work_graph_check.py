@@ -123,6 +123,9 @@ def _node_projection(
         "initiative_branch": str(node.get("initiative_branch", "")).strip(),
         "parent_initiative_node": str(node.get("parent_initiative_node", "")).strip(),
         "integration_mode": str(node.get("integration_mode", "")).strip(),
+        "availability_target_ref": str(node.get("availability_target_ref", "")).strip(),
+        "availability_status": str(node.get("availability_status", "")).strip(),
+        "availability_ref": str(node.get("availability_ref", "")).strip(),
         "conflict_domains": sorted(str(item).strip() for item in node.get("conflict_domains", []) if str(item).strip()),
         "expected_artifacts": sorted(str(item).strip() for item in node.get("expected_artifacts", []) if str(item).strip()),
         "depends_on": depends_on,
@@ -348,6 +351,17 @@ def check_remaining_work_graph(
                 errors.append(f"ready_slice_missing_implementation_branch:{node_id}")
             if integration_mode != "via_initiative":
                 errors.append(f"ready_slice_wrong_integration_mode:{node_id}:{integration_mode}")
+        availability_target_ref = str(item.get("availability_target_ref", "")).strip()
+        availability_status = str(item.get("availability_status", "")).strip()
+        availability_ref = str(item.get("availability_ref", "")).strip()
+        if availability_target_ref and not availability_status:
+            errors.append(f"availability_status_required:{node_id}")
+        if availability_status and availability_status not in {"not_required", "pending", "active"}:
+            errors.append(f"invalid_availability_status:{node_id}:{availability_status}")
+        if availability_status == "active" and not availability_ref:
+            errors.append(f"availability_ref_required:{node_id}")
+        if availability_status == "not_required" and availability_target_ref:
+            errors.append(f"availability_target_not_allowed_for_not_required:{node_id}")
             if not isinstance(ordering.get("ready_order"), int):
                 errors.append(f"ready_node_missing_ready_order:{node_id}")
             if action_state["last_action"] != "promote_ready":

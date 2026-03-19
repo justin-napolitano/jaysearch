@@ -9,12 +9,12 @@ changes:
   - .agent/execplans/20260319-local-git-hook-mainline-followup-codex-01-execplan.md
   - artifacts/planner/research/remaining-work-graph.json
   - docs/queued-execplans.md
+  - spec/remaining-work-graph.schema.yaml
   - spec/workflow.yaml
+  - src/platform_tools/finalize_execplan.py
   - src/platform_tools/reconcile_remaining_work_merge.py
-  - src/platform_tools/orchestrate_governed_slice.py
-  - src/platform_tools/reconcile_pending_merge_completions.py
+  - src/platform_tools/remaining_work_graph_check.py
   - tests/test_reconcile_remaining_work_merge.py
-  - tests/test_orchestrate_governed_slice.py
 approve_policy: codeowners
 reviewers:
   - "github:justin-napolitano"
@@ -33,6 +33,9 @@ validation:
       expected_exit: 0
     - name: "remaining-work-graph-check"
       command: "bin/remaining-work-graph-check"
+      expected_exit: 0
+    - name: "policy-compliance-check"
+      command: "bin/policy-compliance-check --execplan-path .agent/execplans/20260319-local-git-hook-mainline-followup-codex-01-execplan.md"
       expected_exit: 0
 tasks:
   - title: "Pin down why via-initiative completion can mark a slice complete while the expected runtime artifacts are absent from main"

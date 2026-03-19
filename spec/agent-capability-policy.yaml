@@ -55,6 +55,11 @@ capability_rules:
     forbidden_surface_classes:
       - exception_registry
     allowed_referee_paths:
+      - .githooks/post-checkout
+      - .githooks/post-merge
+      - .githooks/pre-push
+      - bin/auto-reconcile-main
+      - bin/install-local-git-hooks
       - bin/anti-cheat-check
       - bin/bootstrap-managed-repo
       - bin/managed-repo-status
@@ -67,8 +72,10 @@ capability_rules:
       - bin/reconcile-governed-graph-events
       - bin/reconcile-remaining-work-transition
       - bin/rule-graph-check
+      - bin/run-governed-pre-push-checks
       - bin/state-transition-legality-check
       - bin/state-transition-legality-smoke-test
+      - src/platform_tools/auto_reconcile_main.py
       - src/platform_tools/anti_cheat_check.py
       - src/platform_tools/bootstrap_managed_repo.py
       - src/platform_tools/branch_policy.py
@@ -79,6 +86,7 @@ capability_rules:
       - src/platform_tools/governance_loader.py
       - src/platform_tools/human_operations_runtime.py
       - src/platform_tools/human_operations_status.py
+      - src/platform_tools/install_local_git_hooks.py
       - src/platform_tools/merge_readiness.py
       - src/platform_tools/managed_repo_status.py
       - src/platform_tools/orchestrate_governed_slice.py
@@ -90,6 +98,7 @@ capability_rules:
       - src/platform_tools/reconcile_remaining_work_merge.py
       - src/platform_tools/reconcile_remaining_work_transition.py
       - src/platform_tools/repo_health.py
+      - src/platform_tools/run_governed_pre_push_checks.py
       - src/platform_tools/rule_graph_check.py
       - src/platform_tools/remaining_work_graph_check.py
       - src/platform_tools/state_transition_legality.py
@@ -103,6 +112,9 @@ capability_rules:
       - tests/test_orchestrator_status.py
       - tests/test_policy_compliance_check.py
       - tests/test_register_remaining_work_node.py
+      - tests/test_run_governed_pre_push_checks.py
+      - tests/test_install_local_git_hooks.py
+      - tests/test_auto_reconcile_main.py
       - tests/test_reconcile_pending_merge_completions.py
       - tests/test_reconcile_governed_graph_events.py
       - tests/test_reconcile_remaining_work_merge.py

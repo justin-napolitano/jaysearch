@@ -337,7 +337,7 @@
       "action": "complete",
       "node_id": "rwg-031",
       "rationale": "20260319-local-git-hook-automation-codex-01-execplan merged to initiative/local-git-hook-automation and is now canonical completed state",
-      "evidence_ref": "merged:pr-98",
+      "evidence_ref": "merged:pr-99",
       "queue_reconciled": true
     },
     {
@@ -1215,7 +1215,7 @@
       "title": "Local git-hook automation",
       "status": "completed",
       "status_reason": "",
-      "gating_class": "review_gated",
+      "gating_class": "auto_runnable",
       "conflict_domains": [
         "governance",
         "orchestrator-runtime",
@@ -1227,6 +1227,8 @@
       "initiative_branch": "initiative/local-git-hook-automation",
       "parent_initiative_node": "initiative-local-git-hook-automation",
       "integration_mode": "via_initiative",
+      "availability_target_ref": "main",
+      "availability_status": "pending",
       "expected_artifacts": [
         ".githooks/post-merge",
         ".githooks/post-checkout",
@@ -1246,7 +1248,7 @@
         "reorder_requires_human": false,
         "reorder_blockers": []
       },
-      "completion_ref": "merged:pr-98"
+      "completion_ref": "merged:pr-99"
     },
     {
       "node_id": "rwg-032",
@@ -1261,7 +1263,7 @@
       ],
       "target_execplan_id": "20260319-local-git-hook-mainline-followup-codex-01-execplan",
       "goal_area": "governance",
-      "implementation_branch": "",
+      "implementation_branch": "impl-execplan/20260319-local-git-hook-mainline-followup-codex-01-execplan-codex-01-20260319",
       "draft_branch": "draft-execplan/20260319-local-git-hook-mainline-followup-codex-01-20260319",
       "initiative_branch": "initiative/local-git-hook-automation",
       "parent_initiative_node": "initiative-local-git-hook-automation",
