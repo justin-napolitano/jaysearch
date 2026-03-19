@@ -153,8 +153,8 @@ This document turns the remaining-work graph into an explicit near-term queue of
 
 28. `20260319-managed-repo-orchestration-codex-01-execplan`
    - status: `review_gated`
-   - goal: allow external repos such as `jayrun` to keep canonical graph and ExecPlan state locally while platform-template-bootstrap supplies deterministic orchestration and control-loop runtime by explicit repo-root targeting
-   - draft branch: `draft-execplan/20260319-managed-repo-orchestration-codex-01-20260319`
+   - goal: allow external repos such as `jayrun` to keep canonical graph and ExecPlan state locally while platform-template-bootstrap supplies deterministic bootstrap, project-board setup, completion-PR visibility, orchestration, and control-loop runtime by explicit repo-root targeting
+   - draft branch: `draft-execplan/20260319-managed-repo-orchestration-bootstrap-codex-01-20260319`
 
 29. `20260319-post-merge-graph-reconciliation-automation-codex-01-execplan`
    - status: `completed`
