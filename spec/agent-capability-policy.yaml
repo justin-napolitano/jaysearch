@@ -58,6 +58,7 @@ capability_rules:
       - bin/anti-cheat-check
       - bin/merge-readiness-check
       - bin/policy-compliance-check
+      - bin/register-remaining-work-node
       - bin/reconcile-remaining-work-transition
       - bin/rule-graph-check
       - bin/state-transition-legality-check
@@ -71,6 +72,7 @@ capability_rules:
       - src/platform_tools/merge_readiness.py
       - src/platform_tools/orchestrator_status.py
       - src/platform_tools/policy_compliance_check.py
+      - src/platform_tools/register_remaining_work_node.py
       - src/platform_tools/reconcile_remaining_work_merge.py
       - src/platform_tools/reconcile_remaining_work_transition.py
       - src/platform_tools/repo_health.py
@@ -82,6 +84,7 @@ capability_rules:
       - tests/test_merge_readiness.py
       - tests/test_orchestrator_status.py
       - tests/test_policy_compliance_check.py
+      - tests/test_register_remaining_work_node.py
       - tests/test_reconcile_remaining_work_merge.py
       - tests/test_reconcile_remaining_work_transition.py
       - tests/test_repo_health.py
