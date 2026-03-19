@@ -318,6 +318,16 @@ def check_remaining_work_graph(
                         errors.append(f"parent_initiative_node_required:{node_id}")
                 elif integration_mode not in {"direct_to_main_hotfix", "direct_to_main_patch"}:
                     errors.append(f"invalid_integration_mode:{node_id}:{integration_mode}")
+        if parent_initiative_node:
+            parent_node = nodes.get(parent_initiative_node)
+            if parent_node is None:
+                errors.append(f"missing_parent_initiative_node:{node_id}:{parent_initiative_node}")
+            else:
+                parent_branch = str(parent_node.get("initiative_branch", "")).strip()
+                if initiative_branch and parent_branch != initiative_branch:
+                    errors.append(
+                        f"initiative_branch_parent_mismatch:{node_id}:{initiative_branch}:{parent_initiative_node}:{parent_branch}"
+                    )
 
         if action_state["last_action_id"]:
             action = action_map.get(action_state["last_action_id"])

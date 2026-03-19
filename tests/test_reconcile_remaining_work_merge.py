@@ -118,6 +118,18 @@ def _graph_data() -> dict[str, object]:
         ],
         "nodes": [
             {
+                "node_id": "initiative-remaining-work-ordering",
+                "title": "Initiative / Remaining-work ordering",
+                "status": "ready",
+                "gating_class": "auto_runnable",
+                "conflict_domains": ["remaining-work-graph"],
+                "target_execplan_id": "initiative:remaining-work-ordering",
+                "goal_area": "reference",
+                "initiative_branch": "initiative/remaining-work-ordering",
+                "parent_initiative_node": "initiative-remaining-work-ordering",
+                "ordering": {},
+            },
+            {
                 "node_id": "rwg-012",
                 "title": "Policy compliance",
                 "status": "completed",
