@@ -62,6 +62,7 @@ capability_rules:
       - bin/state-transition-legality-check
       - bin/state-transition-legality-smoke-test
       - src/platform_tools/anti_cheat_check.py
+      - src/platform_tools/branch_policy.py
       - src/platform_tools/execplan_discovery.py
       - src/platform_tools/game_status.py
       - src/platform_tools/governance_check.py
@@ -69,15 +70,20 @@ capability_rules:
       - src/platform_tools/merge_readiness.py
       - src/platform_tools/orchestrator_status.py
       - src/platform_tools/policy_compliance_check.py
+      - src/platform_tools/reconcile_remaining_work_merge.py
       - src/platform_tools/repo_health.py
       - src/platform_tools/rule_graph_check.py
+      - src/platform_tools/remaining_work_graph_check.py
       - src/platform_tools/state_transition_legality.py
       - tests/test_anti_cheat_check.py
+      - tests/test_branch_policy.py
       - tests/test_merge_readiness.py
       - tests/test_orchestrator_status.py
       - tests/test_policy_compliance_check.py
+      - tests/test_reconcile_remaining_work_merge.py
       - tests/test_repo_health.py
       - tests/test_rule_graph_check.py
+      - tests/test_remaining_work_graph_check.py
       - tests/test_state_transition_legality.py
     requires_execplan_declaration_for_protected_surfaces: true
 denial_rules:
