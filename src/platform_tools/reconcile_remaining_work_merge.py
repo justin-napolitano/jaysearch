@@ -195,6 +195,20 @@ def _merge_search_ref(node: dict[str, Any], main_ref: str) -> str:
     return main_ref
 
 
+def _availability_target_ref(node: dict[str, Any], main_ref: str) -> str:
+    target = str(node.get("availability_target_ref", "")).strip()
+    return target or ""
+
+
+def _completion_extra_markers(node: dict[str, Any]) -> list[str]:
+    markers: list[str] = []
+    initiative_branch = str(node.get("initiative_branch", "")).strip()
+    availability_target_ref = str(node.get("availability_target_ref", "")).strip()
+    if initiative_branch and availability_target_ref == "main":
+        markers.append(initiative_branch)
+    return markers
+
+
 def _transition_event(node: dict[str, Any], *, completion_target_ref: str, main_ref: str) -> str:
     integration_mode = str(node.get("integration_mode", "")).strip()
     if str(node.get("node_id", "")).strip().startswith("initiative-"):
@@ -225,6 +239,24 @@ def _select_merge_candidate(
     return candidates[0]
 
 
+def _select_activation_candidate(
+    *,
+    candidates: list[dict[str, str]],
+    target_branch: str,
+) -> dict[str, str] | None:
+    if not candidates:
+        return None
+    candidates.sort(
+        key=lambda item: (
+            1 if target_branch and str(item.get("branch_ref", "")).strip() == target_branch else 0,
+            item.get("committed_at", ""),
+            item.get("commit", ""),
+        ),
+        reverse=True,
+    )
+    return candidates[0]
+
+
 def _plan_path_for_execplan(repo_root: Path, execplan_id: str) -> Path | None:
     candidate = repo_root / ".agent" / "execplans" / f"{execplan_id}.md"
     return candidate if candidate.exists() else None
@@ -235,14 +267,91 @@ def _safe_merge_candidates(
     merge_ref: str,
     execplan_id: str,
     draft_branch: str,
+    extra_markers: list[str] | None = None,
 ) -> list[dict[str, str]]:
     try:
-        return _merge_candidates(repo_root, merge_ref, execplan_id, draft_branch)
+        return _merge_candidates(repo_root, merge_ref, execplan_id, draft_branch, extra_markers=extra_markers)
     except ValueError as exc:
         message = str(exc).strip()
         if message.startswith("fatal: ambiguous argument "):
             return []
+        if message.startswith("fatal: not a git repository"):
+            return []
         raise
+
+
+def _reconcile_mainline_activation(
+    *,
+    node: dict[str, Any],
+    repo_root: Path,
+    execplan_id: str,
+    draft_branch: str,
+    main_ref: str,
+    actions: list[dict[str, Any]],
+) -> str | None:
+    if _availability_target_ref(node, main_ref) != main_ref:
+        return None
+    initiative_branch = str(node.get("initiative_branch", "")).strip()
+    if not initiative_branch:
+        return None
+    candidates = _safe_merge_candidates(
+        repo_root,
+        main_ref,
+        execplan_id,
+        draft_branch,
+        extra_markers=[initiative_branch],
+    )
+    selected = _select_activation_candidate(candidates=candidates, target_branch=initiative_branch)
+    if selected is None:
+        node["availability_status"] = "pending"
+        node.pop("availability_ref", None)
+        return None
+    availability_ref = (
+        f"merged:pr-{selected['pull_request']}"
+        if selected.get("pull_request", "").strip()
+        else f"merged:{selected['commit']}"
+    )
+    existing_activate_action = None
+    node_id = str(node.get("node_id", "")).strip()
+    for action in reversed(actions):
+        if (
+            str(action.get("node_id", "")).strip() == node_id
+            and str(action.get("action", "")).strip() == "activate"
+            and str(action.get("evidence_ref", "")).strip() == availability_ref
+        ):
+            existing_activate_action = action
+            break
+    if existing_activate_action is None:
+        activate_action_id = _next_action_id(
+            actions,
+            committed_at=selected["committed_at"],
+            action="activate",
+            node_id=node_id,
+        )
+        actions.append(
+            {
+                "action_id": activate_action_id,
+                "action": "activate",
+                "node_id": node_id,
+                "rationale": (
+                    f"{execplan_id} is now operator-active on {main_ref} because {initiative_branch} merged to {main_ref}"
+                ),
+                "evidence_ref": availability_ref,
+                "queue_reconciled": True,
+            }
+        )
+    else:
+        activate_action_id = str(existing_activate_action.get("action_id", "")).strip()
+    node["availability_status"] = "active"
+    node["availability_ref"] = availability_ref
+    action_state = node.get("action_state", {}) if isinstance(node.get("action_state"), dict) else {}
+    action_state["last_action_id"] = activate_action_id
+    action_state["last_action"] = "activate"
+    action_state["action_required"] = False
+    action_state["reorder_requires_human"] = False
+    action_state["reorder_blockers"] = []
+    node["action_state"] = action_state
+    return availability_ref
 
 
 def find_pending_merge_reconciliations(
@@ -267,7 +376,13 @@ def find_pending_merge_reconciliations(
         plan = parse_plan(plan_path)
         draft_branch = str(plan.frontmatter.get("draft_branch", "")).strip()
         merge_ref = _merge_search_ref(node, main_ref)
-        candidates = _safe_merge_candidates(repo_root, merge_ref, execplan_id, draft_branch)
+        candidates = _safe_merge_candidates(
+            repo_root,
+            merge_ref,
+            execplan_id,
+            draft_branch,
+            extra_markers=_completion_extra_markers(node),
+        )
         selected = _select_merge_candidate(
             candidates=candidates,
             implementation_branch=str(node.get("implementation_branch", "")).strip(),
@@ -301,13 +416,70 @@ def reconcile_pending_merge_completions(
                 merge_evidence=item["merge_evidence"],
             )
         )
+    activation_results = reconcile_pending_mainline_activations(repo_root=repo_root, main_ref=main_ref)
     return {
         "command": "reconcile-pending-merge-completions",
         "status": "ok",
         "ok": True,
         "reconciled_count": len(results),
+        "activated_count": len(activation_results),
         "results": results,
+        "activation_results": activation_results,
     }
+
+
+def reconcile_pending_mainline_activations(
+    *,
+    repo_root: Path,
+    main_ref: str = "main",
+) -> list[dict[str, Any]]:
+    graph_path = repo_root / GRAPH_PATH
+    graph = _load_json(graph_path)
+    nodes = graph.get("nodes", [])
+    actions = graph.get("graph_actions", [])
+    if not isinstance(nodes, list) or not isinstance(actions, list):
+        return []
+    results: list[dict[str, Any]] = []
+    changed = False
+    for node in nodes:
+        if not isinstance(node, dict):
+            continue
+        if str(node.get("status", "")).strip() != "completed":
+            continue
+        if _availability_target_ref(node, main_ref) != main_ref:
+            continue
+        if str(node.get("availability_status", "")).strip() == "active":
+            continue
+        execplan_id = str(node.get("target_execplan_id", "")).strip()
+        plan_path = _plan_path_for_execplan(repo_root, execplan_id)
+        if plan_path is None:
+            continue
+        plan = parse_plan(plan_path)
+        availability_ref = _reconcile_mainline_activation(
+            node=node,
+            repo_root=repo_root,
+            execplan_id=execplan_id,
+            draft_branch=str(plan.frontmatter.get("draft_branch", "")).strip(),
+            main_ref=main_ref,
+            actions=actions,
+        )
+        if availability_ref:
+            changed = True
+            results.append(
+                {
+                    "node_id": str(node.get("node_id", "")).strip(),
+                    "availability_ref": availability_ref,
+                    "availability_status": str(node.get("availability_status", "")).strip(),
+                }
+            )
+    if changed:
+        graph["graph_actions"] = actions
+        graph["nodes"] = nodes
+        queue_projection = graph.get("queue_projection", {}) if isinstance(graph.get("queue_projection"), dict) else {}
+        queue_projection["last_reconciled_action_id"] = actions[-1]["action_id"]
+        graph["queue_projection"] = queue_projection
+        _write_json(graph_path, graph)
+    return results
 
 
 def reconcile_remaining_work_merge(
@@ -338,7 +510,13 @@ def reconcile_remaining_work_merge(
     if merge_evidence is None:
         draft_branch = str(plan.frontmatter.get("draft_branch", "")).strip()
         merge_ref = _merge_search_ref(node, main_ref)
-        candidates = _merge_candidates(repo_root, merge_ref, execplan_id, draft_branch)
+        candidates = _merge_candidates(
+            repo_root,
+            merge_ref,
+            execplan_id,
+            draft_branch,
+            extra_markers=_completion_extra_markers(node),
+        )
         if not candidates:
             raise ValueError("missing_merge_commit")
         implementation_branch = str(node.get("implementation_branch", "")).strip()
@@ -378,6 +556,9 @@ def reconcile_remaining_work_merge(
     node["status"] = "completed"
     node["completion_ref"] = completion_ref
     node["status_reason"] = ""
+    if str(node.get("availability_target_ref", "")).strip():
+        node["availability_status"] = "pending"
+        node.pop("availability_ref", None)
     ordering = node.get("ordering", {}) if isinstance(node.get("ordering"), dict) else {}
     ordering.pop("ready_order", None)
     ordering["source_action_id"] = complete_action_id
@@ -446,6 +627,15 @@ def reconcile_remaining_work_merge(
     queue_projection["last_reconciled_action_id"] = actions[-1]["action_id"]
     queue_projection["ready_execplan_ids"] = ready_execplan_ids
     queue_projection["projection_authority"] = "projection_only"
+    availability_ref = _reconcile_mainline_activation(
+        node=node,
+        repo_root=repo_root,
+        execplan_id=execplan_id,
+        draft_branch=str(plan.frontmatter.get("draft_branch", "")).strip(),
+        main_ref=main_ref,
+        actions=actions,
+    )
+    queue_projection["last_reconciled_action_id"] = actions[-1]["action_id"]
     graph["queue_projection"] = queue_projection
     graph["graph_actions"] = actions
     graph["nodes"] = nodes
@@ -473,6 +663,8 @@ def reconcile_remaining_work_merge(
         "completed_node_id": node_id,
         "completion_ref": completion_ref,
         "completion_target_ref": completion_target_ref,
+        "availability_ref": availability_ref or str(node.get("availability_ref", "")).strip(),
+        "availability_status": str(node.get("availability_status", "")).strip(),
         "transition_event": transition_event,
         "merge_commit": str(merge_evidence.get("commit", "")).strip(),
         "merge_signature_status": str(merge_evidence.get("signature_status", "")).strip(),

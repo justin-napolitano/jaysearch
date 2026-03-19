@@ -1227,6 +1227,8 @@
       "initiative_branch": "initiative/local-git-hook-automation",
       "parent_initiative_node": "initiative-local-git-hook-automation",
       "integration_mode": "via_initiative",
+      "availability_target_ref": "main",
+      "availability_status": "pending",
       "expected_artifacts": [
         ".githooks/post-merge",
         ".githooks/post-checkout",
@@ -1261,7 +1263,7 @@
       ],
       "target_execplan_id": "20260319-local-git-hook-mainline-followup-codex-01-execplan",
       "goal_area": "governance",
-      "implementation_branch": "",
+      "implementation_branch": "impl-execplan/20260319-local-git-hook-mainline-followup-codex-01-execplan-codex-01-20260319",
       "draft_branch": "draft-execplan/20260319-local-git-hook-mainline-followup-codex-01-20260319",
       "initiative_branch": "initiative/local-git-hook-automation",
       "parent_initiative_node": "initiative-local-git-hook-automation",
