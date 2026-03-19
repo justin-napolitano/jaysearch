@@ -16,7 +16,7 @@
   "queue_projection": {
     "path": "docs/queued-execplans.md",
     "projection_authority": "projection_only",
-    "last_reconciled_action_id": "rwg-action-20260319-011-complete-rwg-027",
+    "last_reconciled_action_id": "rwg-action-20260319-012-unblock-rwg-030",
     "ready_execplan_ids": [
     ]
   },
@@ -259,6 +259,14 @@
       "node_id": "rwg-027",
       "rationale": "graph transition automation and merge-gated reconciliation merged to main in PR 91 and is now canonical completed state",
       "evidence_ref": "merged:pr-91",
+      "queue_reconciled": true
+    },
+    {
+      "action_id": "rwg-action-20260319-012-unblock-rwg-030",
+      "action": "unblock",
+      "node_id": "rwg-030",
+      "rationale": "capture automatic post-merge graph reconciliation as its own slice so merged implementation evidence cannot sit stale in the repo until a manual follow-up branch updates canonical state",
+      "evidence_ref": ".agent/execplans/20260319-post-merge-graph-reconciliation-automation-codex-01-execplan.md",
       "queue_reconciled": true
     }
   ],
@@ -1060,6 +1068,42 @@
       }
     },
     {
+      "node_id": "rwg-030",
+      "title": "Automatic post-merge graph reconciliation",
+      "status": "review_gated",
+      "status_reason": "draft the runtime slice that should consume merged implementation evidence automatically and reconcile canonical completion without a manual cleanup branch",
+      "gating_class": "review_gated",
+      "conflict_domains": [
+        "governance",
+        "orchestrator-runtime",
+        "workflow"
+      ],
+      "target_execplan_id": "20260319-post-merge-graph-reconciliation-automation-codex-01-execplan",
+      "goal_area": "governance",
+      "implementation_branch": "impl-execplan/20260319-post-merge-graph-reconciliation-automation-codex-01-execplan-codex-01-20260319",
+      "initiative_branch": "initiative/graph-transition-automation",
+      "parent_initiative_node": "initiative-graph-transition-automation",
+      "integration_mode": "via_initiative",
+      "expected_artifacts": [
+        "src/platform_tools/orchestrate_governed_slice.py",
+        "src/platform_tools/reconcile_remaining_work_merge.py",
+        "src/platform_tools/human_operations_runtime.py",
+        "docs/codex-orchestrator-contract.md"
+      ],
+      "ordering": {
+        "queue_position": 30,
+        "source_action_id": "rwg-action-20260319-012-unblock-rwg-030",
+        "tie_breaker": "20260319-post-merge-graph-reconciliation-automation-codex-01-execplan"
+      },
+      "action_state": {
+        "last_action_id": "rwg-action-20260319-012-unblock-rwg-030",
+        "last_action": "unblock",
+        "action_required": false,
+        "reorder_requires_human": false,
+        "reorder_blockers": []
+      }
+    },
+    {
       "node_id": "artifact-orchestrator-contract",
       "title": "Codex orchestrator contract",
       "status": "ready",
@@ -1114,6 +1158,11 @@
     },
     {
       "from": "rwg-029",
+      "to": "rwg-027",
+      "relation": "depends_on"
+    },
+    {
+      "from": "rwg-030",
       "to": "rwg-027",
       "relation": "depends_on"
     },
