@@ -34,6 +34,7 @@ def _seed_mapping(root: Path) -> None:
                 "  status: single_select",
                 "  gating_class: single_select",
                 "  implementation_branch: text",
+                "  completion_pr: text",
                 "  goal_area: single_select",
                 "  dependency_summary: text",
                 "  human_review_state: single_select",
@@ -149,6 +150,7 @@ def test_execute_bootstrap_writes_sync_compatible_field_map(tmp_path: Path, monk
                         "nodes": [
                             {"id": "FIELD_node_id", "name": "node_id", "dataType": "TEXT"},
                             {"id": "FIELD_target_execplan_id", "name": "target_execplan_id", "dataType": "TEXT"},
+                            {"id": "FIELD_completion_pr", "name": "completion_pr", "dataType": "TEXT"},
                             {
                                 "id": "FIELD_status",
                                 "name": "status",
@@ -190,6 +192,7 @@ def test_execute_bootstrap_writes_sync_compatible_field_map(tmp_path: Path, monk
     assert field_map["project_id"] == "PVT_123"
     assert field_map["fields"]["title"]["field_id"] == "builtin:title"
     assert field_map["fields"]["status"]["field_id"] == "FIELD_status"
+    assert field_map["fields"]["completion_pr"]["field_id"] == "FIELD_completion_pr"
     assert field_map["fields"]["status"]["options"]["ready"] == "OPT_READY"
     assert field_map["fields"]["finalization_state"]["options"]["merged_to_main"] == "OPT_MERGED"
 

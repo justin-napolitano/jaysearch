@@ -64,6 +64,9 @@ The orchestrator may target an external repository root when:
 - the external repo remains canonical for its own graph, ExecPlans, docs, and initiative state
 - `platform-template-bootstrap` remains only the runtime and orchestration engine
 - the external repo exposes the lightweight canonical artifacts declared in [workflow.yaml](/mnt/c/Users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap/spec/workflow.yaml)
+- managed-repo bootstrap is performed through versioned platform commands rather than Codex-only behavior or ad hoc shell usage
+- repo-local provider-sync artifacts are created during bootstrap and reused for later board sync
+- the managed board surfaces canonical completion PR evidence as projection data rather than as independent authority
 - root-targeted runtime commands fail closed when those artifacts are missing or ambiguous
 
 This allows the platform runtime to operate on repos such as `jayrun` without absorbing those repos into platform canonical state.

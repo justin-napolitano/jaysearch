@@ -70,6 +70,8 @@ execution_requirements:
     initiative_to_main_requires_parent_node_completion: true
     fail_closed_on_missing_initiative_mapping: true
     default_integration_mode: via_initiative
+    optional_mainline_activation_signal_allowed: true
+    mainline_activation_signal_meaning: completed_slice_is_not_operator_active_on_main_until_activation_evidence_exists
     direct_to_main_exception_modes:
       - direct_to_main_hotfix
       - direct_to_main_patch
@@ -105,11 +107,17 @@ execution_requirements:
     target_repo_owns_canonical_state: true
     platform_repo_owns_runtime: true
     external_root_targeting_must_fail_closed: true
+    platform_owned_bootstrap_required: true
+    bootstrap_command: bin/bootstrap-managed-repo
+    bootstrap_must_be_human_runnable_without_codex: true
+    github_project_bootstrap_via_runtime_code_required: true
+    managed_repo_board_must_show_completion_pr_projection: true
     lightweight_required_artifacts:
       - spec/workflow.yaml
       - artifacts/planner/research/remaining-work-graph.json
       - docs/queued-execplans.md
       - .agent/execplans
+      - artifacts/provider-sync/github-projects-field-map.json
     lightweight_branch_policy_fields:
       - allowed_branch_patterns
       - forbidden_branches
