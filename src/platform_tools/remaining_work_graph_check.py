@@ -120,6 +120,9 @@ def _node_projection(
         "goal_area": str(node.get("goal_area", "")).strip(),
         "target_execplan_id": target_execplan_id,
         "implementation_branch": implementation_branch,
+        "initiative_branch": str(node.get("initiative_branch", "")).strip(),
+        "parent_initiative_node": str(node.get("parent_initiative_node", "")).strip(),
+        "integration_mode": str(node.get("integration_mode", "")).strip(),
         "conflict_domains": sorted(str(item).strip() for item in node.get("conflict_domains", []) if str(item).strip()),
         "expected_artifacts": sorted(str(item).strip() for item in node.get("expected_artifacts", []) if str(item).strip()),
         "depends_on": depends_on,
@@ -296,12 +299,25 @@ def check_remaining_work_graph(
         ordering = item["ordering"]
         action_state = item["action_state"]
         queue_position = ordering.get("queue_position")
+        integration_mode = item.get("integration_mode", "")
+        initiative_branch = item.get("initiative_branch", "")
+        parent_initiative_node = item.get("parent_initiative_node", "")
 
         if status != "completed":
             if not isinstance(queue_position, int):
                 errors.append(f"slice_missing_queue_position:{node_id}")
             if not ordering.get("tie_breaker"):
                 errors.append(f"slice_missing_tie_breaker:{node_id}")
+            if _is_slice_node(nodes[node_id]) and status in READY_STATUSES:
+                if not integration_mode:
+                    errors.append(f"slice_missing_integration_mode:{node_id}")
+                elif integration_mode == "via_initiative":
+                    if not initiative_branch:
+                        errors.append(f"initiative_branch_required:{node_id}")
+                    if not parent_initiative_node:
+                        errors.append(f"parent_initiative_node_required:{node_id}")
+                elif integration_mode not in {"direct_to_main_hotfix", "direct_to_main_patch"}:
+                    errors.append(f"invalid_integration_mode:{node_id}:{integration_mode}")
 
         if action_state["last_action_id"]:
             action = action_map.get(action_state["last_action_id"])
@@ -320,6 +336,8 @@ def check_remaining_work_graph(
                 errors.append(f"ready_node_with_incomplete_dependencies:{node_id}")
             if _is_slice_node(nodes[node_id]) and not item["implementation_branch"]:
                 errors.append(f"ready_slice_missing_implementation_branch:{node_id}")
+            if integration_mode != "via_initiative":
+                errors.append(f"ready_slice_wrong_integration_mode:{node_id}:{integration_mode}")
             if not isinstance(ordering.get("ready_order"), int):
                 errors.append(f"ready_node_missing_ready_order:{node_id}")
             if action_state["last_action"] != "promote_ready":
