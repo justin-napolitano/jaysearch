@@ -8,18 +8,26 @@ base_branch: main
 changes:
   - .agent/execplans/20260319-post-merge-graph-reconciliation-automation-codex-01-execplan.md
   - artifacts/planner/research/remaining-work-graph.json
+  - artifacts/governance/board-action-events.jsonl
   - docs/queued-execplans.md
   - docs/codex-orchestrator-contract.md
   - spec/workflow.yaml
   - spec/agent-capability-policy.yaml
   - spec/protected-surfaces.schema.yaml
+  - bin/post-merge-graph-reconciliation-smoke-test
   - bin/reconcile-pending-merge-completions
   - src/platform_tools/orchestrate_governed_slice.py
+  - src/platform_tools/reconcile_governed_graph_events.py
   - src/platform_tools/reconcile_pending_merge_completions.py
   - src/platform_tools/reconcile_remaining_work_merge.py
   - src/platform_tools/human_operations_runtime.py
+  - src/platform_tools/merge_readiness.py
+  - src/platform_tools/policy_compliance_check.py
   - tests/test_orchestrate_governed_slice.py
+  - tests/test_reconcile_governed_graph_events.py
   - tests/test_reconcile_pending_merge_completions.py
+  - tests/test_merge_readiness.py
+  - tests/test_policy_compliance_check.py
 approve_policy: codeowners
 reviewers:
   - "github:justin-napolitano"
@@ -41,6 +49,9 @@ validation:
       expected_exit: 0
     - name: "policy-compliance-check"
       command: "bin/policy-compliance-check --execplan-path .agent/execplans/20260319-post-merge-graph-reconciliation-automation-codex-01-execplan.md"
+      expected_exit: 0
+    - name: "post-merge-graph-reconciliation-smoke-test"
+      command: "bin/post-merge-graph-reconciliation-smoke-test"
       expected_exit: 0
 tasks:
   - title: "Make the local orchestrator detect merged implementation evidence and reconcile graph completion automatically"

@@ -163,6 +163,36 @@ def test_merge_readiness_fails_for_dirty_generated_artifact(tmp_path: Path) -> N
     assert "dirty_generated_artifacts" in report["failing_checks"]
 
 
+def test_merge_readiness_reports_missing_initiative_base_ref(tmp_path: Path) -> None:
+    execplan = _seed_repo(tmp_path)
+    _git(tmp_path, "checkout", "-b", "impl-execplan/test")
+    graph_path = tmp_path / "artifacts" / "planner" / "research" / "remaining-work-graph.json"
+    _write_json(
+        graph_path,
+        {
+            "nodes": [
+                {
+                    "node_id": "rwg-100",
+                    "target_execplan_id": "20260310-test-plan-codex-01-execplan",
+                    "implementation_branch": "impl-execplan/test",
+                    "initiative_branch": "initiative/missing",
+                    "integration_mode": "via_initiative",
+                }
+            ]
+        },
+    )
+
+    code, report = check_merge_readiness(
+        root=tmp_path.as_posix(),
+        execplan_path=execplan.as_posix(),
+        base_ref="main",
+        include_validation_runs=False,
+    )
+
+    assert code == 1
+    assert "missing_base_ref:initiative/missing" in report["failing_checks"]
+
+
 def test_merge_readiness_fails_for_wrong_commit_order(tmp_path: Path) -> None:
     _git(tmp_path, "init", "-b", "main")
     _git(tmp_path, "config", "user.name", "Tests")
@@ -789,5 +819,5 @@ Test.
     )
 
     assert code == 1
-    assert "merge_target_mismatch:initiative/transition-automation:main" in report["failing_checks"]
+    assert "missing_base_ref:initiative/transition-automation" in report["failing_checks"]
     assert report["checks"]["graph_merge_target"]["expected_target"] == "initiative/transition-automation"

@@ -63,6 +63,17 @@ def _git(cwd: Path, *args: str) -> str:
     return proc.stdout.strip()
 
 
+def _ref_exists(cwd: Path, ref: str) -> bool:
+    proc = subprocess.run(
+        ["git", "rev-parse", "--verify", "--quiet", ref],
+        cwd=cwd,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    return proc.returncode == 0
+
+
 def _merge_base(cwd: Path, base_ref: str) -> str:
     return _git(cwd, "merge-base", "HEAD", base_ref)
 
@@ -311,8 +322,45 @@ def check_merge_readiness(
     plan_path = Path(execplan_path) if execplan_path else _discover_execplan(cwd, base_ref)
     parsed = parse_plan(plan_path)
     execplan_id = str(parsed.frontmatter.get("id", "")).strip()
+    graph_node = _active_remaining_work_node(cwd, branch=branch, execplan_id=execplan_id)
+    expected_merge_target = _expected_merge_target(branch, graph_node, base_ref)
+    effective_base_ref = expected_merge_target or base_ref
 
-    changed_files = _changed_files(cwd, base_ref)
+    if effective_base_ref and not _ref_exists(cwd, effective_base_ref):
+        report = {
+            "tool": "merge_readiness_check",
+            "branch": branch,
+            "execplan_id": execplan_id,
+            "execplan_path": plan_path.as_posix(),
+            "readiness": False,
+            "failing_checks": [f"missing_base_ref:{effective_base_ref}"],
+            "blockers": [],
+            "dirty_artifacts": _dirty_generated_artifacts(cwd),
+            "human_approvals": [
+                "human_review_required",
+                "execplan_finalization_required",
+            ],
+            "next_action": "resolve_blockers",
+            "checks": {
+                "validations": [],
+                "validation_runs_included": include_validation_runs,
+                "smoke_test_present": False,
+                "graph_merge_target": {
+                    "expected_target": expected_merge_target,
+                    "active_node_id": str(graph_node.get("node_id", "")).strip() if isinstance(graph_node, dict) else "",
+                    "active_integration_mode": (
+                        str(graph_node.get("integration_mode", "")).strip() if isinstance(graph_node, dict) else ""
+                    ),
+                },
+                "commit_stack": [],
+                "scope_blockers": {"status": "deferred", "blockers": []},
+            },
+            "warnings": [],
+            "changed_files": [],
+        }
+        return 1, report
+
+    changed_files = _changed_files(cwd, effective_base_ref)
     validation_entries = _validation_entries(plan_path)
     commands: list[dict[str, str]] = list(validation_entries)
     seen_commands = {entry["command"] for entry in commands}
@@ -344,8 +392,6 @@ def check_merge_readiness(
     if dirty_artifacts:
         failing_checks.append("dirty_generated_artifacts")
 
-    graph_node = _active_remaining_work_node(cwd, branch=branch, execplan_id=execplan_id)
-    expected_merge_target = _expected_merge_target(branch, graph_node, base_ref)
     if branch.startswith("impl-execplan/"):
         if not expected_merge_target:
             failing_checks.append("missing_merge_target_contract")
@@ -356,7 +402,7 @@ def check_merge_readiness(
 
     commit_reports, commit_errors, commit_warnings = _commit_reports(
         cwd,
-        base_ref,
+        effective_base_ref,
         active_execplan_path=_repo_relative_path(plan_path, root=cwd),
     )
     failing_checks.extend(commit_errors)

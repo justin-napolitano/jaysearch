@@ -5,7 +5,7 @@ import sys
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
-from platform_tools.orchestrate_governed_slice import run_orchestrate_governed_slice
+from platform_tools.orchestrate_governed_slice import _effective_base_ref, run_orchestrate_governed_slice
 
 
 def test_orchestrate_governed_slice_runs_reconciliation_then_reports_status(monkeypatch, tmp_path: Path) -> None:
@@ -76,3 +76,35 @@ def test_orchestrate_governed_slice_uses_managed_repo_status_for_external_root(m
     assert report["ok"] is True
     assert report["managed_repo"]["ok"] is True
     assert report["next_actions"][0]["action"] == "start_managed_slice"
+
+
+def test_effective_base_ref_prefers_initiative_branch_for_impl_execplan(tmp_path: Path) -> None:
+    execplan_path = tmp_path / ".agent" / "execplans" / "plan.md"
+    execplan_path.parent.mkdir(parents=True, exist_ok=True)
+    execplan_path.write_text("---\nid: \"plan-id\"\n---\n\n# Purpose / Big Picture\n", encoding="utf-8")
+    graph_path = tmp_path / "artifacts" / "planner" / "research" / "remaining-work-graph.json"
+    graph_path.parent.mkdir(parents=True, exist_ok=True)
+    graph_path.write_text(
+        """
+{
+  "nodes": [
+    {
+      "target_execplan_id": "plan-id",
+      "integration_mode": "via_initiative",
+      "initiative_branch": "initiative/graph-transition-automation"
+    }
+  ]
+}
+""".strip()
+        + "\n",
+        encoding="utf-8",
+    )
+
+    base_ref = _effective_base_ref(
+        repo_root=tmp_path,
+        branch="impl-execplan/test",
+        execplan_path=execplan_path.as_posix(),
+        default_base_ref="main",
+    )
+
+    assert base_ref == "initiative/graph-transition-automation"
