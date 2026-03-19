@@ -57,6 +57,17 @@ Primary artifact families:
 
 When both human-readable and machine-readable output exist, Codex must consume the machine-readable form.
 
+## Managed Repos
+
+The orchestrator may target an external repository root when:
+
+- the external repo remains canonical for its own graph, ExecPlans, docs, and initiative state
+- `platform-template-bootstrap` remains only the runtime and orchestration engine
+- the external repo exposes the lightweight canonical artifacts declared in [workflow.yaml](/mnt/c/Users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap/spec/workflow.yaml)
+- root-targeted runtime commands fail closed when those artifacts are missing or ambiguous
+
+This allows the platform runtime to operate on repos such as `jayrun` without absorbing those repos into platform canonical state.
+
 ## Required Output Contract
 
 Commands used by Codex orchestration must eventually provide stable machine-readable output with:
