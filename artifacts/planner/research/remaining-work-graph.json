@@ -1083,7 +1083,7 @@
       "node_id": "rwg-029",
       "title": "Managed external repo orchestration",
       "status": "review_gated",
-      "status_reason": "draft the platform slice that lets external repos keep canonical graph and ExecPlan state locally while platform runtime commands orchestrate them by explicit root targeting",
+      "status_reason": "draft the platform slice that lets external repos keep canonical graph and ExecPlan state locally while platform runtime commands bootstrap and orchestrate them by explicit root targeting",
       "gating_class": "review_gated",
       "conflict_domains": [
         "governance",
@@ -1098,9 +1098,13 @@
       "integration_mode": "via_initiative",
       "expected_artifacts": [
         "spec/workflow.yaml",
+        "bin/bootstrap-managed-repo",
+        "bin/github-projects-bootstrap",
+        "src/platform_tools/integrations/github_projects_sync.py",
         "src/platform_tools/orchestrate_governed_slice.py",
         "src/platform_tools/execplan_discovery.py",
-        "docs/codex-orchestrator-contract.md"
+        "docs/codex-orchestrator-contract.md",
+        "artifacts/provider-sync/"
       ],
       "ordering": {
         "queue_position": 29,
