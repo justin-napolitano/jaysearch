@@ -70,6 +70,8 @@ execution_requirements:
     initiative_to_main_requires_parent_node_completion: true
     fail_closed_on_missing_initiative_mapping: true
     default_integration_mode: via_initiative
+    optional_mainline_activation_signal_allowed: true
+    mainline_activation_signal_meaning: completed_slice_is_not_operator_active_on_main_until_activation_evidence_exists
     direct_to_main_exception_modes:
       - direct_to_main_hotfix
       - direct_to_main_patch
