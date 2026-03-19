@@ -9,7 +9,9 @@ changes:
   - .agent/execplans/20260318-graph-transition-automation-and-merge-gating-codex-01-execplan.md
   - artifacts/planner/research/remaining-work-graph.json
   - docs/queued-execplans.md
+  - spec/agent-capability-policy.yaml
   - spec/governance.yaml
+  - spec/protected-surfaces.schema.yaml
   - spec/remaining-work-graph.schema.yaml
   - spec/ruleset.yaml
   - spec/workflow.yaml
@@ -19,6 +21,7 @@ changes:
   - src/platform_tools/reconcile_remaining_work_merge.py
   - src/platform_tools/remaining_work_graph_check.py
   - tests/test_branch_policy.py
+  - tests/test_policy_compliance_check.py
   - tests/test_reconcile_remaining_work_merge.py
   - tests/test_remaining_work_graph_check.py
 approve_policy: codeowners
