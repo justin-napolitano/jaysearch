@@ -59,6 +59,7 @@ capability_rules:
       - bin/managed-repo-status
       - bin/merge-readiness-check
       - bin/orchestrate-governed-slice
+      - bin/post-merge-graph-reconciliation-smoke-test
       - bin/policy-compliance-check
       - bin/register-remaining-work-node
       - bin/reconcile-pending-merge-completions

@@ -230,6 +230,21 @@ def _plan_path_for_execplan(repo_root: Path, execplan_id: str) -> Path | None:
     return candidate if candidate.exists() else None
 
 
+def _safe_merge_candidates(
+    repo_root: Path,
+    merge_ref: str,
+    execplan_id: str,
+    draft_branch: str,
+) -> list[dict[str, str]]:
+    try:
+        return _merge_candidates(repo_root, merge_ref, execplan_id, draft_branch)
+    except ValueError as exc:
+        message = str(exc).strip()
+        if message.startswith("fatal: ambiguous argument "):
+            return []
+        raise
+
+
 def find_pending_merge_reconciliations(
     *,
     repo_root: Path,
@@ -252,7 +267,7 @@ def find_pending_merge_reconciliations(
         plan = parse_plan(plan_path)
         draft_branch = str(plan.frontmatter.get("draft_branch", "")).strip()
         merge_ref = _merge_search_ref(node, main_ref)
-        candidates = _merge_candidates(repo_root, merge_ref, execplan_id, draft_branch)
+        candidates = _safe_merge_candidates(repo_root, merge_ref, execplan_id, draft_branch)
         selected = _select_merge_candidate(
             candidates=candidates,
             implementation_branch=str(node.get("implementation_branch", "")).strip(),

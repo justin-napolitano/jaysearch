@@ -16,6 +16,11 @@ surface_entries:
     authority_role: projection_only
     path_exact:
       - docs/queued-execplans.md
+  - id: governance_audit_surface
+    surface_class: projection_surface
+    authority_role: projection_only
+    path_exact:
+      - artifacts/governance/board-action-events.jsonl
   - id: rule_surface
     surface_class: rule_surface
     authority_role: governance_local
@@ -53,6 +58,7 @@ surface_entries:
       - bin/managed-repo-status
       - bin/merge-readiness-check
       - bin/orchestrate-governed-slice
+      - bin/post-merge-graph-reconciliation-smoke-test
       - bin/policy-compliance-check
       - bin/policy-compliance-smoke-test
       - bin/register-remaining-work-node
