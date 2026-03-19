@@ -99,6 +99,7 @@ def _seed_specs(root: Path) -> None:
                 "  status: single_select",
                 "  gating_class: single_select",
                 "  implementation_branch: text",
+                "  completion_pr: text",
                 "  goal_area: single_select",
                 "  dependency_summary: text",
                 "  human_review_state: single_select",
@@ -186,6 +187,26 @@ def _seed_remaining_work(root: Path) -> None:
             ],
             "nodes": [
                 {
+                    "node_id": "initiative-provider-sync",
+                    "title": "Provider sync initiative",
+                    "status": "in_progress",
+                    "gating_class": "decision_gated",
+                    "conflict_domains": ["provider-sync"],
+                    "target_execplan_id": "initiative:provider-sync",
+                    "goal_area": "provider-sync",
+                    "initiative_branch": "initiative/provider-sync",
+                    "parent_initiative_node": "initiative-provider-sync",
+                    "expected_artifacts": [],
+                    "ordering": {"queue_position": 0, "tie_breaker": "initiative:provider-sync"},
+                    "action_state": {
+                        "last_action_id": "",
+                        "last_action": "",
+                        "action_required": False,
+                        "reorder_requires_human": False,
+                        "reorder_blockers": [],
+                    },
+                },
+                {
                     "node_id": "rwg-005",
                     "title": "Provider sync runtime",
                     "status": "ready",
@@ -194,6 +215,9 @@ def _seed_remaining_work(root: Path) -> None:
                     "target_execplan_id": "20260311-github-projects-provider-sync-runtime-codex-01-execplan",
                     "goal_area": "provider-sync",
                     "implementation_branch": "impl-execplan/provider-sync",
+                    "initiative_branch": "initiative/provider-sync",
+                    "parent_initiative_node": "initiative-provider-sync",
+                    "integration_mode": "via_initiative",
                     "ordering": {
                         "queue_position": 1,
                         "ready_order": 1,
@@ -218,6 +242,9 @@ def _seed_remaining_work(root: Path) -> None:
                     "target_execplan_id": "20260311-github-projects-bootstrap-runtime-codex-01-execplan",
                     "goal_area": "provider-sync",
                     "implementation_branch": "impl-execplan/bootstrap",
+                    "initiative_branch": "initiative/provider-sync",
+                    "parent_initiative_node": "initiative-provider-sync",
+                    "integration_mode": "via_initiative",
                     "ordering": {"queue_position": 2, "tie_breaker": "20260311-github-projects-bootstrap-runtime-codex-01-execplan"},
                     "action_state": {
                         "last_action_id": "act-1",
@@ -276,6 +303,7 @@ def _seed_field_map(root: Path) -> Path:
                     },
                 },
                 "implementation_branch": {"field_id": "FIELD_branch", "data_type": "text"},
+                "completion_pr": {"field_id": "FIELD_completion_pr", "data_type": "text"},
                 "goal_area": {
                     "field_id": "FIELD_goal_area",
                     "data_type": "single_select",
@@ -406,7 +434,7 @@ def test_build_sync_plan_maps_goal_area_to_existing_provider_options(tmp_path: P
     field_map_path = _seed_field_map(tmp_path)
 
     data = json.loads((tmp_path / "artifacts" / "planner" / "research" / "remaining-work-graph.json").read_text(encoding="utf-8"))
-    data["nodes"][0]["goal_area"] = "implementation-orchestrator"
+    next(node for node in data["nodes"] if node["node_id"] == "rwg-005")["goal_area"] = "implementation-orchestrator"
     (tmp_path / "artifacts" / "planner" / "research" / "remaining-work-graph.json").write_text(
         json.dumps(data, indent=2, sort_keys=True) + "\n",
         encoding="utf-8",
