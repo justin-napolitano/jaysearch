@@ -84,6 +84,40 @@ def validate_execplan(path: str | Path) -> dict[str, Any]:
             if not initiative_node_id:
                 errors.append("missing_initiative_node_id")
 
+        registration = frontmatter.get("graph_registration")
+        if registration is not None:
+            if not isinstance(registration, dict):
+                errors.append("invalid_graph_registration")
+            else:
+                node_id = str(registration.get("node_id", "")).strip()
+                goal_area = str(registration.get("goal_area", "")).strip()
+                queue_position = registration.get("queue_position")
+                conflict_domains = registration.get("conflict_domains")
+                expected_artifacts = registration.get("expected_artifacts")
+                implementation_branch = str(registration.get("implementation_branch", "")).strip()
+                integration_mode = str(registration.get("integration_mode", "")).strip()
+                if not node_id:
+                    errors.append("missing_graph_registration_node_id")
+                if not goal_area:
+                    errors.append("missing_graph_registration_goal_area")
+                if not isinstance(queue_position, int):
+                    errors.append("missing_graph_registration_queue_position")
+                if not isinstance(conflict_domains, list) or not conflict_domains:
+                    errors.append("missing_graph_registration_conflict_domains")
+                if not isinstance(expected_artifacts, list) or not expected_artifacts:
+                    errors.append("missing_graph_registration_expected_artifacts")
+                if implementation_branch and not implementation_branch.startswith("impl-execplan/"):
+                    errors.append("invalid_graph_registration_implementation_branch")
+                if integration_mode and integration_mode not in {"via_initiative", "direct_to_main_hotfix", "direct_to_main_patch"}:
+                    errors.append("invalid_graph_registration_integration_mode")
+                if implementation_branch and not integration_mode:
+                    errors.append("missing_graph_registration_integration_mode")
+                if integration_mode == "via_initiative":
+                    if not initiative_branch:
+                        errors.append("missing_initiative_branch")
+                    if not initiative_node_id:
+                        errors.append("missing_initiative_node_id")
+
         if (
             isinstance(current_branch, str)
             and current_branch.startswith("impl-execplan/")

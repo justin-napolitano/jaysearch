@@ -106,6 +106,12 @@ properties:
           type: string
         implementation_branch:
           type: string
+        initiative_branch:
+          type: string
+        parent_initiative_node:
+          type: string
+        integration_mode:
+          enum: ["via_initiative", "direct_to_main_hotfix", "direct_to_main_patch"]
         expected_artifacts:
           type: array
           items:
