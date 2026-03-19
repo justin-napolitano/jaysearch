@@ -16,8 +16,10 @@
   "queue_projection": {
     "path": "docs/queued-execplans.md",
     "projection_authority": "projection_only",
-    "last_reconciled_action_id": "rwg-action-20260319-015-unblock-rwg-031",
-    "ready_execplan_ids": []
+    "last_reconciled_action_id": "rwg-action-20260319-016-promote_ready-rwg-031",
+    "ready_execplan_ids": [
+      "20260319-local-git-hook-automation-codex-01-execplan"
+    ]
   },
   "graph_actions": [
     {
@@ -314,6 +316,14 @@
       "node_id": "rwg-031",
       "rationale": "capture local git-hook automation as the next governance automation slice so deterministic runtime updates can run from versioned local hooks instead of manual command chains",
       "evidence_ref": ".agent/execplans/20260319-local-git-hook-automation-codex-01-execplan.md",
+      "queue_reconciled": true
+    },
+    {
+      "action_id": "rwg-action-20260319-016-promote_ready-rwg-031",
+      "action": "promote_ready",
+      "node_id": "rwg-031",
+      "rationale": "implementation_branch_publish derived deterministically from canonical branch and ExecPlan evidence",
+      "evidence_ref": "branch:origin/impl-execplan/20260319-local-git-hook-automation-codex-01-execplan-codex-01-20260319",
       "queue_reconciled": true
     }
   ],
@@ -1176,9 +1186,9 @@
     {
       "node_id": "rwg-031",
       "title": "Local git-hook automation",
-      "status": "review_gated",
-      "status_reason": "draft the local automation slice that should install versioned local git hooks for deterministic reconciliation and governed pre-push checks",
-      "gating_class": "review_gated",
+      "status": "ready",
+      "status_reason": "",
+      "gating_class": "auto_runnable",
       "conflict_domains": [
         "governance",
         "orchestrator-runtime",
@@ -1199,12 +1209,13 @@
       ],
       "ordering": {
         "queue_position": 31,
-        "source_action_id": "rwg-action-20260319-015-unblock-rwg-031",
-        "tie_breaker": "20260319-local-git-hook-automation-codex-01-execplan"
+        "source_action_id": "rwg-action-20260319-016-promote_ready-rwg-031",
+        "tie_breaker": "20260319-local-git-hook-automation-codex-01-execplan",
+        "ready_order": 1
       },
       "action_state": {
-        "last_action_id": "rwg-action-20260319-015-unblock-rwg-031",
-        "last_action": "unblock",
+        "last_action_id": "rwg-action-20260319-016-promote_ready-rwg-031",
+        "last_action": "promote_ready",
         "action_required": false,
         "reorder_requires_human": false,
         "reorder_blockers": []

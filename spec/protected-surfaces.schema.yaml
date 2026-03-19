@@ -25,6 +25,7 @@ surface_entries:
     surface_class: rule_surface
     authority_role: governance_local
     path_exact:
+      - docs/codex-orchestrator-contract.md
       - docs/commands.md
       - docs/getting-started.md
       - docs/governance.md
@@ -35,6 +36,7 @@ surface_entries:
       - docs/rules-architecture.md
       - docs/subgame-branch-governance.md
       - docs/todos.md
+      - pyproject.toml
       - spec/governance.yaml
       - spec/remaining-work-graph.schema.yaml
       - spec/rule-graph.schema.yaml
@@ -53,6 +55,8 @@ surface_entries:
   - id: referee_surface
     surface_class: referee_surface
     authority_role: governance_local
+    path_prefixes:
+      - .githooks/
     path_exact:
       - bin/auto-reconcile-main
       - bin/anti-cheat-check
@@ -107,6 +111,9 @@ surface_entries:
       - tests/test_orchestrator_status.py
       - tests/test_policy_compliance_check.py
       - tests/test_register_remaining_work_node.py
+      - tests/test_run_governed_pre_push_checks.py
+      - tests/test_install_local_git_hooks.py
+      - tests/test_auto_reconcile_main.py
       - tests/test_reconcile_pending_merge_completions.py
       - tests/test_reconcile_governed_graph_events.py
       - tests/test_reconcile_remaining_work_merge.py
