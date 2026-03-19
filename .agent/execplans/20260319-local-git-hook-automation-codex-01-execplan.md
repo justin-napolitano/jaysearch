@@ -7,9 +7,9 @@ status: draft
 base_branch: main
 changes:
   - .agent/execplans/20260319-local-git-hook-automation-codex-01-execplan.md
+  - artifacts/governance/board-action-events.jsonl
   - artifacts/planner/research/remaining-work-graph.json
   - docs/queued-execplans.md
-  - spec/workflow.yaml
   - docs/codex-orchestrator-contract.md
   - docs/commands.md
   - .githooks/post-merge
@@ -18,6 +18,19 @@ changes:
   - bin/auto-reconcile-main
   - bin/install-local-git-hooks
   - bin/run-governed-pre-push-checks
+  - pyproject.toml
+  - spec/agent-capability-policy.yaml
+  - spec/protected-surfaces.schema.yaml
+  - spec/workflow.yaml
+  - src/platform_tools/auto_reconcile_main.py
+  - src/platform_tools/install_local_git_hooks.py
+  - src/platform_tools/reconcile_remaining_work_merge.py
+  - src/platform_tools/run_governed_pre_push_checks.py
+  - tests/test_auto_reconcile_main.py
+  - tests/test_install_local_git_hooks.py
+  - tests/test_reconcile_pending_merge_completions.py
+  - tests/test_reconcile_remaining_work_merge.py
+  - tests/test_run_governed_pre_push_checks.py
 approve_policy: codeowners
 reviewers:
   - "github:justin-napolitano"
@@ -36,6 +49,9 @@ validation:
       expected_exit: 0
     - name: "remaining-work-graph-check"
       command: "bin/remaining-work-graph-check"
+      expected_exit: 0
+    - name: "policy-compliance-check"
+      command: "bin/policy-compliance-check --execplan-path .agent/execplans/20260319-local-git-hook-automation-codex-01-execplan.md"
       expected_exit: 0
 tasks:
   - title: "Version local git-hook entrypoints in-repo instead of relying on manual command chains"

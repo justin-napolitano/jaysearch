@@ -71,6 +71,24 @@ The orchestrator may target an external repository root when:
 
 This allows the platform runtime to operate on repos such as `jayrun` without absorbing those repos into platform canonical state.
 
+## Local Hook Automation
+
+Routine local automation may run through versioned git hooks when:
+
+- the hook bodies are stored in-repo under `.githooks/`
+- the hook bodies call only repo-owned commands
+- mutating hooks are limited to deterministic reconciliation on eligible branches
+- validation hooks remain validation-only
+- local setup is installed through `bin/install-local-git-hooks` rather than hidden one-off shell edits
+
+The initial governed hook surface is:
+
+- `post-merge` -> `bin/auto-reconcile-main`
+- `post-checkout` -> `bin/auto-reconcile-main`
+- `pre-push` -> `bin/run-governed-pre-push-checks`
+
+Hooks are automation surfaces, not authority surfaces. They may invoke governed commands, but they do not create new rules outside the machine-readable workflow contract.
+
 ## Required Output Contract
 
 Commands used by Codex orchestration must eventually provide stable machine-readable output with:

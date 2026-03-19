@@ -108,7 +108,13 @@ def _resolve_finalized_by(repo_root: Path, merge_evidence: dict[str, str]) -> st
     return unique[0]
 
 
-def _merge_candidates(repo_root: Path, main_ref: str, plan_id: str, draft_branch: str) -> list[dict[str, str]]:
+def _merge_candidates(
+    repo_root: Path,
+    main_ref: str,
+    plan_id: str,
+    draft_branch: str,
+    extra_markers: list[str] | tuple[str, ...] | None = None,
+) -> list[dict[str, str]]:
     output = _git(
         repo_root,
         "log",
@@ -116,6 +122,10 @@ def _merge_candidates(repo_root: Path, main_ref: str, plan_id: str, draft_branch
         "--format=%H%x1f%cI%x1f%an%x1f%ae%x1f%G?%x1f%GS%x1f%GK%x1f%s%x1f%b%x1e",
         main_ref,
     )
+    markers = [plan_id, draft_branch]
+    if extra_markers:
+        markers.extend(str(item).strip() for item in extra_markers if str(item).strip())
+    markers = [item for item in markers if item]
     candidates: list[dict[str, str]] = []
     for chunk in output.split("\x1e"):
         chunk = chunk.strip()
@@ -128,7 +138,7 @@ def _merge_candidates(repo_root: Path, main_ref: str, plan_id: str, draft_branch
             continue
         commit, committed_at, author_name, author_email, signature_status, signer_name, signer_fingerprint, subject, body = parts
         text = "\n".join([subject, body])
-        if plan_id not in text and draft_branch not in text:
+        if markers and not any(marker in text for marker in markers):
             continue
         pr_match = re.search(r"Merge pull request #(\d+)", subject)
         branch_match = re.search(r"Merge pull request #\d+ from [^/]+/([^\n]+)", subject)

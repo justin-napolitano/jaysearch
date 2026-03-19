@@ -167,7 +167,8 @@ This document turns the remaining-work graph into an explicit near-term queue of
    - status: `completed`
    - goal: install versioned local git hooks that invoke deterministic repo-owned reconciliation and governed pre-push checks instead of requiring manual command chains
    - draft branch: `draft-execplan/20260319-local-git-hook-automation-codex-01-20260319`
-   - completion ref: `merged:pr-98`
+   - completion ref: `merged:pr-99`
+   - completion ref: `merged:pr-99`
 
 31. `20260319-local-git-hook-mainline-followup-codex-01-execplan`
    - status: `review_gated`
