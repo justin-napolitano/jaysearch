@@ -16,7 +16,7 @@
   "queue_projection": {
     "path": "docs/queued-execplans.md",
     "projection_authority": "projection_only",
-    "last_reconciled_action_id": "rwg-action-20260319-021-activate-rwg-031",
+    "last_reconciled_action_id": "rwg-action-20260319-022-unblock-rwg-033",
     "ready_execplan_ids": []
   },
   "graph_actions": [
@@ -362,6 +362,14 @@
       "node_id": "rwg-031",
       "rationale": "20260319-local-git-hook-automation-codex-01-execplan is now operator-active on main because initiative/local-git-hook-automation merged to main",
       "evidence_ref": "merged:pr-100",
+      "queue_reconciled": true
+    },
+    {
+      "action_id": "rwg-action-20260319-022-unblock-rwg-033",
+      "action": "unblock",
+      "node_id": "rwg-033",
+      "rationale": "capture platform surface simplification as the next initiative-backed draft slice so the public platform model can be reduced to the working core",
+      "evidence_ref": ".agent/execplans/20260319-platform-surface-simplification-codex-01-execplan.md",
       "queue_reconciled": true
     }
   ],
@@ -1308,9 +1316,9 @@
     {
       "node_id": "initiative-platform-surface-simplification",
       "title": "Initiative / Platform surface simplification",
-      "status": "decision_gated",
-      "status_reason": "queued parent initiative for simplifying the public platform model around the graph, transitions, validators, orchestration, and projection",
-      "gating_class": "decision_gated",
+      "status": "review_gated",
+      "status_reason": "initiative branch is published and the first simplification draft is ready for review under it",
+      "gating_class": "review_gated",
       "conflict_domains": [
         "documentation",
         "governance",
@@ -1332,16 +1340,17 @@
     {
       "node_id": "rwg-033",
       "title": "Platform surface simplification and public runtime consolidation",
-      "status": "decision_gated",
-      "status_reason": "queued simplification slice to reduce the public platform surface to the canonical graph, workflow, rule registry, orchestrator, managed-repo runtime, and board projection",
-      "gating_class": "decision_gated",
+      "status": "review_gated",
+      "status_reason": "draft ExecPlan is prepared for initiative review so the simplification effort can start by defining the minimal supported public platform surface",
+      "gating_class": "review_gated",
       "conflict_domains": [
         "documentation",
         "governance",
         "orchestrator-runtime"
       ],
-      "target_execplan_id": "future:platform-surface-simplification",
+      "target_execplan_id": "20260319-platform-surface-simplification-codex-01-execplan",
       "goal_area": "reference",
+      "draft_branch": "draft-execplan/20260319-platform-surface-simplification-codex-01-20260319",
       "initiative_branch": "initiative/platform-surface-simplification",
       "parent_initiative_node": "initiative-platform-surface-simplification",
       "integration_mode": "via_initiative",
@@ -1354,7 +1363,15 @@
       ],
       "ordering": {
         "queue_position": 33,
-        "tie_breaker": "future:platform-surface-simplification"
+        "source_action_id": "rwg-action-20260319-022-unblock-rwg-033",
+        "tie_breaker": "20260319-platform-surface-simplification-codex-01-execplan"
+      },
+      "action_state": {
+        "last_action_id": "rwg-action-20260319-022-unblock-rwg-033",
+        "last_action": "unblock",
+        "action_required": false,
+        "reorder_requires_human": false,
+        "reorder_blockers": []
       }
     },
     {

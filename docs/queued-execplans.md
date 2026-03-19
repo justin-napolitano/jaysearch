@@ -175,9 +175,10 @@ This document turns the remaining-work graph into an explicit near-term queue of
    - draft branch: `draft-execplan/20260319-local-git-hook-mainline-followup-codex-01-20260319`
    - completion ref: `merged:3b3542e4ec4ce607a8786f65edf5c005b32aed9d`
 
-32. `future:platform-surface-simplification`
-   - status: `decision_gated`
+32. `20260319-platform-surface-simplification-codex-01-execplan`
+   - status: `review_gated`
    - goal: reduce the public platform model to the graph, workflow, rule registry, orchestrator, managed-repo runtime, and board projection
+   - draft branch: `draft-execplan/20260319-platform-surface-simplification-codex-01-20260319`
 
 33. `future:game-language-removal`
    - status: `decision_gated`
@@ -192,7 +193,7 @@ This document turns the remaining-work graph into an explicit near-term queue of
    - goal: freeze a small supported public command set and demote intermediate reconciliation and smoke commands to internal tooling
 ## Mirror Metadata
 
-- canonical_last_graph_action_id: `rwg-action-20260319-021-activate-rwg-031`
+- canonical_last_graph_action_id: `rwg-action-20260319-022-unblock-rwg-033`
 - canonical_ready_order: ``
 - projection_authority: `projection_only`
 
