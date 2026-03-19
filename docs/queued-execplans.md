@@ -168,15 +168,31 @@ This document turns the remaining-work graph into an explicit near-term queue of
    - goal: install versioned local git hooks that invoke deterministic repo-owned reconciliation and governed pre-push checks instead of requiring manual command chains
    - draft branch: `draft-execplan/20260319-local-git-hook-automation-codex-01-20260319`
    - completion ref: `merged:pr-99`
-   - completion ref: `merged:pr-99`
 
 31. `20260319-local-git-hook-mainline-followup-codex-01-execplan`
-   - status: `review_gated`
+   - status: `completed`
    - goal: spike the mismatch between initiative-level completion and actual mainline hook/runtime availability so completion evidence, activation semantics, and local installation behavior stay trustworthy
    - draft branch: `draft-execplan/20260319-local-git-hook-mainline-followup-codex-01-20260319`
+   - completion ref: `merged:3b3542e4ec4ce607a8786f65edf5c005b32aed9d`
+
+32. `future:platform-surface-simplification`
+   - status: `decision_gated`
+   - goal: reduce the public platform model to the graph, workflow, rule registry, orchestrator, managed-repo runtime, and board projection
+
+33. `future:game-language-removal`
+   - status: `decision_gated`
+   - goal: remove game-first platform language from public docs and recast those concepts as validators, transitions, and execution state
+
+34. `future:minimal-execution-model-docs`
+   - status: `decision_gated`
+   - goal: rewrite the public documentation around the minimal execution model of graph, ExecPlans, transition engine, validator suite, and projection
+
+35. `future:public-command-surface-freeze`
+   - status: `decision_gated`
+   - goal: freeze a small supported public command set and demote intermediate reconciliation and smoke commands to internal tooling
 ## Mirror Metadata
 
-- canonical_last_graph_action_id: `rwg-action-20260319-019-unblock-rwg-032`
+- canonical_last_graph_action_id: `rwg-action-20260319-021-activate-rwg-031`
 - canonical_ready_order: ``
 - projection_authority: `projection_only`
 

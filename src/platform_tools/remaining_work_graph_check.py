@@ -381,8 +381,12 @@ def check_remaining_work_graph(
                 errors.append(f"gated_node_missing_status_reason:{node_id}")
         if status == "completed" and not item["dependencies_complete"] and item["depends_on"]:
             errors.append(f"completed_node_with_incomplete_dependencies:{node_id}")
-        if status == "completed" and action_state["last_action"] and action_state["last_action"] != "complete":
-            errors.append(f"completed_node_wrong_last_action:{node_id}:{action_state['last_action']}")
+        if status == "completed" and action_state["last_action"]:
+            allowed_last_actions = {"complete"}
+            if availability_status == "active":
+                allowed_last_actions.add("activate")
+            if action_state["last_action"] not in allowed_last_actions:
+                errors.append(f"completed_node_wrong_last_action:{node_id}:{action_state['last_action']}")
 
         for gate_id in item["gated_by"]:
             gate_projection = projection_map.get(gate_id)
