@@ -183,3 +183,24 @@ def test_impl_branch_rejects_missing_parent_initiative_node(tmp_path: Path, monk
 
     assert report["ok"] is False
     assert "branch_policy_violation:implementation_parent_initiative_not_found" in report["findings"]
+
+
+def test_lightweight_branch_policy_uses_root_local_workflow_patterns(tmp_path: Path) -> None:
+    _write(
+        tmp_path / "spec" / "workflow.yaml",
+        "\n".join(
+            [
+                "allowed_branch_patterns:",
+                "  - impl-execplan/*",
+                "forbidden_branches:",
+                "  - main",
+                "  - master",
+            ]
+        )
+        + "\n",
+    )
+
+    report = evaluate_branch_policy("impl-execplan/jayrun", root=tmp_path)
+
+    assert report["ok"] is True
+    assert report["findings"] == []
