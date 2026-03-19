@@ -37,6 +37,9 @@ validation:
     - name: "remaining-work-graph-check"
       command: "bin/remaining-work-graph-check"
       expected_exit: 0
+    - name: "policy-compliance-check"
+      command: "bin/policy-compliance-check --execplan-path .agent/execplans/20260319-local-git-hook-automation-codex-01-execplan.md"
+      expected_exit: 0
 tasks:
   - title: "Version local git-hook entrypoints in-repo instead of relying on manual command chains"
     priority: "P1"

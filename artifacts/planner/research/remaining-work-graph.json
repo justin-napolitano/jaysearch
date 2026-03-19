@@ -1177,7 +1177,7 @@
       "node_id": "rwg-031",
       "title": "Local git-hook automation",
       "status": "review_gated",
-      "status_reason": "draft the local automation slice that should install versioned git hooks for deterministic reconciliation and governed pre-push checks",
+      "status_reason": "draft the local automation slice that should install versioned local git hooks for deterministic reconciliation and governed pre-push checks",
       "gating_class": "review_gated",
       "conflict_domains": [
         "governance",
