@@ -73,6 +73,8 @@ def _seed_provider_specs(root: Path) -> None:
                 "          type: string",
                 "        implementation_branch:",
                 "          type: string",
+                "        completion_pr:",
+                "          type: string",
                 "        completion_ref:",
                 "          type: string",
                 "  edges:",
@@ -124,6 +126,7 @@ def _seed_provider_specs(root: Path) -> None:
                 "    - status",
                 "    - gating_class",
                 "    - implementation_branch",
+                "    - completion_pr",
                 "  conflict_policy:",
                 "    required_fields:",
                 "      - unresolved_conflict_resolution",
@@ -155,6 +158,7 @@ def _seed_provider_specs(root: Path) -> None:
                 "  - status",
                 "  - gating_class",
                 "  - implementation_branch",
+                "  - completion_pr",
                 "  - goal_area",
                 "  - dependency_summary",
                 "  - human_review_state",
@@ -229,7 +233,7 @@ def _seed_remaining_work(root: Path) -> Path:
                     "node_id": "rwg-006",
                     "title": "Runtime constraint canonicalization",
                     "status": "completed",
-                    "completion_ref": "merged:runtime-constraints",
+                    "completion_ref": "merged:pr-77",
                     "gating_class": "auto_runnable",
                     "conflict_domains": ["remaining-work-graph"],
                     "target_execplan_id": "20260311-runtime-constraint-canonicalization-codex-01-execplan",
@@ -305,6 +309,8 @@ def test_provider_projection_builds_github_projects_board(tmp_path: Path) -> Non
     assert report["item_count"] == 2
     provider_item = next(item for item in report["items"] if item["fields"]["node_id"] == "rwg-005")
     assert provider_item["fields"]["human_review_state"] == "ready_for_review"
+    completed_item = next(item for item in report["items"] if item["fields"]["node_id"] == "rwg-006")
+    assert completed_item["fields"]["completion_pr"] == "pr-77"
 
 
 def test_provider_projection_supports_microsoft_placeholder_mapping(tmp_path: Path) -> None:
