@@ -1,5 +1,5 @@
 version: v1
-last_updated: 2026-03-11
+last_updated: 2026-03-19
 lifecycle:
   - draft
   - proposed
@@ -74,6 +74,27 @@ execution_requirements:
       - direct_to_main_hotfix
       - direct_to_main_patch
     normal_governed_work_requires_initiative_branch: true
+    transition_evidence_contract:
+      draft_execplan_merge_to_main:
+        source_branch_role: draft_execplan
+        target_branch_role: main
+        resulting_state: review_gated
+      impl_execplan_merge_to_initiative:
+        source_branch_role: implementation_execplan
+        integration_mode: via_initiative
+        target_branch_role: initiative
+        resulting_state: completed
+      impl_execplan_merge_to_main_exception:
+        source_branch_role: implementation_execplan
+        integration_modes:
+          - direct_to_main_hotfix
+          - direct_to_main_patch
+        target_branch_role: main
+        resulting_state: completed
+      initiative_merge_to_main:
+        source_branch_role: initiative
+        target_branch_role: main
+        resulting_state: completed
   board_runtime_requirements:
     board_review_surface_is_projection_only: true
     provider_sync_field_map_required_for_live_board_sync: true

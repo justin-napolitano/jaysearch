@@ -578,6 +578,9 @@ Test.
                     "target_execplan_id": "20260318-test-ready-codex-01-execplan",
                     "goal_area": "governance",
                     "implementation_branch": "impl-execplan/20260318-test-ready-codex-01-execplan-codex-01-20260318",
+                    "initiative_branch": "initiative/test-ready",
+                    "parent_initiative_node": "initiative-test-ready",
+                    "integration_mode": "via_initiative",
                     "expected_artifacts": ["spec/slice.yaml"],
                     "ordering": {
                         "queue_position": 1,
@@ -603,8 +606,177 @@ Test.
         subprocess.run(["chmod", "+x", str(tmp_path / "bin" / script)], check=True)
     _git(tmp_path, "add", "README.md", execplan_rel, "artifacts/planner/research/remaining-work-graph.json")
     _git(tmp_path, "commit", "-m", "docs: seed finalized execplan and graph")
+    _git(tmp_path, "branch", "initiative/test-ready")
 
     branch = "impl-execplan/20260318-test-ready-codex-01-execplan-codex-01-20260318"
+    _git(tmp_path, "checkout", "-b", branch)
+    _write(tmp_path / "spec" / "slice.yaml", "slice: true\n")
+    _git(tmp_path, "add", "spec/slice.yaml")
+    _git(tmp_path, "commit", "-m", "spec(test): add slice spec")
+
+    code, report = check_merge_readiness(
+        root=tmp_path.as_posix(),
+        base_ref="initiative/test-ready",
+        include_validation_runs=False,
+    )
+
+    assert code == 0
+    assert report["readiness"] is True
+    assert report["execplan_id"] == "20260318-test-ready-codex-01-execplan"
+    assert report["execplan_path"].endswith(execplan_rel)
+    assert report["checks"]["graph_merge_target"]["expected_target"] == "initiative/test-ready"
+
+
+def test_merge_readiness_fails_when_impl_branch_targets_main_instead_of_initiative(tmp_path: Path) -> None:
+    _git(tmp_path, "init", "-b", "main")
+    _git(tmp_path, "config", "user.name", "Tests")
+    _git(tmp_path, "config", "user.email", "tests@example.com")
+    _write(tmp_path / "README.md", "base\n")
+    _git(tmp_path, "add", "README.md")
+    _git(tmp_path, "commit", "-m", "docs: base")
+
+    execplan_rel = ".agent/execplans/20260319-initiative-target-test-codex-01-execplan.md"
+    _write(
+        tmp_path / execplan_rel,
+        """---
+id: "20260319-initiative-target-test-codex-01-execplan"
+title: "Initiative target test"
+owner: "agent/codex-01"
+created: "2026-03-19T00:00:00Z"
+status: draft
+base_branch: main
+changes:
+  - .agent/execplans/20260319-initiative-target-test-codex-01-execplan.md
+approve_policy: codeowners
+reviewers:
+  - "github:test-owner"
+draft_by: "agent/codex-01"
+draft_branch: "draft-execplan/20260319-initiative-target-test-codex-01"
+draft_created: "2026-03-19T00:00:00Z"
+finalized_by: "github:test-owner"
+finalized_at: "2026-03-19T00:00:00Z"
+finalized_in_pr: "99"
+validation:
+  tests:
+    - name: "execplan-validate"
+      command: "bin/execplan-validate .agent/execplans/20260319-initiative-target-test-codex-01-execplan.md"
+      expected_exit: 0
+    - name: "smoke"
+      command: "bin/smoke-pass"
+      expected_exit: 0
+tasks:
+  - title: "Implement"
+    priority: "P1"
+depends_on: []
+---
+
+# Purpose / Big Picture
+
+Test.
+
+## Progress
+
+- [ ] Test
+
+## Surprises & Discoveries
+
+None.
+
+## Decision Log
+
+None.
+
+## Outcomes & Retrospective
+
+Test.
+
+## Context and Orientation
+
+Test.
+
+## Plan of Work
+
+Test.
+
+## Concrete Steps
+
+1. Test.
+
+## Validation and Acceptance
+
+Test.
+
+## Idempotence and Recovery
+
+Test.
+
+## Artifacts and Notes
+
+Test.
+
+## Interfaces and Dependencies
+
+Test.
+""",
+    )
+    _write_json(
+        tmp_path / "artifacts" / "planner" / "research" / "remaining-work-graph.json",
+        {
+            "graph_id": "remaining-work-test",
+            "created_at": "2026-03-19T00:00:00Z",
+            "ordering_policy": {
+                "ready_statuses": ["ready"],
+                "ready_sort_fields": ["ready_order", "tie_breaker", "node_id"],
+                "reorder_requires_explicit_action": True,
+                "board_projection_authority": "projection_only",
+            },
+            "queue_projection": {
+                "path": "docs/queued-execplans.md",
+                "projection_authority": "projection_only",
+                "last_reconciled_action_id": "rwg-action-20260319-001-promote-rwg-027",
+                "ready_execplan_ids": ["20260319-initiative-target-test-codex-01-execplan"],
+            },
+            "graph_actions": [],
+            "nodes": [
+                {
+                    "node_id": "rwg-027",
+                    "title": "Graph transition automation",
+                    "status": "ready",
+                    "gating_class": "auto_runnable",
+                    "conflict_domains": ["governance"],
+                    "target_execplan_id": "20260319-initiative-target-test-codex-01-execplan",
+                    "goal_area": "governance",
+                    "implementation_branch": "impl-execplan/20260319-initiative-target-test-codex-01",
+                    "initiative_branch": "initiative/transition-automation",
+                    "parent_initiative_node": "initiative-transition-automation",
+                    "integration_mode": "via_initiative",
+                    "expected_artifacts": ["spec/slice.yaml"],
+                    "ordering": {
+                        "queue_position": 1,
+                        "ready_order": 1,
+                        "tie_breaker": "20260319-initiative-target-test-codex-01-execplan",
+                    },
+                    "action_state": {
+                        "last_action_id": "rwg-action-20260319-001-promote-rwg-027",
+                        "last_action": "promote_ready",
+                        "action_required": False,
+                        "reorder_requires_human": False,
+                        "reorder_blockers": [],
+                    },
+                }
+            ],
+            "edges": [],
+        },
+    )
+    _write(tmp_path / "bin" / "execplan-validate", "#!/usr/bin/env bash\nexit 0\n")
+    _write(tmp_path / "bin" / "smoke-pass", "#!/usr/bin/env bash\nexit 0\n")
+    _write(tmp_path / "bin" / "rule-graph-check", "#!/usr/bin/env bash\nexit 0\n")
+    for script in ["execplan-validate", "smoke-pass", "rule-graph-check"]:
+        subprocess.run(["chmod", "+x", str(tmp_path / "bin" / script)], check=True)
+    _git(tmp_path, "add", "README.md", execplan_rel, "artifacts/planner/research/remaining-work-graph.json")
+    _git(tmp_path, "commit", "-m", "docs: seed initiative-target execplan and graph")
+
+    branch = "impl-execplan/20260319-initiative-target-test-codex-01"
     _git(tmp_path, "checkout", "-b", branch)
     _write(tmp_path / "spec" / "slice.yaml", "slice: true\n")
     _git(tmp_path, "add", "spec/slice.yaml")
@@ -616,7 +788,6 @@ Test.
         include_validation_runs=False,
     )
 
-    assert code == 0
-    assert report["readiness"] is True
-    assert report["execplan_id"] == "20260318-test-ready-codex-01-execplan"
-    assert report["execplan_path"].endswith(execplan_rel)
+    assert code == 1
+    assert "merge_target_mismatch:initiative/transition-automation:main" in report["failing_checks"]
+    assert report["checks"]["graph_merge_target"]["expected_target"] == "initiative/transition-automation"
