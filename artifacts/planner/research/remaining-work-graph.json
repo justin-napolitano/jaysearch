@@ -16,7 +16,7 @@
   "queue_projection": {
     "path": "docs/queued-execplans.md",
     "projection_authority": "projection_only",
-    "last_reconciled_action_id": "rwg-action-20260319-009-promote-rwg-027",
+    "last_reconciled_action_id": "rwg-action-20260319-010-unblock-rwg-029",
     "ready_execplan_ids": [
       "20260318-graph-transition-automation-and-merge-gating-codex-01-execplan"
     ]
@@ -244,6 +244,14 @@
       "node_id": "rwg-027",
       "rationale": "the draft ExecPlan was human-finalized on main, so graph transition automation can advance onto its dedicated implementation branch",
       "evidence_ref": "merged:pr-89",
+      "queue_reconciled": true
+    },
+    {
+      "action_id": "rwg-action-20260319-010-unblock-rwg-029",
+      "action": "unblock",
+      "node_id": "rwg-029",
+      "rationale": "capture managed-repo orchestration as its own platform slice so external project repos like jayrun can keep canonical state local while the platform provides deterministic runtime and control-loop behavior",
+      "evidence_ref": ".agent/execplans/20260319-managed-repo-orchestration-codex-01-execplan.md",
       "queue_reconciled": true
     }
   ],
@@ -989,6 +997,39 @@
       }
     },
     {
+      "node_id": "rwg-029",
+      "title": "Managed external repo orchestration",
+      "status": "review_gated",
+      "status_reason": "draft the platform slice that lets external repos keep canonical graph and ExecPlan state locally while platform runtime commands orchestrate them by explicit root targeting",
+      "gating_class": "review_gated",
+      "conflict_domains": [
+        "governance",
+        "orchestrator-runtime",
+        "workflow"
+      ],
+      "target_execplan_id": "20260319-managed-repo-orchestration-codex-01-execplan",
+      "goal_area": "governance",
+      "implementation_branch": "impl-execplan/20260319-managed-repo-orchestration-codex-01-execplan-codex-01-20260319",
+      "expected_artifacts": [
+        "spec/workflow.yaml",
+        "src/platform_tools/orchestrate_governed_slice.py",
+        "src/platform_tools/execplan_discovery.py",
+        "docs/codex-orchestrator-contract.md"
+      ],
+      "ordering": {
+        "queue_position": 29,
+        "source_action_id": "rwg-action-20260319-010-unblock-rwg-029",
+        "tie_breaker": "20260319-managed-repo-orchestration-codex-01-execplan"
+      },
+      "action_state": {
+        "last_action_id": "rwg-action-20260319-010-unblock-rwg-029",
+        "last_action": "unblock",
+        "action_required": false,
+        "reorder_requires_human": false,
+        "reorder_blockers": []
+      }
+    },
+    {
       "node_id": "artifact-orchestrator-contract",
       "title": "Codex orchestrator contract",
       "status": "ready",
@@ -1039,6 +1080,11 @@
     {
       "from": "rwg-006",
       "to": "rwg-002",
+      "relation": "depends_on"
+    },
+    {
+      "from": "rwg-029",
+      "to": "rwg-027",
       "relation": "depends_on"
     },
     {
