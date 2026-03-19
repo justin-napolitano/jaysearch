@@ -163,13 +163,13 @@ This document turns the remaining-work graph into an explicit near-term queue of
    - completion ref: `merged:pr-94`
 
 30. `20260319-local-git-hook-automation-codex-01-execplan`
-   - status: `review_gated`
+   - status: `ready`
    - goal: install versioned local git hooks that invoke deterministic repo-owned reconciliation and governed pre-push checks instead of requiring manual command chains
    - draft branch: `draft-execplan/20260319-local-git-hook-automation-codex-01-20260319`
 ## Mirror Metadata
 
-- canonical_last_graph_action_id: `rwg-action-20260319-015-unblock-rwg-031`
-- canonical_ready_order: ``
+- canonical_last_graph_action_id: `rwg-action-20260319-016-promote_ready-rwg-031`
+- canonical_ready_order: `20260319-local-git-hook-automation-codex-01-execplan`
 - projection_authority: `projection_only`
 
 ## Queue Discipline
