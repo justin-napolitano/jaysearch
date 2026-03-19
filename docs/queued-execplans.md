@@ -148,9 +148,14 @@ This document turns the remaining-work graph into an explicit near-term queue of
 27. `future:graph-priority-ranking-and-traversal-engine`
    - status: `decision_gated`
    - goal: add machine-readable priority and cost signals so the graph can emit deterministic sequential, parallel-safe, and lowest-cost execution plans
+
+28. `20260319-managed-repo-orchestration-codex-01-execplan`
+   - status: `review_gated`
+   - goal: allow external repos such as `jayrun` to keep canonical graph and ExecPlan state locally while platform-template-bootstrap supplies deterministic orchestration and control-loop runtime by explicit repo-root targeting
+   - draft branch: `draft-execplan/20260319-managed-repo-orchestration-codex-01-20260319`
 ## Mirror Metadata
 
-- canonical_last_graph_action_id: `rwg-action-20260319-009-promote-rwg-027`
+- canonical_last_graph_action_id: `rwg-action-20260319-010-unblock-rwg-029`
 - canonical_ready_order: `20260318-graph-transition-automation-and-merge-gating-codex-01-execplan`
 - projection_authority: `projection_only`
 
