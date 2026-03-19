@@ -16,10 +16,8 @@
   "queue_projection": {
     "path": "docs/queued-execplans.md",
     "projection_authority": "projection_only",
-    "last_reconciled_action_id": "rwg-action-20260319-016-promote_ready-rwg-029",
-    "ready_execplan_ids": [
-      "20260319-managed-repo-orchestration-codex-01-execplan"
-    ]
+    "last_reconciled_action_id": "rwg-action-20260319-019-unblock-rwg-032",
+    "ready_execplan_ids": []
   },
   "graph_actions": [
     {
@@ -324,6 +322,30 @@
       "node_id": "rwg-029",
       "rationale": "implementation_branch_publish derived deterministically from canonical branch and ExecPlan evidence",
       "evidence_ref": "branch:origin/impl-execplan/20260319-managed-repo-orchestration-codex-01-execplan-codex-01-20260319",
+      "queue_reconciled": true
+    },
+    {
+      "action_id": "rwg-action-20260319-017-complete-rwg-029",
+      "action": "complete",
+      "node_id": "rwg-029",
+      "rationale": "20260319-managed-repo-orchestration-codex-01-execplan merged to initiative/managed-repo-orchestration and is now canonical completed state",
+      "evidence_ref": "merged:pr-93",
+      "queue_reconciled": true
+    },
+    {
+      "action_id": "rwg-action-20260319-018-complete-rwg-031",
+      "action": "complete",
+      "node_id": "rwg-031",
+      "rationale": "20260319-local-git-hook-automation-codex-01-execplan merged to initiative/local-git-hook-automation and is now canonical completed state",
+      "evidence_ref": "merged:pr-98",
+      "queue_reconciled": true
+    },
+    {
+      "action_id": "rwg-action-20260319-019-unblock-rwg-032",
+      "action": "unblock",
+      "node_id": "rwg-032",
+      "rationale": "capture the local git-hook automation follow-up as a focused spike so initiative-to-main availability, completion semantics, and hook installation behavior are repaired explicitly",
+      "evidence_ref": ".agent/execplans/20260319-local-git-hook-mainline-followup-codex-01-execplan.md",
       "queue_reconciled": true
     }
   ],
@@ -1092,7 +1114,7 @@
     {
       "node_id": "rwg-029",
       "title": "Managed external repo orchestration",
-      "status": "ready",
+      "status": "completed",
       "status_reason": "",
       "gating_class": "auto_runnable",
       "conflict_domains": [
@@ -1118,17 +1140,17 @@
       ],
       "ordering": {
         "queue_position": 29,
-        "source_action_id": "rwg-action-20260319-016-promote_ready-rwg-029",
-        "tie_breaker": "20260319-managed-repo-orchestration-codex-01-execplan",
-        "ready_order": 1
+        "source_action_id": "rwg-action-20260319-017-complete-rwg-029",
+        "tie_breaker": "20260319-managed-repo-orchestration-codex-01-execplan"
       },
       "action_state": {
-        "last_action_id": "rwg-action-20260319-016-promote_ready-rwg-029",
-        "last_action": "promote_ready",
+        "last_action_id": "rwg-action-20260319-017-complete-rwg-029",
+        "last_action": "complete",
         "action_required": false,
         "reorder_requires_human": false,
         "reorder_blockers": []
-      }
+      },
+      "completion_ref": "merged:pr-93"
     },
     {
       "node_id": "rwg-030",
@@ -1191,8 +1213,8 @@
     {
       "node_id": "rwg-031",
       "title": "Local git-hook automation",
-      "status": "review_gated",
-      "status_reason": "draft the local automation slice that should install versioned git hooks for deterministic reconciliation and governed pre-push checks",
+      "status": "completed",
+      "status_reason": "",
       "gating_class": "review_gated",
       "conflict_domains": [
         "governance",
@@ -1214,11 +1236,49 @@
       ],
       "ordering": {
         "queue_position": 31,
-        "source_action_id": "rwg-action-20260319-015-unblock-rwg-031",
+        "source_action_id": "rwg-action-20260319-018-complete-rwg-031",
         "tie_breaker": "20260319-local-git-hook-automation-codex-01-execplan"
       },
       "action_state": {
-        "last_action_id": "rwg-action-20260319-015-unblock-rwg-031",
+        "last_action_id": "rwg-action-20260319-018-complete-rwg-031",
+        "last_action": "complete",
+        "action_required": false,
+        "reorder_requires_human": false,
+        "reorder_blockers": []
+      },
+      "completion_ref": "merged:pr-98"
+    },
+    {
+      "node_id": "rwg-032",
+      "title": "Local git-hook automation mainline activation follow-up",
+      "status": "review_gated",
+      "status_reason": "spike the gap between child-slice completion on an initiative branch and actual hook/runtime availability on main so completion evidence and activation semantics stay trustworthy",
+      "gating_class": "review_gated",
+      "conflict_domains": [
+        "governance",
+        "orchestrator-runtime",
+        "workflow"
+      ],
+      "target_execplan_id": "20260319-local-git-hook-mainline-followup-codex-01-execplan",
+      "goal_area": "governance",
+      "implementation_branch": "",
+      "draft_branch": "draft-execplan/20260319-local-git-hook-mainline-followup-codex-01-20260319",
+      "initiative_branch": "initiative/local-git-hook-automation",
+      "parent_initiative_node": "initiative-local-git-hook-automation",
+      "integration_mode": "via_initiative",
+      "expected_artifacts": [
+        "src/platform_tools/reconcile_remaining_work_merge.py",
+        "src/platform_tools/orchestrate_governed_slice.py",
+        "spec/workflow.yaml",
+        ".githooks/"
+      ],
+      "ordering": {
+        "queue_position": 32,
+        "source_action_id": "rwg-action-20260319-019-unblock-rwg-032",
+        "tie_breaker": "20260319-local-git-hook-mainline-followup-codex-01-execplan"
+      },
+      "action_state": {
+        "last_action_id": "rwg-action-20260319-019-unblock-rwg-032",
         "last_action": "unblock",
         "action_required": false,
         "reorder_requires_human": false,
@@ -1313,6 +1373,11 @@
     {
       "from": "rwg-031",
       "to": "rwg-030",
+      "relation": "depends_on"
+    },
+    {
+      "from": "rwg-032",
+      "to": "rwg-031",
       "relation": "depends_on"
     },
     {
