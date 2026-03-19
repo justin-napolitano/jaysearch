@@ -65,7 +65,7 @@ properties:
         action_id:
           type: string
         action:
-          enum: ["promote_ready", "block", "unblock", "complete", "reorder"]
+          enum: ["promote_ready", "block", "unblock", "complete", "reorder", "activate"]
         node_id:
           type: string
         rationale:
@@ -112,6 +112,12 @@ properties:
           type: string
         integration_mode:
           enum: ["via_initiative", "direct_to_main_hotfix", "direct_to_main_patch"]
+        availability_target_ref:
+          type: string
+        availability_status:
+          enum: ["not_required", "pending", "active"]
+        availability_ref:
+          type: string
         expected_artifacts:
           type: array
           items:
@@ -143,7 +149,7 @@ properties:
             last_action_id:
               type: string
             last_action:
-              enum: ["promote_ready", "block", "unblock", "complete", "reorder"]
+              enum: ["promote_ready", "block", "unblock", "complete", "reorder", "activate"]
             action_required:
               type: boolean
             reorder_requires_human:

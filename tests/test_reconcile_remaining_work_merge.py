@@ -6,7 +6,10 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
-from platform_tools.reconcile_remaining_work_merge import reconcile_remaining_work_merge
+from platform_tools.reconcile_remaining_work_merge import (
+    reconcile_pending_merge_completions,
+    reconcile_remaining_work_merge,
+)
 
 
 def _write(path: Path, text: str) -> None:
@@ -322,7 +325,13 @@ def test_reconcile_uses_initiative_branch_as_completion_target(monkeypatch, tmp_
 
     seen: dict[str, str] = {}
 
-    def _fake_merge_candidates(repo_root: Path, ref: str, plan_id: str, draft_branch: str) -> list[dict[str, str]]:
+    def _fake_merge_candidates(
+        repo_root: Path,
+        ref: str,
+        plan_id: str,
+        draft_branch: str,
+        extra_markers=None,
+    ) -> list[dict[str, str]]:
         seen["ref"] = ref
         return [
             {
@@ -346,11 +355,11 @@ def test_reconcile_uses_initiative_branch_as_completion_target(monkeypatch, tmp_
     assert report["completion_target_ref"] == "initiative/remaining-work-ordering"
     assert report["transition_event"] == "impl_execplan_merge_to_initiative"
 
-
 def test_reconcile_requires_impl_merge_for_via_initiative(monkeypatch, tmp_path: Path) -> None:
     plan = tmp_path / ".agent" / "execplans" / "20260312-remaining-work-graph-actions-and-ordering-codex-01-execplan.md"
     _write(plan, _plan_text())
     _write_json(tmp_path / "artifacts" / "planner" / "research" / "remaining-work-graph.json", _graph_data())
+
     _write(tmp_path / "docs" / "queued-execplans.md", _queue_text())
     _write(tmp_path / "spec" / "remaining-work-graph.schema.yaml", _schema_text())
     _write(tmp_path / "docs" / "remaining-work-graph.md", "# Remaining Work Graph\n")
@@ -377,3 +386,90 @@ def test_reconcile_requires_impl_merge_for_via_initiative(monkeypatch, tmp_path:
         assert str(exc) == "missing_merge_commit"
     else:
         raise AssertionError("expected missing_merge_commit for draft-only merge history")
+
+
+def test_reconcile_tracks_pending_mainline_activation_for_completed_via_initiative_node(tmp_path: Path) -> None:
+    plan = tmp_path / ".agent" / "execplans" / "20260312-remaining-work-graph-actions-and-ordering-codex-01-execplan.md"
+    _write(plan, _plan_text())
+    graph = _graph_data()
+    target = next(node for node in graph["nodes"] if node["node_id"] == "rwg-020")
+    target["availability_target_ref"] = "main"
+    _write_json(tmp_path / "artifacts" / "planner" / "research" / "remaining-work-graph.json", graph)
+    _write(tmp_path / "docs" / "queued-execplans.md", _queue_text())
+    _write(tmp_path / "spec" / "remaining-work-graph.schema.yaml", _schema_text())
+    _write(tmp_path / "docs" / "remaining-work-graph.md", "# Remaining Work Graph\n")
+
+    report = reconcile_remaining_work_merge(
+        execplan_path=plan,
+        repo_root=tmp_path,
+        merge_evidence={
+            "pull_request": "73",
+            "commit": "abc123",
+            "committed_at": "2026-03-12T12:00:00Z",
+            "branch_ref": "impl-execplan/20260312-remaining-work-graph-actions-and-ordering-codex-01-execplan-codex-01-20260312",
+            "merge_role": "impl-execplan",
+        },
+    )
+
+    graph = json.loads((tmp_path / "artifacts" / "planner" / "research" / "remaining-work-graph.json").read_text(encoding="utf-8"))
+    rwg020 = next(node for node in graph["nodes"] if node["node_id"] == "rwg-020")
+    assert report["completion_ref"] == "merged:pr-73"
+    assert report["availability_status"] == "pending"
+    assert report["availability_ref"] == ""
+    assert rwg020["status"] == "completed"
+    assert rwg020["availability_status"] == "pending"
+    assert "availability_ref" not in rwg020
+
+
+def test_pending_merge_reconciliation_activates_completed_node_when_initiative_reaches_main(monkeypatch, tmp_path: Path) -> None:
+    plan = tmp_path / ".agent" / "execplans" / "20260312-remaining-work-graph-actions-and-ordering-codex-01-execplan.md"
+    _write(plan, _plan_text())
+    graph = _graph_data()
+    target = next(node for node in graph["nodes"] if node["node_id"] == "rwg-020")
+    target["status"] = "completed"
+    target["completion_ref"] = "merged:pr-73"
+    target["availability_target_ref"] = "main"
+    target["availability_status"] = "pending"
+    target["ordering"]["source_action_id"] = "rwg-action-20260312-005-complete-rwg-020"
+    target["action_state"]["last_action_id"] = "rwg-action-20260312-005-complete-rwg-020"
+    target["action_state"]["last_action"] = "complete"
+    graph["queue_projection"]["last_reconciled_action_id"] = "rwg-action-20260312-005-complete-rwg-020"
+    graph["queue_projection"]["ready_execplan_ids"] = []
+    graph["graph_actions"].append(
+        {
+            "action_id": "rwg-action-20260312-005-complete-rwg-020",
+            "action": "complete",
+            "node_id": "rwg-020",
+            "rationale": "ordering work completed on initiative branch",
+            "evidence_ref": "merged:pr-73",
+            "queue_reconciled": True,
+        }
+    )
+    _write_json(tmp_path / "artifacts" / "planner" / "research" / "remaining-work-graph.json", graph)
+    _write(tmp_path / "docs" / "queued-execplans.md", _queue_text().replace("   - status: `ready`", "   - status: `completed`", 1))
+    _write(tmp_path / "spec" / "remaining-work-graph.schema.yaml", _schema_text())
+    _write(tmp_path / "docs" / "remaining-work-graph.md", "# Remaining Work Graph\n")
+
+    def _fake_merge_candidates(repo_root: Path, ref: str, plan_id: str, draft_branch: str, extra_markers=None) -> list[dict[str, str]]:
+        if ref == "main":
+            return [
+                {
+                    "pull_request": "100",
+                    "commit": "mainmerge",
+                    "committed_at": "2026-03-19T19:00:00Z",
+                    "branch_ref": "initiative/remaining-work-ordering",
+                    "merge_role": "other",
+                }
+            ]
+        return []
+
+    monkeypatch.setattr("platform_tools.reconcile_remaining_work_merge._merge_candidates", _fake_merge_candidates)
+
+    report = reconcile_pending_merge_completions(repo_root=tmp_path)
+
+    assert report["activated_count"] == 1
+    assert report["activation_results"][0]["availability_ref"] == "merged:pr-100"
+    graph = json.loads((tmp_path / "artifacts" / "planner" / "research" / "remaining-work-graph.json").read_text(encoding="utf-8"))
+    rwg020 = next(node for node in graph["nodes"] if node["node_id"] == "rwg-020")
+    assert rwg020["availability_status"] == "active"
+    assert rwg020["availability_ref"] == "merged:pr-100"

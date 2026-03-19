@@ -20,6 +20,11 @@ bin/remaining-work-graph-check
 bin/auto-reconcile-main
 bin/install-local-git-hooks
 bin/run-governed-pre-push-checks
+bin/bootstrap-managed-repo
+bin/managed-repo-status
+bin/orchestrate-governed-slice
+bin/github-projects-bootstrap
+bin/github-projects-sync
 bin/finalize-execplan
 bin/codex-commit
 
@@ -32,3 +37,7 @@ Notes:
 - `bin/auto-reconcile-main` is the local deterministic reconciliation entrypoint for `main` and `initiative/*` after merges or branch switches.
 - `bin/install-local-git-hooks` installs the versioned `.githooks/` entrypoints by configuring local `core.hooksPath`.
 - `bin/run-governed-pre-push-checks` runs safe branch-aware governance checks before push on governed branches.
+- `bin/bootstrap-managed-repo` scaffolds a lightweight managed repo and writes repo-local provider-sync artifacts through platform-owned runtime code.
+- `bin/managed-repo-status` validates that an external repo has the required canonical and board-bootstrap artifacts before orchestration proceeds.
+- `bin/orchestrate-governed-slice` is the local control-loop entrypoint for both self-hosted and managed repos.
+- `bin/github-projects-bootstrap` and `bin/github-projects-sync` are provider runtimes; they are meant to be invoked directly or by higher-level platform commands, not replaced by ad hoc shell usage.

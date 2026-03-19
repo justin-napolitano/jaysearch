@@ -51,6 +51,7 @@ surface_entries:
     path_exact:
       - docs/agent-capability-boundaries.md
       - spec/agent-capability-policy.yaml
+      - spec/providers/github-projects.schema.yaml
       - spec/protected-surfaces.schema.yaml
   - id: referee_surface
     surface_class: referee_surface
@@ -61,6 +62,7 @@ surface_entries:
       - bin/auto-reconcile-main
       - bin/anti-cheat-check
       - bin/install-local-git-hooks
+      - bin/bootstrap-managed-repo
       - bin/managed-repo-status
       - bin/merge-readiness-check
       - bin/orchestrate-governed-slice
@@ -78,6 +80,7 @@ surface_entries:
       - bin/state-transition-legality-smoke-test
       - src/platform_tools/auto_reconcile_main.py
       - src/platform_tools/anti_cheat_check.py
+      - src/platform_tools/bootstrap_managed_repo.py
       - src/platform_tools/branch_policy.py
       - src/platform_tools/execplan_lint.py
       - src/platform_tools/execplan_discovery.py
@@ -103,6 +106,7 @@ surface_entries:
       - src/platform_tools/remaining_work_graph_check.py
       - src/platform_tools/state_transition_legality.py
       - tests/test_anti_cheat_check.py
+      - tests/test_bootstrap_managed_repo.py
       - tests/test_branch_policy.py
       - tests/test_human_operations_status.py
       - tests/test_managed_repo_status.py
@@ -133,3 +137,7 @@ surface_entries:
     path_prefixes:
       - artifacts/provider-sync/
       - src/platform_tools/integrations/
+    path_exact:
+      - tests/test_github_projects_bootstrap.py
+      - tests/test_github_projects_sync.py
+      - tests/test_provider_adapter_contract.py
