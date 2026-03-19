@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import argparse
 import json
-import os
 import subprocess
 from pathlib import Path
 from typing import Any
@@ -31,12 +30,7 @@ def _load_yaml(path: Path) -> dict[str, Any]:
 
 
 def _evaluate_branch_policy_at_root(root: Path, branch: str) -> dict[str, Any]:
-    previous = Path.cwd()
-    os.chdir(root)
-    try:
-        return evaluate_branch_policy(branch)
-    finally:
-        os.chdir(previous)
+    return evaluate_branch_policy(branch, root=root)
 
 
 def _graph_nodes_by_id(root: Path) -> dict[str, dict[str, Any]]:
@@ -100,7 +94,7 @@ def get_game_status(
     base_ref: str = "main",
 ) -> tuple[int, dict[str, Any]]:
     cwd = Path(root)
-    current_branch = branch or get_current_branch()
+    current_branch = branch or get_current_branch(root=cwd)
     graph_code, graph_report = check_game_graph(root)
     nodes = _graph_nodes_by_id(cwd) if graph_report.get("ok") else {}
     parents = _contains_parents(cwd) if graph_report.get("ok") else {}

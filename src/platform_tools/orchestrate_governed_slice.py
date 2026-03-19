@@ -7,6 +7,7 @@ from typing import Any
 
 from platform_tools.game_status import get_game_status
 from platform_tools.human_operations_status import get_human_operations_status
+from platform_tools.managed_repo_status import get_managed_repo_status
 from platform_tools.merge_readiness import check_merge_readiness
 from platform_tools.orchestrator_status import get_orchestrator_status
 from platform_tools.reconcile_governed_graph_events import reconcile_governed_graph_events
@@ -22,6 +23,29 @@ def run_orchestrate_governed_slice(
     execplan_path: str | None = None,
     base_ref: str = "main",
 ) -> tuple[int, dict[str, Any]]:
+    root_path = Path(root).resolve()
+    local_repo_path = Path(".").resolve()
+    if root_path != local_repo_path:
+        managed_code, managed_report = get_managed_repo_status(
+            root=root,
+            branch=branch,
+            execplan_path=execplan_path,
+            base_ref=base_ref,
+        )
+        report = {
+            "command": COMMAND,
+            "status": managed_report.get("status", ""),
+            "ok": bool(managed_report.get("ok", False)),
+            "blockers": managed_report.get("blockers", []),
+            "branch": managed_report.get("branch", ""),
+            "execplan_path": (
+                managed_report.get("active_execplan", {}) or {}
+            ).get("path", execplan_path or ""),
+            "managed_repo": managed_report,
+            "next_actions": managed_report.get("next_actions", []),
+        }
+        return managed_code, report
+
     game_code, game_report = get_game_status(
         root=root,
         branch=branch,
@@ -104,6 +128,7 @@ def run_orchestrate_governed_slice(
             "status": human_ops_report.get("status", ""),
             "next_actions": human_ops_report.get("next_actions", []),
         },
+        "managed_repo": None,
         "next_actions": next_actions,
     }
     return (0 if not blockers else 1), report
