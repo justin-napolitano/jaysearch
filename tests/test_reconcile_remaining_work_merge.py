@@ -345,3 +345,35 @@ def test_reconcile_uses_initiative_branch_as_completion_target(monkeypatch, tmp_
     assert report["ok"] is True
     assert report["completion_target_ref"] == "initiative/remaining-work-ordering"
     assert report["transition_event"] == "impl_execplan_merge_to_initiative"
+
+
+def test_reconcile_requires_impl_merge_for_via_initiative(monkeypatch, tmp_path: Path) -> None:
+    plan = tmp_path / ".agent" / "execplans" / "20260312-remaining-work-graph-actions-and-ordering-codex-01-execplan.md"
+    _write(plan, _plan_text())
+    _write_json(tmp_path / "artifacts" / "planner" / "research" / "remaining-work-graph.json", _graph_data())
+    _write(tmp_path / "docs" / "queued-execplans.md", _queue_text())
+    _write(tmp_path / "spec" / "remaining-work-graph.schema.yaml", _schema_text())
+    _write(tmp_path / "docs" / "remaining-work-graph.md", "# Remaining Work Graph\n")
+
+    monkeypatch.setattr(
+        "platform_tools.reconcile_remaining_work_merge._merge_candidates",
+        lambda *args, **kwargs: [
+            {
+                "pull_request": "82",
+                "commit": "draftmerge",
+                "committed_at": "2026-03-12T10:00:00Z",
+                "branch_ref": "draft-execplan/20260312-remaining-work-graph-actions-and-ordering-codex-01-execplan-codex-01-20260312",
+                "merge_role": "draft-execplan",
+            }
+        ],
+    )
+
+    try:
+        reconcile_remaining_work_merge(
+            execplan_path=plan,
+            repo_root=tmp_path,
+        )
+    except ValueError as exc:
+        assert str(exc) == "missing_merge_commit"
+    else:
+        raise AssertionError("expected missing_merge_commit for draft-only merge history")

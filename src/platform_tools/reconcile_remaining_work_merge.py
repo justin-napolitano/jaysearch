@@ -209,10 +209,23 @@ def _transition_event(node: dict[str, Any], *, completion_target_ref: str, main_
 def _select_merge_candidate(
     *,
     candidates: list[dict[str, str]],
-    implementation_branch: str,
+    node: dict[str, Any],
 ) -> dict[str, str] | None:
     if not candidates:
         return None
+    integration_mode = str(node.get("integration_mode", "")).strip()
+    implementation_branch = str(node.get("implementation_branch", "")).strip()
+    if integration_mode == "via_initiative" and implementation_branch:
+        implementation_candidates = [
+            item
+            for item in candidates
+            if str(item.get("branch_ref", "")).strip() == implementation_branch
+            or item.get("merge_role") == "impl-execplan"
+        ]
+        if implementation_candidates:
+            candidates = implementation_candidates
+        else:
+            return None
     candidates.sort(
         key=lambda item: (
             1 if implementation_branch and str(item.get("branch_ref", "")).strip() == implementation_branch else 0,
@@ -270,7 +283,7 @@ def find_pending_merge_reconciliations(
         candidates = _safe_merge_candidates(repo_root, merge_ref, execplan_id, draft_branch)
         selected = _select_merge_candidate(
             candidates=candidates,
-            implementation_branch=str(node.get("implementation_branch", "")).strip(),
+            node=node,
         )
         if selected is None:
             continue
@@ -341,8 +354,7 @@ def reconcile_remaining_work_merge(
         candidates = _merge_candidates(repo_root, merge_ref, execplan_id, draft_branch)
         if not candidates:
             raise ValueError("missing_merge_commit")
-        implementation_branch = str(node.get("implementation_branch", "")).strip()
-        merge_evidence = _select_merge_candidate(candidates=candidates, implementation_branch=implementation_branch)
+        merge_evidence = _select_merge_candidate(candidates=candidates, node=node)
         if merge_evidence is None:
             raise ValueError("missing_merge_commit")
     completion_ref = f"merged:pr-{merge_evidence['pull_request']}" if merge_evidence.get("pull_request", "").strip() else f"merged:{merge_evidence['commit']}"

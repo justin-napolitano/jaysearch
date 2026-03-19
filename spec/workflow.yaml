@@ -113,6 +113,20 @@ execution_requirements:
     lightweight_branch_policy_fields:
       - allowed_branch_patterns
       - forbidden_branches
+  local_hook_requirements:
+    versioned_local_hooks_required: true
+    configured_hooks_path: .githooks
+    installer_command: bin/install-local-git-hooks
+    post_merge_command: bin/auto-reconcile-main
+    post_checkout_command: bin/auto-reconcile-main
+    pre_push_command: bin/run-governed-pre-push-checks
+    mutating_hooks:
+      - post-merge
+      - post-checkout
+    validation_only_hooks:
+      - pre-push
+    hooks_must_invoke_repo_owned_commands_only: true
+    hooks_must_noop_on_ineligible_branches: true
   queue_reconciliation_requirements:
     graph_actions_required_for_governed_work: true
     stale_queue_blocks_advancement: true
