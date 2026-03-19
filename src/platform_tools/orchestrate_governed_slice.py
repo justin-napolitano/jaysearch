@@ -10,10 +10,49 @@ from platform_tools.human_operations_status import get_human_operations_status
 from platform_tools.managed_repo_status import get_managed_repo_status
 from platform_tools.merge_readiness import check_merge_readiness
 from platform_tools.orchestrator_status import get_orchestrator_status
+from platform_tools.plan_utils import parse_plan
 from platform_tools.reconcile_governed_graph_events import reconcile_governed_graph_events
+from platform_tools.reconcile_remaining_work_merge import reconcile_pending_merge_completions
 
 
 COMMAND = "orchestrate-governed-slice"
+GRAPH_PATH = Path("artifacts/planner/research/remaining-work-graph.json")
+
+
+def _effective_base_ref(
+    *,
+    repo_root: Path,
+    branch: str,
+    execplan_path: str,
+    default_base_ref: str,
+) -> str:
+    if not branch.startswith("impl-execplan/") or not execplan_path:
+        return default_base_ref
+    graph_path = repo_root / GRAPH_PATH
+    if not graph_path.exists():
+        return default_base_ref
+    try:
+        graph = json.loads(graph_path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError:
+        return default_base_ref
+    nodes = graph.get("nodes", [])
+    if not isinstance(nodes, list):
+        return default_base_ref
+    try:
+        execplan_id = str(parse_plan(Path(execplan_path)).frontmatter.get("id", "")).strip()
+    except Exception:
+        return default_base_ref
+    for node in nodes:
+        if not isinstance(node, dict):
+            continue
+        if str(node.get("target_execplan_id", "")).strip() != execplan_id:
+            continue
+        initiative_branch = str(node.get("initiative_branch", "")).strip()
+        integration_mode = str(node.get("integration_mode", "")).strip()
+        if integration_mode == "via_initiative" and initiative_branch:
+            return initiative_branch
+        break
+    return default_base_ref
 
 
 def run_orchestrate_governed_slice(
@@ -46,6 +85,8 @@ def run_orchestrate_governed_slice(
         }
         return managed_code, report
 
+    post_merge_reconciliation = reconcile_pending_merge_completions(repo_root=root_path, main_ref=base_ref)
+
     game_code, game_report = get_game_status(
         root=root,
         branch=branch,
@@ -57,6 +98,12 @@ def run_orchestrate_governed_slice(
         str(active_execplan.get("path", "")).strip() if isinstance(active_execplan, dict) else ""
     )
     current_branch = str(game_report.get("branch", branch or "")).strip() if isinstance(game_report, dict) else (branch or "")
+    effective_base_ref = _effective_base_ref(
+        repo_root=root_path,
+        branch=current_branch,
+        execplan_path=resolved_execplan_path,
+        default_base_ref=base_ref,
+    )
 
     blockers: list[str] = []
     if game_code != 0:
@@ -81,7 +128,7 @@ def run_orchestrate_governed_slice(
     merge_code, merge_report = check_merge_readiness(
         root=root,
         execplan_path=resolved_execplan_path or None,
-        base_ref=base_ref,
+        base_ref=effective_base_ref,
         include_validation_runs=False,
     )
     if merge_code != 0:
@@ -114,8 +161,10 @@ def run_orchestrate_governed_slice(
         "ok": not blockers,
         "blockers": sorted(set(blockers)),
         "branch": current_branch,
+        "base_ref": effective_base_ref,
         "execplan_path": resolved_execplan_path,
         "reconciliation": reconcile_report,
+        "post_merge_reconciliation": post_merge_reconciliation,
         "merge_readiness": {
             "readiness": bool(merge_report.get("readiness", False)),
             "failing_checks": merge_report.get("failing_checks", []),
