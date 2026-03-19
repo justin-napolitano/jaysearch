@@ -16,7 +16,7 @@
   "queue_projection": {
     "path": "docs/queued-execplans.md",
     "projection_authority": "projection_only",
-    "last_reconciled_action_id": "rwg-action-20260319-019-unblock-rwg-032",
+    "last_reconciled_action_id": "rwg-action-20260319-021-activate-rwg-031",
     "ready_execplan_ids": []
   },
   "graph_actions": [
@@ -346,6 +346,22 @@
       "node_id": "rwg-032",
       "rationale": "capture the local git-hook automation follow-up as a focused spike so initiative-to-main availability, completion semantics, and hook installation behavior are repaired explicitly",
       "evidence_ref": ".agent/execplans/20260319-local-git-hook-mainline-followup-codex-01-execplan.md",
+      "queue_reconciled": true
+    },
+    {
+      "action_id": "rwg-action-20260319-020-complete-rwg-032",
+      "action": "complete",
+      "node_id": "rwg-032",
+      "rationale": "20260319-local-git-hook-mainline-followup-codex-01-execplan merged to initiative/local-git-hook-automation and is now canonical completed state",
+      "evidence_ref": "merged:3b3542e4ec4ce607a8786f65edf5c005b32aed9d",
+      "queue_reconciled": true
+    },
+    {
+      "action_id": "rwg-action-20260319-021-activate-rwg-031",
+      "action": "activate",
+      "node_id": "rwg-031",
+      "rationale": "20260319-local-git-hook-automation-codex-01-execplan is now operator-active on main because initiative/local-git-hook-automation merged to main",
+      "evidence_ref": "merged:pr-100",
       "queue_reconciled": true
     }
   ],
@@ -1228,7 +1244,7 @@
       "parent_initiative_node": "initiative-local-git-hook-automation",
       "integration_mode": "via_initiative",
       "availability_target_ref": "main",
-      "availability_status": "pending",
+      "availability_status": "active",
       "expected_artifacts": [
         ".githooks/post-merge",
         ".githooks/post-checkout",
@@ -1242,19 +1258,20 @@
         "tie_breaker": "20260319-local-git-hook-automation-codex-01-execplan"
       },
       "action_state": {
-        "last_action_id": "rwg-action-20260319-018-complete-rwg-031",
-        "last_action": "complete",
+        "last_action_id": "rwg-action-20260319-021-activate-rwg-031",
+        "last_action": "activate",
         "action_required": false,
         "reorder_requires_human": false,
         "reorder_blockers": []
       },
-      "completion_ref": "merged:pr-99"
+      "completion_ref": "merged:pr-99",
+      "availability_ref": "merged:pr-100"
     },
     {
       "node_id": "rwg-032",
       "title": "Local git-hook automation mainline activation follow-up",
-      "status": "review_gated",
-      "status_reason": "spike the gap between child-slice completion on an initiative branch and actual hook/runtime availability on main so completion evidence and activation semantics stay trustworthy",
+      "status": "completed",
+      "status_reason": "",
       "gating_class": "review_gated",
       "conflict_domains": [
         "governance",
@@ -1276,15 +1293,148 @@
       ],
       "ordering": {
         "queue_position": 32,
-        "source_action_id": "rwg-action-20260319-019-unblock-rwg-032",
+        "source_action_id": "rwg-action-20260319-020-complete-rwg-032",
         "tie_breaker": "20260319-local-git-hook-mainline-followup-codex-01-execplan"
       },
       "action_state": {
-        "last_action_id": "rwg-action-20260319-019-unblock-rwg-032",
-        "last_action": "unblock",
+        "last_action_id": "rwg-action-20260319-020-complete-rwg-032",
+        "last_action": "complete",
         "action_required": false,
         "reorder_requires_human": false,
         "reorder_blockers": []
+      },
+      "completion_ref": "merged:3b3542e4ec4ce607a8786f65edf5c005b32aed9d"
+    },
+    {
+      "node_id": "initiative-platform-surface-simplification",
+      "title": "Initiative / Platform surface simplification",
+      "status": "decision_gated",
+      "status_reason": "queued parent initiative for simplifying the public platform model around the graph, transitions, validators, orchestration, and projection",
+      "gating_class": "decision_gated",
+      "conflict_domains": [
+        "documentation",
+        "governance",
+        "orchestrator-runtime",
+        "workflow"
+      ],
+      "target_execplan_id": "initiative:platform-surface-simplification",
+      "goal_area": "reference",
+      "initiative_branch": "initiative/platform-surface-simplification",
+      "parent_initiative_node": "initiative-platform-surface-simplification",
+      "expected_artifacts": [
+        "README.md",
+        "docs/commands.md",
+        "docs/codex-orchestrator-contract.md",
+        "docs/platform-definition-v1.md"
+      ],
+      "ordering": {}
+    },
+    {
+      "node_id": "rwg-033",
+      "title": "Platform surface simplification and public runtime consolidation",
+      "status": "decision_gated",
+      "status_reason": "queued simplification slice to reduce the public platform surface to the canonical graph, workflow, rule registry, orchestrator, managed-repo runtime, and board projection",
+      "gating_class": "decision_gated",
+      "conflict_domains": [
+        "documentation",
+        "governance",
+        "orchestrator-runtime"
+      ],
+      "target_execplan_id": "future:platform-surface-simplification",
+      "goal_area": "reference",
+      "initiative_branch": "initiative/platform-surface-simplification",
+      "parent_initiative_node": "initiative-platform-surface-simplification",
+      "integration_mode": "via_initiative",
+      "expected_artifacts": [
+        "README.md",
+        "docs/commands.md",
+        "docs/codex-orchestrator-contract.md",
+        "spec/workflow.yaml",
+        "spec/rule-registry.yaml"
+      ],
+      "ordering": {
+        "queue_position": 33,
+        "tie_breaker": "future:platform-surface-simplification"
+      }
+    },
+    {
+      "node_id": "rwg-034",
+      "title": "Game-language removal and validator-suite terminology alignment",
+      "status": "decision_gated",
+      "status_reason": "queued cleanup slice to replace game-first public language with the simpler execution model of validators, transitions, evidence, and canonical work state",
+      "gating_class": "decision_gated",
+      "conflict_domains": [
+        "documentation",
+        "governance",
+        "workflow"
+      ],
+      "target_execplan_id": "future:game-language-removal",
+      "goal_area": "documentation",
+      "initiative_branch": "initiative/platform-surface-simplification",
+      "parent_initiative_node": "initiative-platform-surface-simplification",
+      "integration_mode": "via_initiative",
+      "expected_artifacts": [
+        "docs/agent-game-rules-v1.md",
+        "docs/planner-game-model.md",
+        "docs/game-scoring-model.md",
+        "docs/subgame-branch-governance.md"
+      ],
+      "ordering": {
+        "queue_position": 34,
+        "tie_breaker": "future:game-language-removal"
+      }
+    },
+    {
+      "node_id": "rwg-035",
+      "title": "Documentation rewrite around the minimal execution model",
+      "status": "decision_gated",
+      "status_reason": "queued docs slice to restate the platform as work graph, ExecPlans, transition engine, validator suite, board projection, and managed-repo orchestration",
+      "gating_class": "decision_gated",
+      "conflict_domains": [
+        "documentation",
+        "orchestrator-runtime"
+      ],
+      "target_execplan_id": "future:minimal-execution-model-docs",
+      "goal_area": "documentation",
+      "initiative_branch": "initiative/platform-surface-simplification",
+      "parent_initiative_node": "initiative-platform-surface-simplification",
+      "integration_mode": "via_initiative",
+      "expected_artifacts": [
+        "README.md",
+        "docs/platform-definition-v1.md",
+        "docs/codex-orchestrator-contract.md",
+        "docs/commands.md"
+      ],
+      "ordering": {
+        "queue_position": 35,
+        "tie_breaker": "future:minimal-execution-model-docs"
+      }
+    },
+    {
+      "node_id": "rwg-036",
+      "title": "Public command surface freeze and internal command demotion",
+      "status": "decision_gated",
+      "status_reason": "queued cleanup slice to freeze a small supported public command set and demote intermediate reconciliation and smoke commands to internal tooling",
+      "gating_class": "decision_gated",
+      "conflict_domains": [
+        "documentation",
+        "orchestrator-runtime",
+        "workflow"
+      ],
+      "target_execplan_id": "future:public-command-surface-freeze",
+      "goal_area": "orchestrator-runtime",
+      "initiative_branch": "initiative/platform-surface-simplification",
+      "parent_initiative_node": "initiative-platform-surface-simplification",
+      "integration_mode": "via_initiative",
+      "expected_artifacts": [
+        "docs/commands.md",
+        "pyproject.toml",
+        "bin/",
+        "src/platform_tools/"
+      ],
+      "ordering": {
+        "queue_position": 36,
+        "tie_breaker": "future:public-command-surface-freeze"
       }
     },
     {
