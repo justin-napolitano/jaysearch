@@ -55,6 +55,9 @@ capability_rules:
     forbidden_surface_classes:
       - exception_registry
     allowed_referee_paths:
+      - .githooks/post-checkout
+      - .githooks/post-merge
+      - .githooks/pre-push
       - bin/auto-reconcile-main
       - bin/install-local-git-hooks
       - bin/anti-cheat-check
@@ -106,6 +109,9 @@ capability_rules:
       - tests/test_orchestrator_status.py
       - tests/test_policy_compliance_check.py
       - tests/test_register_remaining_work_node.py
+      - tests/test_run_governed_pre_push_checks.py
+      - tests/test_install_local_git_hooks.py
+      - tests/test_auto_reconcile_main.py
       - tests/test_reconcile_pending_merge_completions.py
       - tests/test_reconcile_governed_graph_events.py
       - tests/test_reconcile_remaining_work_merge.py
