@@ -16,7 +16,7 @@
   "queue_projection": {
     "path": "docs/queued-execplans.md",
     "projection_authority": "projection_only",
-    "last_reconciled_action_id": "rwg-action-20260319-014-complete-rwg-030",
+    "last_reconciled_action_id": "rwg-action-20260319-015-unblock-rwg-031",
     "ready_execplan_ids": []
   },
   "graph_actions": [
@@ -306,6 +306,14 @@
       "node_id": "rwg-030",
       "rationale": "20260319-post-merge-graph-reconciliation-automation-codex-01-execplan merged to initiative/graph-transition-automation and is now canonical completed state",
       "evidence_ref": "merged:pr-94",
+      "queue_reconciled": true
+    },
+    {
+      "action_id": "rwg-action-20260319-015-unblock-rwg-031",
+      "action": "unblock",
+      "node_id": "rwg-031",
+      "rationale": "capture local git-hook automation as the next governance automation slice so deterministic runtime updates can run from versioned local hooks instead of manual command chains",
+      "evidence_ref": ".agent/execplans/20260319-local-git-hook-automation-codex-01-execplan.md",
       "queue_reconciled": true
     }
   ],
@@ -1145,6 +1153,64 @@
       "completion_ref": "merged:pr-94"
     },
     {
+      "node_id": "initiative-local-git-hook-automation",
+      "title": "Initiative / Local git-hook automation",
+      "status": "review_gated",
+      "gating_class": "review_gated",
+      "conflict_domains": [
+        "governance",
+        "orchestrator-runtime",
+        "workflow"
+      ],
+      "target_execplan_id": "initiative:local-git-hook-automation",
+      "goal_area": "reference",
+      "initiative_branch": "initiative/local-git-hook-automation",
+      "parent_initiative_node": "initiative-local-git-hook-automation",
+      "expected_artifacts": [
+        "artifacts/planner/research/remaining-work-graph.json",
+        "spec/workflow.yaml",
+        ".githooks/"
+      ],
+      "ordering": {}
+    },
+    {
+      "node_id": "rwg-031",
+      "title": "Local git-hook automation",
+      "status": "review_gated",
+      "status_reason": "draft the local automation slice that should install versioned git hooks for deterministic reconciliation and governed pre-push checks",
+      "gating_class": "review_gated",
+      "conflict_domains": [
+        "governance",
+        "orchestrator-runtime",
+        "workflow"
+      ],
+      "target_execplan_id": "20260319-local-git-hook-automation-codex-01-execplan",
+      "goal_area": "governance",
+      "implementation_branch": "impl-execplan/20260319-local-git-hook-automation-codex-01-execplan-codex-01-20260319",
+      "initiative_branch": "initiative/local-git-hook-automation",
+      "parent_initiative_node": "initiative-local-git-hook-automation",
+      "integration_mode": "via_initiative",
+      "expected_artifacts": [
+        ".githooks/post-merge",
+        ".githooks/post-checkout",
+        ".githooks/pre-push",
+        "bin/install-local-git-hooks",
+        "bin/auto-reconcile-main"
+      ],
+      "ordering": {
+        "queue_position": 31,
+        "source_action_id": "rwg-action-20260319-015-unblock-rwg-031",
+        "tie_breaker": "20260319-local-git-hook-automation-codex-01-execplan"
+      },
+      "action_state": {
+        "last_action_id": "rwg-action-20260319-015-unblock-rwg-031",
+        "last_action": "unblock",
+        "action_required": false,
+        "reorder_requires_human": false,
+        "reorder_blockers": []
+      }
+    },
+    {
       "node_id": "artifact-orchestrator-contract",
       "title": "Codex orchestrator contract",
       "status": "completed",
@@ -1227,6 +1293,11 @@
     {
       "from": "rwg-030",
       "to": "rwg-027",
+      "relation": "depends_on"
+    },
+    {
+      "from": "rwg-031",
+      "to": "rwg-030",
       "relation": "depends_on"
     },
     {
