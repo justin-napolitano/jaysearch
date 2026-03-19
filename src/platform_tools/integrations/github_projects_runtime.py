@@ -145,3 +145,106 @@ def update_project_item_single_select_field(
             "singleSelectOptionId": option_id,
         },
     )
+
+
+def resolve_owner_id(*, token: str, owner: str, owner_type: str) -> tuple[str, dict[str, Any]]:
+    query = """
+    query($login: String!) {
+      user(login: $login) {
+        id
+      }
+      organization(login: $login) {
+        id
+      }
+    }
+    """
+    response = github_graphql_request(token, query, {"login": owner})
+    key = "organization" if owner_type == "organization" else "user"
+    owner_id = str(response.get("data", {}).get(key, {}).get("id", "")).strip()
+    return owner_id, response
+
+
+def create_project(*, token: str, owner_id: str, title: str) -> dict[str, Any]:
+    mutation = """
+    mutation($ownerId: ID!, $title: String!) {
+      createProjectV2(input: {ownerId: $ownerId, title: $title}) {
+        projectV2 {
+          id
+          title
+        }
+      }
+    }
+    """
+    return github_graphql_request(token, mutation, {"ownerId": owner_id, "title": title})
+
+
+def create_project_field(
+    *,
+    token: str,
+    project_id: str,
+    field_name: str,
+    data_type: str,
+    single_select_options: list[str] | None = None,
+) -> dict[str, Any]:
+    options = [{"name": value} for value in (single_select_options or []) if str(value).strip()]
+    mutation = """
+    mutation(
+      $projectId: ID!,
+      $name: String!,
+      $dataType: ProjectV2CustomFieldType!,
+      $singleSelectOptions: [ProjectV2SingleSelectFieldOptionInput!]
+    ) {
+      createProjectV2Field(
+        input: {
+          projectId: $projectId,
+          name: $name,
+          dataType: $dataType,
+          singleSelectOptions: $singleSelectOptions
+        }
+      ) {
+        projectV2Field {
+          ... on ProjectV2FieldCommon {
+            id
+            name
+          }
+        }
+      }
+    }
+    """
+    return github_graphql_request(
+        token,
+        mutation,
+        {
+            "projectId": project_id,
+            "name": field_name,
+            "dataType": data_type,
+            "singleSelectOptions": options,
+        },
+    )
+
+
+def list_project_fields(*, token: str, project_id: str) -> dict[str, Any]:
+    query = """
+    query($projectId: ID!) {
+      node(id: $projectId) {
+        ... on ProjectV2 {
+          fields(first: 50) {
+            nodes {
+              ... on ProjectV2FieldCommon {
+                id
+                name
+                dataType
+              }
+              ... on ProjectV2SingleSelectField {
+                options {
+                  id
+                  name
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    """
+    return github_graphql_request(token, query, {"projectId": project_id})
