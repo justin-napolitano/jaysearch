@@ -55,6 +55,8 @@ capability_rules:
     forbidden_surface_classes:
       - exception_registry
     allowed_referee_paths:
+      - bin/auto-reconcile-main
+      - bin/install-local-git-hooks
       - bin/anti-cheat-check
       - bin/managed-repo-status
       - bin/merge-readiness-check
@@ -66,8 +68,10 @@ capability_rules:
       - bin/reconcile-governed-graph-events
       - bin/reconcile-remaining-work-transition
       - bin/rule-graph-check
+      - bin/run-governed-pre-push-checks
       - bin/state-transition-legality-check
       - bin/state-transition-legality-smoke-test
+      - src/platform_tools/auto_reconcile_main.py
       - src/platform_tools/anti_cheat_check.py
       - src/platform_tools/branch_policy.py
       - src/platform_tools/execplan_lint.py
@@ -77,6 +81,7 @@ capability_rules:
       - src/platform_tools/governance_loader.py
       - src/platform_tools/human_operations_runtime.py
       - src/platform_tools/human_operations_status.py
+      - src/platform_tools/install_local_git_hooks.py
       - src/platform_tools/merge_readiness.py
       - src/platform_tools/managed_repo_status.py
       - src/platform_tools/orchestrate_governed_slice.py
@@ -88,6 +93,7 @@ capability_rules:
       - src/platform_tools/reconcile_remaining_work_merge.py
       - src/platform_tools/reconcile_remaining_work_transition.py
       - src/platform_tools/repo_health.py
+      - src/platform_tools/run_governed_pre_push_checks.py
       - src/platform_tools/rule_graph_check.py
       - src/platform_tools/remaining_work_graph_check.py
       - src/platform_tools/state_transition_legality.py
