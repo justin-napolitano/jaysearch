@@ -152,9 +152,10 @@ This document turns the remaining-work graph into an explicit near-term queue of
    - goal: add machine-readable priority and cost signals so the graph can emit deterministic sequential, parallel-safe, and lowest-cost execution plans
 
 28. `20260319-managed-repo-orchestration-codex-01-execplan`
-   - status: `ready`
+   - status: `completed`
    - goal: allow external repos such as `jayrun` to keep canonical graph and ExecPlan state locally while platform-template-bootstrap supplies deterministic bootstrap, project-board setup, completion-PR visibility, orchestration, and control-loop runtime by explicit repo-root targeting
    - draft branch: `draft-execplan/20260319-managed-repo-orchestration-bootstrap-codex-01-20260319`
+   - completion ref: `merged:pr-93`
 
 29. `20260319-post-merge-graph-reconciliation-automation-codex-01-execplan`
    - status: `completed`
@@ -163,13 +164,19 @@ This document turns the remaining-work graph into an explicit near-term queue of
    - completion ref: `merged:pr-94`
 
 30. `20260319-local-git-hook-automation-codex-01-execplan`
-   - status: `review_gated`
+   - status: `completed`
    - goal: install versioned local git hooks that invoke deterministic repo-owned reconciliation and governed pre-push checks instead of requiring manual command chains
    - draft branch: `draft-execplan/20260319-local-git-hook-automation-codex-01-20260319`
+   - completion ref: `merged:pr-98`
+
+31. `20260319-local-git-hook-mainline-followup-codex-01-execplan`
+   - status: `review_gated`
+   - goal: spike the mismatch between initiative-level completion and actual mainline hook/runtime availability so completion evidence, activation semantics, and local installation behavior stay trustworthy
+   - draft branch: `draft-execplan/20260319-local-git-hook-mainline-followup-codex-01-20260319`
 ## Mirror Metadata
 
-- canonical_last_graph_action_id: `rwg-action-20260319-016-promote_ready-rwg-029`
-- canonical_ready_order: `20260319-managed-repo-orchestration-codex-01-execplan`
+- canonical_last_graph_action_id: `rwg-action-20260319-019-unblock-rwg-032`
+- canonical_ready_order: ``
 - projection_authority: `projection_only`
 
 ## Queue Discipline
