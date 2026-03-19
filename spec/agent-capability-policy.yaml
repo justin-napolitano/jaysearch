@@ -56,6 +56,7 @@ capability_rules:
       - exception_registry
     allowed_referee_paths:
       - bin/anti-cheat-check
+      - bin/bootstrap-managed-repo
       - bin/managed-repo-status
       - bin/merge-readiness-check
       - bin/orchestrate-governed-slice
@@ -69,6 +70,7 @@ capability_rules:
       - bin/state-transition-legality-check
       - bin/state-transition-legality-smoke-test
       - src/platform_tools/anti_cheat_check.py
+      - src/platform_tools/bootstrap_managed_repo.py
       - src/platform_tools/branch_policy.py
       - src/platform_tools/execplan_lint.py
       - src/platform_tools/execplan_discovery.py
@@ -92,6 +94,7 @@ capability_rules:
       - src/platform_tools/remaining_work_graph_check.py
       - src/platform_tools/state_transition_legality.py
       - tests/test_anti_cheat_check.py
+      - tests/test_bootstrap_managed_repo.py
       - tests/test_branch_policy.py
       - tests/test_human_operations_status.py
       - tests/test_managed_repo_status.py
