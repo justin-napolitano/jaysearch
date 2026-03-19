@@ -69,6 +69,11 @@ execution_requirements:
     governed_child_slices_may_branch_from_initiative: true
     initiative_to_main_requires_parent_node_completion: true
     fail_closed_on_missing_initiative_mapping: true
+    default_integration_mode: via_initiative
+    direct_to_main_exception_modes:
+      - direct_to_main_hotfix
+      - direct_to_main_patch
+    normal_governed_work_requires_initiative_branch: true
   board_runtime_requirements:
     board_review_surface_is_projection_only: true
     provider_sync_field_map_required_for_live_board_sync: true

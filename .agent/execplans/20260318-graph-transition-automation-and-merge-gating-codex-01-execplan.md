@@ -7,6 +7,7 @@ status: draft
 base_branch: main
 changes:
   - .agent/execplans/20260318-graph-transition-automation-and-merge-gating-codex-01-execplan.md
+  - artifacts/planner/research/remaining-work-graph.json
   - docs/queued-execplans.md
   - spec/governance.yaml
   - spec/workflow.yaml
@@ -28,6 +29,9 @@ validation:
       expected_exit: 0
     - name: "remaining-work-graph-check"
       command: "bin/remaining-work-graph-check"
+      expected_exit: 0
+    - name: "policy-compliance-check"
+      command: "bin/policy-compliance-check --execplan-path .agent/execplans/20260318-graph-transition-automation-and-merge-gating-codex-01-execplan.md"
       expected_exit: 0
 tasks:
   - title: "Define machine-readable graph transition rules for routine lifecycle events"
