@@ -18,9 +18,11 @@ changes:
   - src/platform_tools/branch_policy.py
   - src/platform_tools/integrations/github_projects_sync.py
   - src/platform_tools/integrations/provider_adapter.py
+  - src/platform_tools/merge_readiness.py
   - src/platform_tools/reconcile_remaining_work_merge.py
   - src/platform_tools/remaining_work_graph_check.py
   - tests/test_branch_policy.py
+  - tests/test_merge_readiness.py
   - tests/test_policy_compliance_check.py
   - tests/test_reconcile_remaining_work_merge.py
   - tests/test_remaining_work_graph_check.py

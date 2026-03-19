@@ -241,6 +241,7 @@ def test_reconcile_remaining_work_merge_updates_graph_and_queue(tmp_path: Path) 
     assert report["completed_node_id"] == "rwg-020"
     assert report["next_node_id"] == "rwg-014"
     assert report["next_node_status"] == "review_gated"
+    assert report["transition_event"] == "impl_execplan_merge_to_initiative"
     assert report["ready_execplan_ids"] == []
 
     graph = json.loads((tmp_path / "artifacts" / "planner" / "research" / "remaining-work-graph.json").read_text(encoding="utf-8"))
@@ -331,3 +332,4 @@ def test_reconcile_uses_initiative_branch_as_completion_target(monkeypatch, tmp_
     assert seen["ref"] == "initiative/remaining-work-ordering"
     assert report["ok"] is True
     assert report["completion_target_ref"] == "initiative/remaining-work-ordering"
+    assert report["transition_event"] == "impl_execplan_merge_to_initiative"
