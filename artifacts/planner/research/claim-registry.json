@@ -293,6 +293,27 @@
           "bibliography_claim_ids": ["claim-remaining-work-graph"]
         }
       ]
+    },
+    {
+      "artifact_path": "docs/governed-super-agent-harness-research.md",
+      "artifact_node_id": "artifact-governed-super-agent-harness-research",
+      "required": true,
+      "claims": [
+        {
+          "claim_id": "gshr-001",
+          "summary": "DeerFlow currently presents itself as a runtime harness centered on skills, tools, subagents, memory, sandboxed execution, and user-facing service surfaces.",
+          "category": "source-backed",
+          "source_ids": ["src-deerflow-readme-20260323"],
+          "bibliography_claim_ids": ["claim-deerflow-runtime-profile"]
+        },
+        {
+          "claim_id": "gshr-002",
+          "summary": "A DeerFlow-inspired direction should be evaluated as a layered harness above the current kernel rather than as a direct replacement for canonical local governance surfaces.",
+          "category": "design-inference",
+          "source_ids": ["src-deerflow-readme-20260323", "src-prov-overview", "src-harel-1987"],
+          "bibliography_claim_ids": ["claim-governed-super-agent-harness-layering"]
+        }
+      ]
     }
   ]
 }

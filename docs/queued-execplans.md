@@ -191,9 +191,22 @@ This document turns the remaining-work graph into an explicit near-term queue of
 35. `future:public-command-surface-freeze`
    - status: `decision_gated`
    - goal: freeze a small supported public command set and demote intermediate reconciliation and smoke commands to internal tooling
+
+37. `20260323-governed-super-agent-harness-planning-spike-codex-01-execplan`
+   - status: `decision_gated`
+   - goal: Plan a governed super-agent harness that layers DeerFlow-style runtime capabilities on top of the platform kernel
+   - implementation branch: `impl-execplan/20260323-governed-super-agent-harness-planning-spike-codex-01-20260323`
+   - gate: `finalized draft ExecPlan required before execution`
+
+38. `20260323-governed-super-agent-harness-research-codex-01-execplan`
+   - status: `decision_gated`
+   - goal: Research DeerFlow-style runtime capabilities before committing to a governed super-agent harness architecture
+   - implementation branch: `impl-execplan/20260323-governed-super-agent-harness-research-codex-01-20260323`
+   - gate: `finalized draft ExecPlan required before execution`
+
 ## Mirror Metadata
 
-- canonical_last_graph_action_id: `rwg-action-20260319-022-unblock-rwg-033`
+- canonical_last_graph_action_id: `rwg-action-20260323-register-rwg-038`
 - canonical_ready_order: ``
 - projection_authority: `projection_only`
 

@@ -16,7 +16,7 @@
   "queue_projection": {
     "path": "docs/queued-execplans.md",
     "projection_authority": "projection_only",
-    "last_reconciled_action_id": "rwg-action-20260319-022-unblock-rwg-033",
+    "last_reconciled_action_id": "rwg-action-20260323-register-rwg-038",
     "ready_execplan_ids": []
   },
   "graph_actions": [
@@ -370,6 +370,22 @@
       "node_id": "rwg-033",
       "rationale": "capture platform surface simplification as the next initiative-backed draft slice so the public platform model can be reduced to the working core",
       "evidence_ref": ".agent/execplans/20260319-platform-surface-simplification-codex-01-execplan.md",
+      "queue_reconciled": true
+    },
+    {
+      "action_id": "rwg-action-20260323-register-rwg-037",
+      "action": "block",
+      "node_id": "rwg-037",
+      "rationale": "node registered deterministically from ExecPlan graph_registration metadata",
+      "evidence_ref": ".agent/execplans/20260323-governed-super-agent-harness-planning-spike-codex-01-execplan.md",
+      "queue_reconciled": true
+    },
+    {
+      "action_id": "rwg-action-20260323-register-rwg-038",
+      "action": "block",
+      "node_id": "rwg-038",
+      "rationale": "node registered deterministically from ExecPlan graph_registration metadata",
+      "evidence_ref": ".agent/execplans/20260323-governed-super-agent-harness-research-codex-01-execplan.md",
       "queue_reconciled": true
     }
   ],
@@ -1497,6 +1513,92 @@
       "action_state": {
         "last_action_id": "rwg-action-20260311-001-complete-artifact-merge-readiness-contract",
         "last_action": "complete",
+        "action_required": false,
+        "reorder_requires_human": false,
+        "reorder_blockers": []
+      }
+    },
+    {
+      "node_id": "initiative-governed-super-agent-harness",
+      "title": "Initiative / governed super agent harness",
+      "status": "ready",
+      "gating_class": "auto_runnable",
+      "conflict_domains": [
+        "research-governance",
+        "super-agent-harness"
+      ],
+      "target_execplan_id": "initiative:governed-super-agent-harness",
+      "goal_area": "reference",
+      "initiative_branch": "initiative/governed-super-agent-harness",
+      "parent_initiative_node": "initiative-governed-super-agent-harness",
+      "ordering": {}
+    },
+    {
+      "node_id": "rwg-037",
+      "title": "Plan a governed super-agent harness that layers DeerFlow-style runtime capabilities on top of the platform kernel",
+      "status": "decision_gated",
+      "status_reason": "registered from ExecPlan metadata; finalized draft ExecPlan required before execution",
+      "gating_class": "decision_gated",
+      "conflict_domains": [
+        "research-governance",
+        "super-agent-harness"
+      ],
+      "target_execplan_id": "20260323-governed-super-agent-harness-planning-spike-codex-01-execplan",
+      "goal_area": "integration",
+      "implementation_branch": "impl-execplan/20260323-governed-super-agent-harness-planning-spike-codex-01-20260323",
+      "initiative_branch": "initiative/governed-super-agent-harness",
+      "parent_initiative_node": "initiative-governed-super-agent-harness",
+      "integration_mode": "via_initiative",
+      "expected_artifacts": [
+        ".agent/execplans/20260323-governed-super-agent-harness-planning-spike-codex-01-execplan.md",
+        "artifacts/planner/research/remaining-work-graph.json",
+        "docs/queued-execplans.md"
+      ],
+      "ordering": {
+        "queue_position": 37,
+        "tie_breaker": "20260323-governed-super-agent-harness-planning-spike-codex-01-execplan",
+        "source_action_id": "rwg-action-20260323-register-rwg-037"
+      },
+      "action_state": {
+        "last_action_id": "rwg-action-20260323-register-rwg-037",
+        "last_action": "block",
+        "action_required": false,
+        "reorder_requires_human": false,
+        "reorder_blockers": []
+      }
+    },
+    {
+      "node_id": "rwg-038",
+      "title": "Research DeerFlow-style runtime capabilities before committing to a governed super-agent harness architecture",
+      "status": "decision_gated",
+      "status_reason": "registered from ExecPlan metadata; finalized draft ExecPlan required before execution",
+      "gating_class": "decision_gated",
+      "conflict_domains": [
+        "research-governance",
+        "super-agent-harness"
+      ],
+      "target_execplan_id": "20260323-governed-super-agent-harness-research-codex-01-execplan",
+      "goal_area": "integration",
+      "implementation_branch": "impl-execplan/20260323-governed-super-agent-harness-research-codex-01-20260323",
+      "initiative_branch": "initiative/governed-super-agent-harness",
+      "parent_initiative_node": "initiative-governed-super-agent-harness",
+      "integration_mode": "via_initiative",
+      "expected_artifacts": [
+        ".agent/execplans/20260323-governed-super-agent-harness-research-codex-01-execplan.md",
+        "docs/governed-super-agent-harness-research.md",
+        "docs/references.md",
+        "docs/research-assumptions.md",
+        "artifacts/planner/research/bibliography-graph.json",
+        "artifacts/planner/research/claim-registry.json"
+      ],
+      "ordering": {
+        "queue_position": 38,
+        "tie_breaker": "20260323-governed-super-agent-harness-research-codex-01-execplan",
+        "source_action_id": "rwg-action-20260323-register-rwg-038"
+      },
+      "action_state": {
+        "last_action_id": "rwg-action-20260323-register-rwg-038",
+        "last_action": "block",
         "action_required": false,
         "reorder_requires_human": false,
         "reorder_blockers": []
