@@ -80,6 +80,13 @@
       "link": "https://www.nobelprize.org/prizes/economic-sciences/2007/summary/"
     },
     {
+      "id": "src-deerflow-readme-20260323",
+      "type": "source",
+      "label": "DeerFlow README 2026-03-23",
+      "title": "bytedance/deer-flow GitHub repository and README",
+      "link": "https://github.com/bytedance/deer-flow"
+    },
+    {
       "id": "concept-mechanism-design",
       "type": "concept",
       "label": "Mechanism Design",
@@ -144,6 +151,18 @@
       "type": "claim",
       "label": "Remaining Work Graph",
       "title": "Remaining implementation work should be represented as a canonical backlog graph with dependency and conflict edges"
+    },
+    {
+      "id": "claim-deerflow-runtime-profile",
+      "type": "claim",
+      "label": "DeerFlow Runtime Profile",
+      "title": "DeerFlow is currently described as a runtime harness with skills, tools, subagents, memory, sandboxing, and service surfaces"
+    },
+    {
+      "id": "claim-governed-super-agent-harness-layering",
+      "type": "claim",
+      "label": "Harness Layering",
+      "title": "A DeerFlow-inspired direction should layer runtime capabilities above the current governed kernel"
     },
     {
       "id": "artifact-planner-game-model",
@@ -276,6 +295,12 @@
       "type": "artifact",
       "label": "Queued ExecPlans",
       "title": "docs/queued-execplans.md"
+    },
+    {
+      "id": "artifact-governed-super-agent-harness-research",
+      "type": "artifact",
+      "label": "Harness Research",
+      "title": "docs/governed-super-agent-harness-research.md"
     }
   ],
   "edges": [
@@ -307,6 +332,10 @@
     { "from": "concept-provenance", "to": "claim-remaining-work-graph", "relation": "supports" },
     { "from": "concept-state-transitions", "to": "claim-remaining-work-graph", "relation": "supports" },
     { "from": "concept-inspection", "to": "claim-remaining-work-graph", "relation": "informs" },
+    { "from": "src-deerflow-readme-20260323", "to": "claim-deerflow-runtime-profile", "relation": "supports" },
+    { "from": "src-deerflow-readme-20260323", "to": "claim-governed-super-agent-harness-layering", "relation": "informs" },
+    { "from": "concept-provenance", "to": "claim-governed-super-agent-harness-layering", "relation": "supports" },
+    { "from": "concept-state-transitions", "to": "claim-governed-super-agent-harness-layering", "relation": "supports" },
     { "from": "claim-planning-implementation-game", "to": "artifact-planner-game-model", "relation": "cited_in" },
     { "from": "claim-planning-implementation-game", "to": "artifact-implementation-game-model", "relation": "cited_in" },
     { "from": "claim-canonical-graph", "to": "artifact-transition-spec", "relation": "cited_in" },
@@ -328,6 +357,8 @@
     { "from": "claim-remaining-work-graph", "to": "artifact-remaining-work-graph-doc", "relation": "cited_in" },
     { "from": "claim-remaining-work-graph", "to": "artifact-parallel-execution-policy", "relation": "cited_in" },
     { "from": "claim-remaining-work-graph", "to": "artifact-queued-execplans", "relation": "cited_in" },
+    { "from": "claim-deerflow-runtime-profile", "to": "artifact-governed-super-agent-harness-research", "relation": "cited_in" },
+    { "from": "claim-governed-super-agent-harness-layering", "to": "artifact-governed-super-agent-harness-research", "relation": "cited_in" },
     { "from": "concept-mechanism-design", "to": "artifact-scoring-spec", "relation": "informs" },
     { "from": "concept-inspection", "to": "artifact-scoring-spec", "relation": "informs" },
     { "from": "artifact-assumptions-doc", "to": "claim-planning-implementation-game", "relation": "classified_as" },
@@ -335,6 +366,7 @@
     { "from": "artifact-assumptions-doc", "to": "claim-explicit-reconciliation", "relation": "classified_as" },
     { "from": "artifact-assumptions-doc", "to": "claim-codex-orchestration", "relation": "classified_as" },
     { "from": "artifact-assumptions-doc", "to": "claim-nested-game-system", "relation": "classified_as" },
-    { "from": "artifact-assumptions-doc", "to": "claim-remaining-work-graph", "relation": "classified_as" }
+    { "from": "artifact-assumptions-doc", "to": "claim-remaining-work-graph", "relation": "classified_as" },
+    { "from": "artifact-assumptions-doc", "to": "claim-governed-super-agent-harness-layering", "relation": "classified_as" }
   ]
 }

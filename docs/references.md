@@ -49,3 +49,8 @@ This design package is informed by the following primary or authoritative source
 
 - The platform’s exact scoring weights are design choices informed by these sources, not values copied from them.
 - Where the framework extends beyond the cited sources, that extension should be marked as a design inference rather than presented as if it were directly established by the literature.
+
+## Comparative Runtime Research
+
+12. bytedance. “DeerFlow” GitHub repository and README, reviewed 2026-03-23.
+    Link: https://github.com/bytedance/deer-flow
