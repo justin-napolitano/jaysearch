@@ -108,6 +108,7 @@ surface_entries:
       - bin/session-bootstrap-check
       - bin/state-transition-legality-check
       - bin/state-transition-legality-smoke-test
+      - bin/worker-runtime-artifact-check
       - src/platform_tools/auto_reconcile_main.py
       - src/platform_tools/anti_cheat_check.py
       - src/platform_tools/bootstrap_managed_repo.py
@@ -136,6 +137,7 @@ surface_entries:
       - src/platform_tools/repo_health.py
       - src/platform_tools/session_bootstrap.py
       - src/platform_tools/worker_runtime_artifacts.py
+      - src/platform_tools/worker_runtime_artifact_check.py
       - src/platform_tools/worker_contracts.py
       - src/platform_tools/rule_graph_check.py
       - src/platform_tools/remaining_work_graph_check.py
@@ -173,6 +175,7 @@ surface_entries:
       - tests/test_session_bootstrap.py
       - tests/test_remaining_work_graph_check.py
       - tests/test_state_transition_legality.py
+      - tests/test_worker_runtime_artifact_check.py
       - tests/test_worker_session_status.py
   - id: exception_registry
     surface_class: exception_registry

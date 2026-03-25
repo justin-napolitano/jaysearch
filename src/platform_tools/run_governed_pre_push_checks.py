@@ -12,6 +12,7 @@ from platform_tools.governance_check import check_governance
 from platform_tools.orchestrate_governed_slice import _effective_base_ref
 from platform_tools.policy_compliance_check import _published_branch_rewrite_status, check_policy_compliance
 from platform_tools.remaining_work_graph_check import check_remaining_work_graph
+from platform_tools.worker_runtime_artifact_check import check_worker_runtime_artifacts
 
 
 COMMAND = "run-governed-pre-push-checks"
@@ -59,6 +60,11 @@ def run_governed_pre_push_checks(
     checks.append({"name": "remaining_work_graph_check", "ok": graph_code == 0, "errors": graph_report.get("errors", [])})
     if graph_code != 0:
         blockers.extend(f"remaining_work_graph:{item}" for item in graph_report.get("errors", []))
+
+    runtime_code, runtime_report = check_worker_runtime_artifacts(root=root_path.as_posix())
+    checks.append({"name": "worker_runtime_artifact_check", "ok": runtime_code == 0, "errors": runtime_report.get("errors", [])})
+    if runtime_code != 0:
+        blockers.extend(f"worker_runtime_artifacts:{item}" for item in runtime_report.get("errors", []))
 
     execplan_path = ""
     execplan_strategy = ""
