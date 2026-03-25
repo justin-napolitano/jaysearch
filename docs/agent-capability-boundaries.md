@@ -17,6 +17,11 @@ Capability is evaluated from local repository state:
 
 The default governed actor is the active implementation agent on an `impl-execplan/*` branch.
 
+Every new Codex session and every worker session must bootstrap from
+repository-local governance state before mutating governed artifacts.
+That bootstrap is fail-closed when branch role, active ExecPlan, or
+required authority artifacts are ambiguous.
+
 ## Protected Surface Categories
 
 - `rule_surface`
@@ -31,6 +36,15 @@ The default governed actor is the active implementation agent on an `impl-execpl
   - graph, ExecPlan, and other canonical in-repo state
 - `projection_surface`
   - queue mirrors and provider-board projections
+
+Worker-runtime governance additions:
+
+- worker launchers and worker-runtime modules are treated as governed
+  runtime surfaces, not as free-form helper scripts
+- worker sessions must execute in isolated checkouts or ephemeral
+  container-local clones
+- worker sessions must hand off authority through Git-backed artifacts,
+  not through durable process memory
 
 ## Default Anti-Cheat Rules
 

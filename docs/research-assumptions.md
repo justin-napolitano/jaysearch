@@ -38,6 +38,7 @@ Use these categories for future design and implementation artifacts:
 - planning merge readiness and implementation merge readiness should be treated as distinct proof games
 - remaining implementation work should be modeled as a canonical backlog graph rather than prose-only next steps
 - safe parallel execution requires explicit conflict domains in addition to dependency edges
+- a DeerFlow-inspired runtime should be layered above the existing kernel rather than replacing the kernel directly
 
 ### Policy Choices
 
@@ -53,6 +54,9 @@ Use these categories for future design and implementation artifacts:
 - exact reviewer/referee automation boundaries for future implementation tools
 - exact runtime validator contract for the game graph itself
 - exact runtime validator contract for the remaining-work graph
+- exact memory model that preserves convenience without becoming hidden authority
+- exact runtime artifact contract for sandbox outputs, session traces, and subagent results
+- exact gateway surface that improves usability without bypassing local governance
 
 ## Usage Requirement
 

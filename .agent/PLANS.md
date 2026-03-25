@@ -9,6 +9,8 @@ traceable, auditable, and reproducible.
 This repository follows **plan‑driven development**.
 
 All meaningful work must originate from an ExecPlan.
+For initiative-based execution, the ExecPlan is the bounded authority
+contract for the initiative rather than a per-worker scratchpad.
 
 ------------------------------------------------------------------------
 
@@ -150,19 +152,29 @@ Agents must populate the `changes` field with explicit paths.
 
 # Implementation Workflow
 
-Implementation execution should occur on branches named:
+Implementation execution should occur on worker branches named:
 
-impl-execplan/`<plan-id>`{=html}-`<agent>`{=html}-YYYYMMDD
+impl-execplan/`<initiative-scope>`{=html}-`<worker>`{=html}
 
-Parallel implementation ExecPlans must use distinct implementation branches.
+Parallel workers must use distinct implementation branches and distinct
+worker contracts under the parent initiative ExecPlan.
 
 Optional integration branches may be named:
 
 queue-execplan/`<queue-name>`{=html}-`<agent>`{=html}-YYYYMMDD
 
 Queue branches are for deliberate stacking and integration only. They do
-not replace the canonical implementation branch for an individual
-ExecPlan slice.
+not replace the canonical worker branch for an individual worker
+contract.
+
+Initiative worker-contract model:
+
+- the initiative branch holds the authoritative bounded ExecPlan
+- worker branches inherit that authority and execute narrow subcontracts
+- worker contracts must define owned scope, validations, merge criteria,
+  and explicit non-goals
+- worker branches merge back into the initiative branch rather than
+  creating competing plan authority
 
 ------------------------------------------------------------------------
 
