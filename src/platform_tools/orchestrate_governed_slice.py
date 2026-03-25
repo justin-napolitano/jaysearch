@@ -13,6 +13,7 @@ from platform_tools.orchestrator_status import get_orchestrator_status
 from platform_tools.plan_utils import parse_plan
 from platform_tools.reconcile_governed_graph_events import reconcile_governed_graph_events
 from platform_tools.reconcile_remaining_work_merge import reconcile_pending_merge_completions
+from platform_tools.session_bootstrap import run_session_bootstrap_check
 
 
 COMMAND = "orchestrate-governed-slice"
@@ -98,6 +99,13 @@ def run_orchestrate_governed_slice(
         str(active_execplan.get("path", "")).strip() if isinstance(active_execplan, dict) else ""
     )
     current_branch = str(game_report.get("branch", branch or "")).strip() if isinstance(game_report, dict) else (branch or "")
+    bootstrap_code, bootstrap_report = run_session_bootstrap_check(
+        root=root,
+        branch=current_branch or None,
+        base_ref=base_ref,
+        execplan_path=resolved_execplan_path or None,
+        session_kind="codex",
+    )
     effective_base_ref = _effective_base_ref(
         repo_root=root_path,
         branch=current_branch,
@@ -106,6 +114,8 @@ def run_orchestrate_governed_slice(
     )
 
     blockers: list[str] = []
+    if bootstrap_code != 0:
+        blockers.extend(f"session_bootstrap:{item}" for item in bootstrap_report.get("blockers", []))
     if game_code != 0:
         blockers.extend(f"game_status:{item}" for item in game_report.get("blockers", []))
     if not resolved_execplan_path:
@@ -125,26 +135,30 @@ def run_orchestrate_governed_slice(
         if not reconcile_report.get("ok", False):
             blockers.append("graph_reconciliation_failed")
 
-    merge_code, merge_report = check_merge_readiness(
-        root=root,
-        execplan_path=resolved_execplan_path or None,
-        base_ref=effective_base_ref,
-        include_validation_runs=False,
-    )
-    if merge_code != 0:
-        blockers.extend(f"merge_readiness:{item}" for item in merge_report.get("failing_checks", []))
+    merge_report: dict[str, Any] = {"readiness": False, "failing_checks": []}
+    orchestrator_report: dict[str, Any] = {"status": "deferred", "next_actions": []}
+    human_ops_report: dict[str, Any] = {"status": "deferred", "next_actions": []}
+    if not blockers:
+        merge_code, merge_report = check_merge_readiness(
+            root=root,
+            execplan_path=resolved_execplan_path or None,
+            base_ref=effective_base_ref,
+            include_validation_runs=False,
+        )
+        if merge_code != 0:
+            blockers.extend(f"merge_readiness:{item}" for item in merge_report.get("failing_checks", []))
 
-    _, orchestrator_report = get_orchestrator_status(
-        root=root,
-        branch=current_branch or None,
-        execplan_path=resolved_execplan_path or None,
-        base_ref=base_ref,
-    )
-    _, human_ops_report = get_human_operations_status(
-        root=root,
-        branch=current_branch or None,
-        execplan_path=resolved_execplan_path or None,
-    )
+        _, orchestrator_report = get_orchestrator_status(
+            root=root,
+            branch=current_branch or None,
+            execplan_path=resolved_execplan_path or None,
+            base_ref=base_ref,
+        )
+        _, human_ops_report = get_human_operations_status(
+            root=root,
+            branch=current_branch or None,
+            execplan_path=resolved_execplan_path or None,
+        )
 
     next_actions: list[dict[str, Any]] = []
     if blockers:
@@ -163,6 +177,7 @@ def run_orchestrate_governed_slice(
         "branch": current_branch,
         "base_ref": effective_base_ref,
         "execplan_path": resolved_execplan_path,
+        "session_bootstrap": bootstrap_report,
         "reconciliation": reconcile_report,
         "post_merge_reconciliation": post_merge_reconciliation,
         "merge_readiness": {

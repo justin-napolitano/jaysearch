@@ -1,1084 +1,1362 @@
 {
-  "graph_id": "remaining-work-graph-20260311",
   "created_at": "2026-03-11T00:00:00Z",
-  "ordering_policy": {
-    "ready_statuses": [
-      "ready"
-    ],
-    "ready_sort_fields": [
-      "ready_order",
-      "tie_breaker",
-      "node_id"
-    ],
-    "reorder_requires_explicit_action": true,
-    "board_projection_authority": "projection_only"
-  },
-  "queue_projection": {
-    "path": "docs/queued-execplans.md",
-    "projection_authority": "projection_only",
-    "last_reconciled_action_id": "rwg-action-20260323-register-rwg-038",
-    "ready_execplan_ids": []
-  },
-  "graph_actions": [
+  "edges": [
     {
-      "action_id": "rwg-action-20260312-001-complete-rwg-012",
-      "action": "complete",
-      "node_id": "rwg-012",
-      "rationale": "policy-compliance merged to main in PR 72 and is now canonical completed state",
-      "evidence_ref": "merged:pr-72",
-      "queue_reconciled": true
+      "from": "rwg-002",
+      "relation": "depends_on",
+      "to": "rwg-001"
     },
     {
-      "action_id": "rwg-action-20260312-001b-complete-rwg-013",
-      "action": "complete",
-      "node_id": "rwg-013",
-      "rationale": "commit-structure subgame artifacts merged with policy-compliance and require canonical reconciliation",
-      "evidence_ref": "merged:pr-72",
-      "queue_reconciled": true
+      "from": "rwg-004",
+      "relation": "depends_on",
+      "to": "rwg-002"
     },
     {
-      "action_id": "rwg-action-20260312-002-complete-rwg-019",
-      "action": "complete",
-      "node_id": "rwg-019",
-      "rationale": "stale-queue enforcement landed inside policy-compliance and must be reconciled canonically",
-      "evidence_ref": "merged:pr-72",
-      "queue_reconciled": true
+      "from": "rwg-004",
+      "relation": "depends_on",
+      "to": "rwg-003"
     },
     {
-      "action_id": "rwg-action-20260312-003-reorder-rwg-020",
-      "action": "reorder",
-      "node_id": "rwg-020",
-      "rationale": "this slice becomes the deterministic next governed ready work once policy-compliance is completed",
-      "evidence_ref": "docs/queued-execplans.md",
-      "queue_reconciled": true
+      "from": "rwg-006",
+      "relation": "depends_on",
+      "to": "rwg-004"
     },
     {
-      "action_id": "rwg-action-20260312-004-promote-rwg-020",
-      "action": "promote_ready",
-      "node_id": "rwg-020",
-      "rationale": "ready ordering and graph-action work is the next canonical slice after policy-compliance reconciliation",
-      "evidence_ref": ".agent/execplans/20260312-remaining-work-graph-actions-and-ordering-codex-01-execplan.md",
-      "queue_reconciled": true
+      "from": "rwg-006",
+      "relation": "depends_on",
+      "to": "rwg-002"
     },
     {
-      "action_id": "rwg-action-20260312-005-complete-rwg-020",
-      "action": "complete",
-      "node_id": "rwg-020",
-      "rationale": "20260312-remaining-work-graph-actions-and-ordering-codex-01-execplan merged to main and is now canonical completed state",
-      "evidence_ref": "merged:pr-73",
-      "queue_reconciled": true
+      "from": "rwg-029",
+      "relation": "depends_on",
+      "to": "rwg-027"
     },
     {
-      "action_id": "rwg-action-20260312-006-unblock-rwg-014",
-      "action": "unblock",
-      "node_id": "rwg-014",
-      "rationale": "20260312-remaining-work-graph-actions-and-ordering-codex-01-execplan completed on main; dependency gating is cleared for the next canonical slice",
-      "evidence_ref": "merged:pr-73",
-      "queue_reconciled": true
+      "from": "rwg-030",
+      "relation": "depends_on",
+      "to": "rwg-027"
     },
     {
-      "action_id": "rwg-action-20260313-001-promote-rwg-014",
-      "action": "promote_ready",
-      "node_id": "rwg-014",
-      "rationale": "the canonical hostile-review implementation branch is published, so the slice may advance from review-gated to ready with an explicit backlog action",
-      "evidence_ref": ".agent/execplans/20260313-game-hostile-review-runtime-codex-01-execplan.md",
-      "queue_reconciled": true
+      "from": "rwg-031",
+      "relation": "depends_on",
+      "to": "rwg-030"
     },
     {
-      "action_id": "rwg-action-20260316-002-complete-rwg-014",
-      "action": "complete",
-      "node_id": "rwg-014",
-      "rationale": "20260313-game-hostile-review-runtime-codex-01-execplan merged to main and is now canonical completed state",
-      "evidence_ref": "merged:pr-75",
-      "queue_reconciled": true
+      "from": "rwg-032",
+      "relation": "depends_on",
+      "to": "rwg-031"
     },
     {
-      "action_id": "rwg-action-20260316-003-unblock-rwg-021",
-      "action": "unblock",
-      "node_id": "rwg-021",
-      "rationale": "hostile-review completed on main, so the board-action API contract becomes the next canonical queued slice pending implementation-branch publication",
-      "evidence_ref": ".agent/execplans/20260316-board-action-api-contract-and-event-log-codex-01-execplan.md",
-      "queue_reconciled": true
+      "from": "rwg-007",
+      "relation": "depends_on",
+      "to": "rwg-005"
     },
     {
-      "action_id": "rwg-action-20260316-004-promote-rwg-021",
-      "action": "promote_ready",
-      "node_id": "rwg-021",
-      "rationale": "the canonical board-action API implementation branch is published, so the slice may advance from review-gated to ready with an explicit backlog action",
-      "evidence_ref": ".agent/execplans/20260316-board-action-api-contract-and-event-log-codex-01-execplan.md",
-      "queue_reconciled": true
+      "from": "rwg-008",
+      "relation": "depends_on",
+      "to": "rwg-005"
     },
     {
-      "action_id": "rwg-action-20260316-005-complete-rwg-021",
-      "action": "complete",
-      "node_id": "rwg-021",
-      "rationale": "the board-action API contract and event-log slice merged on main, so the canonical graph records it as completed",
-      "evidence_ref": ".agent/execplans/20260316-board-action-api-contract-and-event-log-codex-01-execplan.md",
-      "queue_reconciled": true
+      "from": "rwg-008",
+      "relation": "depends_on",
+      "to": "rwg-007"
     },
     {
-      "action_id": "rwg-action-20260316-006-unblock-rwg-022",
-      "action": "unblock",
-      "node_id": "rwg-022",
-      "rationale": "board-action API completion satisfied the remaining dependency for the anti-cheat capability slice",
-      "evidence_ref": ".agent/execplans/20260316-anti-cheat-capability-enforcement-codex-01-execplan.md",
-      "queue_reconciled": true
+      "from": "rwg-010",
+      "relation": "depends_on",
+      "to": "rwg-008"
     },
     {
-      "action_id": "rwg-action-20260316-007-promote-rwg-022",
-      "action": "promote_ready",
-      "node_id": "rwg-022",
-      "rationale": "the canonical anti-cheat implementation branch is published, so the slice may advance from blocked to ready on its dedicated implementation branch",
-      "evidence_ref": ".agent/execplans/20260316-anti-cheat-capability-enforcement-codex-01-execplan.md",
-      "queue_reconciled": true
+      "from": "rwg-010",
+      "relation": "depends_on",
+      "to": "rwg-009"
     },
     {
-      "action_id": "rwg-action-20260316-008-complete-rwg-022",
-      "action": "complete",
-      "node_id": "rwg-022",
-      "rationale": "the anti-cheat capability enforcement slice merged on main, so the canonical graph records it as completed",
-      "evidence_ref": ".agent/execplans/20260316-anti-cheat-capability-enforcement-codex-01-execplan.md",
-      "queue_reconciled": true
+      "from": "rwg-010",
+      "relation": "depends_on",
+      "to": "rwg-006"
     },
     {
-      "action_id": "rwg-action-20260316-009-unblock-rwg-023",
-      "action": "unblock",
-      "node_id": "rwg-023",
-      "rationale": "anti-cheat capability enforcement completed, satisfying the remaining dependency for subgame branch and state-transition governance",
-      "evidence_ref": ".agent/execplans/20260316-subgame-branch-state-transition-governance-codex-01-execplan.md",
-      "queue_reconciled": true
+      "from": "rwg-011",
+      "relation": "depends_on",
+      "to": "rwg-010"
     },
     {
-      "action_id": "rwg-action-20260316-010-promote-rwg-023",
-      "action": "promote_ready",
-      "node_id": "rwg-023",
-      "rationale": "the canonical slice-3 implementation branch is published, so the subgame branch governance slice may advance from blocked to ready on its dedicated implementation branch",
-      "evidence_ref": ".agent/execplans/20260316-subgame-branch-state-transition-governance-codex-01-execplan.md",
-      "queue_reconciled": true
+      "from": "rwg-011",
+      "relation": "depends_on",
+      "to": "rwg-009"
     },
     {
-      "action_id": "rwg-action-20260316-011-complete-rwg-023",
-      "action": "complete",
-      "node_id": "rwg-023",
-      "rationale": "the subgame branch and state-transition governance slice merged on main, so the canonical graph records it as completed",
-      "evidence_ref": "merged:pr-81",
-      "queue_reconciled": true
+      "from": "rwg-012",
+      "relation": "depends_on",
+      "to": "rwg-011"
     },
     {
-      "action_id": "rwg-action-20260316-012-unblock-rwg-024",
-      "action": "unblock",
-      "node_id": "rwg-024",
-      "rationale": "slice 3 completion exposed a narrow anti-cheat contract inconsistency, so a focused cleanup slice is queued for explicit rule-surface authority treatment",
-      "evidence_ref": ".agent/execplans/20260316-anti-cheat-rule-surface-authority-cleanup-codex-01-execplan.md",
-      "queue_reconciled": true
+      "from": "rwg-012",
+      "relation": "depends_on",
+      "to": "rwg-010"
     },
     {
-      "action_id": "rwg-action-20260318-001-unblock-rwg-025",
-      "action": "unblock",
-      "node_id": "rwg-025",
-      "rationale": "rule authority consolidation is queued for draft review so the repository can formalize the governed draft-to-PR-to-implementation procedure before broader governance implementation continues",
-      "evidence_ref": ".agent/execplans/20260318-rule-authority-consolidation-codex-01-execplan.md",
-      "queue_reconciled": true
+      "from": "rwg-013",
+      "relation": "depends_on",
+      "to": "rwg-012"
     },
     {
-      "action_id": "rwg-action-20260318-002-promote-rwg-025",
-      "action": "promote_ready",
-      "node_id": "rwg-025",
-      "rationale": "the draft ExecPlan was human-finalized on main in PR 82, so the implementation slice may advance from review-gated to ready on its dedicated implementation branch",
-      "evidence_ref": "merged:pr-82",
-      "queue_reconciled": true
+      "from": "rwg-014",
+      "relation": "depends_on",
+      "to": "rwg-012"
     },
     {
-      "action_id": "rwg-action-20260318-003-complete-rwg-025",
-      "action": "complete",
-      "node_id": "rwg-025",
-      "rationale": "20260318-rule-authority-consolidation-codex-01-execplan merged to main and is now canonical completed state",
-      "evidence_ref": "merged:pr-83",
-      "queue_reconciled": true
+      "from": "rwg-014",
+      "relation": "depends_on",
+      "to": "rwg-013"
     },
     {
-      "action_id": "rwg-action-20260318-004-unblock-rwg-026",
-      "action": "unblock",
-      "node_id": "rwg-026",
-      "rationale": "rule-registry drift enforcement and provider-sync hardening are queued for draft review so the new canonical rule authority and project projection runtime remain durable",
-      "evidence_ref": ".agent/execplans/20260318-rule-registry-drift-and-provider-sync-hardening-codex-01-execplan.md",
-      "queue_reconciled": true
+      "from": "rwg-014",
+      "relation": "depends_on",
+      "to": "rwg-020"
     },
     {
-      "action_id": "rwg-action-20260318-005-complete-rwg-026",
-      "action": "complete",
-      "node_id": "rwg-026",
-      "rationale": "rule-registry drift enforcement, initiative-branch governance, and provider-sync hardening merged to main and the surviving GitHub Project item is now canonical board evidence",
-      "evidence_ref": "merged:pr-86",
-      "queue_reconciled": true
+      "from": "rwg-019",
+      "relation": "depends_on",
+      "to": "rwg-012"
     },
     {
-      "action_id": "rwg-action-20260318-006-unblock-rwg-027",
-      "action": "unblock",
-      "node_id": "rwg-027",
-      "rationale": "capture the planned move from manual graph bookkeeping to deterministic event-driven reconciliation and merge-gated graph transitions before the design drifts back into prose only",
-      "evidence_ref": "chat:2026-03-18-graph-transition-automation",
-      "queue_reconciled": true
+      "from": "rwg-020",
+      "relation": "depends_on",
+      "to": "rwg-012"
     },
     {
-      "action_id": "rwg-action-20260318-007-unblock-rwg-028",
-      "action": "unblock",
-      "node_id": "rwg-028",
-      "rationale": "capture the planned traversal engine so the graph can recommend sequential, parallel-safe, and lowest-cost execution order using machine-readable priority and cost signals",
-      "evidence_ref": "chat:2026-03-18-graph-priority-ranking",
-      "queue_reconciled": true
+      "from": "rwg-015",
+      "relation": "gated_by",
+      "to": "rwg-012"
     },
     {
-      "action_id": "rwg-action-20260318-008-unblock-rwg-027",
-      "action": "unblock",
-      "node_id": "rwg-027",
-      "rationale": "graph transition automation is now drafted for review so routine lifecycle changes can become deterministic and merge-gated instead of relying on manual graph bookkeeping",
-      "evidence_ref": ".agent/execplans/20260318-graph-transition-automation-and-merge-gating-codex-01-execplan.md",
-      "queue_reconciled": true
+      "from": "rwg-016",
+      "relation": "gated_by",
+      "to": "rwg-011"
     },
     {
-      "action_id": "rwg-action-20260319-009-promote-rwg-027",
-      "action": "promote_ready",
-      "node_id": "rwg-027",
-      "rationale": "the draft ExecPlan was human-finalized on main, so graph transition automation can advance onto its dedicated implementation branch",
-      "evidence_ref": "merged:pr-89",
-      "queue_reconciled": true
+      "from": "rwg-017",
+      "relation": "gated_by",
+      "to": "rwg-011"
     },
     {
-      "action_id": "rwg-action-20260319-010-unblock-rwg-029",
-      "action": "unblock",
-      "node_id": "rwg-029",
-      "rationale": "capture managed-repo orchestration as its own platform slice so external project repos like jayrun can keep canonical state local while the platform provides deterministic runtime and control-loop behavior",
-      "evidence_ref": ".agent/execplans/20260319-managed-repo-orchestration-codex-01-execplan.md",
-      "queue_reconciled": true
+      "from": "rwg-018",
+      "relation": "gated_by",
+      "to": "rwg-010"
     },
     {
-      "action_id": "rwg-action-20260319-011-complete-rwg-027",
-      "action": "complete",
-      "node_id": "rwg-027",
-      "rationale": "graph transition automation and merge-gated reconciliation merged to main in PR 91 and is now canonical completed state",
-      "evidence_ref": "merged:pr-91",
-      "queue_reconciled": true
+      "from": "rwg-018",
+      "relation": "gated_by",
+      "to": "rwg-012"
     },
     {
-      "action_id": "rwg-action-20260319-012-unblock-rwg-030",
-      "action": "unblock",
-      "node_id": "rwg-030",
-      "rationale": "capture automatic post-merge graph reconciliation as its own slice so merged implementation evidence cannot sit stale in the repo until a manual follow-up branch updates canonical state",
-      "evidence_ref": ".agent/execplans/20260319-post-merge-graph-reconciliation-automation-codex-01-execplan.md",
-      "queue_reconciled": true
+      "from": "rwg-019",
+      "relation": "informed_by",
+      "to": "artifact-merge-readiness-contract"
     },
     {
-      "action_id": "rwg-action-20260318-009-complete-rwg-024",
-      "action": "complete",
-      "node_id": "rwg-024",
-      "rationale": "20260316-anti-cheat-rule-surface-authority-cleanup-codex-01-execplan merged to main and is now canonical completed state",
-      "evidence_ref": "merged:pr-88",
-      "queue_reconciled": true
+      "from": "rwg-020",
+      "relation": "informed_by",
+      "to": "artifact-merge-readiness-contract"
     },
     {
-      "action_id": "rwg-action-20260310-001-complete-artifact-orchestrator-contract",
-      "action": "complete",
-      "node_id": "artifact-orchestrator-contract",
-      "rationale": "20260310-codex-orchestrator-contract-codex-01-execplan merged to main and is now canonical completed state",
-      "evidence_ref": "merged:pr-43",
-      "queue_reconciled": true
+      "from": "rwg-001",
+      "relation": "conflicts_with",
+      "to": "rwg-002"
     },
     {
-      "action_id": "rwg-action-20260311-001-complete-artifact-merge-readiness-contract",
-      "action": "complete",
-      "node_id": "artifact-merge-readiness-contract",
-      "rationale": "20260310-merge-readiness-engine-codex-01-execplan merged to main and is now canonical completed state",
-      "evidence_ref": "merged:pr-44",
-      "queue_reconciled": true
+      "from": "rwg-002",
+      "relation": "conflicts_with",
+      "to": "rwg-004"
     },
     {
-      "action_id": "rwg-action-20260319-013-promote_ready-rwg-030",
-      "action": "promote_ready",
-      "node_id": "rwg-030",
-      "rationale": "implementation_branch_publish derived deterministically from canonical branch and ExecPlan evidence",
-      "evidence_ref": "branch:origin/impl-execplan/20260319-post-merge-graph-reconciliation-automation-codex-01-execplan-codex-01-20260319",
-      "queue_reconciled": true
+      "from": "rwg-006",
+      "relation": "conflicts_with",
+      "to": "rwg-005"
     },
     {
-      "action_id": "rwg-action-20260319-014-complete-rwg-030",
-      "action": "complete",
-      "node_id": "rwg-030",
-      "rationale": "20260319-post-merge-graph-reconciliation-automation-codex-01-execplan merged to initiative/graph-transition-automation and is now canonical completed state",
-      "evidence_ref": "merged:pr-94",
-      "queue_reconciled": true
+      "from": "rwg-008",
+      "relation": "conflicts_with",
+      "to": "rwg-010"
     },
     {
-      "action_id": "rwg-action-20260319-015-unblock-rwg-031",
-      "action": "unblock",
-      "node_id": "rwg-031",
-      "rationale": "capture local git-hook automation as the next governance automation slice so deterministic runtime updates can run from versioned local hooks instead of manual command chains",
-      "evidence_ref": ".agent/execplans/20260319-local-git-hook-automation-codex-01-execplan.md",
-      "queue_reconciled": true
+      "from": "rwg-009",
+      "relation": "conflicts_with",
+      "to": "rwg-010"
     },
     {
-      "action_id": "rwg-action-20260319-016-promote_ready-rwg-029",
-      "action": "promote_ready",
-      "node_id": "rwg-029",
-      "rationale": "implementation_branch_publish derived deterministically from canonical branch and ExecPlan evidence",
-      "evidence_ref": "branch:origin/impl-execplan/20260319-managed-repo-orchestration-codex-01-execplan-codex-01-20260319",
-      "queue_reconciled": true
+      "from": "rwg-012",
+      "relation": "conflicts_with",
+      "to": "rwg-014"
     },
     {
-      "action_id": "rwg-action-20260319-017-complete-rwg-029",
-      "action": "complete",
-      "node_id": "rwg-029",
-      "rationale": "20260319-managed-repo-orchestration-codex-01-execplan merged to initiative/managed-repo-orchestration and is now canonical completed state",
-      "evidence_ref": "merged:pr-93",
-      "queue_reconciled": true
+      "from": "rwg-001",
+      "relation": "informed_by",
+      "to": "artifact-orchestrator-contract"
     },
     {
-      "action_id": "rwg-action-20260319-018-complete-rwg-031",
-      "action": "complete",
-      "node_id": "rwg-031",
-      "rationale": "20260319-local-git-hook-automation-codex-01-execplan merged to initiative/local-git-hook-automation and is now canonical completed state",
-      "evidence_ref": "merged:pr-99",
-      "queue_reconciled": true
+      "from": "rwg-002",
+      "relation": "informed_by",
+      "to": "artifact-orchestrator-contract"
     },
     {
-      "action_id": "rwg-action-20260319-019-unblock-rwg-032",
-      "action": "unblock",
-      "node_id": "rwg-032",
-      "rationale": "capture the local git-hook automation follow-up as a focused spike so initiative-to-main availability, completion semantics, and hook installation behavior are repaired explicitly",
-      "evidence_ref": ".agent/execplans/20260319-local-git-hook-mainline-followup-codex-01-execplan.md",
-      "queue_reconciled": true
+      "from": "rwg-004",
+      "relation": "informed_by",
+      "to": "artifact-orchestrator-contract"
     },
     {
-      "action_id": "rwg-action-20260319-020-complete-rwg-032",
-      "action": "complete",
-      "node_id": "rwg-032",
-      "rationale": "20260319-local-git-hook-mainline-followup-codex-01-execplan merged to initiative/local-git-hook-automation and is now canonical completed state",
-      "evidence_ref": "merged:3b3542e4ec4ce607a8786f65edf5c005b32aed9d",
-      "queue_reconciled": true
+      "from": "rwg-006",
+      "relation": "informed_by",
+      "to": "artifact-orchestrator-contract"
     },
     {
-      "action_id": "rwg-action-20260319-021-activate-rwg-031",
-      "action": "activate",
-      "node_id": "rwg-031",
-      "rationale": "20260319-local-git-hook-automation-codex-01-execplan is now operator-active on main because initiative/local-git-hook-automation merged to main",
-      "evidence_ref": "merged:pr-100",
-      "queue_reconciled": true
+      "from": "rwg-010",
+      "relation": "informed_by",
+      "to": "artifact-orchestrator-contract"
     },
     {
-      "action_id": "rwg-action-20260319-022-unblock-rwg-033",
-      "action": "unblock",
-      "node_id": "rwg-033",
-      "rationale": "capture platform surface simplification as the next initiative-backed draft slice so the public platform model can be reduced to the working core",
-      "evidence_ref": ".agent/execplans/20260319-platform-surface-simplification-codex-01-execplan.md",
-      "queue_reconciled": true
+      "from": "rwg-011",
+      "relation": "informed_by",
+      "to": "artifact-orchestrator-contract"
     },
     {
-      "action_id": "rwg-action-20260323-register-rwg-037",
-      "action": "block",
-      "node_id": "rwg-037",
-      "rationale": "node registered deterministically from ExecPlan graph_registration metadata",
-      "evidence_ref": ".agent/execplans/20260323-governed-super-agent-harness-planning-spike-codex-01-execplan.md",
-      "queue_reconciled": true
+      "from": "rwg-002",
+      "relation": "informed_by",
+      "to": "artifact-merge-readiness-contract"
     },
     {
-      "action_id": "rwg-action-20260323-register-rwg-038",
-      "action": "block",
-      "node_id": "rwg-038",
-      "rationale": "node registered deterministically from ExecPlan graph_registration metadata",
-      "evidence_ref": ".agent/execplans/20260323-governed-super-agent-harness-research-codex-01-execplan.md",
-      "queue_reconciled": true
+      "from": "rwg-004",
+      "relation": "informed_by",
+      "to": "artifact-merge-readiness-contract"
+    },
+    {
+      "from": "rwg-006",
+      "relation": "informed_by",
+      "to": "artifact-merge-readiness-contract"
+    },
+    {
+      "from": "rwg-010",
+      "relation": "informed_by",
+      "to": "artifact-merge-readiness-contract"
+    },
+    {
+      "from": "rwg-012",
+      "relation": "informed_by",
+      "to": "artifact-merge-readiness-contract"
+    },
+    {
+      "from": "rwg-014",
+      "relation": "informed_by",
+      "to": "artifact-merge-readiness-contract"
+    },
+    {
+      "from": "rwg-021",
+      "relation": "depends_on",
+      "to": "rwg-014"
+    },
+    {
+      "from": "rwg-022",
+      "relation": "depends_on",
+      "to": "rwg-014"
+    },
+    {
+      "from": "rwg-022",
+      "relation": "depends_on",
+      "to": "rwg-021"
+    },
+    {
+      "from": "rwg-023",
+      "relation": "depends_on",
+      "to": "rwg-014"
+    },
+    {
+      "from": "rwg-023",
+      "relation": "depends_on",
+      "to": "rwg-021"
+    },
+    {
+      "from": "rwg-023",
+      "relation": "depends_on",
+      "to": "rwg-022"
+    },
+    {
+      "from": "rwg-024",
+      "relation": "depends_on",
+      "to": "rwg-022"
+    },
+    {
+      "from": "rwg-024",
+      "relation": "depends_on",
+      "to": "rwg-023"
     }
   ],
+  "graph_actions": [
+    {
+      "action": "complete",
+      "action_id": "rwg-action-20260312-001-complete-rwg-012",
+      "evidence_ref": "merged:pr-72",
+      "node_id": "rwg-012",
+      "queue_reconciled": true,
+      "rationale": "policy-compliance merged to main in PR 72 and is now canonical completed state"
+    },
+    {
+      "action": "complete",
+      "action_id": "rwg-action-20260312-001b-complete-rwg-013",
+      "evidence_ref": "merged:pr-72",
+      "node_id": "rwg-013",
+      "queue_reconciled": true,
+      "rationale": "commit-structure subgame artifacts merged with policy-compliance and require canonical reconciliation"
+    },
+    {
+      "action": "complete",
+      "action_id": "rwg-action-20260312-002-complete-rwg-019",
+      "evidence_ref": "merged:pr-72",
+      "node_id": "rwg-019",
+      "queue_reconciled": true,
+      "rationale": "stale-queue enforcement landed inside policy-compliance and must be reconciled canonically"
+    },
+    {
+      "action": "reorder",
+      "action_id": "rwg-action-20260312-003-reorder-rwg-020",
+      "evidence_ref": "docs/queued-execplans.md",
+      "node_id": "rwg-020",
+      "queue_reconciled": true,
+      "rationale": "this slice becomes the deterministic next governed ready work once policy-compliance is completed"
+    },
+    {
+      "action": "promote_ready",
+      "action_id": "rwg-action-20260312-004-promote-rwg-020",
+      "evidence_ref": ".agent/execplans/20260312-remaining-work-graph-actions-and-ordering-codex-01-execplan.md",
+      "node_id": "rwg-020",
+      "queue_reconciled": true,
+      "rationale": "ready ordering and graph-action work is the next canonical slice after policy-compliance reconciliation"
+    },
+    {
+      "action": "complete",
+      "action_id": "rwg-action-20260312-005-complete-rwg-020",
+      "evidence_ref": "merged:pr-73",
+      "node_id": "rwg-020",
+      "queue_reconciled": true,
+      "rationale": "20260312-remaining-work-graph-actions-and-ordering-codex-01-execplan merged to main and is now canonical completed state"
+    },
+    {
+      "action": "unblock",
+      "action_id": "rwg-action-20260312-006-unblock-rwg-014",
+      "evidence_ref": "merged:pr-73",
+      "node_id": "rwg-014",
+      "queue_reconciled": true,
+      "rationale": "20260312-remaining-work-graph-actions-and-ordering-codex-01-execplan completed on main; dependency gating is cleared for the next canonical slice"
+    },
+    {
+      "action": "promote_ready",
+      "action_id": "rwg-action-20260313-001-promote-rwg-014",
+      "evidence_ref": ".agent/execplans/20260313-game-hostile-review-runtime-codex-01-execplan.md",
+      "node_id": "rwg-014",
+      "queue_reconciled": true,
+      "rationale": "the canonical hostile-review implementation branch is published, so the slice may advance from review-gated to ready with an explicit backlog action"
+    },
+    {
+      "action": "complete",
+      "action_id": "rwg-action-20260316-002-complete-rwg-014",
+      "evidence_ref": "merged:pr-75",
+      "node_id": "rwg-014",
+      "queue_reconciled": true,
+      "rationale": "20260313-game-hostile-review-runtime-codex-01-execplan merged to main and is now canonical completed state"
+    },
+    {
+      "action": "unblock",
+      "action_id": "rwg-action-20260316-003-unblock-rwg-021",
+      "evidence_ref": ".agent/execplans/20260316-board-action-api-contract-and-event-log-codex-01-execplan.md",
+      "node_id": "rwg-021",
+      "queue_reconciled": true,
+      "rationale": "hostile-review completed on main, so the board-action API contract becomes the next canonical queued slice pending implementation-branch publication"
+    },
+    {
+      "action": "promote_ready",
+      "action_id": "rwg-action-20260316-004-promote-rwg-021",
+      "evidence_ref": ".agent/execplans/20260316-board-action-api-contract-and-event-log-codex-01-execplan.md",
+      "node_id": "rwg-021",
+      "queue_reconciled": true,
+      "rationale": "the canonical board-action API implementation branch is published, so the slice may advance from review-gated to ready with an explicit backlog action"
+    },
+    {
+      "action": "complete",
+      "action_id": "rwg-action-20260316-005-complete-rwg-021",
+      "evidence_ref": ".agent/execplans/20260316-board-action-api-contract-and-event-log-codex-01-execplan.md",
+      "node_id": "rwg-021",
+      "queue_reconciled": true,
+      "rationale": "the board-action API contract and event-log slice merged on main, so the canonical graph records it as completed"
+    },
+    {
+      "action": "unblock",
+      "action_id": "rwg-action-20260316-006-unblock-rwg-022",
+      "evidence_ref": ".agent/execplans/20260316-anti-cheat-capability-enforcement-codex-01-execplan.md",
+      "node_id": "rwg-022",
+      "queue_reconciled": true,
+      "rationale": "board-action API completion satisfied the remaining dependency for the anti-cheat capability slice"
+    },
+    {
+      "action": "promote_ready",
+      "action_id": "rwg-action-20260316-007-promote-rwg-022",
+      "evidence_ref": ".agent/execplans/20260316-anti-cheat-capability-enforcement-codex-01-execplan.md",
+      "node_id": "rwg-022",
+      "queue_reconciled": true,
+      "rationale": "the canonical anti-cheat implementation branch is published, so the slice may advance from blocked to ready on its dedicated implementation branch"
+    },
+    {
+      "action": "complete",
+      "action_id": "rwg-action-20260316-008-complete-rwg-022",
+      "evidence_ref": ".agent/execplans/20260316-anti-cheat-capability-enforcement-codex-01-execplan.md",
+      "node_id": "rwg-022",
+      "queue_reconciled": true,
+      "rationale": "the anti-cheat capability enforcement slice merged on main, so the canonical graph records it as completed"
+    },
+    {
+      "action": "unblock",
+      "action_id": "rwg-action-20260316-009-unblock-rwg-023",
+      "evidence_ref": ".agent/execplans/20260316-subgame-branch-state-transition-governance-codex-01-execplan.md",
+      "node_id": "rwg-023",
+      "queue_reconciled": true,
+      "rationale": "anti-cheat capability enforcement completed, satisfying the remaining dependency for subgame branch and state-transition governance"
+    },
+    {
+      "action": "promote_ready",
+      "action_id": "rwg-action-20260316-010-promote-rwg-023",
+      "evidence_ref": ".agent/execplans/20260316-subgame-branch-state-transition-governance-codex-01-execplan.md",
+      "node_id": "rwg-023",
+      "queue_reconciled": true,
+      "rationale": "the canonical slice-3 implementation branch is published, so the subgame branch governance slice may advance from blocked to ready on its dedicated implementation branch"
+    },
+    {
+      "action": "complete",
+      "action_id": "rwg-action-20260316-011-complete-rwg-023",
+      "evidence_ref": "merged:pr-81",
+      "node_id": "rwg-023",
+      "queue_reconciled": true,
+      "rationale": "the subgame branch and state-transition governance slice merged on main, so the canonical graph records it as completed"
+    },
+    {
+      "action": "unblock",
+      "action_id": "rwg-action-20260316-012-unblock-rwg-024",
+      "evidence_ref": ".agent/execplans/20260316-anti-cheat-rule-surface-authority-cleanup-codex-01-execplan.md",
+      "node_id": "rwg-024",
+      "queue_reconciled": true,
+      "rationale": "slice 3 completion exposed a narrow anti-cheat contract inconsistency, so a focused cleanup slice is queued for explicit rule-surface authority treatment"
+    },
+    {
+      "action": "unblock",
+      "action_id": "rwg-action-20260318-001-unblock-rwg-025",
+      "evidence_ref": ".agent/execplans/20260318-rule-authority-consolidation-codex-01-execplan.md",
+      "node_id": "rwg-025",
+      "queue_reconciled": true,
+      "rationale": "rule authority consolidation is queued for draft review so the repository can formalize the governed draft-to-PR-to-implementation procedure before broader governance implementation continues"
+    },
+    {
+      "action": "promote_ready",
+      "action_id": "rwg-action-20260318-002-promote-rwg-025",
+      "evidence_ref": "merged:pr-82",
+      "node_id": "rwg-025",
+      "queue_reconciled": true,
+      "rationale": "the draft ExecPlan was human-finalized on main in PR 82, so the implementation slice may advance from review-gated to ready on its dedicated implementation branch"
+    },
+    {
+      "action": "complete",
+      "action_id": "rwg-action-20260318-003-complete-rwg-025",
+      "evidence_ref": "merged:pr-83",
+      "node_id": "rwg-025",
+      "queue_reconciled": true,
+      "rationale": "20260318-rule-authority-consolidation-codex-01-execplan merged to main and is now canonical completed state"
+    },
+    {
+      "action": "unblock",
+      "action_id": "rwg-action-20260318-004-unblock-rwg-026",
+      "evidence_ref": ".agent/execplans/20260318-rule-registry-drift-and-provider-sync-hardening-codex-01-execplan.md",
+      "node_id": "rwg-026",
+      "queue_reconciled": true,
+      "rationale": "rule-registry drift enforcement and provider-sync hardening are queued for draft review so the new canonical rule authority and project projection runtime remain durable"
+    },
+    {
+      "action": "complete",
+      "action_id": "rwg-action-20260318-005-complete-rwg-026",
+      "evidence_ref": "merged:pr-86",
+      "node_id": "rwg-026",
+      "queue_reconciled": true,
+      "rationale": "rule-registry drift enforcement, initiative-branch governance, and provider-sync hardening merged to main and the surviving GitHub Project item is now canonical board evidence"
+    },
+    {
+      "action": "unblock",
+      "action_id": "rwg-action-20260318-006-unblock-rwg-027",
+      "evidence_ref": "chat:2026-03-18-graph-transition-automation",
+      "node_id": "rwg-027",
+      "queue_reconciled": true,
+      "rationale": "capture the planned move from manual graph bookkeeping to deterministic event-driven reconciliation and merge-gated graph transitions before the design drifts back into prose only"
+    },
+    {
+      "action": "unblock",
+      "action_id": "rwg-action-20260318-007-unblock-rwg-028",
+      "evidence_ref": "chat:2026-03-18-graph-priority-ranking",
+      "node_id": "rwg-028",
+      "queue_reconciled": true,
+      "rationale": "capture the planned traversal engine so the graph can recommend sequential, parallel-safe, and lowest-cost execution order using machine-readable priority and cost signals"
+    },
+    {
+      "action": "unblock",
+      "action_id": "rwg-action-20260318-008-unblock-rwg-027",
+      "evidence_ref": ".agent/execplans/20260318-graph-transition-automation-and-merge-gating-codex-01-execplan.md",
+      "node_id": "rwg-027",
+      "queue_reconciled": true,
+      "rationale": "graph transition automation is now drafted for review so routine lifecycle changes can become deterministic and merge-gated instead of relying on manual graph bookkeeping"
+    },
+    {
+      "action": "promote_ready",
+      "action_id": "rwg-action-20260319-009-promote-rwg-027",
+      "evidence_ref": "merged:pr-89",
+      "node_id": "rwg-027",
+      "queue_reconciled": true,
+      "rationale": "the draft ExecPlan was human-finalized on main, so graph transition automation can advance onto its dedicated implementation branch"
+    },
+    {
+      "action": "unblock",
+      "action_id": "rwg-action-20260319-010-unblock-rwg-029",
+      "evidence_ref": ".agent/execplans/20260319-managed-repo-orchestration-codex-01-execplan.md",
+      "node_id": "rwg-029",
+      "queue_reconciled": true,
+      "rationale": "capture managed-repo orchestration as its own platform slice so external project repos like jayrun can keep canonical state local while the platform provides deterministic runtime and control-loop behavior"
+    },
+    {
+      "action": "complete",
+      "action_id": "rwg-action-20260319-011-complete-rwg-027",
+      "evidence_ref": "merged:pr-91",
+      "node_id": "rwg-027",
+      "queue_reconciled": true,
+      "rationale": "graph transition automation and merge-gated reconciliation merged to main in PR 91 and is now canonical completed state"
+    },
+    {
+      "action": "unblock",
+      "action_id": "rwg-action-20260319-012-unblock-rwg-030",
+      "evidence_ref": ".agent/execplans/20260319-post-merge-graph-reconciliation-automation-codex-01-execplan.md",
+      "node_id": "rwg-030",
+      "queue_reconciled": true,
+      "rationale": "capture automatic post-merge graph reconciliation as its own slice so merged implementation evidence cannot sit stale in the repo until a manual follow-up branch updates canonical state"
+    },
+    {
+      "action": "complete",
+      "action_id": "rwg-action-20260318-009-complete-rwg-024",
+      "evidence_ref": "merged:pr-88",
+      "node_id": "rwg-024",
+      "queue_reconciled": true,
+      "rationale": "20260316-anti-cheat-rule-surface-authority-cleanup-codex-01-execplan merged to main and is now canonical completed state"
+    },
+    {
+      "action": "complete",
+      "action_id": "rwg-action-20260310-001-complete-artifact-orchestrator-contract",
+      "evidence_ref": "merged:pr-43",
+      "node_id": "artifact-orchestrator-contract",
+      "queue_reconciled": true,
+      "rationale": "20260310-codex-orchestrator-contract-codex-01-execplan merged to main and is now canonical completed state"
+    },
+    {
+      "action": "complete",
+      "action_id": "rwg-action-20260311-001-complete-artifact-merge-readiness-contract",
+      "evidence_ref": "merged:pr-44",
+      "node_id": "artifact-merge-readiness-contract",
+      "queue_reconciled": true,
+      "rationale": "20260310-merge-readiness-engine-codex-01-execplan merged to main and is now canonical completed state"
+    },
+    {
+      "action": "promote_ready",
+      "action_id": "rwg-action-20260319-013-promote_ready-rwg-030",
+      "evidence_ref": "branch:origin/impl-execplan/20260319-post-merge-graph-reconciliation-automation-codex-01-execplan-codex-01-20260319",
+      "node_id": "rwg-030",
+      "queue_reconciled": true,
+      "rationale": "implementation_branch_publish derived deterministically from canonical branch and ExecPlan evidence"
+    },
+    {
+      "action": "complete",
+      "action_id": "rwg-action-20260319-014-complete-rwg-030",
+      "evidence_ref": "merged:pr-94",
+      "node_id": "rwg-030",
+      "queue_reconciled": true,
+      "rationale": "20260319-post-merge-graph-reconciliation-automation-codex-01-execplan merged to initiative/graph-transition-automation and is now canonical completed state"
+    },
+    {
+      "action": "unblock",
+      "action_id": "rwg-action-20260319-015-unblock-rwg-031",
+      "evidence_ref": ".agent/execplans/20260319-local-git-hook-automation-codex-01-execplan.md",
+      "node_id": "rwg-031",
+      "queue_reconciled": true,
+      "rationale": "capture local git-hook automation as the next governance automation slice so deterministic runtime updates can run from versioned local hooks instead of manual command chains"
+    },
+    {
+      "action": "promote_ready",
+      "action_id": "rwg-action-20260319-016-promote_ready-rwg-029",
+      "evidence_ref": "branch:origin/impl-execplan/20260319-managed-repo-orchestration-codex-01-execplan-codex-01-20260319",
+      "node_id": "rwg-029",
+      "queue_reconciled": true,
+      "rationale": "implementation_branch_publish derived deterministically from canonical branch and ExecPlan evidence"
+    },
+    {
+      "action": "complete",
+      "action_id": "rwg-action-20260319-017-complete-rwg-029",
+      "evidence_ref": "merged:pr-93",
+      "node_id": "rwg-029",
+      "queue_reconciled": true,
+      "rationale": "20260319-managed-repo-orchestration-codex-01-execplan merged to initiative/managed-repo-orchestration and is now canonical completed state"
+    },
+    {
+      "action": "complete",
+      "action_id": "rwg-action-20260319-018-complete-rwg-031",
+      "evidence_ref": "merged:pr-99",
+      "node_id": "rwg-031",
+      "queue_reconciled": true,
+      "rationale": "20260319-local-git-hook-automation-codex-01-execplan merged to initiative/local-git-hook-automation and is now canonical completed state"
+    },
+    {
+      "action": "unblock",
+      "action_id": "rwg-action-20260319-019-unblock-rwg-032",
+      "evidence_ref": ".agent/execplans/20260319-local-git-hook-mainline-followup-codex-01-execplan.md",
+      "node_id": "rwg-032",
+      "queue_reconciled": true,
+      "rationale": "capture the local git-hook automation follow-up as a focused spike so initiative-to-main availability, completion semantics, and hook installation behavior are repaired explicitly"
+    },
+    {
+      "action": "complete",
+      "action_id": "rwg-action-20260319-020-complete-rwg-032",
+      "evidence_ref": "merged:3b3542e4ec4ce607a8786f65edf5c005b32aed9d",
+      "node_id": "rwg-032",
+      "queue_reconciled": true,
+      "rationale": "20260319-local-git-hook-mainline-followup-codex-01-execplan merged to initiative/local-git-hook-automation and is now canonical completed state"
+    },
+    {
+      "action": "activate",
+      "action_id": "rwg-action-20260319-021-activate-rwg-031",
+      "evidence_ref": "merged:pr-100",
+      "node_id": "rwg-031",
+      "queue_reconciled": true,
+      "rationale": "20260319-local-git-hook-automation-codex-01-execplan is now operator-active on main because initiative/local-git-hook-automation merged to main"
+    },
+    {
+      "action": "unblock",
+      "action_id": "rwg-action-20260319-022-unblock-rwg-033",
+      "evidence_ref": ".agent/execplans/20260319-platform-surface-simplification-codex-01-execplan.md",
+      "node_id": "rwg-033",
+      "queue_reconciled": true,
+      "rationale": "capture platform surface simplification as the next initiative-backed draft slice so the public platform model can be reduced to the working core"
+    },
+    {
+      "action": "block",
+      "action_id": "rwg-action-20260323-register-rwg-037",
+      "evidence_ref": ".agent/execplans/20260323-governed-super-agent-harness-planning-spike-codex-01-execplan.md",
+      "node_id": "rwg-037",
+      "queue_reconciled": true,
+      "rationale": "node registered deterministically from ExecPlan graph_registration metadata"
+    },
+    {
+      "action": "block",
+      "action_id": "rwg-action-20260323-register-rwg-038",
+      "evidence_ref": ".agent/execplans/20260323-governed-super-agent-harness-research-codex-01-execplan.md",
+      "node_id": "rwg-038",
+      "queue_reconciled": true,
+      "rationale": "node registered deterministically from ExecPlan graph_registration metadata"
+    },
+    {
+      "action": "complete",
+      "action_id": "rwg-action-20260319-023-complete-rwg-033",
+      "evidence_ref": "merged:pr-109",
+      "node_id": "rwg-033",
+      "queue_reconciled": true,
+      "rationale": "20260319-platform-surface-simplification-codex-01-execplan merged to initiative/platform-surface-simplification and is now canonical completed state"
+    }
+  ],
+  "graph_id": "remaining-work-graph-20260311",
   "nodes": [
     {
-      "node_id": "rwg-001",
-      "title": "Machine-readable output hardening",
-      "status": "completed",
       "completion_ref": "merged:machine-readable-output-hardening",
-      "gating_class": "review_gated",
       "conflict_domains": [
         "planner-cli",
         "orchestrator-status"
       ],
-      "target_execplan_id": "20260311-machine-readable-output-hardening-codex-01-execplan",
-      "goal_area": "orchestrator-status",
       "expected_artifacts": [
         "bin/planner",
         "bin/citation-check",
         "bin/planner-score",
         "bin/rule-graph-check"
       ],
-      "ordering": {}
+      "gating_class": "review_gated",
+      "goal_area": "orchestrator-status",
+      "node_id": "rwg-001",
+      "ordering": {},
+      "status": "completed",
+      "target_execplan_id": "20260311-machine-readable-output-hardening-codex-01-execplan",
+      "title": "Machine-readable output hardening"
     },
     {
-      "node_id": "rwg-002",
-      "title": "Composite orchestrator status command",
-      "status": "completed",
       "completion_ref": "merged:composite-orchestrator-status",
-      "gating_class": "review_gated",
       "conflict_domains": [
         "orchestrator-status",
         "merge-readiness"
       ],
-      "target_execplan_id": "20260311-composite-orchestrator-status-codex-01-execplan",
-      "goal_area": "orchestrator-status",
       "expected_artifacts": [
         "bin/orchestrator-status",
         "src/platform_tools/orchestrator_status.py"
       ],
+      "gating_class": "review_gated",
+      "goal_area": "orchestrator-status",
       "implementation_branch": "impl-execplan/20260311-composite-orchestrator-status-codex-01-execplan-codex-01-20260311",
-      "ordering": {}
+      "node_id": "rwg-002",
+      "ordering": {},
+      "status": "completed",
+      "target_execplan_id": "20260311-composite-orchestrator-status-codex-01-execplan",
+      "title": "Composite orchestrator status command"
     },
     {
-      "node_id": "rwg-003",
-      "title": "Game-graph validator and active-game status surface",
-      "status": "completed",
       "completion_ref": "merged:game-graph-validator-and-status",
-      "gating_class": "auto_runnable",
       "conflict_domains": [
         "game-graph"
       ],
-      "target_execplan_id": "20260311-game-graph-validator-and-status-codex-01-execplan",
-      "goal_area": "game-graph",
       "expected_artifacts": [
         "bin/game-graph-check",
         "bin/game-status",
         "src/platform_tools/game_graph_check.py"
       ],
-      "ordering": {}
+      "gating_class": "auto_runnable",
+      "goal_area": "game-graph",
+      "node_id": "rwg-003",
+      "ordering": {},
+      "status": "completed",
+      "target_execplan_id": "20260311-game-graph-validator-and-status-codex-01-execplan",
+      "title": "Game-graph validator and active-game status surface"
     },
     {
-      "node_id": "rwg-004",
-      "title": "Implementation orchestrator runtime",
-      "status": "completed",
       "completion_ref": "merged:implementation-orchestrator-runtime",
-      "gating_class": "auto_runnable",
       "conflict_domains": [
         "planner-cli",
         "orchestrator-status",
         "merge-readiness"
       ],
-      "target_execplan_id": "20260311-implementation-orchestrator-runtime-codex-01-execplan",
-      "goal_area": "implementation-orchestrator",
       "expected_artifacts": [
         "src/platform_tools/implementation_orchestrator.py",
         "bin/implementation-orchestrator"
       ],
+      "gating_class": "auto_runnable",
+      "goal_area": "implementation-orchestrator",
       "implementation_branch": "impl-execplan/20260311-implementation-orchestrator-runtime-codex-01-execplan-codex-01-20260311",
-      "ordering": {}
+      "node_id": "rwg-004",
+      "ordering": {},
+      "status": "completed",
+      "target_execplan_id": "20260311-implementation-orchestrator-runtime-codex-01-execplan",
+      "title": "Implementation orchestrator runtime"
     },
     {
-      "node_id": "rwg-005",
-      "title": "Provider sync scaffolding",
-      "status": "completed",
       "completion_ref": "merged:provider-sync-scaffold",
-      "gating_class": "auto_runnable",
       "conflict_domains": [
         "provider-sync"
       ],
-      "target_execplan_id": "20260311-provider-sync-scaffold-codex-01-execplan",
-      "goal_area": "provider-sync",
       "expected_artifacts": [
         "src/platform_tools/integrations/",
         "spec/provider-adapter.schema.yaml"
       ],
-      "ordering": {}
+      "gating_class": "auto_runnable",
+      "goal_area": "provider-sync",
+      "node_id": "rwg-005",
+      "ordering": {},
+      "status": "completed",
+      "target_execplan_id": "20260311-provider-sync-scaffold-codex-01-execplan",
+      "title": "Provider sync scaffolding"
     },
     {
-      "node_id": "rwg-006",
-      "title": "Runtime constraint canonicalization",
-      "status": "completed",
       "completion_ref": "merged:runtime-constraint-canonicalization",
-      "gating_class": "auto_runnable",
       "conflict_domains": [
         "orchestrator-status",
         "implementation-orchestrator",
         "remaining-work-graph"
       ],
-      "target_execplan_id": "20260311-runtime-constraint-canonicalization-codex-01-execplan",
-      "goal_area": "runtime-governance",
       "expected_artifacts": [
         "bin/remaining-work-graph-check",
         "src/platform_tools/remaining_work_graph_check.py",
         "bin/runtime-constraint-smoke-test"
       ],
+      "gating_class": "auto_runnable",
+      "goal_area": "runtime-governance",
       "implementation_branch": "impl-execplan/20260311-runtime-constraint-canonicalization-codex-01-execplan-codex-01-20260311",
-      "ordering": {}
+      "node_id": "rwg-006",
+      "ordering": {},
+      "status": "completed",
+      "target_execplan_id": "20260311-runtime-constraint-canonicalization-codex-01-execplan",
+      "title": "Runtime constraint canonicalization"
     },
     {
-      "node_id": "rwg-007",
-      "title": "GitHub Projects bootstrap runtime",
-      "status": "completed",
       "completion_ref": "merged:github-projects-bootstrap-runtime",
-      "gating_class": "auto_runnable",
       "conflict_domains": [
         "provider-sync"
       ],
-      "target_execplan_id": "20260311-github-projects-bootstrap-runtime-codex-01-execplan",
-      "goal_area": "provider-sync",
       "expected_artifacts": [
         "bin/github-projects-bootstrap",
         "src/platform_tools/integrations/github_projects_bootstrap.py"
       ],
-      "ordering": {}
+      "gating_class": "auto_runnable",
+      "goal_area": "provider-sync",
+      "node_id": "rwg-007",
+      "ordering": {},
+      "status": "completed",
+      "target_execplan_id": "20260311-github-projects-bootstrap-runtime-codex-01-execplan",
+      "title": "GitHub Projects bootstrap runtime"
     },
     {
-      "node_id": "rwg-008",
-      "title": "GitHub Projects provider sync runtime",
-      "status": "completed",
       "completion_ref": "merged:github-projects-provider-sync-runtime",
-      "gating_class": "auto_runnable",
       "conflict_domains": [
         "provider-sync",
         "review-runtime"
       ],
-      "target_execplan_id": "20260311-github-projects-provider-sync-runtime-codex-01-execplan",
-      "goal_area": "provider-sync",
       "expected_artifacts": [
         "bin/github-projects-sync",
         "src/platform_tools/integrations/github_projects_sync.py"
       ],
-      "ordering": {}
+      "gating_class": "auto_runnable",
+      "goal_area": "provider-sync",
+      "node_id": "rwg-008",
+      "ordering": {},
+      "status": "completed",
+      "target_execplan_id": "20260311-github-projects-provider-sync-runtime-codex-01-execplan",
+      "title": "GitHub Projects provider sync runtime"
     },
     {
-      "node_id": "rwg-009",
-      "title": "ExecPlan finalization completion reconciliation",
-      "status": "completed",
       "completion_ref": "merged:execplan-finalization-completion-reconciliation",
-      "gating_class": "auto_runnable",
       "conflict_domains": [
         "governance",
         "review-runtime"
       ],
-      "target_execplan_id": "20260312-execplan-finalization-completion-reconciliation-codex-01-execplan",
-      "goal_area": "governance",
       "expected_artifacts": [
         "bin/finalize-execplan",
         "src/platform_tools/finalize_execplan.py",
         "spec/governance.yaml"
       ],
-      "ordering": {}
+      "gating_class": "auto_runnable",
+      "goal_area": "governance",
+      "node_id": "rwg-009",
+      "ordering": {},
+      "status": "completed",
+      "target_execplan_id": "20260312-execplan-finalization-completion-reconciliation-codex-01-execplan",
+      "title": "ExecPlan finalization completion reconciliation"
     },
     {
-      "node_id": "rwg-010",
-      "title": "Human operations review runtime",
-      "status": "completed",
       "completion_ref": "merged:human-operations-review-runtime",
-      "gating_class": "auto_runnable",
       "conflict_domains": [
         "review-runtime",
         "provider-sync",
         "governance"
       ],
-      "target_execplan_id": "20260312-human-operations-review-runtime-codex-01-execplan",
-      "goal_area": "governance",
       "expected_artifacts": [
         "bin/human-operations-status",
         "src/platform_tools/human_operations_status.py",
         "bin/human-operations-smoke-test"
       ],
+      "gating_class": "auto_runnable",
+      "goal_area": "governance",
       "implementation_branch": "impl-execplan/20260312-human-operations-review-runtime-codex-01-execplan-codex-01-20260312",
-      "ordering": {}
+      "node_id": "rwg-010",
+      "ordering": {},
+      "status": "completed",
+      "target_execplan_id": "20260312-human-operations-review-runtime-codex-01-execplan",
+      "title": "Human operations review runtime"
     },
     {
-      "node_id": "rwg-011",
-      "title": "Game rules engine audit and extensibility",
-      "status": "completed",
       "completion_ref": "merged:game-rules-engine-audit-and-extensibility",
-      "gating_class": "auto_runnable",
       "conflict_domains": [
         "game-graph",
         "governance",
         "review-runtime"
       ],
-      "target_execplan_id": "20260312-game-rules-engine-audit-and-extensibility-codex-01-execplan",
-      "goal_area": "runtime-governance",
       "expected_artifacts": [
         "bin/game-rules-audit",
         "src/platform_tools/game_rules_audit.py",
         "bin/game-rules-audit-smoke-test"
       ],
+      "gating_class": "auto_runnable",
+      "goal_area": "runtime-governance",
       "implementation_branch": "impl-execplan/20260312-game-rules-engine-audit-and-extensibility-codex-01-execplan-codex-01-20260312",
-      "ordering": {}
+      "node_id": "rwg-011",
+      "ordering": {},
+      "status": "completed",
+      "target_execplan_id": "20260312-game-rules-engine-audit-and-extensibility-codex-01-execplan",
+      "title": "Game rules engine audit and extensibility"
     },
     {
-      "node_id": "rwg-012",
-      "title": "Game policy-compliance runtime",
-      "status": "completed",
+      "action_state": {
+        "action_required": false,
+        "last_action": "complete",
+        "last_action_id": "rwg-action-20260312-001-complete-rwg-012",
+        "reorder_blockers": [],
+        "reorder_requires_human": false
+      },
       "completion_ref": "merged:pr-72",
-      "gating_class": "auto_runnable",
       "conflict_domains": [
         "governance",
         "merge-readiness",
         "policy-compliance"
       ],
-      "target_execplan_id": "20260312-game-policy-compliance-codex-01-execplan",
-      "goal_area": "governance",
       "expected_artifacts": [
         "bin/policy-compliance-check",
         "src/platform_tools/policy_compliance_check.py",
         "bin/policy-compliance-smoke-test"
       ],
+      "gating_class": "auto_runnable",
+      "goal_area": "governance",
       "implementation_branch": "impl-execplan/20260312-game-policy-compliance-codex-01-execplan-codex-01-20260312",
+      "node_id": "rwg-012",
       "ordering": {
         "queue_position": 12,
-        "tie_breaker": "20260312-game-policy-compliance-codex-01-execplan",
-        "source_action_id": "rwg-action-20260312-001-complete-rwg-012"
+        "source_action_id": "rwg-action-20260312-001-complete-rwg-012",
+        "tie_breaker": "20260312-game-policy-compliance-codex-01-execplan"
       },
-      "action_state": {
-        "last_action_id": "rwg-action-20260312-001-complete-rwg-012",
-        "last_action": "complete",
-        "action_required": false,
-        "reorder_requires_human": false,
-        "reorder_blockers": []
-      }
+      "status": "completed",
+      "target_execplan_id": "20260312-game-policy-compliance-codex-01-execplan",
+      "title": "Game policy-compliance runtime"
     },
     {
-      "node_id": "rwg-013",
-      "title": "Game commit-structure subgame",
-      "status": "completed",
+      "action_state": {
+        "action_required": false,
+        "last_action": "complete",
+        "last_action_id": "rwg-action-20260312-001b-complete-rwg-013",
+        "reorder_blockers": [],
+        "reorder_requires_human": false
+      },
       "completion_ref": "merged:pr-72",
-      "gating_class": "auto_runnable",
       "conflict_domains": [
         "policy-compliance",
         "merge-readiness"
       ],
-      "target_execplan_id": "20260312-game-policy-compliance-codex-01-execplan",
-      "goal_area": "governance",
       "expected_artifacts": [
         "docs/games/commit-structure-game.md",
         "spec/games/commit-structure-game.yaml"
       ],
+      "gating_class": "auto_runnable",
+      "goal_area": "governance",
+      "node_id": "rwg-013",
       "ordering": {
         "queue_position": 13,
         "tie_breaker": "20260312-game-policy-compliance-codex-01-execplan"
       },
-      "action_state": {
-        "last_action_id": "rwg-action-20260312-001b-complete-rwg-013",
-        "last_action": "complete",
-        "action_required": false,
-        "reorder_requires_human": false,
-        "reorder_blockers": []
-      }
+      "status": "completed",
+      "target_execplan_id": "20260312-game-policy-compliance-codex-01-execplan",
+      "title": "Game commit-structure subgame"
     },
     {
-      "node_id": "rwg-014",
-      "title": "Game hostile-review runtime",
-      "status": "completed",
-      "status_reason": "",
-      "gating_class": "auto_runnable",
+      "action_state": {
+        "action_required": false,
+        "last_action": "complete",
+        "last_action_id": "rwg-action-20260316-002-complete-rwg-014",
+        "reorder_blockers": [],
+        "reorder_requires_human": false
+      },
+      "completion_ref": "merged:pr-75",
       "conflict_domains": [
         "review-runtime",
         "merge-readiness",
         "policy-compliance"
       ],
-      "target_execplan_id": "20260313-game-hostile-review-runtime-codex-01-execplan",
-      "goal_area": "review-runtime",
-      "implementation_branch": "impl-execplan/20260313-game-hostile-review-runtime-codex-01-execplan-codex-01-20260313",
       "expected_artifacts": [
         "bin/hostile-review",
         "bin/hostile-review-smoke-test",
         "artifacts/review/hostile-review-report.json"
       ],
+      "gating_class": "auto_runnable",
+      "goal_area": "review-runtime",
+      "implementation_branch": "impl-execplan/20260313-game-hostile-review-runtime-codex-01-execplan-codex-01-20260313",
+      "node_id": "rwg-014",
       "ordering": {
         "queue_position": 14,
-        "tie_breaker": "20260313-game-hostile-review-runtime-codex-01-execplan",
-        "source_action_id": "rwg-action-20260316-002-complete-rwg-014"
+        "source_action_id": "rwg-action-20260316-002-complete-rwg-014",
+        "tie_breaker": "20260313-game-hostile-review-runtime-codex-01-execplan"
       },
-      "action_state": {
-        "last_action_id": "rwg-action-20260316-002-complete-rwg-014",
-        "last_action": "complete",
-        "action_required": false,
-        "reorder_requires_human": false,
-        "reorder_blockers": []
-      },
-      "completion_ref": "merged:pr-75"
+      "status": "completed",
+      "status_reason": "",
+      "target_execplan_id": "20260313-game-hostile-review-runtime-codex-01-execplan",
+      "title": "Game hostile-review runtime"
     },
     {
-      "node_id": "rwg-015",
-      "title": "Game branching runtime",
-      "status": "decision_gated",
-      "status_reason": "queued future game family for branch-cut legality and branching decisions after policy-compliance work",
-      "gating_class": "decision_gated",
       "conflict_domains": [
         "governance",
         "workflow"
       ],
-      "target_execplan_id": "future:game-branching",
-      "goal_area": "governance",
       "expected_artifacts": [
         "docs/games/branching-game.md",
         "spec/games/branching-game.yaml"
       ],
+      "gating_class": "decision_gated",
+      "goal_area": "governance",
+      "node_id": "rwg-015",
       "ordering": {
         "queue_position": 15,
         "tie_breaker": "future:game-branching"
-      }
+      },
+      "status": "decision_gated",
+      "status_reason": "queued future game family for branch-cut legality and branching decisions after policy-compliance work",
+      "target_execplan_id": "future:game-branching",
+      "title": "Game branching runtime"
     },
     {
-      "node_id": "rwg-016",
-      "title": "Game citation runtime",
-      "status": "decision_gated",
-      "status_reason": "queued future truth-layer game for citation-backed claims and anti-hallucination verification",
-      "gating_class": "decision_gated",
       "conflict_domains": [
         "research-provenance",
         "documentation"
       ],
-      "target_execplan_id": "future:game-citation",
-      "goal_area": "research-provenance",
       "expected_artifacts": [
         "docs/games/citation-game.md",
         "spec/games/citation-game.yaml"
       ],
+      "gating_class": "decision_gated",
+      "goal_area": "research-provenance",
+      "node_id": "rwg-016",
       "ordering": {
         "queue_position": 16,
         "tie_breaker": "future:game-citation"
-      }
+      },
+      "status": "decision_gated",
+      "status_reason": "queued future truth-layer game for citation-backed claims and anti-hallucination verification",
+      "target_execplan_id": "future:game-citation",
+      "title": "Game citation runtime"
     },
     {
-      "node_id": "rwg-017",
-      "title": "Game documentation runtime",
-      "status": "decision_gated",
-      "status_reason": "queued future truth-layer game for code, game, and relationship documentation completeness",
-      "gating_class": "decision_gated",
       "conflict_domains": [
         "documentation",
         "research-provenance"
       ],
-      "target_execplan_id": "future:game-documentation",
-      "goal_area": "documentation",
       "expected_artifacts": [
         "docs/games/documentation-game.md",
         "spec/games/documentation-game.yaml"
       ],
+      "gating_class": "decision_gated",
+      "goal_area": "documentation",
+      "node_id": "rwg-017",
       "ordering": {
         "queue_position": 17,
         "tie_breaker": "future:game-documentation"
-      }
+      },
+      "status": "decision_gated",
+      "status_reason": "queued future truth-layer game for code, game, and relationship documentation completeness",
+      "target_execplan_id": "future:game-documentation",
+      "title": "Game documentation runtime"
     },
     {
-      "node_id": "rwg-018",
-      "title": "Game board-integrity runtime",
-      "status": "decision_gated",
-      "status_reason": "queued future projection-layer game for project-board reuse, item identity reuse, and sync integrity",
-      "gating_class": "decision_gated",
       "conflict_domains": [
         "provider-sync",
         "review-runtime"
       ],
-      "target_execplan_id": "future:game-board-integrity",
-      "goal_area": "provider-sync",
       "expected_artifacts": [
         "docs/games/board-integrity-game.md",
         "spec/games/board-integrity-game.yaml"
       ],
+      "gating_class": "decision_gated",
+      "goal_area": "provider-sync",
+      "node_id": "rwg-018",
       "ordering": {
         "queue_position": 18,
         "tie_breaker": "future:game-board-integrity"
-      }
+      },
+      "status": "decision_gated",
+      "status_reason": "queued future projection-layer game for project-board reuse, item identity reuse, and sync integrity",
+      "target_execplan_id": "future:game-board-integrity",
+      "title": "Game board-integrity runtime"
     },
     {
-      "node_id": "rwg-019",
-      "title": "Graph-action-required and stale-queue enforcement",
-      "status": "completed",
+      "action_state": {
+        "action_required": false,
+        "last_action": "complete",
+        "last_action_id": "rwg-action-20260312-002-complete-rwg-019",
+        "reorder_blockers": [],
+        "reorder_requires_human": false
+      },
       "completion_ref": "merged:pr-72",
-      "gating_class": "auto_runnable",
       "conflict_domains": [
         "policy-compliance",
         "merge-readiness",
         "remaining-work-graph"
       ],
-      "target_execplan_id": "20260312-game-policy-compliance-codex-01-execplan",
-      "goal_area": "governance",
       "expected_artifacts": [
         "artifacts/planner/research/remaining-work-graph.json",
         "bin/remaining-work-graph-check",
         "src/platform_tools/policy_compliance_check.py"
       ],
+      "gating_class": "auto_runnable",
+      "goal_area": "governance",
+      "node_id": "rwg-019",
       "ordering": {
         "queue_position": 19,
-        "tie_breaker": "20260312-game-policy-compliance-codex-01-execplan",
-        "source_action_id": "rwg-action-20260312-002-complete-rwg-019"
+        "source_action_id": "rwg-action-20260312-002-complete-rwg-019",
+        "tie_breaker": "20260312-game-policy-compliance-codex-01-execplan"
       },
-      "action_state": {
-        "last_action_id": "rwg-action-20260312-002-complete-rwg-019",
-        "last_action": "complete",
-        "action_required": false,
-        "reorder_requires_human": false,
-        "reorder_blockers": []
-      }
+      "status": "completed",
+      "target_execplan_id": "20260312-game-policy-compliance-codex-01-execplan",
+      "title": "Graph-action-required and stale-queue enforcement"
     },
     {
-      "node_id": "rwg-020",
-      "title": "Remaining-work graph actions and deterministic ordering",
-      "status": "completed",
-      "status_reason": "",
-      "gating_class": "auto_runnable",
+      "action_state": {
+        "action_required": false,
+        "last_action": "complete",
+        "last_action_id": "rwg-action-20260312-005-complete-rwg-020",
+        "reorder_blockers": [],
+        "reorder_requires_human": false
+      },
+      "completion_ref": "merged:pr-73",
       "conflict_domains": [
         "remaining-work-graph",
         "policy-compliance",
         "provider-sync"
       ],
-      "target_execplan_id": "20260312-remaining-work-graph-actions-and-ordering-codex-01-execplan",
-      "goal_area": "governance",
-      "implementation_branch": "impl-execplan/20260312-remaining-work-graph-actions-and-ordering-codex-01-execplan-codex-01-20260312",
       "expected_artifacts": [
         "artifacts/planner/research/remaining-work-graph.json",
         "spec/remaining-work-graph.schema.yaml",
         "bin/remaining-work-graph-check"
       ],
+      "gating_class": "auto_runnable",
+      "goal_area": "governance",
+      "implementation_branch": "impl-execplan/20260312-remaining-work-graph-actions-and-ordering-codex-01-execplan-codex-01-20260312",
+      "node_id": "rwg-020",
       "ordering": {
         "queue_position": 20,
-        "tie_breaker": "20260312-remaining-work-graph-actions-and-ordering-codex-01-execplan",
-        "source_action_id": "rwg-action-20260312-005-complete-rwg-020"
+        "source_action_id": "rwg-action-20260312-005-complete-rwg-020",
+        "tie_breaker": "20260312-remaining-work-graph-actions-and-ordering-codex-01-execplan"
       },
-      "action_state": {
-        "last_action_id": "rwg-action-20260312-005-complete-rwg-020",
-        "last_action": "complete",
-        "action_required": false,
-        "reorder_requires_human": false,
-        "reorder_blockers": []
-      },
-      "completion_ref": "merged:pr-73"
-    },
-    {
-      "node_id": "rwg-021",
-      "title": "Board-action API contract and event log",
       "status": "completed",
       "status_reason": "",
-      "gating_class": "auto_runnable",
+      "target_execplan_id": "20260312-remaining-work-graph-actions-and-ordering-codex-01-execplan",
+      "title": "Remaining-work graph actions and deterministic ordering"
+    },
+    {
+      "action_state": {
+        "action_required": false,
+        "last_action": "complete",
+        "last_action_id": "rwg-action-20260316-005-complete-rwg-021",
+        "reorder_blockers": [],
+        "reorder_requires_human": false
+      },
+      "completion_ref": "merged:pr-79",
       "conflict_domains": [
         "governance",
         "orchestrator-status",
         "provider-sync"
       ],
-      "target_execplan_id": "20260316-board-action-api-contract-and-event-log-codex-01-execplan",
-      "goal_area": "governance",
-      "implementation_branch": "impl-execplan/20260316-board-action-api-contract-and-event-log-codex-01-execplan-codex-01-20260316",
       "expected_artifacts": [
         "docs/board-action-api.md",
         "spec/board-action-api.yaml",
         "spec/board-event-log.schema.yaml"
       ],
+      "gating_class": "auto_runnable",
+      "goal_area": "governance",
+      "implementation_branch": "impl-execplan/20260316-board-action-api-contract-and-event-log-codex-01-execplan-codex-01-20260316",
+      "node_id": "rwg-021",
       "ordering": {
         "queue_position": 21,
         "source_action_id": "rwg-action-20260316-005-complete-rwg-021",
         "tie_breaker": "20260316-board-action-api-contract-and-event-log-codex-01-execplan"
       },
-      "action_state": {
-        "last_action_id": "rwg-action-20260316-005-complete-rwg-021",
-        "last_action": "complete",
-        "action_required": false,
-        "reorder_requires_human": false,
-        "reorder_blockers": []
-      },
-      "completion_ref": "merged:pr-79"
-    },
-    {
-      "node_id": "rwg-022",
-      "title": "Anti-cheat capability enforcement",
       "status": "completed",
       "status_reason": "",
-      "gating_class": "auto_runnable",
+      "target_execplan_id": "20260316-board-action-api-contract-and-event-log-codex-01-execplan",
+      "title": "Board-action API contract and event log"
+    },
+    {
+      "action_state": {
+        "action_required": false,
+        "last_action": "complete",
+        "last_action_id": "rwg-action-20260316-008-complete-rwg-022",
+        "reorder_blockers": [],
+        "reorder_requires_human": false
+      },
+      "completion_ref": "merged:pr-80",
       "conflict_domains": [
         "governance",
         "policy-compliance",
         "review-runtime"
       ],
-      "target_execplan_id": "20260316-anti-cheat-capability-enforcement-codex-01-execplan",
-      "goal_area": "governance",
-      "implementation_branch": "impl-execplan/20260316-anti-cheat-capability-enforcement-codex-01-execplan-codex-01-20260316",
       "expected_artifacts": [
         "docs/agent-capability-boundaries.md",
         "spec/agent-capability-policy.yaml",
         "spec/protected-surfaces.schema.yaml"
       ],
+      "gating_class": "auto_runnable",
+      "goal_area": "governance",
+      "implementation_branch": "impl-execplan/20260316-anti-cheat-capability-enforcement-codex-01-execplan-codex-01-20260316",
+      "node_id": "rwg-022",
       "ordering": {
         "queue_position": 22,
         "source_action_id": "rwg-action-20260316-008-complete-rwg-022",
         "tie_breaker": "20260316-anti-cheat-capability-enforcement-codex-01-execplan"
       },
-      "action_state": {
-        "last_action_id": "rwg-action-20260316-008-complete-rwg-022",
-        "last_action": "complete",
-        "action_required": false,
-        "reorder_requires_human": false,
-        "reorder_blockers": []
-      },
-      "completion_ref": "merged:pr-80"
-    },
-    {
-      "node_id": "rwg-023",
-      "title": "Subgame branch and state-transition governance",
       "status": "completed",
       "status_reason": "",
-      "gating_class": "auto_runnable",
+      "target_execplan_id": "20260316-anti-cheat-capability-enforcement-codex-01-execplan",
+      "title": "Anti-cheat capability enforcement"
+    },
+    {
+      "action_state": {
+        "action_required": false,
+        "last_action": "complete",
+        "last_action_id": "rwg-action-20260316-011-complete-rwg-023",
+        "reorder_blockers": [],
+        "reorder_requires_human": false
+      },
+      "completion_ref": "merged:pr-81",
       "conflict_domains": [
         "governance",
         "workflow",
         "policy-compliance"
       ],
-      "target_execplan_id": "20260316-subgame-branch-state-transition-governance-codex-01-execplan",
-      "goal_area": "governance",
-      "implementation_branch": "impl-execplan/20260316-subgame-branch-state-transition-governance-codex-01-execplan-codex-01-20260316",
       "expected_artifacts": [
         "docs/subgame-branch-governance.md",
         "spec/subgame-branch-contract.yaml",
         "spec/state-transition-legality.schema.yaml"
       ],
+      "gating_class": "auto_runnable",
+      "goal_area": "governance",
+      "implementation_branch": "impl-execplan/20260316-subgame-branch-state-transition-governance-codex-01-execplan-codex-01-20260316",
+      "node_id": "rwg-023",
       "ordering": {
         "queue_position": 23,
         "source_action_id": "rwg-action-20260316-011-complete-rwg-023",
         "tie_breaker": "20260316-subgame-branch-state-transition-governance-codex-01-execplan"
       },
-      "action_state": {
-        "last_action_id": "rwg-action-20260316-011-complete-rwg-023",
-        "last_action": "complete",
-        "action_required": false,
-        "reorder_requires_human": false,
-        "reorder_blockers": []
-      },
-      "completion_ref": "merged:pr-81"
-    },
-    {
-      "node_id": "rwg-024",
-      "title": "Anti-cheat rule-surface authority cleanup",
       "status": "completed",
       "status_reason": "",
-      "gating_class": "review_gated",
+      "target_execplan_id": "20260316-subgame-branch-state-transition-governance-codex-01-execplan",
+      "title": "Subgame branch and state-transition governance"
+    },
+    {
+      "action_state": {
+        "action_required": false,
+        "last_action": "complete",
+        "last_action_id": "rwg-action-20260318-009-complete-rwg-024",
+        "reorder_blockers": [],
+        "reorder_requires_human": false
+      },
+      "completion_ref": "merged:pr-88",
       "conflict_domains": [
         "governance",
         "policy-compliance"
       ],
-      "target_execplan_id": "20260316-anti-cheat-rule-surface-authority-cleanup-codex-01-execplan",
-      "goal_area": "governance",
-      "implementation_branch": "",
       "expected_artifacts": [
         "spec/agent-capability-policy.yaml",
         "spec/protected-surfaces.schema.yaml",
         "src/platform_tools/anti_cheat_check.py"
       ],
+      "gating_class": "review_gated",
+      "goal_area": "governance",
+      "implementation_branch": "",
+      "node_id": "rwg-024",
       "ordering": {
         "queue_position": 24,
         "source_action_id": "rwg-action-20260318-009-complete-rwg-024",
         "tie_breaker": "20260316-anti-cheat-rule-surface-authority-cleanup-codex-01-execplan"
       },
-      "action_state": {
-        "last_action_id": "rwg-action-20260318-009-complete-rwg-024",
-        "last_action": "complete",
-        "action_required": false,
-        "reorder_requires_human": false,
-        "reorder_blockers": []
-      },
-      "completion_ref": "merged:pr-88"
-    },
-    {
-      "node_id": "rwg-025",
-      "title": "Rule authority consolidation and governed draft PR procedure",
       "status": "completed",
       "status_reason": "",
-      "gating_class": "auto_runnable",
+      "target_execplan_id": "20260316-anti-cheat-rule-surface-authority-cleanup-codex-01-execplan",
+      "title": "Anti-cheat rule-surface authority cleanup"
+    },
+    {
+      "action_state": {
+        "action_required": false,
+        "last_action": "complete",
+        "last_action_id": "rwg-action-20260318-003-complete-rwg-025",
+        "reorder_blockers": [],
+        "reorder_requires_human": false
+      },
+      "completion_ref": "merged:pr-83",
       "conflict_domains": [
         "governance",
         "workflow",
         "review-runtime"
       ],
-      "target_execplan_id": "20260318-rule-authority-consolidation-codex-01-execplan",
-      "goal_area": "governance",
-      "implementation_branch": "impl-execplan/20260318-rule-authority-consolidation-codex-01-execplan-codex-01-20260318",
       "expected_artifacts": [
         ".github/PULL_REQUEST_TEMPLATE.md",
         "spec/rule-registry.yaml",
         "spec/workflow.yaml"
       ],
+      "gating_class": "auto_runnable",
+      "goal_area": "governance",
+      "implementation_branch": "impl-execplan/20260318-rule-authority-consolidation-codex-01-execplan-codex-01-20260318",
+      "node_id": "rwg-025",
       "ordering": {
         "queue_position": 25,
         "source_action_id": "rwg-action-20260318-003-complete-rwg-025",
         "tie_breaker": "20260318-rule-authority-consolidation-codex-01-execplan"
       },
-      "action_state": {
-        "last_action_id": "rwg-action-20260318-003-complete-rwg-025",
-        "last_action": "complete",
-        "action_required": false,
-        "reorder_requires_human": false,
-        "reorder_blockers": []
-      },
-      "completion_ref": "merged:pr-83"
-    },
-    {
-      "node_id": "rwg-026",
-      "title": "Rule-registry drift enforcement, initiative-branch governance, and provider-sync hardening",
       "status": "completed",
       "status_reason": "",
-      "gating_class": "auto_runnable",
+      "target_execplan_id": "20260318-rule-authority-consolidation-codex-01-execplan",
+      "title": "Rule authority consolidation and governed draft PR procedure"
+    },
+    {
+      "action_state": {
+        "action_required": false,
+        "last_action": "complete",
+        "last_action_id": "rwg-action-20260318-005-complete-rwg-026",
+        "reorder_blockers": [],
+        "reorder_requires_human": false
+      },
+      "completion_ref": "merged:pr-86",
       "conflict_domains": [
         "governance",
         "provider-sync",
         "review-runtime",
         "workflow"
       ],
-      "target_execplan_id": "20260318-rule-registry-drift-and-provider-sync-hardening-codex-01-execplan",
-      "goal_area": "governance",
-      "implementation_branch": "impl-execplan/20260318-rule-registry-drift-and-provider-sync-hardening-codex-01-execplan-codex-01-20260318",
       "expected_artifacts": [
         "spec/rule-registry.yaml",
         "src/platform_tools/rule_registry_check.py",
         "src/platform_tools/integrations/github_projects_sync.py",
         "spec/workflow.yaml"
       ],
+      "gating_class": "auto_runnable",
+      "goal_area": "governance",
+      "implementation_branch": "impl-execplan/20260318-rule-registry-drift-and-provider-sync-hardening-codex-01-execplan-codex-01-20260318",
+      "node_id": "rwg-026",
       "ordering": {
         "queue_position": 26,
         "source_action_id": "rwg-action-20260318-005-complete-rwg-026",
         "tie_breaker": "20260318-rule-registry-drift-and-provider-sync-hardening-codex-01-execplan"
       },
-      "action_state": {
-        "last_action_id": "rwg-action-20260318-005-complete-rwg-026",
-        "last_action": "complete",
-        "action_required": false,
-        "reorder_requires_human": false,
-        "reorder_blockers": []
-      },
-      "completion_ref": "merged:pr-86"
+      "status": "completed",
+      "status_reason": "",
+      "target_execplan_id": "20260318-rule-registry-drift-and-provider-sync-hardening-codex-01-execplan",
+      "title": "Rule-registry drift enforcement, initiative-branch governance, and provider-sync hardening"
     },
     {
-      "node_id": "initiative-graph-transition-automation",
-      "title": "Initiative / Graph transition automation",
-      "status": "completed",
-      "gating_class": "auto_runnable",
       "conflict_domains": [
         "governance",
         "workflow"
       ],
-      "target_execplan_id": "initiative:graph-transition-automation",
-      "goal_area": "reference",
-      "initiative_branch": "initiative/graph-transition-automation",
-      "parent_initiative_node": "initiative-graph-transition-automation",
       "expected_artifacts": [
         "artifacts/planner/research/remaining-work-graph.json",
         "spec/workflow.yaml"
       ],
-      "ordering": {}
+      "gating_class": "auto_runnable",
+      "goal_area": "reference",
+      "initiative_branch": "initiative/graph-transition-automation",
+      "node_id": "initiative-graph-transition-automation",
+      "ordering": {},
+      "parent_initiative_node": "initiative-graph-transition-automation",
+      "status": "completed",
+      "target_execplan_id": "initiative:graph-transition-automation",
+      "title": "Initiative / Graph transition automation"
     },
     {
-      "node_id": "rwg-027",
-      "title": "Graph transition automation and merge-gated reconciliation",
-      "status": "completed",
-      "status_reason": "",
-      "gating_class": "auto_runnable",
+      "action_state": {
+        "action_required": false,
+        "last_action": "complete",
+        "last_action_id": "rwg-action-20260319-011-complete-rwg-027",
+        "reorder_blockers": [],
+        "reorder_requires_human": false
+      },
+      "completion_ref": "merged:pr-91",
       "conflict_domains": [
         "governance",
         "provider-sync",
         "review-runtime",
         "workflow"
       ],
-      "target_execplan_id": "20260318-graph-transition-automation-and-merge-gating-codex-01-execplan",
-      "goal_area": "governance",
-      "implementation_branch": "impl-execplan/20260318-graph-transition-automation-and-merge-gating-codex-01-execplan-codex-01-20260319",
-      "initiative_branch": "initiative/graph-transition-automation",
-      "parent_initiative_node": "initiative-graph-transition-automation",
-      "integration_mode": "via_initiative",
-      "completion_ref": "merged:pr-91",
       "expected_artifacts": [
         ".agent/execplans/20260318-graph-transition-automation-and-merge-gating-codex-01-execplan.md",
         "spec/workflow.yaml",
@@ -1086,88 +1364,89 @@
         "src/platform_tools/reconcile_remaining_work_merge.py",
         "src/platform_tools/integrations/github_projects_sync.py"
       ],
+      "gating_class": "auto_runnable",
+      "goal_area": "governance",
+      "implementation_branch": "impl-execplan/20260318-graph-transition-automation-and-merge-gating-codex-01-execplan-codex-01-20260319",
+      "initiative_branch": "initiative/graph-transition-automation",
+      "integration_mode": "via_initiative",
+      "node_id": "rwg-027",
       "ordering": {
         "queue_position": 27,
         "source_action_id": "rwg-action-20260319-011-complete-rwg-027",
         "tie_breaker": "20260318-graph-transition-automation-and-merge-gating-codex-01-execplan"
       },
-      "action_state": {
-        "last_action_id": "rwg-action-20260319-011-complete-rwg-027",
-        "last_action": "complete",
-        "action_required": false,
-        "reorder_requires_human": false,
-        "reorder_blockers": []
-      }
+      "parent_initiative_node": "initiative-graph-transition-automation",
+      "status": "completed",
+      "status_reason": "",
+      "target_execplan_id": "20260318-graph-transition-automation-and-merge-gating-codex-01-execplan",
+      "title": "Graph transition automation and merge-gated reconciliation"
     },
     {
-      "node_id": "rwg-028",
-      "title": "Graph priority ranking and traversal planning",
-      "status": "decision_gated",
-      "status_reason": "captured next as a planning-engine slice so the graph can recommend sequential, parallel-safe, and lowest-cost worksets using explicit dependency, conflict, priority, and cost signals",
-      "gating_class": "decision_gated",
+      "action_state": {
+        "action_required": false,
+        "last_action": "unblock",
+        "last_action_id": "rwg-action-20260318-007-unblock-rwg-028",
+        "reorder_blockers": [],
+        "reorder_requires_human": false
+      },
       "conflict_domains": [
         "governance",
         "planner-runtime",
         "workflow"
       ],
-      "target_execplan_id": "future:graph-priority-ranking-and-traversal-engine",
-      "goal_area": "governance",
-      "implementation_branch": "",
       "expected_artifacts": [
         "spec/remaining-work-graph.schema.yaml",
         "docs/remaining-work-graph.md",
         "src/platform_tools/remaining_work_graph_check.py"
       ],
+      "gating_class": "decision_gated",
+      "goal_area": "governance",
+      "implementation_branch": "",
+      "node_id": "rwg-028",
       "ordering": {
         "queue_position": 28,
         "source_action_id": "rwg-action-20260318-007-unblock-rwg-028",
         "tie_breaker": "future:graph-priority-ranking-and-traversal-engine"
       },
-      "action_state": {
-        "last_action_id": "rwg-action-20260318-007-unblock-rwg-028",
-        "last_action": "unblock",
-        "action_required": false,
-        "reorder_requires_human": false,
-        "reorder_blockers": []
-      }
+      "status": "decision_gated",
+      "status_reason": "captured next as a planning-engine slice so the graph can recommend sequential, parallel-safe, and lowest-cost worksets using explicit dependency, conflict, priority, and cost signals",
+      "target_execplan_id": "future:graph-priority-ranking-and-traversal-engine",
+      "title": "Graph priority ranking and traversal planning"
     },
     {
-      "node_id": "initiative-managed-repo-orchestration",
-      "title": "Initiative / Managed repo orchestration",
-      "status": "review_gated",
-      "gating_class": "review_gated",
       "conflict_domains": [
         "governance",
         "orchestrator-runtime",
         "workflow"
       ],
-      "target_execplan_id": "initiative:managed-repo-orchestration",
-      "goal_area": "reference",
-      "initiative_branch": "initiative/managed-repo-orchestration",
-      "parent_initiative_node": "initiative-managed-repo-orchestration",
       "expected_artifacts": [
         "artifacts/planner/research/remaining-work-graph.json",
         "spec/workflow.yaml"
       ],
-      "ordering": {}
+      "gating_class": "review_gated",
+      "goal_area": "reference",
+      "initiative_branch": "initiative/managed-repo-orchestration",
+      "node_id": "initiative-managed-repo-orchestration",
+      "ordering": {},
+      "parent_initiative_node": "initiative-managed-repo-orchestration",
+      "status": "review_gated",
+      "target_execplan_id": "initiative:managed-repo-orchestration",
+      "title": "Initiative / Managed repo orchestration"
     },
     {
-      "node_id": "rwg-029",
-      "title": "Managed external repo orchestration",
-      "status": "completed",
-      "status_reason": "",
-      "gating_class": "auto_runnable",
+      "action_state": {
+        "action_required": false,
+        "last_action": "complete",
+        "last_action_id": "rwg-action-20260319-017-complete-rwg-029",
+        "reorder_blockers": [],
+        "reorder_requires_human": false
+      },
+      "completion_ref": "merged:pr-93",
       "conflict_domains": [
         "governance",
         "orchestrator-runtime",
         "workflow"
       ],
-      "target_execplan_id": "20260319-managed-repo-orchestration-codex-01-execplan",
-      "goal_area": "governance",
-      "implementation_branch": "impl-execplan/20260319-managed-repo-orchestration-codex-01-execplan-codex-01-20260319",
-      "initiative_branch": "initiative/managed-repo-orchestration",
-      "parent_initiative_node": "initiative-managed-repo-orchestration",
-      "integration_mode": "via_initiative",
       "expected_artifacts": [
         "spec/workflow.yaml",
         "bin/bootstrap-managed-repo",
@@ -1178,97 +1457,98 @@
         "docs/codex-orchestrator-contract.md",
         "artifacts/provider-sync/"
       ],
+      "gating_class": "auto_runnable",
+      "goal_area": "governance",
+      "implementation_branch": "impl-execplan/20260319-managed-repo-orchestration-codex-01-execplan-codex-01-20260319",
+      "initiative_branch": "initiative/managed-repo-orchestration",
+      "integration_mode": "via_initiative",
+      "node_id": "rwg-029",
       "ordering": {
         "queue_position": 29,
         "source_action_id": "rwg-action-20260319-017-complete-rwg-029",
         "tie_breaker": "20260319-managed-repo-orchestration-codex-01-execplan"
       },
-      "action_state": {
-        "last_action_id": "rwg-action-20260319-017-complete-rwg-029",
-        "last_action": "complete",
-        "action_required": false,
-        "reorder_requires_human": false,
-        "reorder_blockers": []
-      },
-      "completion_ref": "merged:pr-93"
-    },
-    {
-      "node_id": "rwg-030",
-      "title": "Automatic post-merge graph reconciliation",
+      "parent_initiative_node": "initiative-managed-repo-orchestration",
       "status": "completed",
       "status_reason": "",
-      "gating_class": "auto_runnable",
+      "target_execplan_id": "20260319-managed-repo-orchestration-codex-01-execplan",
+      "title": "Managed external repo orchestration"
+    },
+    {
+      "action_state": {
+        "action_required": false,
+        "last_action": "complete",
+        "last_action_id": "rwg-action-20260319-014-complete-rwg-030",
+        "reorder_blockers": [],
+        "reorder_requires_human": false
+      },
+      "completion_ref": "merged:pr-94",
       "conflict_domains": [
         "governance",
         "orchestrator-runtime",
         "workflow"
       ],
-      "target_execplan_id": "20260319-post-merge-graph-reconciliation-automation-codex-01-execplan",
-      "goal_area": "governance",
-      "implementation_branch": "impl-execplan/20260319-post-merge-graph-reconciliation-automation-codex-01-execplan-codex-01-20260319",
-      "initiative_branch": "initiative/graph-transition-automation",
-      "parent_initiative_node": "initiative-graph-transition-automation",
-      "integration_mode": "via_initiative",
       "expected_artifacts": [
         "src/platform_tools/orchestrate_governed_slice.py",
         "src/platform_tools/reconcile_remaining_work_merge.py",
         "src/platform_tools/human_operations_runtime.py",
         "docs/codex-orchestrator-contract.md"
       ],
+      "gating_class": "auto_runnable",
+      "goal_area": "governance",
+      "implementation_branch": "impl-execplan/20260319-post-merge-graph-reconciliation-automation-codex-01-execplan-codex-01-20260319",
+      "initiative_branch": "initiative/graph-transition-automation",
+      "integration_mode": "via_initiative",
+      "node_id": "rwg-030",
       "ordering": {
         "queue_position": 30,
         "source_action_id": "rwg-action-20260319-014-complete-rwg-030",
         "tie_breaker": "20260319-post-merge-graph-reconciliation-automation-codex-01-execplan"
       },
-      "action_state": {
-        "last_action_id": "rwg-action-20260319-014-complete-rwg-030",
-        "last_action": "complete",
-        "action_required": false,
-        "reorder_requires_human": false,
-        "reorder_blockers": []
-      },
-      "completion_ref": "merged:pr-94"
+      "parent_initiative_node": "initiative-graph-transition-automation",
+      "status": "completed",
+      "status_reason": "",
+      "target_execplan_id": "20260319-post-merge-graph-reconciliation-automation-codex-01-execplan",
+      "title": "Automatic post-merge graph reconciliation"
     },
     {
-      "node_id": "initiative-local-git-hook-automation",
-      "title": "Initiative / Local git-hook automation",
-      "status": "review_gated",
-      "gating_class": "review_gated",
       "conflict_domains": [
         "governance",
         "orchestrator-runtime",
         "workflow"
       ],
-      "target_execplan_id": "initiative:local-git-hook-automation",
-      "goal_area": "reference",
-      "initiative_branch": "initiative/local-git-hook-automation",
-      "parent_initiative_node": "initiative-local-git-hook-automation",
       "expected_artifacts": [
         "artifacts/planner/research/remaining-work-graph.json",
         "spec/workflow.yaml",
         ".githooks/"
       ],
-      "ordering": {}
+      "gating_class": "review_gated",
+      "goal_area": "reference",
+      "initiative_branch": "initiative/local-git-hook-automation",
+      "node_id": "initiative-local-git-hook-automation",
+      "ordering": {},
+      "parent_initiative_node": "initiative-local-git-hook-automation",
+      "status": "review_gated",
+      "target_execplan_id": "initiative:local-git-hook-automation",
+      "title": "Initiative / Local git-hook automation"
     },
     {
-      "node_id": "rwg-031",
-      "title": "Local git-hook automation",
-      "status": "completed",
-      "status_reason": "",
-      "gating_class": "auto_runnable",
+      "action_state": {
+        "action_required": false,
+        "last_action": "activate",
+        "last_action_id": "rwg-action-20260319-021-activate-rwg-031",
+        "reorder_blockers": [],
+        "reorder_requires_human": false
+      },
+      "availability_ref": "merged:pr-100",
+      "availability_status": "active",
+      "availability_target_ref": "main",
+      "completion_ref": "merged:pr-99",
       "conflict_domains": [
         "governance",
         "orchestrator-runtime",
         "workflow"
       ],
-      "target_execplan_id": "20260319-local-git-hook-automation-codex-01-execplan",
-      "goal_area": "governance",
-      "implementation_branch": "impl-execplan/20260319-local-git-hook-automation-codex-01-execplan-codex-01-20260319",
-      "initiative_branch": "initiative/local-git-hook-automation",
-      "parent_initiative_node": "initiative-local-git-hook-automation",
-      "integration_mode": "via_initiative",
-      "availability_target_ref": "main",
-      "availability_status": "active",
       "expected_artifacts": [
         ".githooks/post-merge",
         ".githooks/post-checkout",
@@ -1276,100 +1556,100 @@
         "bin/install-local-git-hooks",
         "bin/auto-reconcile-main"
       ],
+      "gating_class": "auto_runnable",
+      "goal_area": "governance",
+      "implementation_branch": "impl-execplan/20260319-local-git-hook-automation-codex-01-execplan-codex-01-20260319",
+      "initiative_branch": "initiative/local-git-hook-automation",
+      "integration_mode": "via_initiative",
+      "node_id": "rwg-031",
       "ordering": {
         "queue_position": 31,
         "source_action_id": "rwg-action-20260319-018-complete-rwg-031",
         "tie_breaker": "20260319-local-git-hook-automation-codex-01-execplan"
       },
-      "action_state": {
-        "last_action_id": "rwg-action-20260319-021-activate-rwg-031",
-        "last_action": "activate",
-        "action_required": false,
-        "reorder_requires_human": false,
-        "reorder_blockers": []
-      },
-      "completion_ref": "merged:pr-99",
-      "availability_ref": "merged:pr-100"
-    },
-    {
-      "node_id": "rwg-032",
-      "title": "Local git-hook automation mainline activation follow-up",
+      "parent_initiative_node": "initiative-local-git-hook-automation",
       "status": "completed",
       "status_reason": "",
-      "gating_class": "review_gated",
+      "target_execplan_id": "20260319-local-git-hook-automation-codex-01-execplan",
+      "title": "Local git-hook automation"
+    },
+    {
+      "action_state": {
+        "action_required": false,
+        "last_action": "complete",
+        "last_action_id": "rwg-action-20260319-020-complete-rwg-032",
+        "reorder_blockers": [],
+        "reorder_requires_human": false
+      },
+      "completion_ref": "merged:3b3542e4ec4ce607a8786f65edf5c005b32aed9d",
       "conflict_domains": [
         "governance",
         "orchestrator-runtime",
         "workflow"
       ],
-      "target_execplan_id": "20260319-local-git-hook-mainline-followup-codex-01-execplan",
-      "goal_area": "governance",
-      "implementation_branch": "impl-execplan/20260319-local-git-hook-mainline-followup-codex-01-execplan-codex-01-20260319",
       "draft_branch": "draft-execplan/20260319-local-git-hook-mainline-followup-codex-01-20260319",
-      "initiative_branch": "initiative/local-git-hook-automation",
-      "parent_initiative_node": "initiative-local-git-hook-automation",
-      "integration_mode": "via_initiative",
       "expected_artifacts": [
         "src/platform_tools/reconcile_remaining_work_merge.py",
         "src/platform_tools/orchestrate_governed_slice.py",
         "spec/workflow.yaml",
         ".githooks/"
       ],
+      "gating_class": "review_gated",
+      "goal_area": "governance",
+      "implementation_branch": "impl-execplan/20260319-local-git-hook-mainline-followup-codex-01-execplan-codex-01-20260319",
+      "initiative_branch": "initiative/local-git-hook-automation",
+      "integration_mode": "via_initiative",
+      "node_id": "rwg-032",
       "ordering": {
         "queue_position": 32,
         "source_action_id": "rwg-action-20260319-020-complete-rwg-032",
         "tie_breaker": "20260319-local-git-hook-mainline-followup-codex-01-execplan"
       },
-      "action_state": {
-        "last_action_id": "rwg-action-20260319-020-complete-rwg-032",
-        "last_action": "complete",
-        "action_required": false,
-        "reorder_requires_human": false,
-        "reorder_blockers": []
-      },
-      "completion_ref": "merged:3b3542e4ec4ce607a8786f65edf5c005b32aed9d"
+      "parent_initiative_node": "initiative-local-git-hook-automation",
+      "status": "completed",
+      "status_reason": "",
+      "target_execplan_id": "20260319-local-git-hook-mainline-followup-codex-01-execplan",
+      "title": "Local git-hook automation mainline activation follow-up"
     },
     {
-      "node_id": "initiative-platform-surface-simplification",
-      "title": "Initiative / Platform surface simplification",
-      "status": "review_gated",
-      "status_reason": "initiative branch is published and the first simplification draft is ready for review under it",
-      "gating_class": "review_gated",
       "conflict_domains": [
         "documentation",
         "governance",
         "orchestrator-runtime",
         "workflow"
       ],
-      "target_execplan_id": "initiative:platform-surface-simplification",
-      "goal_area": "reference",
-      "initiative_branch": "initiative/platform-surface-simplification",
-      "parent_initiative_node": "initiative-platform-surface-simplification",
       "expected_artifacts": [
         "README.md",
         "docs/commands.md",
         "docs/codex-orchestrator-contract.md",
         "docs/platform-definition-v1.md"
       ],
-      "ordering": {}
+      "gating_class": "review_gated",
+      "goal_area": "reference",
+      "initiative_branch": "initiative/platform-surface-simplification",
+      "node_id": "initiative-platform-surface-simplification",
+      "ordering": {},
+      "parent_initiative_node": "initiative-platform-surface-simplification",
+      "status": "review_gated",
+      "status_reason": "initiative branch is published and the first simplification draft is ready for review under it",
+      "target_execplan_id": "initiative:platform-surface-simplification",
+      "title": "Initiative / Platform surface simplification"
     },
     {
-      "node_id": "rwg-033",
-      "title": "Platform surface simplification and public runtime consolidation",
-      "status": "review_gated",
-      "status_reason": "draft ExecPlan is prepared for initiative review so the simplification effort can start by defining the minimal supported public platform surface",
-      "gating_class": "review_gated",
+      "action_state": {
+        "action_required": false,
+        "last_action": "complete",
+        "last_action_id": "rwg-action-20260319-023-complete-rwg-033",
+        "reorder_blockers": [],
+        "reorder_requires_human": false
+      },
+      "completion_ref": "merged:pr-109",
       "conflict_domains": [
         "documentation",
         "governance",
         "orchestrator-runtime"
       ],
-      "target_execplan_id": "20260319-platform-surface-simplification-codex-01-execplan",
-      "goal_area": "reference",
       "draft_branch": "draft-execplan/20260319-platform-surface-simplification-codex-01-20260319",
-      "initiative_branch": "initiative/platform-surface-simplification",
-      "parent_initiative_node": "initiative-platform-surface-simplification",
-      "integration_mode": "via_initiative",
       "expected_artifacts": [
         "README.md",
         "docs/commands.md",
@@ -1377,212 +1657,212 @@
         "spec/workflow.yaml",
         "spec/rule-registry.yaml"
       ],
+      "gating_class": "review_gated",
+      "goal_area": "reference",
+      "initiative_branch": "initiative/platform-surface-simplification",
+      "integration_mode": "via_initiative",
+      "node_id": "rwg-033",
       "ordering": {
         "queue_position": 33,
-        "source_action_id": "rwg-action-20260319-022-unblock-rwg-033",
+        "source_action_id": "rwg-action-20260319-023-complete-rwg-033",
         "tie_breaker": "20260319-platform-surface-simplification-codex-01-execplan"
       },
-      "action_state": {
-        "last_action_id": "rwg-action-20260319-022-unblock-rwg-033",
-        "last_action": "unblock",
-        "action_required": false,
-        "reorder_requires_human": false,
-        "reorder_blockers": []
-      }
+      "parent_initiative_node": "initiative-platform-surface-simplification",
+      "status": "completed",
+      "status_reason": "",
+      "target_execplan_id": "20260319-platform-surface-simplification-codex-01-execplan",
+      "title": "Platform surface simplification and public runtime consolidation"
     },
     {
-      "node_id": "rwg-034",
-      "title": "Game-language removal and validator-suite terminology alignment",
-      "status": "decision_gated",
-      "status_reason": "queued cleanup slice to replace game-first public language with the simpler execution model of validators, transitions, evidence, and canonical work state",
-      "gating_class": "decision_gated",
       "conflict_domains": [
         "documentation",
         "governance",
         "workflow"
       ],
-      "target_execplan_id": "future:game-language-removal",
-      "goal_area": "documentation",
-      "initiative_branch": "initiative/platform-surface-simplification",
-      "parent_initiative_node": "initiative-platform-surface-simplification",
-      "integration_mode": "via_initiative",
       "expected_artifacts": [
         "docs/agent-game-rules-v1.md",
         "docs/planner-game-model.md",
         "docs/game-scoring-model.md",
         "docs/subgame-branch-governance.md"
       ],
+      "gating_class": "decision_gated",
+      "goal_area": "documentation",
+      "implementation_branch": "impl-execplan/future-game-language-removal",
+      "initiative_branch": "initiative/platform-surface-simplification",
+      "integration_mode": "via_initiative",
+      "node_id": "rwg-034",
       "ordering": {
         "queue_position": 34,
-        "tie_breaker": "future:game-language-removal"
-      }
+        "tie_breaker": "20260324-game-language-removal-codex-01-execplan"
+      },
+      "parent_initiative_node": "initiative-platform-surface-simplification",
+      "status": "decision_gated",
+      "status_reason": "queued cleanup slice to replace game-first public language with the simpler execution model of validators, transitions, evidence, and canonical work state",
+      "target_execplan_id": "20260324-game-language-removal-codex-01-execplan",
+      "title": "Game-language removal and validator-suite terminology alignment"
     },
     {
-      "node_id": "rwg-035",
-      "title": "Documentation rewrite around the minimal execution model",
-      "status": "decision_gated",
-      "status_reason": "queued docs slice to restate the platform as work graph, ExecPlans, transition engine, validator suite, board projection, and managed-repo orchestration",
-      "gating_class": "decision_gated",
       "conflict_domains": [
         "documentation",
         "orchestrator-runtime"
       ],
-      "target_execplan_id": "future:minimal-execution-model-docs",
-      "goal_area": "documentation",
-      "initiative_branch": "initiative/platform-surface-simplification",
-      "parent_initiative_node": "initiative-platform-surface-simplification",
-      "integration_mode": "via_initiative",
       "expected_artifacts": [
         "README.md",
         "docs/platform-definition-v1.md",
         "docs/codex-orchestrator-contract.md",
         "docs/commands.md"
       ],
+      "gating_class": "decision_gated",
+      "goal_area": "documentation",
+      "initiative_branch": "initiative/platform-surface-simplification",
+      "integration_mode": "via_initiative",
+      "node_id": "rwg-035",
       "ordering": {
         "queue_position": 35,
         "tie_breaker": "future:minimal-execution-model-docs"
-      }
+      },
+      "parent_initiative_node": "initiative-platform-surface-simplification",
+      "status": "decision_gated",
+      "status_reason": "queued docs slice to restate the platform as work graph, ExecPlans, transition engine, validator suite, board projection, and managed-repo orchestration",
+      "target_execplan_id": "future:minimal-execution-model-docs",
+      "title": "Documentation rewrite around the minimal execution model"
     },
     {
-      "node_id": "rwg-036",
-      "title": "Public command surface freeze and internal command demotion",
-      "status": "decision_gated",
-      "status_reason": "queued cleanup slice to freeze a small supported public command set and demote intermediate reconciliation and smoke commands to internal tooling",
-      "gating_class": "decision_gated",
       "conflict_domains": [
         "documentation",
         "orchestrator-runtime",
         "workflow"
       ],
-      "target_execplan_id": "future:public-command-surface-freeze",
-      "goal_area": "orchestrator-runtime",
-      "initiative_branch": "initiative/platform-surface-simplification",
-      "parent_initiative_node": "initiative-platform-surface-simplification",
-      "integration_mode": "via_initiative",
       "expected_artifacts": [
         "docs/commands.md",
         "pyproject.toml",
         "bin/",
         "src/platform_tools/"
       ],
+      "gating_class": "decision_gated",
+      "goal_area": "orchestrator-runtime",
+      "initiative_branch": "initiative/platform-surface-simplification",
+      "integration_mode": "via_initiative",
+      "node_id": "rwg-036",
       "ordering": {
         "queue_position": 36,
         "tie_breaker": "future:public-command-surface-freeze"
-      }
+      },
+      "parent_initiative_node": "initiative-platform-surface-simplification",
+      "status": "decision_gated",
+      "status_reason": "queued cleanup slice to freeze a small supported public command set and demote intermediate reconciliation and smoke commands to internal tooling",
+      "target_execplan_id": "future:public-command-surface-freeze",
+      "title": "Public command surface freeze and internal command demotion"
     },
     {
-      "node_id": "artifact-orchestrator-contract",
-      "title": "Codex orchestrator contract",
-      "status": "completed",
-      "gating_class": "auto_runnable",
+      "action_state": {
+        "action_required": false,
+        "last_action": "complete",
+        "last_action_id": "rwg-action-20260310-001-complete-artifact-orchestrator-contract",
+        "reorder_blockers": [],
+        "reorder_requires_human": false
+      },
+      "completion_ref": "merged:pr-43",
       "conflict_domains": [],
-      "target_execplan_id": "20260310-codex-orchestrator-contract-codex-01-execplan",
-      "goal_area": "reference",
       "expected_artifacts": [
         "docs/codex-orchestrator-contract.md"
       ],
+      "gating_class": "auto_runnable",
+      "goal_area": "reference",
+      "node_id": "artifact-orchestrator-contract",
       "ordering": {
         "source_action_id": "rwg-action-20260310-001-complete-artifact-orchestrator-contract"
       },
-      "completion_ref": "merged:pr-43",
+      "status": "completed",
       "status_reason": "",
-      "action_state": {
-        "last_action_id": "rwg-action-20260310-001-complete-artifact-orchestrator-contract",
-        "last_action": "complete",
-        "action_required": false,
-        "reorder_requires_human": false,
-        "reorder_blockers": []
-      }
+      "target_execplan_id": "20260310-codex-orchestrator-contract-codex-01-execplan",
+      "title": "Codex orchestrator contract"
     },
     {
-      "node_id": "artifact-merge-readiness-contract",
-      "title": "Merge-readiness contract",
-      "status": "completed",
-      "gating_class": "auto_runnable",
+      "action_state": {
+        "action_required": false,
+        "last_action": "complete",
+        "last_action_id": "rwg-action-20260311-001-complete-artifact-merge-readiness-contract",
+        "reorder_blockers": [],
+        "reorder_requires_human": false
+      },
+      "completion_ref": "merged:pr-44",
       "conflict_domains": [],
-      "target_execplan_id": "20260310-merge-readiness-engine-codex-01-execplan",
-      "goal_area": "reference",
       "expected_artifacts": [
         "docs/merge-readiness-contract.md"
       ],
+      "gating_class": "auto_runnable",
+      "goal_area": "reference",
+      "node_id": "artifact-merge-readiness-contract",
       "ordering": {
         "source_action_id": "rwg-action-20260311-001-complete-artifact-merge-readiness-contract"
       },
-      "completion_ref": "merged:pr-44",
+      "status": "completed",
       "status_reason": "",
-      "action_state": {
-        "last_action_id": "rwg-action-20260311-001-complete-artifact-merge-readiness-contract",
-        "last_action": "complete",
-        "action_required": false,
-        "reorder_requires_human": false,
-        "reorder_blockers": []
-      }
+      "target_execplan_id": "20260310-merge-readiness-engine-codex-01-execplan",
+      "title": "Merge-readiness contract"
     },
     {
-      "node_id": "initiative-governed-super-agent-harness",
-      "title": "Initiative / governed super agent harness",
-      "status": "ready",
-      "gating_class": "auto_runnable",
       "conflict_domains": [
         "research-governance",
         "super-agent-harness"
       ],
-      "target_execplan_id": "initiative:governed-super-agent-harness",
+      "gating_class": "auto_runnable",
       "goal_area": "reference",
       "initiative_branch": "initiative/governed-super-agent-harness",
+      "node_id": "initiative-governed-super-agent-harness",
+      "ordering": {},
       "parent_initiative_node": "initiative-governed-super-agent-harness",
-      "ordering": {}
+      "status": "ready",
+      "target_execplan_id": "initiative:governed-super-agent-harness",
+      "title": "Initiative / governed super agent harness"
     },
     {
-      "node_id": "rwg-037",
-      "title": "Plan a governed super-agent harness that layers DeerFlow-style runtime capabilities on top of the platform kernel",
-      "status": "decision_gated",
-      "status_reason": "registered from ExecPlan metadata; finalized draft ExecPlan required before execution",
-      "gating_class": "decision_gated",
+      "action_state": {
+        "action_required": false,
+        "last_action": "block",
+        "last_action_id": "rwg-action-20260323-register-rwg-037",
+        "reorder_blockers": [],
+        "reorder_requires_human": false
+      },
       "conflict_domains": [
         "research-governance",
         "super-agent-harness"
       ],
-      "target_execplan_id": "20260323-governed-super-agent-harness-planning-spike-codex-01-execplan",
-      "goal_area": "integration",
-      "implementation_branch": "impl-execplan/20260323-governed-super-agent-harness-planning-spike-codex-01-20260323",
-      "initiative_branch": "initiative/governed-super-agent-harness",
-      "parent_initiative_node": "initiative-governed-super-agent-harness",
-      "integration_mode": "via_initiative",
       "expected_artifacts": [
         ".agent/execplans/20260323-governed-super-agent-harness-planning-spike-codex-01-execplan.md",
         "artifacts/planner/research/remaining-work-graph.json",
         "docs/queued-execplans.md"
       ],
+      "gating_class": "decision_gated",
+      "goal_area": "integration",
+      "implementation_branch": "impl-execplan/20260323-governed-super-agent-harness-planning-spike-codex-01-20260323",
+      "initiative_branch": "initiative/governed-super-agent-harness",
+      "integration_mode": "via_initiative",
+      "node_id": "rwg-037",
       "ordering": {
         "queue_position": 37,
-        "tie_breaker": "20260323-governed-super-agent-harness-planning-spike-codex-01-execplan",
-        "source_action_id": "rwg-action-20260323-register-rwg-037"
+        "source_action_id": "rwg-action-20260323-register-rwg-037",
+        "tie_breaker": "20260323-governed-super-agent-harness-planning-spike-codex-01-execplan"
       },
-      "action_state": {
-        "last_action_id": "rwg-action-20260323-register-rwg-037",
-        "last_action": "block",
-        "action_required": false,
-        "reorder_requires_human": false,
-        "reorder_blockers": []
-      }
-    },
-    {
-      "node_id": "rwg-038",
-      "title": "Research DeerFlow-style runtime capabilities before committing to a governed super-agent harness architecture",
+      "parent_initiative_node": "initiative-governed-super-agent-harness",
       "status": "decision_gated",
       "status_reason": "registered from ExecPlan metadata; finalized draft ExecPlan required before execution",
-      "gating_class": "decision_gated",
+      "target_execplan_id": "20260323-governed-super-agent-harness-planning-spike-codex-01-execplan",
+      "title": "Plan a governed super-agent harness that layers DeerFlow-style runtime capabilities on top of the platform kernel"
+    },
+    {
+      "action_state": {
+        "action_required": false,
+        "last_action": "block",
+        "last_action_id": "rwg-action-20260323-register-rwg-038",
+        "reorder_blockers": [],
+        "reorder_requires_human": false
+      },
       "conflict_domains": [
         "research-governance",
         "super-agent-harness"
       ],
-      "target_execplan_id": "20260323-governed-super-agent-harness-research-codex-01-execplan",
-      "goal_area": "integration",
-      "implementation_branch": "impl-execplan/20260323-governed-super-agent-harness-research-codex-01-20260323",
-      "initiative_branch": "initiative/governed-super-agent-harness",
-      "parent_initiative_node": "initiative-governed-super-agent-harness",
-      "integration_mode": "via_initiative",
       "expected_artifacts": [
         ".agent/execplans/20260323-governed-super-agent-harness-research-codex-01-execplan.md",
         "docs/governed-super-agent-harness-research.md",
@@ -1591,310 +1871,40 @@
         "artifacts/planner/research/bibliography-graph.json",
         "artifacts/planner/research/claim-registry.json"
       ],
+      "gating_class": "decision_gated",
+      "goal_area": "integration",
+      "implementation_branch": "impl-execplan/20260323-governed-super-agent-harness-research-codex-01-20260323",
+      "initiative_branch": "initiative/governed-super-agent-harness",
+      "integration_mode": "via_initiative",
+      "node_id": "rwg-038",
       "ordering": {
         "queue_position": 38,
-        "tie_breaker": "20260323-governed-super-agent-harness-research-codex-01-execplan",
-        "source_action_id": "rwg-action-20260323-register-rwg-038"
+        "source_action_id": "rwg-action-20260323-register-rwg-038",
+        "tie_breaker": "20260323-governed-super-agent-harness-research-codex-01-execplan"
       },
-      "action_state": {
-        "last_action_id": "rwg-action-20260323-register-rwg-038",
-        "last_action": "block",
-        "action_required": false,
-        "reorder_requires_human": false,
-        "reorder_blockers": []
-      }
+      "parent_initiative_node": "initiative-governed-super-agent-harness",
+      "status": "decision_gated",
+      "status_reason": "registered from ExecPlan metadata; finalized draft ExecPlan required before execution",
+      "target_execplan_id": "20260323-governed-super-agent-harness-research-codex-01-execplan",
+      "title": "Research DeerFlow-style runtime capabilities before committing to a governed super-agent harness architecture"
     }
   ],
-  "edges": [
-    {
-      "from": "rwg-002",
-      "to": "rwg-001",
-      "relation": "depends_on"
-    },
-    {
-      "from": "rwg-004",
-      "to": "rwg-002",
-      "relation": "depends_on"
-    },
-    {
-      "from": "rwg-004",
-      "to": "rwg-003",
-      "relation": "depends_on"
-    },
-    {
-      "from": "rwg-006",
-      "to": "rwg-004",
-      "relation": "depends_on"
-    },
-    {
-      "from": "rwg-006",
-      "to": "rwg-002",
-      "relation": "depends_on"
-    },
-    {
-      "from": "rwg-029",
-      "to": "rwg-027",
-      "relation": "depends_on"
-    },
-    {
-      "from": "rwg-030",
-      "to": "rwg-027",
-      "relation": "depends_on"
-    },
-    {
-      "from": "rwg-031",
-      "to": "rwg-030",
-      "relation": "depends_on"
-    },
-    {
-      "from": "rwg-032",
-      "to": "rwg-031",
-      "relation": "depends_on"
-    },
-    {
-      "from": "rwg-007",
-      "to": "rwg-005",
-      "relation": "depends_on"
-    },
-    {
-      "from": "rwg-008",
-      "to": "rwg-005",
-      "relation": "depends_on"
-    },
-    {
-      "from": "rwg-008",
-      "to": "rwg-007",
-      "relation": "depends_on"
-    },
-    {
-      "from": "rwg-010",
-      "to": "rwg-008",
-      "relation": "depends_on"
-    },
-    {
-      "from": "rwg-010",
-      "to": "rwg-009",
-      "relation": "depends_on"
-    },
-    {
-      "from": "rwg-010",
-      "to": "rwg-006",
-      "relation": "depends_on"
-    },
-    {
-      "from": "rwg-011",
-      "to": "rwg-010",
-      "relation": "depends_on"
-    },
-    {
-      "from": "rwg-011",
-      "to": "rwg-009",
-      "relation": "depends_on"
-    },
-    {
-      "from": "rwg-012",
-      "to": "rwg-011",
-      "relation": "depends_on"
-    },
-    {
-      "from": "rwg-012",
-      "to": "rwg-010",
-      "relation": "depends_on"
-    },
-    {
-      "from": "rwg-013",
-      "to": "rwg-012",
-      "relation": "depends_on"
-    },
-    {
-      "from": "rwg-014",
-      "to": "rwg-012",
-      "relation": "depends_on"
-    },
-    {
-      "from": "rwg-014",
-      "to": "rwg-013",
-      "relation": "depends_on"
-    },
-    {
-      "from": "rwg-014",
-      "to": "rwg-020",
-      "relation": "depends_on"
-    },
-    {
-      "from": "rwg-019",
-      "to": "rwg-012",
-      "relation": "depends_on"
-    },
-    {
-      "from": "rwg-020",
-      "to": "rwg-012",
-      "relation": "depends_on"
-    },
-    {
-      "from": "rwg-015",
-      "to": "rwg-012",
-      "relation": "gated_by"
-    },
-    {
-      "from": "rwg-016",
-      "to": "rwg-011",
-      "relation": "gated_by"
-    },
-    {
-      "from": "rwg-017",
-      "to": "rwg-011",
-      "relation": "gated_by"
-    },
-    {
-      "from": "rwg-018",
-      "to": "rwg-010",
-      "relation": "gated_by"
-    },
-    {
-      "from": "rwg-018",
-      "to": "rwg-012",
-      "relation": "gated_by"
-    },
-    {
-      "from": "rwg-019",
-      "to": "artifact-merge-readiness-contract",
-      "relation": "informed_by"
-    },
-    {
-      "from": "rwg-020",
-      "to": "artifact-merge-readiness-contract",
-      "relation": "informed_by"
-    },
-    {
-      "from": "rwg-001",
-      "to": "rwg-002",
-      "relation": "conflicts_with"
-    },
-    {
-      "from": "rwg-002",
-      "to": "rwg-004",
-      "relation": "conflicts_with"
-    },
-    {
-      "from": "rwg-006",
-      "to": "rwg-005",
-      "relation": "conflicts_with"
-    },
-    {
-      "from": "rwg-008",
-      "to": "rwg-010",
-      "relation": "conflicts_with"
-    },
-    {
-      "from": "rwg-009",
-      "to": "rwg-010",
-      "relation": "conflicts_with"
-    },
-    {
-      "from": "rwg-012",
-      "to": "rwg-014",
-      "relation": "conflicts_with"
-    },
-    {
-      "from": "rwg-001",
-      "to": "artifact-orchestrator-contract",
-      "relation": "informed_by"
-    },
-    {
-      "from": "rwg-002",
-      "to": "artifact-orchestrator-contract",
-      "relation": "informed_by"
-    },
-    {
-      "from": "rwg-004",
-      "to": "artifact-orchestrator-contract",
-      "relation": "informed_by"
-    },
-    {
-      "from": "rwg-006",
-      "to": "artifact-orchestrator-contract",
-      "relation": "informed_by"
-    },
-    {
-      "from": "rwg-010",
-      "to": "artifact-orchestrator-contract",
-      "relation": "informed_by"
-    },
-    {
-      "from": "rwg-011",
-      "to": "artifact-orchestrator-contract",
-      "relation": "informed_by"
-    },
-    {
-      "from": "rwg-002",
-      "to": "artifact-merge-readiness-contract",
-      "relation": "informed_by"
-    },
-    {
-      "from": "rwg-004",
-      "to": "artifact-merge-readiness-contract",
-      "relation": "informed_by"
-    },
-    {
-      "from": "rwg-006",
-      "to": "artifact-merge-readiness-contract",
-      "relation": "informed_by"
-    },
-    {
-      "from": "rwg-010",
-      "to": "artifact-merge-readiness-contract",
-      "relation": "informed_by"
-    },
-    {
-      "from": "rwg-012",
-      "to": "artifact-merge-readiness-contract",
-      "relation": "informed_by"
-    },
-    {
-      "from": "rwg-014",
-      "to": "artifact-merge-readiness-contract",
-      "relation": "informed_by"
-    },
-    {
-      "from": "rwg-021",
-      "to": "rwg-014",
-      "relation": "depends_on"
-    },
-    {
-      "from": "rwg-022",
-      "to": "rwg-014",
-      "relation": "depends_on"
-    },
-    {
-      "from": "rwg-022",
-      "to": "rwg-021",
-      "relation": "depends_on"
-    },
-    {
-      "from": "rwg-023",
-      "to": "rwg-014",
-      "relation": "depends_on"
-    },
-    {
-      "from": "rwg-023",
-      "to": "rwg-021",
-      "relation": "depends_on"
-    },
-    {
-      "from": "rwg-023",
-      "to": "rwg-022",
-      "relation": "depends_on"
-    },
-    {
-      "from": "rwg-024",
-      "to": "rwg-022",
-      "relation": "depends_on"
-    },
-    {
-      "from": "rwg-024",
-      "to": "rwg-023",
-      "relation": "depends_on"
-    }
-  ]
+  "ordering_policy": {
+    "board_projection_authority": "projection_only",
+    "ready_sort_fields": [
+      "ready_order",
+      "tie_breaker",
+      "node_id"
+    ],
+    "ready_statuses": [
+      "ready"
+    ],
+    "reorder_requires_explicit_action": true
+  },
+  "queue_projection": {
+    "last_reconciled_action_id": "rwg-action-20260319-023-complete-rwg-033",
+    "path": "docs/queued-execplans.md",
+    "projection_authority": "projection_only",
+    "ready_execplan_ids": []
+  }
 }
