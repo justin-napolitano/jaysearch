@@ -21,11 +21,23 @@ surface_entries:
     authority_role: projection_only
     path_exact:
       - artifacts/governance/board-action-events.jsonl
+      - artifacts/governance/worker-session-events.jsonl
+  - id: worker_session_lease_surface
+    surface_class: canonical_state_surface
+    authority_role: canonical_local
+    path_prefixes:
+      - artifacts/governance/worker-sessions/
+  - id: worker_contract_registry_surface
+    surface_class: canonical_state_surface
+    authority_role: canonical_local
+    path_prefixes:
+      - artifacts/governance/initiative-worker-contracts/
   - id: rule_surface
     surface_class: rule_surface
     authority_role: governance_local
     path_exact:
       - docs/codex-orchestrator-contract.md
+      - docs/governed-worker-runtime.md
       - docs/commands.md
       - docs/getting-started.md
       - docs/governance.md
@@ -63,6 +75,12 @@ surface_entries:
       - bin/anti-cheat-check
       - bin/install-local-git-hooks
       - bin/bootstrap-managed-repo
+      - bin/bootstrap-session
+      - bin/governed-worker
+      - bin/next-worker-slice
+      - bin/prepare-next-worker-slice
+      - bin/worker-session-coordinator
+      - bin/worker-session-status
       - bin/managed-repo-status
       - bin/merge-readiness-check
       - bin/orchestrate-governed-slice
@@ -76,6 +94,7 @@ surface_entries:
       - bin/rule-graph-check
       - bin/rule-graph-smoke-test
       - bin/run-governed-pre-push-checks
+      - bin/session-bootstrap-check
       - bin/state-transition-legality-check
       - bin/state-transition-legality-smoke-test
       - src/platform_tools/auto_reconcile_main.py
@@ -85,6 +104,7 @@ surface_entries:
       - src/platform_tools/execplan_lint.py
       - src/platform_tools/execplan_discovery.py
       - src/platform_tools/game_status.py
+      - src/platform_tools/governed_worker.py
       - src/platform_tools/governance_check.py
       - src/platform_tools/governance_loader.py
       - src/platform_tools/human_operations_runtime.py
@@ -102,11 +122,23 @@ surface_entries:
       - src/platform_tools/reconcile_remaining_work_transition.py
       - src/platform_tools/run_governed_pre_push_checks.py
       - src/platform_tools/repo_health.py
+      - src/platform_tools/session_bootstrap.py
+      - src/platform_tools/worker_contracts.py
       - src/platform_tools/rule_graph_check.py
       - src/platform_tools/remaining_work_graph_check.py
       - src/platform_tools/state_transition_legality.py
+      - src/platform_tools/worker_session_status.py
+      - src/platform_tools/worker_session_coordinator.py
+      - src/platform_tools/next_worker_slice.py
+      - src/platform_tools/prepare_next_worker_slice.py
       - tests/test_anti_cheat_check.py
       - tests/test_bootstrap_managed_repo.py
+      - tests/test_bootstrap_session.py
+      - tests/test_governed_worker.py
+      - tests/test_next_worker_slice.py
+      - tests/test_prepare_next_worker_slice.py
+      - tests/test_worker_session_coordinator.py
+      - tests/test_worker_session_status.py
       - tests/test_branch_policy.py
       - tests/test_human_operations_status.py
       - tests/test_managed_repo_status.py
@@ -124,6 +156,7 @@ surface_entries:
       - tests/test_reconcile_remaining_work_transition.py
       - tests/test_repo_health.py
       - tests/test_rule_graph_check.py
+      - tests/test_session_bootstrap.py
       - tests/test_remaining_work_graph_check.py
       - tests/test_state_transition_legality.py
   - id: exception_registry

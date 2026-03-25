@@ -1,0 +1,33 @@
+{
+  "contracts": [
+    {
+      "branch": "impl-execplan/future-game-language-removal",
+      "contract_id": "rwg-034:20260324-game-language-removal-codex-01-execplan",
+      "execplan_id": "20260324-game-language-removal-codex-01-execplan",
+      "initiative_branch": "initiative/platform-surface-simplification",
+      "merge_target": "initiative/platform-surface-simplification",
+      "node_id": "rwg-034",
+      "queue_position": 34,
+      "scope": {
+        "non_goals": [
+          "Do not change worker runtime or lease governance",
+          "Do not widen the initiative beyond terminology cleanup for game-language removal",
+          "Do not introduce Docker or Azure runtime changes"
+        ],
+        "owned_surfaces": [
+          "docs/agent-game-rules-v1.md",
+          "docs/games/implementation-game.md",
+          "spec/providers/github-projects.schema.yaml"
+        ],
+        "validations": [
+          "uv run pytest -q tests/test_prepare_next_worker_slice.py tests/test_next_worker_slice.py",
+          "rg -n \"game-language|subgame|proof game\" docs spec src"
+        ]
+      },
+      "status": "ready",
+      "title": "Game-language removal and validator-suite terminology alignment",
+      "worker_id": "future-game-language-removal"
+    }
+  ],
+  "initiative_branch": "initiative/platform-surface-simplification"
+}

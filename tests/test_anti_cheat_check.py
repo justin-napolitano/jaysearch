@@ -170,6 +170,26 @@ def test_governance_impl_branch_allows_bounded_referee_surface_change(tmp_path: 
     assert report["capability_rule_id"] == "agent_impl_governance"
 
 
+def test_governance_impl_branch_allows_governed_worker_runtime_change(tmp_path: Path) -> None:
+    branch = "impl-execplan/20260323-governed-super-agent-harness-planning-spike-codex-01-20260323"
+    execplan = _seed_repo(
+        tmp_path,
+        branch=branch,
+        execplan_id="20260323-governed-super-agent-harness-planning-spike-codex-01-execplan",
+        goal_area="governance",
+        changes=["src/platform_tools/governed_worker.py"],
+    )
+    _write(tmp_path / "src/platform_tools/governed_worker.py", "COMMAND = 'governed-worker'\n")
+    _git(tmp_path, "add", "src/platform_tools/governed_worker.py")
+    _git(tmp_path, "commit", "-m", "feat(governance): add governed worker runtime")
+
+    code, report = check_anti_cheat(root=tmp_path.as_posix(), execplan_path=execplan.as_posix())
+
+    assert code == 0
+    assert report["ok"] is True
+    assert report["capability_rule_id"] == "agent_impl_governance"
+
+
 def test_governance_draft_branch_allows_canonical_state_and_projection_changes(tmp_path: Path) -> None:
     branch = "draft-execplan/20260318-rule-authority-consolidation-codex-01-20260318"
     execplan = _seed_repo(

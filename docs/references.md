@@ -54,3 +54,14 @@ This design package is informed by the following primary or authoritative source
 
 12. bytedance. “DeerFlow” GitHub repository and README, reviewed 2026-03-23.
     Link: https://github.com/bytedance/deer-flow
+
+## Standards Bibliography Pack
+
+13. Local standards bibliography directory for execution, observability, and error-contract references.
+    Link: resources/biblio/
+
+14. "Execution And Observability Standards."
+    Link: resources/biblio/execution-and-observability-standards.md
+
+15. "Agent Error Contract Standards."
+    Link: resources/biblio/agent-error-contract-standards.md

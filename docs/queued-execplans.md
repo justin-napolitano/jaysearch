@@ -176,13 +176,17 @@ This document turns the remaining-work graph into an explicit near-term queue of
    - completion ref: `merged:3b3542e4ec4ce607a8786f65edf5c005b32aed9d`
 
 32. `20260319-platform-surface-simplification-codex-01-execplan`
-   - status: `review_gated`
+   - status: `completed`
    - goal: reduce the public platform model to the graph, workflow, rule registry, orchestrator, managed-repo runtime, and board projection
    - draft branch: `draft-execplan/20260319-platform-surface-simplification-codex-01-20260319`
+   - completion ref: `merged:pr-109`
 
-33. `future:game-language-removal`
+33. `20260324-game-language-removal-codex-01-execplan`
    - status: `decision_gated`
    - goal: remove game-first platform language from public docs and recast those concepts as validators, transitions, and execution state
+   - draft branch: `draft-execplan/20260324-game-language-removal-codex-01-20260324`
+   - implementation branch: `impl-execplan/future-game-language-removal`
+   - gate: `finalized draft ExecPlan required before execution`
 
 34. `future:minimal-execution-model-docs`
    - status: `decision_gated`
@@ -206,7 +210,7 @@ This document turns the remaining-work graph into an explicit near-term queue of
 
 ## Mirror Metadata
 
-- canonical_last_graph_action_id: `rwg-action-20260323-register-rwg-038`
+- canonical_last_graph_action_id: `rwg-action-20260319-023-complete-rwg-033`
 - canonical_ready_order: ``
 - projection_authority: `projection_only`
 
