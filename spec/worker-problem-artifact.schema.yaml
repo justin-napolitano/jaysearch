@@ -1,0 +1,22 @@
+version: v1
+required_fields:
+  - type
+  - title
+  - status
+  - detail
+  - instance
+  - error_code
+  - retryable
+  - initiative_id
+  - worker_id
+  - contract_id
+  - execplan_id
+  - branch
+  - executor_backend
+  - trace_id
+  - what_you_should_do
+status_type: integer
+token_economy:
+  detail_max_chars: 280
+  prefer_compact_operator_guidance: true
+  render_markdown_from_canonical_json: true

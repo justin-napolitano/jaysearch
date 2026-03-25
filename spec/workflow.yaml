@@ -121,6 +121,34 @@ execution_requirements:
     lightweight_branch_policy_fields:
       - allowed_branch_patterns
       - forbidden_branches
+  session_runtime_requirements:
+    codex_sessions_must_bootstrap_from_repo_local_governance: true
+    worker_sessions_must_bootstrap_from_repo_local_governance: true
+    canonical_session_entrypoint: bin/bootstrap-session
+    bootstrap_checker_command: bin/session-bootstrap-check
+    required_bootstrap_artifacts:
+      - .agent/AGENTS.md
+      - .agent/PLANS.md
+      - spec/workflow.yaml
+    active_execplan_required_for_meaningful_mutation: true
+    ambiguous_branch_or_execplan_must_fail_closed: true
+    protected_branch_execution_forbidden: true
+    initiative_branch_is_default_parent_context_for_governed_work: true
+    worker_sessions_require_isolated_filesystem: true
+    worker_sessions_require_unique_branch: true
+    worker_sessions_require_single_bounded_task_lease: true
+    worker_sessions_require_initiative_worker_contract: true
+    initiative_execplans_are_worker_authority_source: true
+    worker_contract_registry_directory: artifacts/governance/initiative-worker-contracts
+    worker_sessions_require_active_lease_artifact: true
+    worker_session_lease_directory: artifacts/governance/worker-sessions
+    worker_session_audit_log: artifacts/governance/worker-session-events.jsonl
+    worker_sessions_require_git_backed_handoff: true
+    worker_sessions_are_ephemeral: true
+    preferred_local_isolation_backends:
+      - git_worktree
+      - git_clone
+    preferred_ephemeral_remote_backend: container_job
   local_hook_requirements:
     versioned_local_hooks_required: true
     configured_hooks_path: .githooks

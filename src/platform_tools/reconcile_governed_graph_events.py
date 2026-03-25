@@ -8,6 +8,7 @@ from typing import Any
 from platform_tools.plan_utils import parse_plan
 from platform_tools.reconcile_remaining_work_merge import reconcile_remaining_work_merge
 from platform_tools.reconcile_remaining_work_transition import reconcile_remaining_work_transition
+from platform_tools.reconcile_worker_runtime_graph import reconcile_worker_runtime_graph
 from platform_tools.register_remaining_work_node import register_remaining_work_node
 
 GRAPH_PATH = Path("artifacts/planner/research/remaining-work-graph.json")
@@ -98,6 +99,30 @@ def reconcile_governed_graph_events(
         "steps": steps,
         "merge_completed": bool(merge_report and merge_report.get("completion_ref")),
     }
+
+
+def reconcile_latest_worker_runtime_graph(
+    *,
+    repo_root: Path,
+) -> dict[str, Any]:
+    run_dir = repo_root / "artifacts" / "governance" / "worker-runs"
+    if not run_dir.exists():
+        return {
+            "command": "reconcile-latest-worker-runtime-graph",
+            "status": "deferred",
+            "ok": True,
+            "reason": "no_worker_runs_present",
+        }
+    candidates = sorted(run_dir.glob("run-*.json"))
+    if not candidates:
+        return {
+            "command": "reconcile-latest-worker-runtime-graph",
+            "status": "deferred",
+            "ok": True,
+            "reason": "no_worker_runs_present",
+        }
+    run_id = candidates[-1].stem
+    return reconcile_worker_runtime_graph(repo_root=repo_root, run_id=run_id)
 
 
 def main() -> int:

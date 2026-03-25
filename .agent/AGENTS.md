@@ -26,6 +26,9 @@ phase rule is considered.
 Agents **draft** work.\
 Humans **finalize** work.
 
+Every new Codex session and every worker session must bootstrap from
+repository-local governance state before doing meaningful work.
+
 ------------------------------------------------------------------------
 
 # Identity Model
@@ -135,17 +138,59 @@ Agents must populate `changes` with explicit paths.
 
 Implementation Workflow
 
-Approved implementation work should execute on branches matching:
+Approved governed implementation work should execute under one bounded
+initiative-scoped ExecPlan authority.
 
-impl-execplan/`<plan-id>`{=html}-`<agent>`{=html}-YYYYMMDD
+Worker implementation branches should match:
 
-Parallel implementation ExecPlans must not share one implementation branch.
+impl-execplan/`<initiative-scope>`{=html}-`<worker>`{=html}
+
+Parallel workers must not share one implementation branch or worker
+contract.
 
 Optional queue branches may be used for deliberate integration stacking:
 
 queue-execplan/`<queue-name>`{=html}-`<agent>`{=html}-YYYYMMDD
 
-Queue branches do not replace the requirement for one implementation branch per active implementation ExecPlan.
+Queue branches do not replace the requirement for one worker branch per
+active worker contract.
+
+Session Bootstrap Rules
+
+Before a new Codex session or worker session performs meaningful work, it
+must:
+
+• read repository-local governance state from `.agent/AGENTS.md`,
+  `.agent/PLANS.md`, `spec/workflow.yaml`, and the active ExecPlan when
+  one exists\
+• determine the current branch role and stop if execution resolves to
+  `main` or another protected branch\
+• determine whether the session is acting as an initiative coordinator,
+  draft-plan author, implementation worker, or integration-only queue
+  session\
+• inherit the authority limits of that branch role rather than invent a
+  new session-local rule set\
+• stop when the active ExecPlan, graph state, branch role, or required
+  protected artifacts are ambiguous
+
+Worker session-specific rules:
+
+• one worker session maps to one isolated checkout or container-local
+  clone\
+• one worker session maps to one unique working branch\
+• one worker session may execute at most one bounded lease or task scope
+  at a time\
+• one worker session must map to one initiative-owned worker contract
+  before meaningful implementation work begins\
+• one worker session must hold one active worker-session lease artifact
+  before meaningful implementation work begins\
+• worker sessions must not share one mutable filesystem checkout\
+• worker sessions must reconcile outputs through Git commits, validator
+  output, and pull-request or merge evidence rather than session memory\
+• worker-session lease issue and close actions must leave durable audit
+  records in repository-local artifacts\
+• worker sessions must die after handoff; they are not durable authority
+  holders
 
 ------------------------------------------------------------------------
 

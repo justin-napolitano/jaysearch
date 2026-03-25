@@ -175,13 +175,18 @@ This document turns the remaining-work graph into an explicit near-term queue of
    - draft branch: `draft-execplan/20260319-local-git-hook-mainline-followup-codex-01-20260319`
    - completion ref: `merged:3b3542e4ec4ce607a8786f65edf5c005b32aed9d`
 
-32. `future:platform-surface-simplification`
-   - status: `decision_gated`
+32. `20260319-platform-surface-simplification-codex-01-execplan`
+   - status: `completed`
    - goal: reduce the public platform model to the graph, workflow, rule registry, orchestrator, managed-repo runtime, and board projection
+   - draft branch: `draft-execplan/20260319-platform-surface-simplification-codex-01-20260319`
+   - completion ref: `merged:pr-109`
 
-33. `future:game-language-removal`
+33. `20260324-game-language-removal-codex-01-execplan`
    - status: `decision_gated`
    - goal: remove game-first platform language from public docs and recast those concepts as validators, transitions, and execution state
+   - draft branch: `draft-execplan/20260324-game-language-removal-codex-01-20260324`
+   - implementation branch: `impl-execplan/future-game-language-removal`
+   - gate: `finalized draft ExecPlan required before execution`
 
 34. `future:minimal-execution-model-docs`
    - status: `decision_gated`
@@ -190,9 +195,28 @@ This document turns the remaining-work graph into an explicit near-term queue of
 35. `future:public-command-surface-freeze`
    - status: `decision_gated`
    - goal: freeze a small supported public command set and demote intermediate reconciliation and smoke commands to internal tooling
+
+37. `20260323-governed-super-agent-harness-planning-spike-codex-01-execplan`
+   - status: `decision_gated`
+   - goal: Plan a governed super-agent harness that layers DeerFlow-style runtime capabilities on top of the platform kernel
+   - implementation branch: `impl-execplan/20260323-governed-super-agent-harness-planning-spike-codex-01-20260323`
+   - gate: `finalized draft ExecPlan required before execution`
+
+38. `20260323-governed-super-agent-harness-research-codex-01-execplan`
+   - status: `decision_gated`
+   - goal: Research DeerFlow-style runtime capabilities before committing to a governed super-agent harness architecture
+   - implementation branch: `impl-execplan/20260323-governed-super-agent-harness-research-codex-01-20260323`
+   - gate: `finalized draft ExecPlan required before execution`
+
+39. `20260325-graph-runtime-contract-hardening-codex-01-execplan`
+   - status: `decision_gated`
+   - goal: harden the graph and worker runtime contract around standards-aware events, failures, telemetry correlation, executor abstraction, and token-economy policy
+   - draft branch: `draft-execplan/20260325-graph-runtime-contract-hardening-codex-01-20260325`
+   - gate: `finalized draft ExecPlan required before execution`
+
 ## Mirror Metadata
 
-- canonical_last_graph_action_id: `rwg-action-20260319-021-activate-rwg-031`
+- canonical_last_graph_action_id: `rwg-action-20260325-register-rwg-039`
 - canonical_ready_order: ``
 - projection_authority: `projection_only`
 

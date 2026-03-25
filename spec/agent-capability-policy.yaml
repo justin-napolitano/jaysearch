@@ -62,6 +62,13 @@ capability_rules:
       - bin/install-local-git-hooks
       - bin/anti-cheat-check
       - bin/bootstrap-managed-repo
+      - bin/bootstrap-session
+      - bin/governed-worker
+      - bin/next-worker-slice
+      - bin/prepare-next-worker-slice
+      - bin/reconcile-worker-runtime-graph
+      - bin/worker-session-coordinator
+      - bin/worker-session-status
       - bin/managed-repo-status
       - bin/merge-readiness-check
       - bin/orchestrate-governed-slice
@@ -73,8 +80,10 @@ capability_rules:
       - bin/reconcile-remaining-work-transition
       - bin/rule-graph-check
       - bin/run-governed-pre-push-checks
+      - bin/session-bootstrap-check
       - bin/state-transition-legality-check
       - bin/state-transition-legality-smoke-test
+      - bin/worker-runtime-artifact-check
       - src/platform_tools/auto_reconcile_main.py
       - src/platform_tools/anti_cheat_check.py
       - src/platform_tools/bootstrap_managed_repo.py
@@ -82,6 +91,7 @@ capability_rules:
       - src/platform_tools/execplan_lint.py
       - src/platform_tools/execplan_discovery.py
       - src/platform_tools/game_status.py
+      - src/platform_tools/governed_worker.py
       - src/platform_tools/governance_check.py
       - src/platform_tools/governance_loader.py
       - src/platform_tools/human_operations_runtime.py
@@ -95,15 +105,29 @@ capability_rules:
       - src/platform_tools/register_remaining_work_node.py
       - src/platform_tools/reconcile_pending_merge_completions.py
       - src/platform_tools/reconcile_governed_graph_events.py
+      - src/platform_tools/reconcile_worker_runtime_graph.py
       - src/platform_tools/reconcile_remaining_work_merge.py
       - src/platform_tools/reconcile_remaining_work_transition.py
       - src/platform_tools/repo_health.py
       - src/platform_tools/run_governed_pre_push_checks.py
+      - src/platform_tools/session_bootstrap.py
+      - src/platform_tools/worker_runtime_artifacts.py
+      - src/platform_tools/worker_runtime_artifact_check.py
+      - src/platform_tools/worker_contracts.py
       - src/platform_tools/rule_graph_check.py
       - src/platform_tools/remaining_work_graph_check.py
       - src/platform_tools/state_transition_legality.py
+      - src/platform_tools/worker_session_status.py
+      - src/platform_tools/worker_session_coordinator.py
+      - src/platform_tools/next_worker_slice.py
+      - src/platform_tools/prepare_next_worker_slice.py
       - tests/test_anti_cheat_check.py
       - tests/test_bootstrap_managed_repo.py
+      - tests/test_bootstrap_session.py
+      - tests/test_next_worker_slice.py
+      - tests/test_prepare_next_worker_slice.py
+      - tests/test_worker_session_coordinator.py
+      - tests/test_worker_session_status.py
       - tests/test_branch_policy.py
       - tests/test_human_operations_status.py
       - tests/test_managed_repo_status.py
@@ -117,12 +141,17 @@ capability_rules:
       - tests/test_auto_reconcile_main.py
       - tests/test_reconcile_pending_merge_completions.py
       - tests/test_reconcile_governed_graph_events.py
+      - tests/test_reconcile_worker_runtime_graph.py
       - tests/test_reconcile_remaining_work_merge.py
       - tests/test_reconcile_remaining_work_transition.py
       - tests/test_repo_health.py
       - tests/test_rule_graph_check.py
+      - tests/test_session_bootstrap.py
+      - tests/test_governed_worker.py
       - tests/test_remaining_work_graph_check.py
       - tests/test_state_transition_legality.py
+      - tests/test_worker_runtime_artifact_check.py
+      - tests/test_worker_session_status.py
     requires_execplan_declaration_for_protected_surfaces: true
 denial_rules:
   - id: agent_exception_self_authorization
