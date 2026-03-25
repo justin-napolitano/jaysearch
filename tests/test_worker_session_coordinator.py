@@ -80,5 +80,7 @@ def test_worker_session_coordinator_runs_full_flow(tmp_path: Path) -> None:
     assert code == 0
     assert report["lease"]["ok"] is True
     assert report["worker_run"]["ok"] is True
+    assert report["runtime_graph"]["ok"] is True
+    assert report["runtime_graph"]["node_id"] == "rwg-1"
     assert report["worker_status"]["counts"]["closed"] == 1
     assert report["worker_status"]["counts"]["active"] == 0

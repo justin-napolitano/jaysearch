@@ -208,9 +208,15 @@ This document turns the remaining-work graph into an explicit near-term queue of
    - implementation branch: `impl-execplan/20260323-governed-super-agent-harness-research-codex-01-20260323`
    - gate: `finalized draft ExecPlan required before execution`
 
+39. `20260325-graph-runtime-contract-hardening-codex-01-execplan`
+   - status: `decision_gated`
+   - goal: harden the graph and worker runtime contract around standards-aware events, failures, telemetry correlation, executor abstraction, and token-economy policy
+   - draft branch: `draft-execplan/20260325-graph-runtime-contract-hardening-codex-01-20260325`
+   - gate: `finalized draft ExecPlan required before execution`
+
 ## Mirror Metadata
 
-- canonical_last_graph_action_id: `rwg-action-20260319-023-complete-rwg-033`
+- canonical_last_graph_action_id: `rwg-action-20260325-register-rwg-039`
 - canonical_ready_order: ``
 - projection_authority: `projection_only`
 

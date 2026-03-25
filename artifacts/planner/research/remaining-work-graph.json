@@ -290,6 +290,11 @@
       "from": "rwg-024",
       "relation": "depends_on",
       "to": "rwg-023"
+    },
+    {
+      "from": "rwg-039",
+      "relation": "depends_on",
+      "to": "rwg-033"
     }
   ],
   "graph_actions": [
@@ -668,6 +673,14 @@
       "node_id": "rwg-033",
       "queue_reconciled": true,
       "rationale": "20260319-platform-surface-simplification-codex-01-execplan merged to initiative/platform-surface-simplification and is now canonical completed state"
+    },
+    {
+      "action": "block",
+      "action_id": "rwg-action-20260325-register-rwg-039",
+      "evidence_ref": ".agent/execplans/20260325-graph-runtime-contract-hardening-codex-01-execplan.md",
+      "node_id": "rwg-039",
+      "queue_reconciled": true,
+      "rationale": "node registered deterministically from ExecPlan graph_registration metadata"
     }
   ],
   "graph_id": "remaining-work-graph-20260311",
@@ -1887,6 +1900,45 @@
       "status_reason": "registered from ExecPlan metadata; finalized draft ExecPlan required before execution",
       "target_execplan_id": "20260323-governed-super-agent-harness-research-codex-01-execplan",
       "title": "Research DeerFlow-style runtime capabilities before committing to a governed super-agent harness architecture"
+    },
+    {
+      "action_state": {
+        "action_required": false,
+        "last_action": "block",
+        "last_action_id": "rwg-action-20260325-register-rwg-039",
+        "reorder_blockers": [],
+        "reorder_requires_human": false
+      },
+      "conflict_domains": [
+        "documentation",
+        "governance",
+        "orchestrator-runtime",
+        "workflow"
+      ],
+      "expected_artifacts": [
+        ".agent/execplans/20260325-graph-runtime-contract-hardening-codex-01-execplan.md",
+        "artifacts/planner/research/remaining-work-graph.json",
+        "docs/queued-execplans.md",
+        "docs/graph-runtime-contracts-and-token-economy.md",
+        "docs/references.md",
+        "resources/biblio/README.md",
+        "resources/biblio/token-economy-and-api-first-execution.md"
+      ],
+      "gating_class": "decision_gated",
+      "goal_area": "orchestrator-runtime",
+      "initiative_branch": "initiative/platform-surface-simplification",
+      "integration_mode": "via_initiative",
+      "node_id": "rwg-039",
+      "ordering": {
+        "queue_position": 39,
+        "source_action_id": "rwg-action-20260325-register-rwg-039",
+        "tie_breaker": "20260325-graph-runtime-contract-hardening-codex-01-execplan"
+      },
+      "parent_initiative_node": "initiative-platform-surface-simplification",
+      "status": "decision_gated",
+      "status_reason": "registered from ExecPlan metadata; finalized draft ExecPlan required before execution",
+      "target_execplan_id": "20260325-graph-runtime-contract-hardening-codex-01-execplan",
+      "title": "Graph and worker runtime contract hardening with token-economy policy"
     }
   ],
   "ordering_policy": {
@@ -1902,7 +1954,7 @@
     "reorder_requires_explicit_action": true
   },
   "queue_projection": {
-    "last_reconciled_action_id": "rwg-action-20260319-023-complete-rwg-033",
+    "last_reconciled_action_id": "rwg-action-20260325-register-rwg-039",
     "path": "docs/queued-execplans.md",
     "projection_authority": "projection_only",
     "ready_execplan_ids": []

@@ -191,11 +191,15 @@ def test_run_worker_commits_changes_in_clone_workspace(tmp_path: Path) -> None:
     assert report["commit"]["created"] is True
     assert report["lease"]["lease"]["status"] == "closed"
     assert report["lease"]["lease"]["outcome"] == "completed"
+    assert report["runtime"]["status"] == "completed"
+    assert Path(report["runtime"]["run_path"]).exists()
     workspace_path = Path(report["workspace_path"])
     assert (workspace_path / "note.txt").read_text(encoding="utf-8") == "hello\n"
     assert _git(workspace_path, "log", "-1", "--pretty=%s") == "feat(worker): beta"
     audit_lines = (repo / "artifacts" / "governance" / "worker-session-events.jsonl").read_text(encoding="utf-8").splitlines()
     assert len(audit_lines) == 2
+    runtime_lines = (repo / "artifacts" / "governance" / "worker-runtime-events.jsonl").read_text(encoding="utf-8").splitlines()
+    assert len(runtime_lines) >= 2
 
 
 def test_run_worker_closes_lease_with_failed_outcome(tmp_path: Path) -> None:
@@ -222,6 +226,8 @@ def test_run_worker_closes_lease_with_failed_outcome(tmp_path: Path) -> None:
     assert code == 1
     assert report["lease"]["lease"]["status"] == "closed"
     assert report["lease"]["lease"]["outcome"] == "failed"
+    assert report["runtime"]["problem_ref"].endswith(".problem.json")
+    assert Path(report["problem"]["json"]).exists()
     audit_lines = (repo / "artifacts" / "governance" / "worker-session-events.jsonl").read_text(encoding="utf-8").splitlines()
     assert len(audit_lines) == 2
 
@@ -254,6 +260,7 @@ def test_run_worker_blocks_cleanup_when_commit_is_unpushed(tmp_path: Path) -> No
     assert report["cleanup_performed"] is False
     assert report["lease"]["lease"]["status"] == "closed"
     assert report["lease"]["lease"]["outcome"] == "failed"
+    assert Path(report["problem"]["markdown"]).exists()
     workspace_path = Path(report["workspace_path"])
     assert workspace_path.exists()
     assert _git(workspace_path, "log", "-1", "--pretty=%s") == "feat(worker): cleanup"
@@ -287,10 +294,49 @@ def test_run_worker_pushes_to_local_bare_remote_and_cleans_up(tmp_path: Path) ->
     assert report["push"]["pushed"] is True
     assert report["cleanup_performed"] is True
     assert Path(report["workspace_path"]).exists() is False
-    bare_remote = workspace_root / ".tmp" / "governed-worker-remotes" / "repo.git"
+    assert report["runtime"]["outcome"] == "completed"
+    bare_remote = repo / "artifacts" / "governance" / "staging-remotes" / "repo.git"
     assert bare_remote.exists()
     pushed_sha = _git(bare_remote, "rev-parse", "refs/heads/impl-execplan/push-main")
     assert pushed_sha == report["commit"]["sha"]
+    assert report["push"]["targets"][0]["role"] == "local_staging"
+
+
+def test_run_worker_can_dual_push_to_staging_and_github_remote(tmp_path: Path) -> None:
+    repo = _seed_repo(tmp_path, implementation_branch="impl-execplan/dual-main")
+    github_remote = tmp_path / "github-remote.git"
+    _git(tmp_path, "init", "--bare", github_remote.as_posix())
+    _git(repo, "remote", "add", "github", github_remote.as_posix())
+    workspace_root = tmp_path / "workspaces"
+    lease_code, _ = run_worker_session_lease(
+        root=repo.as_posix(),
+        branch="impl-execplan/dual-main",
+        worker_id="dual-main",
+        action="issue",
+    )
+
+    assert lease_code == 0
+    code, report = run_worker(
+        repo_source=repo.as_posix(),
+        worker_id="dual",
+        base_ref="main",
+        branch="impl-execplan/dual-main",
+        backend="clone",
+        workspace_root=workspace_root.as_posix(),
+        task_command="printf 'hello\\n' > note.txt",
+        commit=True,
+        push=True,
+        github_push_remote="github",
+        cleanup=True,
+    )
+
+    assert code == 0
+    targets = {item["role"]: item["remote"] for item in report["push"]["targets"]}
+    assert targets["local_staging"] == "codex-staging"
+    assert targets["github"] == "github"
+    staging_remote = repo / "artifacts" / "governance" / "staging-remotes" / "repo.git"
+    assert _git(staging_remote, "rev-parse", "refs/heads/impl-execplan/dual-main") == report["commit"]["sha"]
+    assert _git(github_remote, "rev-parse", "refs/heads/impl-execplan/dual-main") == report["commit"]["sha"]
 
 
 def test_prepare_local_workspace_blocks_without_bootstrap_mapping(tmp_path: Path) -> None:

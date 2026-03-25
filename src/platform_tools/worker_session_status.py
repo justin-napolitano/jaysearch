@@ -10,6 +10,9 @@ from typing import Any
 COMMAND = "worker-session-status"
 LEASE_DIR = Path("artifacts/governance/worker-sessions")
 AUDIT_LOG = Path("artifacts/governance/worker-session-events.jsonl")
+RUNTIME_EVENT_LOG = Path("artifacts/governance/worker-runtime-events.jsonl")
+RUN_DIR = Path("artifacts/governance/worker-runs")
+PROBLEM_DIR = Path("artifacts/governance/problems")
 
 
 def _parse_timestamp(value: str) -> datetime | None:
@@ -50,6 +53,32 @@ def _load_audit_events(root: Path) -> list[dict[str, Any]]:
     return events
 
 
+def _load_runtime_events(root: Path) -> list[dict[str, Any]]:
+    path = root / RUNTIME_EVENT_LOG
+    if not path.exists():
+        return []
+    events: list[dict[str, Any]] = []
+    for line in path.read_text(encoding="utf-8").splitlines():
+        if not line.strip():
+            continue
+        payload = json.loads(line)
+        if isinstance(payload, dict):
+            events.append(payload)
+    return events
+
+
+def _load_runs(root: Path) -> list[dict[str, Any]]:
+    run_dir = root / RUN_DIR
+    if not run_dir.exists():
+        return []
+    runs: list[dict[str, Any]] = []
+    for path in sorted(run_dir.glob("*.json")):
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        if isinstance(payload, dict):
+            runs.append(payload)
+    return runs
+
+
 def get_worker_session_status(
     *,
     root: str = ".",
@@ -58,6 +87,8 @@ def get_worker_session_status(
     root_path = Path(root).resolve()
     leases = _load_leases(root_path)
     events = _load_audit_events(root_path)
+    runtime_events = _load_runtime_events(root_path)
+    runs = _load_runs(root_path)
     now = datetime.now(timezone.utc)
     stale_threshold_seconds = stale_after_minutes * 60
 
@@ -103,6 +134,7 @@ def get_worker_session_status(
         "root": root_path.as_posix(),
         "lease_dir": (root_path / LEASE_DIR).as_posix(),
         "audit_log": (root_path / AUDIT_LOG).as_posix(),
+        "runtime_event_log": (root_path / RUNTIME_EVENT_LOG).as_posix(),
         "counts": {
             "active": len(active),
             "closed": len(closed),
@@ -110,11 +142,15 @@ def get_worker_session_status(
             "failed": len(failed),
             "abandoned": len(abandoned),
             "audit_events": len(events),
+            "runtime_events": len(runtime_events),
+            "runs": len(runs),
+            "problems": len(list((root_path / PROBLEM_DIR).glob("*.problem.json"))) if (root_path / PROBLEM_DIR).exists() else 0,
         },
         "active_workers": active,
         "stale_workers": stale,
         "failed_workers": failed,
         "abandoned_workers": abandoned,
+        "recent_runs": runs[-5:],
         "blockers": sorted(set(blockers)),
         "next_actions": next_actions,
     }

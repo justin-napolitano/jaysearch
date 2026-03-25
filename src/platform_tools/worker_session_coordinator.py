@@ -2,9 +2,11 @@ from __future__ import annotations
 
 import argparse
 import json
+from pathlib import Path
 from typing import Any
 
 from platform_tools.governed_worker import run_worker
+from platform_tools.reconcile_worker_runtime_graph import reconcile_worker_runtime_graph
 from platform_tools.session_bootstrap import run_worker_session_lease
 from platform_tools.worker_session_status import get_worker_session_status
 
@@ -25,6 +27,7 @@ def run_worker_session_coordinator(
     pr_title: str | None = None,
     pr_body: str | None = None,
     push_remote: str = "origin",
+    github_push_remote: str | None = None,
     draft_pr: bool = False,
     commit: bool = False,
     push: bool = False,
@@ -65,19 +68,25 @@ def run_worker_session_coordinator(
         pr_title=pr_title,
         pr_body=pr_body,
         push_remote=push_remote,
+        github_push_remote=github_push_remote,
         draft_pr=draft_pr,
         commit=commit,
         push=push,
         create_pr=create_pr,
         cleanup=cleanup,
     )
+    runtime_graph = None
+    runtime = worker_report.get("runtime") if isinstance(worker_report, dict) else None
+    if isinstance(runtime, dict) and str(runtime.get("run_id", "")).strip():
+        runtime_graph = reconcile_worker_runtime_graph(repo_root=Path(repo_source), run_id=str(runtime["run_id"]).strip())
     status_code, status_report = get_worker_session_status(root=repo_source, stale_after_minutes=stale_after_minutes)
     report = {
         "command": COMMAND,
-        "status": "ok" if worker_code == 0 and status_code == 0 else "blocked",
-        "ok": worker_code == 0 and status_code == 0,
+        "status": "ok" if worker_code == 0 and status_code == 0 and (runtime_graph is None or runtime_graph.get("ok", False)) else "blocked",
+        "ok": worker_code == 0 and status_code == 0 and (runtime_graph is None or runtime_graph.get("ok", False)),
         "lease": lease_report,
         "worker_run": worker_report,
+        "runtime_graph": runtime_graph,
         "worker_status": status_report,
     }
     return (0 if report["ok"] else 1), report
@@ -96,6 +105,7 @@ def main() -> int:
     parser.add_argument("--pr-title", default=None)
     parser.add_argument("--pr-body", default=None)
     parser.add_argument("--push-remote", default="origin")
+    parser.add_argument("--github-push-remote", default=None)
     parser.add_argument("--draft-pr", action="store_true")
     parser.add_argument("--commit", action="store_true")
     parser.add_argument("--push", action="store_true")
