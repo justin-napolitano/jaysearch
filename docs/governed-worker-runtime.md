@@ -10,6 +10,21 @@ It is designed for the workflow:
 4. optionally push and open a PR
 5. clean up
 
+Every run now emits compact governed runtime artifacts under `artifacts/governance/`:
+
+- `worker-runs/` for run metadata
+- `worker-runtime-events.jsonl` for lifecycle events
+- `problems/` for RFC 9457-style problem artifacts on failures
+- `staging-remotes/` for the shared local bare staging remote used by local push mode
+
+Cleanup is blocked if a worker creates a commit that has not been durably pushed.
+
+Local push policy is now:
+
+- local staging remote required for local worker push mode
+- optional second push to an explicit remote such as `github`
+- pull request creation requires an explicit secondary push remote
+
 ## Local Testing
 
 Prepare an isolated worktree:

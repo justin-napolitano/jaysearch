@@ -50,6 +50,28 @@ def test_worker_session_status_reports_active_and_closed_workers(tmp_path: Path)
             {"event": "worker_lease_closed", "worker_id": "worker-2"},
         ],
     )
+    _write_jsonl(
+        tmp_path / "artifacts" / "governance" / "worker-runtime-events.jsonl",
+        [
+            {"type": "platform.worker.run.started", "data": {"run_id": "run-1"}},
+            {"type": "platform.worker.run.completed", "data": {"run_id": "run-1"}},
+        ],
+    )
+    _write_json(
+        tmp_path / "artifacts" / "governance" / "worker-runs" / "run-1.json",
+        {
+            "run_id": "run-1",
+            "status": "completed",
+            "worker_id": "worker-2",
+        },
+    )
+    _write_json(
+        tmp_path / "artifacts" / "governance" / "problems" / "run-2.problem.json",
+        {
+            "instance": "run-2",
+            "title": "problem",
+        },
+    )
 
     code, report = get_worker_session_status(root=tmp_path.as_posix(), stale_after_minutes=10_000_000)
 
@@ -57,6 +79,10 @@ def test_worker_session_status_reports_active_and_closed_workers(tmp_path: Path)
     assert report["counts"]["active"] == 1
     assert report["counts"]["failed"] == 1
     assert report["counts"]["audit_events"] == 2
+    assert report["counts"]["runtime_events"] == 2
+    assert report["counts"]["runs"] == 1
+    assert report["counts"]["problems"] == 1
+    assert report["recent_runs"][0]["run_id"] == "run-1"
     assert report["next_actions"][0]["action"] == "monitor_active_workers"
 
 

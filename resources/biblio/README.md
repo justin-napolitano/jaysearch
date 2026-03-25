@@ -8,5 +8,6 @@ Current contents:
 
 - `execution-and-observability-standards.md`
 - `agent-error-contract-standards.md`
+- `token-economy-and-api-first-execution.md`
 
 Use these bibliography notes as the local citation anchor when drafting new design documents.

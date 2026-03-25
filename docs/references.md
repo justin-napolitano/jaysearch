@@ -65,3 +65,6 @@ This design package is informed by the following primary or authoritative source
 
 15. "Agent Error Contract Standards."
     Link: resources/biblio/agent-error-contract-standards.md
+
+16. "Token Economy And API-First Execution."
+    Link: resources/biblio/token-economy-and-api-first-execution.md

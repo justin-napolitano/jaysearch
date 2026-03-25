@@ -74,6 +74,28 @@ properties:
           type: string
         queue_reconciled:
           type: boolean
+        occurred_at:
+          type: string
+        actor_id:
+          type: string
+        event_id:
+          type: string
+        event_type:
+          type: string
+        initiative_id:
+          type: string
+        contract_id:
+          type: string
+        worker_id:
+          type: string
+        trace_id:
+          type: string
+        caused_by_event_id:
+          type: string
+        artifact_refs:
+          type: array
+          items:
+            type: string
   nodes:
     type: array
     items:
@@ -112,6 +134,24 @@ properties:
           type: string
         integration_mode:
           enum: ["via_initiative", "direct_to_main_hotfix", "direct_to_main_patch"]
+        node_kind:
+          enum: ["initiative", "execplan_slice", "artifact", "queue_item"]
+        active_worker_contract_id:
+          type: string
+        last_run_id:
+          type: string
+        last_trace_id:
+          type: string
+        last_problem_ref:
+          type: string
+        last_validation_ref:
+          type: string
+        preferred_executor:
+          type: string
+        allowed_executors:
+          type: array
+          items:
+            type: string
         availability_target_ref:
           type: string
         availability_status:

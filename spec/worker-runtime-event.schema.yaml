@@ -1,0 +1,30 @@
+version: v1
+event_envelope:
+  required_fields:
+    - specversion
+    - id
+    - type
+    - source
+    - subject
+    - time
+    - datacontenttype
+    - data
+  specversion_allowed:
+    - "1.0"
+  datacontenttype_allowed:
+    - application/json
+  type_prefixes_allowed:
+    - platform.worker.run.
+data:
+  required_fields:
+    - run_id
+    - trace_id
+    - worker_id
+    - branch
+    - initiative_id
+    - contract_id
+    - summary
+token_economy:
+  summary_max_chars: 160
+  prefer_refs_over_restatement: true
+  prefer_compact_structured_payloads: true
