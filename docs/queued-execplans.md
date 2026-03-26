@@ -214,9 +214,15 @@ This document turns the remaining-work graph into an explicit near-term queue of
    - draft branch: `draft-execplan/20260325-graph-runtime-contract-hardening-codex-01-20260325`
    - completion ref: `merged:pr-113`
 
+40. `20260326-worker-orchestration-api-codex-01-execplan`
+   - status: `decision_gated`
+   - goal: add one orchestrator-agnostic command that resolves and runs a bounded worker contract with explicit executor and push policy
+   - draft branch: `draft-execplan/20260326-worker-orchestration-api-codex-01-20260326`
+   - gate: `finalized draft ExecPlan required before execution`
+
 ## Mirror Metadata
 
-- canonical_last_graph_action_id: `rwg-action-20260325-001-complete-rwg-039`
+- canonical_last_graph_action_id: `rwg-action-20260326-register-rwg-040`
 - canonical_ready_order: ``
 - projection_authority: `projection_only`
 

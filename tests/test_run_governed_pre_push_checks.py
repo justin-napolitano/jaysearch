@@ -37,6 +37,10 @@ def test_pre_push_checks_validate_draft_execplan(monkeypatch, tmp_path: Path) ->
         lambda **kwargs: (0, {"errors": []}),
     )
     monkeypatch.setattr(
+        "platform_tools.run_governed_pre_push_checks.check_public_orchestration_api",
+        lambda **kwargs: (0, {"errors": []}),
+    )
+    monkeypatch.setattr(
         "platform_tools.run_governed_pre_push_checks.discover_execplan",
         lambda *args, **kwargs: (plan, [plan.as_posix()], "draft_branch"),
     )
@@ -71,6 +75,10 @@ def test_pre_push_checks_run_policy_compliance_for_impl_branch(monkeypatch, tmp_
     )
     monkeypatch.setattr(
         "platform_tools.run_governed_pre_push_checks.check_worker_runtime_artifacts",
+        lambda **kwargs: (0, {"errors": []}),
+    )
+    monkeypatch.setattr(
+        "platform_tools.run_governed_pre_push_checks.check_public_orchestration_api",
         lambda **kwargs: (0, {"errors": []}),
     )
     monkeypatch.setattr(
@@ -123,6 +131,10 @@ def test_pre_push_checks_allow_initial_impl_branch_publish(monkeypatch, tmp_path
         lambda **kwargs: (0, {"errors": []}),
     )
     monkeypatch.setattr(
+        "platform_tools.run_governed_pre_push_checks.check_public_orchestration_api",
+        lambda **kwargs: (0, {"errors": []}),
+    )
+    monkeypatch.setattr(
         "platform_tools.run_governed_pre_push_checks.discover_execplan",
         lambda *args, **kwargs: (plan, [plan.as_posix()], "implementation_branch"),
     )
@@ -163,6 +175,10 @@ def test_pre_push_checks_block_on_runtime_artifact_errors(monkeypatch, tmp_path:
         "platform_tools.run_governed_pre_push_checks.check_worker_runtime_artifacts",
         lambda **kwargs: (1, {"errors": ["problem_detail_too_long:run-1.problem.json"]}),
     )
+    monkeypatch.setattr(
+        "platform_tools.run_governed_pre_push_checks.check_public_orchestration_api",
+        lambda **kwargs: (0, {"errors": []}),
+    )
 
     code, report = run_governed_pre_push_checks(root=tmp_path.as_posix(), branch="initiative/example")
 
@@ -170,3 +186,33 @@ def test_pre_push_checks_block_on_runtime_artifact_errors(monkeypatch, tmp_path:
     assert report["status"] == "blocked"
     assert any(item["name"] == "worker_runtime_artifact_check" and item["ok"] is False for item in report["checks"])
     assert "worker_runtime_artifacts:problem_detail_too_long:run-1.problem.json" in report["blockers"]
+
+
+def test_pre_push_checks_block_on_public_orchestration_api_errors(monkeypatch, tmp_path: Path) -> None:
+    monkeypatch.setattr(
+        "platform_tools.run_governed_pre_push_checks.evaluate_branch_policy",
+        lambda *args, **kwargs: {"ok": True, "findings": []},
+    )
+    monkeypatch.setattr(
+        "platform_tools.run_governed_pre_push_checks.check_governance",
+        lambda: (0, {"findings": []}),
+    )
+    monkeypatch.setattr(
+        "platform_tools.run_governed_pre_push_checks.check_remaining_work_graph",
+        lambda **kwargs: (0, {"errors": []}),
+    )
+    monkeypatch.setattr(
+        "platform_tools.run_governed_pre_push_checks.check_worker_runtime_artifacts",
+        lambda **kwargs: (0, {"errors": []}),
+    )
+    monkeypatch.setattr(
+        "platform_tools.run_governed_pre_push_checks.check_public_orchestration_api",
+        lambda **kwargs: (1, {"errors": ["get_graph_state:invalid_api_version:response_get_graph_state:public-orchestration.v0"]}),
+    )
+
+    code, report = run_governed_pre_push_checks(root=tmp_path.as_posix(), branch="initiative/example")
+
+    assert code == 1
+    assert report["status"] == "blocked"
+    assert any(item["name"] == "public_orchestration_api_check" and item["ok"] is False for item in report["checks"])
+    assert "public_orchestration_api:get_graph_state:invalid_api_version:response_get_graph_state:public-orchestration.v0" in report["blockers"]
