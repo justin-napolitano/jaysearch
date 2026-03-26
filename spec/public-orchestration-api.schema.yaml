@@ -1,5 +1,6 @@
 $schema: "https://json-schema.org/draft/2020-12/schema"
-title: "Public Orchestration API Envelope"
+title: "Public Orchestration API v1"
+description: "Versioned request and response contract catalog for the thin orchestration facade."
 type: object
 additionalProperties: true
 required:
@@ -26,3 +27,384 @@ properties:
       - "blocked"
   ok:
     type: boolean
+$defs:
+  graph_node_projection:
+    type: object
+    additionalProperties: false
+    required:
+      - node_id
+      - title
+      - status
+      - execplan_id
+      - initiative_branch
+      - implementation_branch
+      - goal_area
+    properties:
+      node_id:
+        type: string
+      title:
+        type: string
+      status:
+        type: string
+      execplan_id:
+        type: string
+      initiative_branch:
+        type: string
+      implementation_branch:
+        type: string
+      goal_area:
+        type: string
+  worker_contract_projection:
+    type: object
+    additionalProperties: false
+    required:
+      - contract_id
+      - execplan_id
+      - branch
+      - worker_id
+      - title
+    properties:
+      contract_id:
+        type: string
+      execplan_id:
+        type: string
+      branch:
+        type: string
+      worker_id:
+        type: string
+      title:
+        type: string
+      status:
+        type: string
+  worker_contract_run_projection:
+    type: object
+    additionalProperties: false
+    required:
+      - contract_id
+      - execplan_id
+      - implementation_branch
+      - worker_id
+      - title
+    properties:
+      contract_id:
+        type: string
+      execplan_id:
+        type: string
+      implementation_branch:
+        type: string
+      worker_id:
+        type: string
+      title:
+        type: string
+  request_get_graph_state:
+    type: object
+    additionalProperties: false
+    properties:
+      initiative_branch:
+        type: string
+  response_get_graph_state:
+    allOf:
+      - $ref: "#"
+      - type: object
+        additionalProperties: true
+        required:
+          - initiative_branch
+          - graph_id
+          - last_action_id
+          - counts
+          - initiative_nodes
+          - active_node
+          - queued_nodes
+        properties:
+          command:
+            const: "get-graph-state"
+          initiative_branch:
+            type: string
+          graph_id:
+            type: string
+          last_action_id:
+            type: string
+          counts:
+            type: object
+            additionalProperties: false
+            required:
+              - nodes
+              - completed
+              - pending
+            properties:
+              nodes:
+                type: integer
+              completed:
+                type: integer
+              pending:
+                type: integer
+          initiative_nodes:
+            type: array
+            items:
+              $ref: "#/$defs/graph_node_projection"
+          active_node:
+            oneOf:
+              - type: "null"
+              - $ref: "#/$defs/graph_node_projection"
+          queued_nodes:
+            type: array
+            items:
+              $ref: "#/$defs/graph_node_projection"
+  request_resolve_worker_contract:
+    type: object
+    additionalProperties: false
+    properties:
+      initiative_branch:
+        type: string
+      contract_id:
+        type: string
+      branch:
+        type: string
+      worker_id:
+        type: string
+  response_resolve_worker_contract:
+    allOf:
+      - $ref: "#"
+      - type: object
+        additionalProperties: true
+        required:
+          - initiative_branch
+        properties:
+          command:
+            const: "resolve-worker-contract"
+          initiative_branch:
+            type: string
+          blockers:
+            type: array
+            items:
+              type: string
+          candidates:
+            type: array
+            items:
+              type: object
+          selected:
+            $ref: "#/$defs/worker_contract_projection"
+  request_run_worker_contract:
+    type: object
+    additionalProperties: false
+    properties:
+      initiative_branch:
+        type: string
+      contract_id:
+        type: string
+      branch:
+        type: string
+      worker_id:
+        type: string
+      executor:
+        type: string
+        enum:
+          - "local_clone"
+          - "local_worktree"
+      push_mode:
+        type: string
+        enum:
+          - "none"
+          - "staging"
+          - "github"
+          - "staging_and_github"
+      github_push_remote:
+        type: string
+      task_command:
+        type: string
+      commit_message:
+        type: string
+      pr_title:
+        type: string
+      pr_body:
+        type: string
+      draft_pr:
+        type: boolean
+      commit:
+        type: boolean
+      create_pr:
+        type: boolean
+      cleanup:
+        type: boolean
+      actor_id:
+        type: string
+      workspace_root:
+        type: string
+      stale_after_minutes:
+        type: integer
+  response_run_worker_contract:
+    allOf:
+      - $ref: "#"
+      - type: object
+        additionalProperties: true
+        required:
+          - executor
+          - push_mode
+        properties:
+          command:
+            const: "run-worker-contract"
+          initiative_branch:
+            type: string
+          executor:
+            type: string
+          push_mode:
+            type: string
+          blockers:
+            type: array
+            items:
+              type: string
+          selected:
+            oneOf:
+              - $ref: "#/$defs/worker_contract_run_projection"
+              - type: object
+          resolution:
+            type: object
+          worker_run:
+            type: object
+  request_start_next_worker:
+    type: object
+    additionalProperties: false
+    properties:
+      initiative_branch:
+        type: string
+      executor:
+        type: string
+        enum:
+          - "local_clone"
+          - "local_worktree"
+      push_mode:
+        type: string
+        enum:
+          - "none"
+          - "staging"
+          - "github"
+          - "staging_and_github"
+      github_push_remote:
+        type: string
+      task_command:
+        type: string
+      commit_message:
+        type: string
+      pr_title:
+        type: string
+      pr_body:
+        type: string
+      draft_pr:
+        type: boolean
+      commit:
+        type: boolean
+      create_pr:
+        type: boolean
+      cleanup:
+        type: boolean
+      actor_id:
+        type: string
+      workspace_root:
+        type: string
+      stale_after_minutes:
+        type: integer
+  response_start_next_worker:
+    allOf:
+      - $ref: "#"
+      - type: object
+        additionalProperties: true
+        required:
+          - initiative_branch
+          - resolution
+        properties:
+          command:
+            const: "start-next-worker"
+          initiative_branch:
+            type: string
+          blockers:
+            type: array
+            items:
+              type: string
+          resolution:
+            type: object
+          worker_run:
+            type: object
+  request_get_worker_status:
+    type: object
+    additionalProperties: false
+    properties:
+      worker_id:
+        type: string
+      stale_after_minutes:
+        type: integer
+  response_get_worker_status:
+    allOf:
+      - $ref: "#"
+      - type: object
+        additionalProperties: true
+        properties:
+          command:
+            const: "get-worker-status"
+          worker_id:
+            type: string
+          counts:
+            type: object
+          active_workers:
+            type: array
+            items:
+              type: object
+          failed_workers:
+            type: array
+            items:
+              type: object
+          abandoned_workers:
+            type: array
+            items:
+              type: object
+          recent_runs:
+            type: array
+            items:
+              type: object
+          blockers:
+            type: array
+            items:
+              type: string
+  command_catalog:
+    type: object
+    additionalProperties: false
+    properties:
+      get-graph-state:
+        type: object
+        additionalProperties: false
+        properties:
+          request_schema:
+            const: "#/$defs/request_get_graph_state"
+          response_schema:
+            const: "#/$defs/response_get_graph_state"
+      resolve-worker-contract:
+        type: object
+        additionalProperties: false
+        properties:
+          request_schema:
+            const: "#/$defs/request_resolve_worker_contract"
+          response_schema:
+            const: "#/$defs/response_resolve_worker_contract"
+      run-worker-contract:
+        type: object
+        additionalProperties: false
+        properties:
+          request_schema:
+            const: "#/$defs/request_run_worker_contract"
+          response_schema:
+            const: "#/$defs/response_run_worker_contract"
+      start-next-worker:
+        type: object
+        additionalProperties: false
+        properties:
+          request_schema:
+            const: "#/$defs/request_start_next_worker"
+          response_schema:
+            const: "#/$defs/response_start_next_worker"
+      get-worker-status:
+        type: object
+        additionalProperties: false
+        properties:
+          request_schema:
+            const: "#/$defs/request_get_worker_status"
+          response_schema:
+            const: "#/$defs/response_get_worker_status"
