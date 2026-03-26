@@ -13,6 +13,8 @@ This repo already contains:
 
 The goal is to reduce OpenAI token usage by running the orchestration layer locally. Actual implementation work may still be handed off to a model chosen for that task.
 
+The terminal remains the operator UI. The local model is a cheap router/planner inside that terminal workflow, not a replacement for the governed command surface.
+
 ## Machine Constraints
 
 Assume the host baseline is:
@@ -36,6 +38,7 @@ Implement a phase-1 local orchestration bootstrap with:
 4. one governed task-router command
 5. compact structured JSON outputs
 6. tests that fail closed when the runtime is absent
+7. explicit routing between local planner, planning worker, execution worker, remote worker, and human escalation
 
 ## Constraints
 
@@ -44,6 +47,7 @@ Implement a phase-1 local orchestration bootstrap with:
 - do not build a full autonomous framework in one slice
 - do not optimize for prose-heavy chat UX
 - do optimize for bounded structured outputs and routing decisions
+- do treat planning workers and execution workers as distinct roles
 
 ## Required Reading
 
@@ -71,5 +75,7 @@ The implementation should:
 - be policy-driven where practical
 - emit stable machine-readable output
 - be easy to extend later to additional local or remote backends
+- preserve the terminal as the primary operator interface
+- keep repo-owned APIs as authority rather than large markdown or prompt surfaces
 
 Do not stop at analysis. Implement the phase-1 slice, run relevant tests, and summarize the resulting contract surface.
