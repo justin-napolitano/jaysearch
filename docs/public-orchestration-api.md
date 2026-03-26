@@ -108,6 +108,11 @@ Orchestrators should prefer these commands instead of calling lower-level intern
 - fail closed when `api_version` is unknown
 - prefer explicit ids (`contract_id`, `worker_id`, `initiative_branch`) over title matching or freeform text
 
+## Contract Validation
+
+- use `bin/public-orchestration-api-check` to validate that live facade outputs still conform to the versioned contract catalog
+- governed pre-push checks now include this validator so schema drift is blocked before merge
+
 ## Design Rules
 
 - APIs are machine-oriented and compact.
