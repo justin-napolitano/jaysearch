@@ -87,8 +87,11 @@ surface_entries:
       - bin/bootstrap-managed-repo
       - bin/bootstrap-session
       - bin/governed-worker
+      - bin/get-graph-state
+      - bin/get-worker-status
       - bin/next-worker-slice
       - bin/prepare-next-worker-slice
+      - bin/resolve-worker-contract
       - bin/run-worker-contract
       - bin/reconcile-worker-runtime-graph
       - bin/worker-session-coordinator
@@ -118,6 +121,8 @@ surface_entries:
       - src/platform_tools/execplan_discovery.py
       - src/platform_tools/game_status.py
       - src/platform_tools/governed_worker.py
+      - src/platform_tools/get_graph_state.py
+      - src/platform_tools/get_worker_status.py
       - src/platform_tools/governance_check.py
       - src/platform_tools/governance_loader.py
       - src/platform_tools/human_operations_runtime.py
@@ -147,6 +152,7 @@ surface_entries:
       - src/platform_tools/worker_session_coordinator.py
       - src/platform_tools/next_worker_slice.py
       - src/platform_tools/prepare_next_worker_slice.py
+      - src/platform_tools/resolve_worker_contract.py
       - src/platform_tools/run_worker_contract.py
       - tests/test_anti_cheat_check.py
       - tests/test_bootstrap_managed_repo.py
@@ -154,6 +160,7 @@ surface_entries:
       - tests/test_governed_worker.py
       - tests/test_next_worker_slice.py
       - tests/test_prepare_next_worker_slice.py
+      - tests/test_public_orchestration_api.py
       - tests/test_worker_session_coordinator.py
       - tests/test_worker_session_status.py
       - tests/test_branch_policy.py
