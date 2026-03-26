@@ -7,6 +7,7 @@ from typing import Any
 
 from platform_tools.branch_policy import get_current_branch
 from platform_tools.next_worker_slice import get_next_worker_slice
+from platform_tools.public_orchestration_api import envelope
 from platform_tools.worker_contracts import contract_scope_findings, find_contract, load_registry, registry_contracts
 from platform_tools.worker_session_coordinator import run_worker_session_coordinator
 
@@ -131,23 +132,27 @@ def run_worker_contract(
 
     backend, backend_findings = _normalize_executor(executor)
     if backend_findings:
-        return 1, {
-            "command": COMMAND,
-            "status": "blocked",
-            "ok": False,
-            "blockers": backend_findings,
-            "executor": executor,
-        }
+        return 1, envelope(
+            command=COMMAND,
+            status="blocked",
+            ok=False,
+            payload={
+                "blockers": backend_findings,
+                "executor": executor,
+            },
+        )
 
     push_policy, push_findings = _push_policy(push_mode=push_mode, github_push_remote=github_push_remote)
     if push_findings:
-        return 1, {
-            "command": COMMAND,
-            "status": "blocked",
-            "ok": False,
-            "blockers": push_findings,
-            "push_mode": push_mode,
-        }
+        return 1, envelope(
+            command=COMMAND,
+            status="blocked",
+            ok=False,
+            payload={
+                "blockers": push_findings,
+                "push_mode": push_mode,
+            },
+        )
 
     resolved_initiative_branch = (initiative_branch or "").strip()
     resolved_contract: dict[str, Any] | None = None
@@ -173,14 +178,16 @@ def run_worker_contract(
         resolved_initiative_branch = resolved_initiative_branch or get_current_branch(root=repo_root)
         next_code, next_report = get_next_worker_slice(root=repo_root.as_posix(), initiative_branch=resolved_initiative_branch)
         if next_code != 0:
-            return next_code, {
-                "command": COMMAND,
-                "status": "blocked",
-                "ok": False,
-                "initiative_branch": resolved_initiative_branch,
-                "blockers": list(next_report.get("blockers", [])),
-                "resolution": next_report,
-            }
+            return next_code, envelope(
+                command=COMMAND,
+                status="blocked",
+                ok=False,
+                payload={
+                    "initiative_branch": resolved_initiative_branch,
+                    "blockers": list(next_report.get("blockers", [])),
+                    "resolution": next_report,
+                },
+            )
         selected = next_report.get("selected", {})
         resolved_contract = {
             "contract_id": str(selected.get("contract_id", "")).strip(),
@@ -193,25 +200,29 @@ def run_worker_contract(
         }
 
     if resolved_contract is None or resolution_findings:
-        return 1, {
-            "command": COMMAND,
-            "status": "blocked",
-            "ok": False,
-            "initiative_branch": resolved_initiative_branch,
-            "blockers": resolution_findings or ["worker_contract_not_resolved"],
-        }
+        return 1, envelope(
+            command=COMMAND,
+            status="blocked",
+            ok=False,
+            payload={
+                "initiative_branch": resolved_initiative_branch,
+                "blockers": resolution_findings or ["worker_contract_not_resolved"],
+            },
+        )
 
     resolved_branch = str(resolved_contract.get("branch", "")).strip()
     resolved_worker_id = str(resolved_contract.get("worker_id", "")).strip()
     if not resolved_branch or not resolved_worker_id:
-        return 1, {
-            "command": COMMAND,
-            "status": "blocked",
-            "ok": False,
-            "initiative_branch": resolved_initiative_branch,
-            "blockers": ["worker_contract_missing_branch_or_worker_id"],
-            "selected": resolved_contract,
-        }
+        return 1, envelope(
+            command=COMMAND,
+            status="blocked",
+            ok=False,
+            payload={
+                "initiative_branch": resolved_initiative_branch,
+                "blockers": ["worker_contract_missing_branch_or_worker_id"],
+                "selected": resolved_contract,
+            },
+        )
 
     code, coordinator_report = run_worker_session_coordinator(
         repo_source=repo_root.as_posix(),
@@ -232,22 +243,24 @@ def run_worker_contract(
         actor_id=actor_id,
         stale_after_minutes=stale_after_minutes,
     )
-    report = {
-        "command": COMMAND,
-        "status": "ok" if code == 0 else "blocked",
-        "ok": code == 0,
-        "executor": executor,
-        "push_mode": push_mode,
-        "initiative_branch": resolved_initiative_branch,
-        "selected": {
-            "contract_id": str(resolved_contract.get("contract_id", "")).strip(),
-            "execplan_id": str(resolved_contract.get("execplan_id", "")).strip(),
-            "implementation_branch": resolved_branch,
-            "worker_id": resolved_worker_id,
-            "title": str(resolved_contract.get("title", "")).strip(),
+    report = envelope(
+        command=COMMAND,
+        status="ok" if code == 0 else "blocked",
+        ok=code == 0,
+        payload={
+            "executor": executor,
+            "push_mode": push_mode,
+            "initiative_branch": resolved_initiative_branch,
+            "selected": {
+                "contract_id": str(resolved_contract.get("contract_id", "")).strip(),
+                "execplan_id": str(resolved_contract.get("execplan_id", "")).strip(),
+                "implementation_branch": resolved_branch,
+                "worker_id": resolved_worker_id,
+                "title": str(resolved_contract.get("title", "")).strip(),
+            },
+            "worker_run": coordinator_report,
         },
-        "worker_run": coordinator_report,
-    }
+    )
     return code, report
 
 

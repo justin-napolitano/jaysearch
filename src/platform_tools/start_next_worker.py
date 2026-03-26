@@ -4,6 +4,7 @@ import argparse
 import json
 from typing import Any
 
+from platform_tools.public_orchestration_api import envelope
 from platform_tools.resolve_worker_contract import resolve_worker_contract
 from platform_tools.run_worker_contract import run_worker_contract
 
@@ -36,14 +37,16 @@ def start_next_worker(
         initiative_branch=initiative_branch,
     )
     if resolve_code != 0:
-        return resolve_code, {
-            "command": COMMAND,
-            "status": "blocked",
-            "ok": False,
-            "initiative_branch": initiative_branch or "",
-            "resolution": resolve_report,
-            "blockers": list(resolve_report.get("blockers", [])),
-        }
+        return resolve_code, envelope(
+            command=COMMAND,
+            status="blocked",
+            ok=False,
+            payload={
+                "initiative_branch": initiative_branch or "",
+                "resolution": resolve_report,
+                "blockers": list(resolve_report.get("blockers", [])),
+            },
+        )
 
     selected = resolve_report.get("selected", {})
     run_code, run_report = run_worker_contract(
@@ -68,14 +71,16 @@ def start_next_worker(
         workspace_root=workspace_root,
         stale_after_minutes=stale_after_minutes,
     )
-    return run_code, {
-        "command": COMMAND,
-        "status": "ok" if run_code == 0 else "blocked",
-        "ok": run_code == 0,
-        "initiative_branch": resolve_report.get("initiative_branch", ""),
-        "resolution": resolve_report,
-        "worker_run": run_report,
-    }
+    return run_code, envelope(
+        command=COMMAND,
+        status="ok" if run_code == 0 else "blocked",
+        ok=run_code == 0,
+        payload={
+            "initiative_branch": resolve_report.get("initiative_branch", ""),
+            "resolution": resolve_report,
+            "worker_run": run_report,
+        },
+    )
 
 
 def main() -> int:

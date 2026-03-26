@@ -1,0 +1,28 @@
+$schema: "https://json-schema.org/draft/2020-12/schema"
+title: "Public Orchestration API Envelope"
+type: object
+additionalProperties: true
+required:
+  - api_version
+  - command
+  - status
+  - ok
+properties:
+  api_version:
+    type: string
+    const: "public-orchestration.v1"
+  command:
+    type: string
+    enum:
+      - "get-graph-state"
+      - "get-worker-status"
+      - "resolve-worker-contract"
+      - "run-worker-contract"
+      - "start-next-worker"
+  status:
+    type: string
+    enum:
+      - "ok"
+      - "blocked"
+  ok:
+    type: boolean

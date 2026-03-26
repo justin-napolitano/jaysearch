@@ -17,10 +17,12 @@ changes:
   - bin/resolve-worker-contract
   - bin/run-worker-contract
   - bin/start-next-worker
+  - spec/public-orchestration-api.schema.yaml
   - spec/agent-capability-policy.yaml
   - spec/protected-surfaces.schema.yaml
   - src/platform_tools/get_graph_state.py
   - src/platform_tools/get_worker_status.py
+  - src/platform_tools/public_orchestration_api.py
   - src/platform_tools/resolve_worker_contract.py
   - src/platform_tools/run_worker_contract.py
   - src/platform_tools/start_next_worker.py
@@ -46,8 +48,10 @@ graph_registration:
     - "docs/public-orchestration-api.md"
     - "docs/queued-execplans.md"
     - "pyproject.toml"
+    - "spec/public-orchestration-api.schema.yaml"
     - "src/platform_tools/get_graph_state.py"
     - "src/platform_tools/get_worker_status.py"
+    - "src/platform_tools/public_orchestration_api.py"
     - "src/platform_tools/resolve_worker_contract.py"
     - "src/platform_tools/run_worker_contract.py"
     - "src/platform_tools/start_next_worker.py"
@@ -90,6 +94,7 @@ Add one small repo-owned execution API for worker contracts so a thin orchestrat
 - [x] add the orchestrator-agnostic `run-worker-contract` command surface
 - [x] add the composite `start-next-worker` facade command
 - [x] add the public orchestration API contract doc
+- [x] version the facade envelope and record the schema contract
 - [x] map executor and push policy into explicit backend fields
 - [x] compose the existing worker resolver and coordinator instead of reimplementing worker execution
 - [x] register the new command under governed policy surfaces
@@ -100,6 +105,7 @@ Add one small repo-owned execution API for worker contracts so a thin orchestrat
 - the right abstraction is contract execution, not Codex session control
 - explicit `executor` and `push_mode` fields keep the command usable by local and future cloud orchestrators without changing the API shape
 - graph and worker status also benefit from compact orchestration-facing projections instead of exposing raw internal reports directly
+- facade outputs need explicit versioning so thin orchestrators can upgrade against one governed contract instead of brittle command-by-command assumptions
 
 ## Decision Log
 
@@ -123,6 +129,7 @@ Add one small repo-owned execution API for worker contracts so a thin orchestrat
 3. add compact facade commands for graph state, worker contract resolution, and worker status
 4. add a composite next-worker command for thin orchestrators
 5. register the commands under governed policy and graph state
+6. version the facade envelope in a governed schema
 
 ## Concrete Steps
 
@@ -147,6 +154,7 @@ Add one small repo-owned execution API for worker contracts so a thin orchestrat
 
 - the public facade returns compact machine-readable output intended for a calling orchestrator rather than a human narrative session
 - `docs/public-orchestration-api.md` is the public contract note for the facade surface
+- `spec/public-orchestration-api.schema.yaml` is the canonical versioned envelope contract for facade responses
 
 ## Interfaces and Dependencies
 
