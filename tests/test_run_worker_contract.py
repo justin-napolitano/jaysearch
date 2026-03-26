@@ -5,6 +5,7 @@ import sys
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
+from platform_tools.public_orchestration_api import API_VERSION
 from platform_tools.run_worker_contract import run_worker_contract
 
 
@@ -47,6 +48,8 @@ def test_run_worker_contract_uses_next_ready_contract(monkeypatch, tmp_path: Pat
     )
 
     assert code == 0
+    assert report["api_version"] == API_VERSION
+    assert report["command"] == "run-worker-contract"
     assert report["selected"]["contract_id"] == "contract-1"
     assert captured["repo_source"] == tmp_path.resolve().as_posix()
     assert captured["branch"] == "impl-execplan/example-worker"
@@ -99,6 +102,7 @@ def test_run_worker_contract_resolves_explicit_contract_without_initiative(monke
     )
 
     assert code == 0
+    assert report["api_version"] == API_VERSION
     assert report["initiative_branch"] == "initiative/example"
     assert report["selected"]["implementation_branch"] == "impl-execplan/example-worker"
     assert report["executor"] == "local_worktree"
@@ -108,6 +112,7 @@ def test_run_worker_contract_blocks_for_unsupported_executor(tmp_path: Path) -> 
     code, report = run_worker_contract(root=tmp_path.as_posix(), executor="cloud_job")
 
     assert code == 1
+    assert report["api_version"] == API_VERSION
     assert "unsupported_executor" in report["blockers"]
 
 
@@ -115,4 +120,5 @@ def test_run_worker_contract_blocks_for_missing_github_remote(tmp_path: Path) ->
     code, report = run_worker_contract(root=tmp_path.as_posix(), push_mode="github")
 
     assert code == 1
+    assert report["api_version"] == API_VERSION
     assert "github_push_remote_required" in report["blockers"]
