@@ -89,6 +89,7 @@ surface_entries:
       - bin/governed-worker
       - bin/next-worker-slice
       - bin/prepare-next-worker-slice
+      - bin/run-worker-contract
       - bin/reconcile-worker-runtime-graph
       - bin/worker-session-coordinator
       - bin/worker-session-status
@@ -146,6 +147,7 @@ surface_entries:
       - src/platform_tools/worker_session_coordinator.py
       - src/platform_tools/next_worker_slice.py
       - src/platform_tools/prepare_next_worker_slice.py
+      - src/platform_tools/run_worker_contract.py
       - tests/test_anti_cheat_check.py
       - tests/test_bootstrap_managed_repo.py
       - tests/test_bootstrap_session.py
@@ -174,6 +176,7 @@ surface_entries:
       - tests/test_rule_graph_check.py
       - tests/test_session_bootstrap.py
       - tests/test_remaining_work_graph_check.py
+      - tests/test_run_worker_contract.py
       - tests/test_state_transition_legality.py
       - tests/test_worker_runtime_artifact_check.py
       - tests/test_worker_session_status.py
