@@ -41,6 +41,48 @@ Recommended split:
    - remains repo-native machine-readable state in `spec/`, `artifacts/`, `policy/`, and command wrappers in `bin/`
    - the local model is not authority; it is an executor over authority surfaces
 
+## Terminal-First Interface
+
+The terminal is the operator UI.
+
+The local model is not the UI. It is a cheap decision engine inside the terminal workflow.
+
+The intended interaction model is:
+
+1. human operates through terminal commands
+2. the local planner reads compact repo-native API outputs
+3. the planner emits a compact routing or planning decision
+4. repo-owned commands execute that decision
+5. stronger worker models are used only when the decision says they are warranted
+
+This means the local model should help choose commands, classify work, and summarize state, but should not become a parallel authority layer or prose-heavy chat surface.
+
+## Worker Classes
+
+The platform should support two distinct worker classes under the same governance model.
+
+### Execution Workers
+
+- consume bounded worker contracts
+- implement code or documentation changes
+- run validations
+- commit, push, and reconcile outcomes back into graph/runtime artifacts
+- die after handoff
+
+### Planning Workers
+
+- consume planning or research-oriented contracts
+- inspect graph state, contracts, and supporting references
+- research, compare options, and draft graph or ExecPlan updates
+- propose new nodes, dependencies, sequencing, and risk notes
+- surface those proposals through governed command paths instead of freeform graph edits
+
+Execution workers move the graph forward by doing work.
+
+Planning workers improve the graph and contract layer itself.
+
+The local planner should be able to route between these worker classes cheaply.
+
 ## Why This Fits This Repo
 
 This repository already assumes:
@@ -52,6 +94,38 @@ This repository already assumes:
 - token economy as a design constraint
 
 That means the correct next step is not "add a chatbot." The correct next step is to add a local model adapter that can drive the existing contract surface cheaply.
+
+## Comparison to DeerFlow
+
+DeerFlow is a useful reference point because it combines:
+
+- coordinator and planner roles
+- specialized research and coding agents
+- tool access for search, crawling, and Python execution
+- human-in-the-loop plan review
+
+Source:
+- https://github.com/bytedance/deer-flow
+
+This repo should track DeerFlow at the role-and-capability level, not at the implementation-style level.
+
+What to copy conceptually:
+
+- explicit planner role
+- specialized worker roles
+- research-capable planning flow
+- human review of plans
+- tool specialization per role
+
+What to do differently here:
+
+- keep the terminal as the primary UI
+- keep repo-owned APIs and graph state as authority
+- avoid a web-first control plane
+- avoid large prompt or markdown-heavy control surfaces
+- avoid making MCP or freeform tool descriptions the default control mechanism
+
+In other words, this platform should become "DeerFlow-like orchestration over thin repo APIs" rather than "a LangGraph web app with large prompt surfaces."
 
 ## Runtime Recommendation
 
@@ -139,6 +213,14 @@ Add a lightweight policy router that decides:
 
 The router should emit a compact decision artifact, not prose only.
 
+The router should be able to choose among at least:
+
+- local planner only
+- planning worker
+- execution worker
+- remote/specialized worker
+- human escalation
+
 ### Layer 4: Worker Handoff Contract
 
 When the local orchestrator decides to hand work to another model, it should emit a worker handoff packet with:
@@ -152,6 +234,14 @@ When the local orchestrator decides to hand work to another model, it should emi
 
 This should align to the existing worker-contract posture in the repo.
 
+Planning-worker handoff should use the same discipline, but with planning-specific outputs such as:
+
+- proposed node additions
+- dependency updates
+- contract drafts
+- research findings
+- sequencing recommendations
+
 ## Concrete Phase 1 Scope
 
 Phase 1 should be intentionally small.
@@ -162,9 +252,10 @@ Build only this:
 2. One local orchestration config file
 3. One CLI smoke command that proves the runtime is reachable
 4. One CLI command that asks the local model to classify a task into:
-   - local orchestration
-   - local coding worker
-   - remote coding worker
+   - local planner only
+   - planning worker
+   - local execution worker
+   - remote execution worker
    - human escalation
 5. Tests for:
    - adapter contract
@@ -196,6 +287,7 @@ The next implementation slice should likely add:
 - `src/platform_tools/local_runtime/runtime_check.py`
 - `bin/local-runtime-check`
 - `bin/local-task-router`
+- `bin/start-planning-worker`
 - `tests/test_local_runtime_adapter.py`
 - `tests/test_local_runtime_router.py`
 - `tests/test_local_runtime_check.py`
@@ -209,6 +301,13 @@ The local orchestrator should default to local handling when all are true:
 - required context is already in repo-local machine-readable artifacts
 - no internet dependency exists
 - expected output is structured and bounded
+
+The router should prefer a planning worker when all are true:
+
+- the task is about graph evolution, contract drafting, sequencing, or research
+- the primary output is a proposal rather than a code change
+- bounded research or comparison is needed before implementation
+- a stronger planning model would materially improve the proposal
 
 The router should hand off when any are true:
 
@@ -234,6 +333,11 @@ The first two commands should be small and boring:
    - takes a task description and returns a compact JSON routing decision
 
 If those two commands are stable, they can later be called by the broader orchestrator.
+
+The next command after that should likely be:
+
+3. `bin/start-planning-worker`
+   - starts a bounded planning or research worker against a governed planning contract
 
 ## Risks
 
