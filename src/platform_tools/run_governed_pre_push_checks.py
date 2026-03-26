@@ -11,6 +11,7 @@ from platform_tools.execplan_lint import validate_execplan
 from platform_tools.governance_check import check_governance
 from platform_tools.orchestrate_governed_slice import _effective_base_ref
 from platform_tools.policy_compliance_check import _published_branch_rewrite_status, check_policy_compliance
+from platform_tools.public_orchestration_api_check import check_public_orchestration_api
 from platform_tools.remaining_work_graph_check import check_remaining_work_graph
 from platform_tools.worker_runtime_artifact_check import check_worker_runtime_artifacts
 
@@ -65,6 +66,11 @@ def run_governed_pre_push_checks(
     checks.append({"name": "worker_runtime_artifact_check", "ok": runtime_code == 0, "errors": runtime_report.get("errors", [])})
     if runtime_code != 0:
         blockers.extend(f"worker_runtime_artifacts:{item}" for item in runtime_report.get("errors", []))
+
+    public_api_code, public_api_report = check_public_orchestration_api(root=root_path.as_posix())
+    checks.append({"name": "public_orchestration_api_check", "ok": public_api_code == 0, "errors": public_api_report.get("errors", [])})
+    if public_api_code != 0:
+        blockers.extend(f"public_orchestration_api:{item}" for item in public_api_report.get("errors", []))
 
     execplan_path = ""
     execplan_strategy = ""
