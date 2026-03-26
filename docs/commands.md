@@ -23,6 +23,7 @@ bin/run-governed-pre-push-checks
 bin/bootstrap-managed-repo
 bin/managed-repo-status
 bin/orchestrate-governed-slice
+bin/run-worker-contract
 bin/github-projects-bootstrap
 bin/github-projects-sync
 bin/finalize-execplan
@@ -40,4 +41,5 @@ Notes:
 - `bin/bootstrap-managed-repo` scaffolds a lightweight managed repo and writes repo-local provider-sync artifacts through platform-owned runtime code.
 - `bin/managed-repo-status` validates that an external repo has the required canonical and board-bootstrap artifacts before orchestration proceeds.
 - `bin/orchestrate-governed-slice` is the local control-loop entrypoint for both self-hosted and managed repos.
+- `bin/run-worker-contract` is the orchestrator-agnostic worker execution entrypoint; it resolves one bounded worker contract and delegates execution to the governed worker runtime.
 - `bin/github-projects-bootstrap` and `bin/github-projects-sync` are provider runtimes; they are meant to be invoked directly or by higher-level platform commands, not replaced by ad hoc shell usage.

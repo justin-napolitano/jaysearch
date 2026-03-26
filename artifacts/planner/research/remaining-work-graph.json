@@ -689,6 +689,14 @@
       "rationale": "20260325-graph-runtime-contract-hardening-codex-01-execplan merged to origin/main and is now canonical completed state",
       "evidence_ref": "merged:pr-113",
       "queue_reconciled": true
+    },
+    {
+      "action": "block",
+      "action_id": "rwg-action-20260326-register-rwg-040",
+      "evidence_ref": ".agent/execplans/20260326-worker-orchestration-api-codex-01-execplan.md",
+      "node_id": "rwg-040",
+      "queue_reconciled": true,
+      "rationale": "node registered deterministically from ExecPlan graph_registration metadata"
     }
   ],
   "graph_id": "remaining-work-graph-20260311",
@@ -1948,6 +1956,60 @@
       "target_execplan_id": "20260325-graph-runtime-contract-hardening-codex-01-execplan",
       "title": "Graph and worker runtime contract hardening with token-economy policy",
       "completion_ref": "merged:pr-113"
+    },
+    {
+      "conflict_domains": [
+        "governance",
+        "orchestrator-runtime",
+        "workflow"
+      ],
+      "gating_class": "auto_runnable",
+      "goal_area": "reference",
+      "initiative_branch": "initiative/worker-orchestration-api",
+      "node_id": "initiative-worker-orchestration-api",
+      "ordering": {},
+      "parent_initiative_node": "initiative-worker-orchestration-api",
+      "status": "ready",
+      "target_execplan_id": "initiative:worker-orchestration-api",
+      "title": "Initiative / worker orchestration api"
+    },
+    {
+      "action_state": {
+        "action_required": false,
+        "last_action": "block",
+        "last_action_id": "rwg-action-20260326-register-rwg-040",
+        "reorder_blockers": [],
+        "reorder_requires_human": false
+      },
+      "conflict_domains": [
+        "governance",
+        "orchestrator-runtime",
+        "workflow"
+      ],
+      "expected_artifacts": [
+        ".agent/execplans/20260326-worker-orchestration-api-codex-01-execplan.md",
+        "artifacts/planner/research/remaining-work-graph.json",
+        "docs/commands.md",
+        "docs/queued-execplans.md",
+        "pyproject.toml",
+        "src/platform_tools/run_worker_contract.py",
+        "tests/test_run_worker_contract.py"
+      ],
+      "gating_class": "decision_gated",
+      "goal_area": "orchestrator-runtime",
+      "initiative_branch": "initiative/worker-orchestration-api",
+      "integration_mode": "via_initiative",
+      "node_id": "rwg-040",
+      "ordering": {
+        "queue_position": 40,
+        "source_action_id": "rwg-action-20260326-register-rwg-040",
+        "tie_breaker": "20260326-worker-orchestration-api-codex-01-execplan"
+      },
+      "parent_initiative_node": "initiative-worker-orchestration-api",
+      "status": "decision_gated",
+      "status_reason": "registered from ExecPlan metadata; finalized draft ExecPlan required before execution",
+      "target_execplan_id": "20260326-worker-orchestration-api-codex-01-execplan",
+      "title": "Add an orchestrator-agnostic worker contract execution API"
     }
   ],
   "ordering_policy": {
@@ -1963,7 +2025,7 @@
     "reorder_requires_explicit_action": true
   },
   "queue_projection": {
-    "last_reconciled_action_id": "rwg-action-20260325-001-complete-rwg-039",
+    "last_reconciled_action_id": "rwg-action-20260326-register-rwg-040",
     "path": "docs/queued-execplans.md",
     "projection_authority": "projection_only",
     "ready_execplan_ids": []
