@@ -14,6 +14,7 @@ changes:
   - pyproject.toml
   - bin/get-graph-state
   - bin/get-worker-status
+  - bin/public-orchestration-api-check
   - bin/resolve-worker-contract
   - bin/run-worker-contract
   - bin/start-next-worker
@@ -23,9 +24,11 @@ changes:
   - src/platform_tools/get_graph_state.py
   - src/platform_tools/get_worker_status.py
   - src/platform_tools/public_orchestration_api.py
+  - src/platform_tools/public_orchestration_api_check.py
   - src/platform_tools/resolve_worker_contract.py
   - src/platform_tools/run_worker_contract.py
   - src/platform_tools/start_next_worker.py
+  - tests/test_public_orchestration_api_check.py
   - tests/test_public_orchestration_api.py
   - tests/test_run_worker_contract.py
 approve_policy: codeowners
@@ -52,9 +55,11 @@ graph_registration:
     - "src/platform_tools/get_graph_state.py"
     - "src/platform_tools/get_worker_status.py"
     - "src/platform_tools/public_orchestration_api.py"
+    - "src/platform_tools/public_orchestration_api_check.py"
     - "src/platform_tools/resolve_worker_contract.py"
     - "src/platform_tools/run_worker_contract.py"
     - "src/platform_tools/start_next_worker.py"
+    - "tests/test_public_orchestration_api_check.py"
     - "tests/test_public_orchestration_api.py"
     - "tests/test_run_worker_contract.py"
   integration_mode: "via_initiative"
@@ -95,6 +100,7 @@ Add one small repo-owned execution API for worker contracts so a thin orchestrat
 - [x] add the composite `start-next-worker` facade command
 - [x] add the public orchestration API contract doc
 - [x] version the facade envelope and record the schema contract
+- [x] add a live contract validator and wire it into governed pre-push checks
 - [x] map executor and push policy into explicit backend fields
 - [x] compose the existing worker resolver and coordinator instead of reimplementing worker execution
 - [x] register the new command under governed policy surfaces
@@ -106,6 +112,7 @@ Add one small repo-owned execution API for worker contracts so a thin orchestrat
 - explicit `executor` and `push_mode` fields keep the command usable by local and future cloud orchestrators without changing the API shape
 - graph and worker status also benefit from compact orchestration-facing projections instead of exposing raw internal reports directly
 - facade outputs need explicit versioning so thin orchestrators can upgrade against one governed contract instead of brittle command-by-command assumptions
+- schema-only versioning is not enough; the facade needs a live validator to catch drift between documented contracts and emitted command outputs
 
 ## Decision Log
 
@@ -130,6 +137,7 @@ Add one small repo-owned execution API for worker contracts so a thin orchestrat
 4. add a composite next-worker command for thin orchestrators
 5. register the commands under governed policy and graph state
 6. version the facade envelope in a governed schema
+7. validate live facade outputs against the versioned schema catalog before push and merge
 
 ## Concrete Steps
 
@@ -155,6 +163,7 @@ Add one small repo-owned execution API for worker contracts so a thin orchestrat
 - the public facade returns compact machine-readable output intended for a calling orchestrator rather than a human narrative session
 - `docs/public-orchestration-api.md` is the public contract note for the facade surface
 - `spec/public-orchestration-api.schema.yaml` is the canonical versioned envelope contract for facade responses
+- `bin/public-orchestration-api-check` is the live validator that exercises facade outputs against the governed contract catalog
 
 ## Interfaces and Dependencies
 

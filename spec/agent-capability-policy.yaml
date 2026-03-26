@@ -68,6 +68,7 @@ capability_rules:
       - bin/get-worker-status
       - bin/next-worker-slice
       - bin/prepare-next-worker-slice
+      - bin/public-orchestration-api-check
       - bin/resolve-worker-contract
       - bin/run-worker-contract
       - bin/start-next-worker
@@ -100,6 +101,7 @@ capability_rules:
       - src/platform_tools/get_graph_state.py
       - src/platform_tools/get_worker_status.py
       - src/platform_tools/public_orchestration_api.py
+      - src/platform_tools/public_orchestration_api_check.py
       - src/platform_tools/governance_check.py
       - src/platform_tools/governance_loader.py
       - src/platform_tools/human_operations_runtime.py
@@ -138,6 +140,7 @@ capability_rules:
       - tests/test_next_worker_slice.py
       - tests/test_prepare_next_worker_slice.py
       - tests/test_public_orchestration_api.py
+      - tests/test_public_orchestration_api_check.py
       - tests/test_worker_session_coordinator.py
       - tests/test_worker_session_status.py
       - tests/test_branch_policy.py

@@ -137,8 +137,9 @@ def run_worker_contract(
             status="blocked",
             ok=False,
             payload={
-                "blockers": backend_findings,
                 "executor": executor,
+                "push_mode": push_mode,
+                "blockers": backend_findings,
             },
         )
 
@@ -149,8 +150,9 @@ def run_worker_contract(
             status="blocked",
             ok=False,
             payload={
-                "blockers": push_findings,
+                "executor": executor,
                 "push_mode": push_mode,
+                "blockers": push_findings,
             },
         )
 
@@ -183,6 +185,8 @@ def run_worker_contract(
                 status="blocked",
                 ok=False,
                 payload={
+                    "executor": executor,
+                    "push_mode": push_mode,
                     "initiative_branch": resolved_initiative_branch,
                     "blockers": list(next_report.get("blockers", [])),
                     "resolution": next_report,
@@ -205,6 +209,8 @@ def run_worker_contract(
             status="blocked",
             ok=False,
             payload={
+                "executor": executor,
+                "push_mode": push_mode,
                 "initiative_branch": resolved_initiative_branch,
                 "blockers": resolution_findings or ["worker_contract_not_resolved"],
             },
@@ -218,6 +224,8 @@ def run_worker_contract(
             status="blocked",
             ok=False,
             payload={
+                "executor": executor,
+                "push_mode": push_mode,
                 "initiative_branch": resolved_initiative_branch,
                 "blockers": ["worker_contract_missing_branch_or_worker_id"],
                 "selected": resolved_contract,

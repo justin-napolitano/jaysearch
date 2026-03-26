@@ -26,6 +26,7 @@ bin/orchestrate-governed-slice
 bin/resolve-worker-contract
 bin/run-worker-contract
 bin/start-next-worker
+bin/public-orchestration-api-check
 bin/get-graph-state
 bin/get-worker-status
 bin/github-projects-bootstrap
@@ -48,6 +49,7 @@ Notes:
 - `bin/resolve-worker-contract` resolves one runnable or explicit worker contract into a compact machine-shaped payload.
 - `bin/run-worker-contract` is the orchestrator-agnostic worker execution entrypoint; it resolves one bounded worker contract and delegates execution to the governed worker runtime.
 - `bin/start-next-worker` is a composite facade command for thin orchestrators that want “resolve next runnable contract and execute it” in one call.
+- `bin/public-orchestration-api-check` validates that the facade commands still emit outputs compatible with the versioned public orchestration contract catalog.
 - `bin/get-graph-state` provides a compact orchestration-facing view of canonical graph state without exposing the full raw graph payload.
 - `bin/get-worker-status` provides a compact orchestration-facing view of worker session and recent run state.
 - the public orchestration facade commands emit a shared versioned envelope: `public-orchestration.v1`.
