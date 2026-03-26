@@ -70,6 +70,7 @@ capability_rules:
       - bin/prepare-next-worker-slice
       - bin/resolve-worker-contract
       - bin/run-worker-contract
+      - bin/start-next-worker
       - bin/reconcile-worker-runtime-graph
       - bin/worker-session-coordinator
       - bin/worker-session-status
@@ -129,6 +130,7 @@ capability_rules:
       - src/platform_tools/prepare_next_worker_slice.py
       - src/platform_tools/resolve_worker_contract.py
       - src/platform_tools/run_worker_contract.py
+      - src/platform_tools/start_next_worker.py
       - tests/test_anti_cheat_check.py
       - tests/test_bootstrap_managed_repo.py
       - tests/test_bootstrap_session.py

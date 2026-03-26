@@ -9,6 +9,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 from platform_tools.get_graph_state import get_graph_state
 from platform_tools.get_worker_status import get_worker_status
 from platform_tools.resolve_worker_contract import resolve_worker_contract
+from platform_tools.start_next_worker import start_next_worker
 
 
 def _write(path: Path, text: str) -> None:
@@ -108,3 +109,30 @@ def test_get_worker_status_filters_to_requested_worker(monkeypatch) -> None:
     assert report["worker_id"] == "worker-1"
     assert report["active_workers"] == [{"worker_id": "worker-1"}]
     assert report["recent_runs"] == [{"worker_id": "worker-1", "run_id": "run-1"}]
+
+
+def test_start_next_worker_composes_resolve_and_run(monkeypatch, tmp_path: Path) -> None:
+    monkeypatch.setattr(
+        "platform_tools.start_next_worker.resolve_worker_contract",
+        lambda **kwargs: (
+            0,
+            {
+                "initiative_branch": "initiative/example",
+                "selected": {
+                    "contract_id": "contract-1",
+                    "branch": "impl-execplan/example-worker",
+                    "worker_id": "example-worker",
+                },
+            },
+        ),
+    )
+    monkeypatch.setattr(
+        "platform_tools.start_next_worker.run_worker_contract",
+        lambda **kwargs: (0, {"ok": True, "status": "ok", "selected": kwargs["contract_id"]}),
+    )
+
+    code, report = start_next_worker(root=tmp_path.as_posix(), commit=True, push_mode="staging")
+
+    assert code == 0
+    assert report["resolution"]["selected"]["contract_id"] == "contract-1"
+    assert report["worker_run"]["ok"] is True
