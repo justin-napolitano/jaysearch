@@ -6,6 +6,7 @@ from pathlib import Path
 from typing import Any
 
 from platform_tools.branch_policy import get_current_branch
+from platform_tools.public_orchestration_api import envelope
 
 
 COMMAND = "get-graph-state"
@@ -64,22 +65,24 @@ def get_graph_state(
             str(node.get("node_id", "")).strip(),
         ),
     )
-    report = {
-        "command": COMMAND,
-        "status": "ok",
-        "ok": True,
-        "initiative_branch": branch,
-        "graph_id": str(graph.get("graph_id", "")).strip(),
-        "last_action_id": str(graph.get("queue_projection", {}).get("last_reconciled_action_id", "")).strip(),
-        "counts": {
-            "nodes": len(filtered),
-            "completed": completed_count,
-            "pending": pending_count,
+    report = envelope(
+        command=COMMAND,
+        status="ok",
+        ok=True,
+        payload={
+            "initiative_branch": branch,
+            "graph_id": str(graph.get("graph_id", "")).strip(),
+            "last_action_id": str(graph.get("queue_projection", {}).get("last_reconciled_action_id", "")).strip(),
+            "counts": {
+                "nodes": len(filtered),
+                "completed": completed_count,
+                "pending": pending_count,
+            },
+            "initiative_nodes": [_project_node(node) for node in initiative_nodes],
+            "active_node": _project_node(active_node) if isinstance(active_node, dict) else None,
+            "queued_nodes": [_project_node(node) for node in queued[:10]],
         },
-        "initiative_nodes": [_project_node(node) for node in initiative_nodes],
-        "active_node": _project_node(active_node) if isinstance(active_node, dict) else None,
-        "queued_nodes": [_project_node(node) for node in queued[:10]],
-    }
+    )
     return 0, report
 
 

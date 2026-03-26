@@ -9,6 +9,17 @@ This is the thin orchestration-facing surface over the governed worker runtime. 
 
 Orchestrators should prefer these commands instead of calling lower-level internal commands directly.
 
+## Versioning
+
+- all facade responses use the versioned envelope in `spec/public-orchestration-api.schema.yaml`
+- current version: `public-orchestration.v1`
+- required top-level fields:
+  - `api_version`
+  - `command`
+  - `status`
+  - `ok`
+- additive fields are allowed within a version; breaking field or semantic changes require a new `public-orchestration.vN` value
+
 ## Commands
 
 `bin/get-graph-state`
@@ -63,6 +74,7 @@ Orchestrators should prefer these commands instead of calling lower-level intern
 ## Design Rules
 
 - APIs are machine-oriented and compact.
+- Facade responses are versioned so orchestrators can validate one stable contract.
 - Governance stays underneath the facade.
 - Executor choice is explicit and backend-oriented.
 - Push policy is explicit and backend-oriented.

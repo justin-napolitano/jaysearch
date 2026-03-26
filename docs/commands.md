@@ -50,4 +50,5 @@ Notes:
 - `bin/start-next-worker` is a composite facade command for thin orchestrators that want “resolve next runnable contract and execute it” in one call.
 - `bin/get-graph-state` provides a compact orchestration-facing view of canonical graph state without exposing the full raw graph payload.
 - `bin/get-worker-status` provides a compact orchestration-facing view of worker session and recent run state.
+- the public orchestration facade commands emit a shared versioned envelope: `public-orchestration.v1`.
 - `bin/github-projects-bootstrap` and `bin/github-projects-sync` are provider runtimes; they are meant to be invoked directly or by higher-level platform commands, not replaced by ad hoc shell usage.

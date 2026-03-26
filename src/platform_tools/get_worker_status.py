@@ -4,6 +4,7 @@ import argparse
 import json
 from typing import Any
 
+from platform_tools.public_orchestration_api import envelope
 from platform_tools.worker_session_status import get_worker_session_status
 
 
@@ -19,17 +20,19 @@ def get_worker_status(
     code, report = get_worker_session_status(root=root, stale_after_minutes=stale_after_minutes)
     selected_worker_id = (worker_id or "").strip()
     if not selected_worker_id:
-        return code, {
-            "command": COMMAND,
-            "status": report["status"],
-            "ok": report["ok"],
-            "counts": report["counts"],
-            "active_workers": report["active_workers"],
-            "failed_workers": report["failed_workers"],
-            "abandoned_workers": report["abandoned_workers"],
-            "recent_runs": report["recent_runs"],
-            "blockers": report["blockers"],
-        }
+        return code, envelope(
+            command=COMMAND,
+            status=report["status"],
+            ok=report["ok"],
+            payload={
+                "counts": report["counts"],
+                "active_workers": report["active_workers"],
+                "failed_workers": report["failed_workers"],
+                "abandoned_workers": report["abandoned_workers"],
+                "recent_runs": report["recent_runs"],
+                "blockers": report["blockers"],
+            },
+        )
 
     def _filter(items: list[dict[str, Any]]) -> list[dict[str, Any]]:
         return [item for item in items if str(item.get("worker_id", "")).strip() == selected_worker_id]
@@ -39,17 +42,19 @@ def get_worker_status(
     abandoned = _filter(report["abandoned_workers"])
     recent_runs = [item for item in report["recent_runs"] if str(item.get("worker_id", "")).strip() == selected_worker_id]
     blockers = [item for item in report["blockers"] if selected_worker_id in item]
-    selected_report = {
-        "command": COMMAND,
-        "status": "blocked" if blockers else "ok",
-        "ok": not blockers,
-        "worker_id": selected_worker_id,
-        "active_workers": active,
-        "failed_workers": failed,
-        "abandoned_workers": abandoned,
-        "recent_runs": recent_runs,
-        "blockers": blockers,
-    }
+    selected_report = envelope(
+        command=COMMAND,
+        status="blocked" if blockers else "ok",
+        ok=not blockers,
+        payload={
+            "worker_id": selected_worker_id,
+            "active_workers": active,
+            "failed_workers": failed,
+            "abandoned_workers": abandoned,
+            "recent_runs": recent_runs,
+            "blockers": blockers,
+        },
+    )
     return (1 if blockers else 0), selected_report
 
 

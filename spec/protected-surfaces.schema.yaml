@@ -114,6 +114,7 @@ surface_entries:
       - bin/state-transition-legality-check
       - bin/state-transition-legality-smoke-test
       - bin/worker-runtime-artifact-check
+      - spec/public-orchestration-api.schema.yaml
       - src/platform_tools/auto_reconcile_main.py
       - src/platform_tools/anti_cheat_check.py
       - src/platform_tools/bootstrap_managed_repo.py
@@ -124,6 +125,7 @@ surface_entries:
       - src/platform_tools/governed_worker.py
       - src/platform_tools/get_graph_state.py
       - src/platform_tools/get_worker_status.py
+      - src/platform_tools/public_orchestration_api.py
       - src/platform_tools/governance_check.py
       - src/platform_tools/governance_loader.py
       - src/platform_tools/human_operations_runtime.py
