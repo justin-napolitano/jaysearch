@@ -473,3 +473,53 @@ def test_pending_merge_reconciliation_activates_completed_node_when_initiative_r
     rwg020 = next(node for node in graph["nodes"] if node["node_id"] == "rwg-020")
     assert rwg020["availability_status"] == "active"
     assert rwg020["availability_ref"] == "merged:pr-100"
+
+
+def test_reconcile_pending_merge_completion_from_initiative_merge_to_main_without_impl_branch(
+    monkeypatch, tmp_path: Path
+) -> None:
+    plan = tmp_path / ".agent" / "execplans" / "20260312-remaining-work-graph-actions-and-ordering-codex-01-execplan.md"
+    _write(plan, _plan_text().replace("base_branch: main", "base_branch: initiative/remaining-work-ordering"))
+    graph = _graph_data()
+    target = next(node for node in graph["nodes"] if node["node_id"] == "rwg-020")
+    target.pop("implementation_branch", None)
+    target["status"] = "decision_gated"
+    target["gating_class"] = "decision_gated"
+    target["status_reason"] = "registered from ExecPlan metadata; finalized draft ExecPlan required before execution"
+    target["availability_target_ref"] = "main"
+    target["action_state"]["last_action_id"] = "rwg-action-20260312-004-promote-rwg-020"
+    target["action_state"]["last_action"] = "block"
+    target["ordering"]["source_action_id"] = "rwg-action-20260312-004-promote-rwg-020"
+    _write_json(tmp_path / "artifacts" / "planner" / "research" / "remaining-work-graph.json", graph)
+    _write(tmp_path / "docs" / "queued-execplans.md", _queue_text().replace("   - status: `ready`", "   - status: `decision_gated`", 1))
+    _write(tmp_path / "spec" / "remaining-work-graph.schema.yaml", _schema_text())
+    _write(tmp_path / "docs" / "remaining-work-graph.md", "# Remaining Work Graph\n")
+
+    def _fake_merge_candidates(repo_root: Path, ref: str, plan_id: str, draft_branch: str, extra_markers=None) -> list[dict[str, str]]:
+        if ref == "initiative/remaining-work-ordering":
+            return []
+        if ref == "main":
+            return [
+                {
+                    "pull_request": "113",
+                    "commit": "mainmerge",
+                    "committed_at": "2026-03-26T14:00:00Z",
+                    "branch_ref": "initiative/remaining-work-ordering",
+                    "merge_role": "other",
+                }
+            ]
+        return []
+
+    monkeypatch.setattr("platform_tools.reconcile_remaining_work_merge._merge_candidates", _fake_merge_candidates)
+
+    report = reconcile_pending_merge_completions(repo_root=tmp_path)
+
+    assert report["reconciled_count"] == 1
+    result = report["results"][0]
+    assert result["completion_ref"] == "merged:pr-113"
+    assert result["completion_target_ref"] == "main"
+    assert result["transition_event"] == "initiative_merge_to_main"
+    graph = json.loads((tmp_path / "artifacts" / "planner" / "research" / "remaining-work-graph.json").read_text(encoding="utf-8"))
+    rwg020 = next(node for node in graph["nodes"] if node["node_id"] == "rwg-020")
+    assert rwg020["status"] == "completed"
+    assert rwg020["completion_ref"] == "merged:pr-113"

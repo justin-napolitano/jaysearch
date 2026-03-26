@@ -195,23 +195,45 @@ def _merge_search_ref(node: dict[str, Any], main_ref: str) -> str:
     return main_ref
 
 
+def _completion_search_refs(node: dict[str, Any], main_ref: str, *, plan_base_branch: str = "") -> list[str]:
+    integration_mode = str(node.get("integration_mode", "")).strip()
+    initiative_branch = str(node.get("initiative_branch", "")).strip()
+    implementation_branch = str(node.get("implementation_branch", "")).strip()
+    availability_target_ref = _availability_target_ref(node, main_ref)
+
+    if integration_mode != "via_initiative" or not initiative_branch:
+        return [main_ref]
+
+    if implementation_branch:
+        return [initiative_branch]
+
+    refs = [initiative_branch]
+    if availability_target_ref == main_ref or plan_base_branch == initiative_branch:
+        refs.append(main_ref)
+    return refs
+
+
 def _availability_target_ref(node: dict[str, Any], main_ref: str) -> str:
     target = str(node.get("availability_target_ref", "")).strip()
     return target or ""
 
 
-def _completion_extra_markers(node: dict[str, Any]) -> list[str]:
+def _completion_extra_markers(node: dict[str, Any], *, plan_base_branch: str = "") -> list[str]:
     markers: list[str] = []
     initiative_branch = str(node.get("initiative_branch", "")).strip()
     availability_target_ref = str(node.get("availability_target_ref", "")).strip()
-    if initiative_branch and availability_target_ref == "main":
+    implementation_branch = str(node.get("implementation_branch", "")).strip()
+    if initiative_branch and (availability_target_ref == "main" or (not implementation_branch and plan_base_branch == initiative_branch)):
         markers.append(initiative_branch)
     return markers
 
 
 def _transition_event(node: dict[str, Any], *, completion_target_ref: str, main_ref: str) -> str:
     integration_mode = str(node.get("integration_mode", "")).strip()
+    implementation_branch = str(node.get("implementation_branch", "")).strip()
     if str(node.get("node_id", "")).strip().startswith("initiative-"):
+        return "initiative_merge_to_main"
+    if integration_mode == "via_initiative" and not implementation_branch and completion_target_ref == main_ref:
         return "initiative_merge_to_main"
     if integration_mode == "via_initiative" and completion_target_ref != main_ref:
         return "impl_execplan_merge_to_initiative"
@@ -388,18 +410,24 @@ def find_pending_merge_reconciliations(
             continue
         plan = parse_plan(plan_path)
         draft_branch = str(plan.frontmatter.get("draft_branch", "")).strip()
-        merge_ref = _merge_search_ref(node, main_ref)
-        candidates = _safe_merge_candidates(
-            repo_root,
-            merge_ref,
-            execplan_id,
-            draft_branch,
-            extra_markers=_completion_extra_markers(node),
-        )
-        selected = _select_merge_candidate(
-            candidates=candidates,
-            node=node,
-        )
+        plan_base_branch = str(plan.frontmatter.get("base_branch", "")).strip()
+        selected = None
+        selected_ref = ""
+        for merge_ref in _completion_search_refs(node, main_ref, plan_base_branch=plan_base_branch):
+            candidates = _safe_merge_candidates(
+                repo_root,
+                merge_ref,
+                execplan_id,
+                draft_branch,
+                extra_markers=_completion_extra_markers(node, plan_base_branch=plan_base_branch),
+            )
+            selected = _select_merge_candidate(
+                candidates=candidates,
+                node=node,
+            )
+            if selected is not None:
+                selected_ref = merge_ref
+                break
         if selected is None:
             continue
         pending.append(
@@ -408,6 +436,7 @@ def find_pending_merge_reconciliations(
                 "execplan_id": execplan_id,
                 "execplan_path": plan_path,
                 "merge_evidence": selected,
+                "merge_ref": selected_ref,
             }
         )
     return pending
@@ -427,6 +456,7 @@ def reconcile_pending_merge_completions(
                 repo_root=repo_root,
                 main_ref=main_ref,
                 merge_evidence=item["merge_evidence"],
+                merge_ref=item.get("merge_ref", ""),
             )
         )
     activation_results = reconcile_pending_mainline_activations(repo_root=repo_root, main_ref=main_ref)
@@ -501,6 +531,7 @@ def reconcile_remaining_work_merge(
     repo_root: Path,
     main_ref: str = "main",
     merge_evidence: dict[str, str] | None = None,
+    merge_ref: str = "",
 ) -> dict[str, Any]:
     plan = parse_plan(execplan_path)
     execplan_id = str(plan.frontmatter.get("id", "")).strip()
@@ -522,21 +553,33 @@ def reconcile_remaining_work_merge(
 
     if merge_evidence is None:
         draft_branch = str(plan.frontmatter.get("draft_branch", "")).strip()
-        merge_ref = _merge_search_ref(node, main_ref)
-        candidates = _merge_candidates(
-            repo_root,
-            merge_ref,
-            execplan_id,
-            draft_branch,
-            extra_markers=_completion_extra_markers(node),
-        )
-        if not candidates:
-            raise ValueError("missing_merge_commit")
-        merge_evidence = _select_merge_candidate(candidates=candidates, node=node)
+        plan_base_branch = str(plan.frontmatter.get("base_branch", "")).strip()
+        for candidate_ref in _completion_search_refs(node, main_ref, plan_base_branch=plan_base_branch):
+            candidates = _merge_candidates(
+                repo_root,
+                candidate_ref,
+                execplan_id,
+                draft_branch,
+                extra_markers=_completion_extra_markers(node, plan_base_branch=plan_base_branch),
+            )
+            if not candidates:
+                continue
+            merge_evidence = _select_merge_candidate(candidates=candidates, node=node)
+            if merge_evidence is not None:
+                merge_ref = candidate_ref
+                break
         if merge_evidence is None:
             raise ValueError("missing_merge_commit")
+    if not merge_ref:
+        branch_ref = str(merge_evidence.get("branch_ref", "")).strip()
+        initiative_branch = str(node.get("initiative_branch", "")).strip()
+        implementation_branch = str(node.get("implementation_branch", "")).strip()
+        if branch_ref and branch_ref == initiative_branch and not implementation_branch:
+            merge_ref = main_ref
+        else:
+            merge_ref = _merge_search_ref(node, main_ref)
     completion_ref = f"merged:pr-{merge_evidence['pull_request']}" if merge_evidence.get("pull_request", "").strip() else f"merged:{merge_evidence['commit']}"
-    completion_target_ref = _merge_search_ref(node, main_ref)
+    completion_target_ref = merge_ref
     transition_event = _transition_event(node, completion_target_ref=completion_target_ref, main_ref=main_ref)
 
     node_id = str(node.get("node_id", "")).strip()
