@@ -209,14 +209,14 @@ This document turns the remaining-work graph into an explicit near-term queue of
    - gate: `finalized draft ExecPlan required before execution`
 
 39. `20260325-graph-runtime-contract-hardening-codex-01-execplan`
-   - status: `decision_gated`
+   - status: `completed`
    - goal: harden the graph and worker runtime contract around standards-aware events, failures, telemetry correlation, executor abstraction, and token-economy policy
    - draft branch: `draft-execplan/20260325-graph-runtime-contract-hardening-codex-01-20260325`
-   - gate: `finalized draft ExecPlan required before execution`
+   - completion ref: `merged:pr-113`
 
 ## Mirror Metadata
 
-- canonical_last_graph_action_id: `rwg-action-20260325-register-rwg-039`
+- canonical_last_graph_action_id: `rwg-action-20260325-001-complete-rwg-039`
 - canonical_ready_order: ``
 - projection_authority: `projection_only`
 
