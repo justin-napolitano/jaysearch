@@ -218,11 +218,16 @@ This document turns the remaining-work graph into an explicit near-term queue of
    - status: `decision_gated`
    - goal: add one orchestrator-agnostic command that resolves and runs a bounded worker contract with explicit executor and push policy
    - draft branch: `draft-execplan/20260326-worker-orchestration-api-codex-01-20260326`
+
+41. `20260326-local-offline-orchestration-bootstrap-codex-01-execplan`
+   - status: `decision_gated`
+   - goal: bootstrap a local-first offline orchestration loop with a thin runtime adapter, runtime-check command, and task-router command that stay subordinate to repo-native authority surfaces
+   - draft branch: `draft-execplan/20260326-local-offline-orchestration-bootstrap-codex-01-20260326`
    - gate: `finalized draft ExecPlan required before execution`
 
 ## Mirror Metadata
 
-- canonical_last_graph_action_id: `rwg-action-20260326-register-rwg-040`
+- canonical_last_graph_action_id: `rwg-action-20260326-register-rwg-041`
 - canonical_ready_order: ``
 - projection_authority: `projection_only`
 

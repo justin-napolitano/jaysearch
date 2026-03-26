@@ -697,6 +697,14 @@
       "node_id": "rwg-040",
       "queue_reconciled": true,
       "rationale": "node registered deterministically from ExecPlan graph_registration metadata"
+    },
+    {
+      "action": "block",
+      "action_id": "rwg-action-20260326-register-rwg-041",
+      "evidence_ref": ".agent/execplans/20260326-local-offline-orchestration-bootstrap-codex-01-execplan.md",
+      "node_id": "rwg-041",
+      "queue_reconciled": true,
+      "rationale": "node registered deterministically from ExecPlan graph_registration metadata"
     }
   ],
   "graph_id": "remaining-work-graph-20260311",
@@ -2010,6 +2018,70 @@
       "status_reason": "registered from ExecPlan metadata; finalized draft ExecPlan required before execution",
       "target_execplan_id": "20260326-worker-orchestration-api-codex-01-execplan",
       "title": "Add an orchestrator-agnostic worker contract execution API"
+    },
+    {
+      "conflict_domains": [
+        "governance",
+        "orchestrator-runtime",
+        "workflow"
+      ],
+      "gating_class": "auto_runnable",
+      "goal_area": "reference",
+      "initiative_branch": "initiative/local-offline-orchestration-bootstrap",
+      "node_id": "initiative-local-offline-orchestration-bootstrap",
+      "ordering": {},
+      "parent_initiative_node": "initiative-local-offline-orchestration-bootstrap",
+      "status": "ready",
+      "target_execplan_id": "initiative:local-offline-orchestration-bootstrap",
+      "title": "Initiative / local offline orchestration bootstrap"
+    },
+    {
+      "action_state": {
+        "action_required": false,
+        "last_action": "block",
+        "last_action_id": "rwg-action-20260326-register-rwg-041",
+        "reorder_blockers": [],
+        "reorder_requires_human": false
+      },
+      "conflict_domains": [
+        "governance",
+        "orchestrator-runtime",
+        "workflow"
+      ],
+      "expected_artifacts": [
+        ".agent/execplans/20260326-local-offline-orchestration-bootstrap-codex-01-execplan.md",
+        "artifacts/planner/research/remaining-work-graph.json",
+        "docs/local-offline-orchestration-bootstrap.md",
+        "docs/queued-execplans.md",
+        "prompts/20260326-local-offline-orchestration-bootstrap-codex-01.md",
+        "spec/local-orchestration.yaml",
+        "src/platform_tools/local_runtime/adapter.py",
+        "src/platform_tools/local_runtime/config.py",
+        "src/platform_tools/local_runtime/ollama_adapter.py",
+        "src/platform_tools/local_runtime/router.py",
+        "src/platform_tools/local_runtime/runtime_check.py",
+        "src/platform_tools/local_runtime/types.py",
+        "bin/local-runtime-check",
+        "bin/local-task-router",
+        "tests/test_local_runtime_adapter.py",
+        "tests/test_local_runtime_check.py",
+        "tests/test_local_runtime_router.py"
+      ],
+      "gating_class": "decision_gated",
+      "goal_area": "orchestrator-runtime",
+      "initiative_branch": "initiative/local-offline-orchestration-bootstrap",
+      "integration_mode": "via_initiative",
+      "node_id": "rwg-041",
+      "ordering": {
+        "queue_position": 41,
+        "source_action_id": "rwg-action-20260326-register-rwg-041",
+        "tie_breaker": "20260326-local-offline-orchestration-bootstrap-codex-01-execplan"
+      },
+      "parent_initiative_node": "initiative-local-offline-orchestration-bootstrap",
+      "status": "decision_gated",
+      "status_reason": "registered from ExecPlan metadata; finalized draft ExecPlan required before execution",
+      "target_execplan_id": "20260326-local-offline-orchestration-bootstrap-codex-01-execplan",
+      "title": "Bootstrap a local offline orchestration runtime and thin task router"
     }
   ],
   "ordering_policy": {
@@ -2025,7 +2097,7 @@
     "reorder_requires_explicit_action": true
   },
   "queue_projection": {
-    "last_reconciled_action_id": "rwg-action-20260326-register-rwg-040",
+    "last_reconciled_action_id": "rwg-action-20260326-register-rwg-041",
     "path": "docs/queued-execplans.md",
     "projection_authority": "projection_only",
     "ready_execplan_ids": []
