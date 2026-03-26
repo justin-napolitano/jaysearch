@@ -10,10 +10,21 @@ changes:
   - artifacts/planner/research/remaining-work-graph.json
   - docs/queued-execplans.md
   - docs/commands.md
+  - docs/public-orchestration-api.md
   - pyproject.toml
+  - bin/get-graph-state
+  - bin/get-worker-status
+  - bin/resolve-worker-contract
+  - bin/run-worker-contract
+  - bin/start-next-worker
   - spec/agent-capability-policy.yaml
   - spec/protected-surfaces.schema.yaml
+  - src/platform_tools/get_graph_state.py
+  - src/platform_tools/get_worker_status.py
+  - src/platform_tools/resolve_worker_contract.py
   - src/platform_tools/run_worker_contract.py
+  - src/platform_tools/start_next_worker.py
+  - tests/test_public_orchestration_api.py
   - tests/test_run_worker_contract.py
 approve_policy: codeowners
 reviewers:
@@ -32,9 +43,15 @@ graph_registration:
     - ".agent/execplans/20260326-worker-orchestration-api-codex-01-execplan.md"
     - "artifacts/planner/research/remaining-work-graph.json"
     - "docs/commands.md"
+    - "docs/public-orchestration-api.md"
     - "docs/queued-execplans.md"
     - "pyproject.toml"
+    - "src/platform_tools/get_graph_state.py"
+    - "src/platform_tools/get_worker_status.py"
+    - "src/platform_tools/resolve_worker_contract.py"
     - "src/platform_tools/run_worker_contract.py"
+    - "src/platform_tools/start_next_worker.py"
+    - "tests/test_public_orchestration_api.py"
     - "tests/test_run_worker_contract.py"
   integration_mode: "via_initiative"
 draft_by: "agent/codex-01"
@@ -46,10 +63,14 @@ finalized_in_pr: ""
 validation:
   tests:
     - name: "worker orchestration api tests"
-      command: "uv run pytest -q tests/test_run_worker_contract.py tests/test_worker_session_coordinator.py tests/test_next_worker_slice.py"
+      command: "uv run pytest -q tests/test_public_orchestration_api.py tests/test_run_worker_contract.py tests/test_worker_session_coordinator.py tests/test_next_worker_slice.py tests/test_worker_session_status.py"
       expected_exit: 0
 tasks:
   - title: "Add one orchestrator-agnostic command that resolves and runs a bounded worker contract"
+    priority: "P1"
+  - title: "Add a small public orchestration facade for graph state, contract resolution, worker execution, and worker status"
+    priority: "P1"
+  - title: "Add a composite next-worker entrypoint for thin orchestrators"
     priority: "P1"
   - title: "Keep executor and push policy explicit so the API can serve thin local or cloud orchestrators later"
     priority: "P1"
@@ -65,7 +86,10 @@ Add one small repo-owned execution API for worker contracts so a thin orchestrat
 
 ## Progress
 
+- [x] add the public facade commands for graph state, contract resolution, worker execution, and worker status
 - [x] add the orchestrator-agnostic `run-worker-contract` command surface
+- [x] add the composite `start-next-worker` facade command
+- [x] add the public orchestration API contract doc
 - [x] map executor and push policy into explicit backend fields
 - [x] compose the existing worker resolver and coordinator instead of reimplementing worker execution
 - [x] register the new command under governed policy surfaces
@@ -75,6 +99,7 @@ Add one small repo-owned execution API for worker contracts so a thin orchestrat
 - the existing runtime already had most of the mechanics; the main gap was a compact entrypoint that can resolve one worker contract directly
 - the right abstraction is contract execution, not Codex session control
 - explicit `executor` and `push_mode` fields keep the command usable by local and future cloud orchestrators without changing the API shape
+- graph and worker status also benefit from compact orchestration-facing projections instead of exposing raw internal reports directly
 
 ## Decision Log
 
@@ -95,19 +120,21 @@ Add one small repo-owned execution API for worker contracts so a thin orchestrat
 
 1. add the new command as a thin adapter over existing worker resolution and coordination APIs
 2. keep executor and push policy explicit in the command contract
-3. test both next-contract resolution and explicit contract lookup
-4. register the command under governed policy and graph state
+3. add compact facade commands for graph state, worker contract resolution, and worker status
+4. add a composite next-worker command for thin orchestrators
+5. register the commands under governed policy and graph state
 
 ## Concrete Steps
 
 1. add `src/platform_tools/run_worker_contract.py`
-2. add `bin/run-worker-contract` and register the script entrypoint
-3. add focused tests for resolution, push-policy validation, and unsupported executor blocking
-4. update policy and command reference surfaces
+2. add `src/platform_tools/resolve_worker_contract.py`, `src/platform_tools/get_graph_state.py`, and `src/platform_tools/get_worker_status.py`
+3. add `src/platform_tools/start_next_worker.py`
+4. add focused tests for public API projections and worker execution facade behavior
+5. update policy and command reference surfaces
 
 ## Validation and Acceptance
 
-- `uv run pytest -q tests/test_run_worker_contract.py tests/test_worker_session_coordinator.py tests/test_next_worker_slice.py`
+- `uv run pytest -q tests/test_public_orchestration_api.py tests/test_run_worker_contract.py tests/test_worker_session_coordinator.py tests/test_next_worker_slice.py tests/test_worker_session_status.py`
 - `bin/remaining-work-graph-check`
 - `bin/execplan-validate .agent/execplans/20260326-worker-orchestration-api-codex-01-execplan.md`
 
@@ -118,10 +145,12 @@ Add one small repo-owned execution API for worker contracts so a thin orchestrat
 
 ## Artifacts and Notes
 
-- the command returns compact machine-readable output intended for a calling orchestrator rather than a human narrative session
+- the public facade returns compact machine-readable output intended for a calling orchestrator rather than a human narrative session
+- `docs/public-orchestration-api.md` is the public contract note for the facade surface
 
 ## Interfaces and Dependencies
 
 - depends on `next-worker-slice` for initiative-level selection when the caller does not specify a contract
 - depends on `worker-session-coordinator` for the actual governed execution path
 - depends on the worker contract registry as the canonical selection surface
+- exposes a facade layer suitable for Codex today and thinner orchestration models later
