@@ -262,9 +262,15 @@ This document turns the remaining-work graph into an explicit near-term queue of
    - implementation branch: `impl-execplan/20260327-control-plane-composite-runtime-codex-01`
    - gate: `finalized draft ExecPlan required before execution`
 
+49. `20260327-control-plane-api-check-codex-01-execplan`
+   - status: `decision_gated`
+   - goal: Validate control-plane composite commands against their versioned schema
+   - implementation branch: `impl-execplan/20260327-control-plane-api-check-codex-01`
+   - gate: `finalized draft ExecPlan required before execution`
+
 ## Mirror Metadata
 
-- canonical_last_graph_action_id: `rwg-action-20260327-register-rwg-048`
+- canonical_last_graph_action_id: `rwg-action-20260327-register-rwg-049`
 - canonical_ready_order: ``
 - projection_authority: `projection_only`
 
