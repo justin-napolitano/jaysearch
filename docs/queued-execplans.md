@@ -250,9 +250,15 @@ This document turns the remaining-work graph into an explicit near-term queue of
    - goal: implement merge-back orchestration commands for readiness and PR target resolution
    - gate: `finalized draft ExecPlan required before execution`
 
+47. `20260327-implementation-branch-ancestry-enforcement-codex-01-execplan`
+   - status: `decision_gated`
+   - goal: Enforce implementation branch ancestry and merge-back completion before new slices start
+   - implementation branch: `impl-execplan/20260327-implementation-ancestry-enforcement-codex-01`
+   - gate: `finalized draft ExecPlan required before execution`
+
 ## Mirror Metadata
 
-- canonical_last_graph_action_id: `rwg-action-20260327-register-rwg-046`
+- canonical_last_graph_action_id: `rwg-action-20260327-register-rwg-047`
 - canonical_ready_order: ``
 - projection_authority: `projection_only`
 

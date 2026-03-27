@@ -7,6 +7,7 @@ It does not claim that the commands already exist. It defines the contract a lat
 - whether an `impl-execplan/*` branch is ready to merge back
 - which `initiative/*` branch is the lawful target
 - which validations and human actions are still required
+- whether the next implementation slice may lawfully be cut from the current initiative head
 
 ## Contract Source
 
@@ -45,8 +46,19 @@ If a later orchestrator needs prose to decide where an implementation PR should 
   - blockers
   - next action
 
+`prepare-next-impl-branch`
+- purpose: fail closed unless the current initiative branch is current and older implementation slices for that initiative are already merged back
+- required output focus:
+  - initiative branch
+  - selected execplan or node
+  - suggested implementation branch
+  - blockers
+  - prior unmerged implementation slices
+  - next action
+
 ## Relationship to Existing Surfaces
 
 - `bin/merge-readiness-check` remains the underlying readiness authority
 - workflow branch-role and initiative-authority rules remain the target-resolution authority
+- initiative-head ancestry and prior-slice merge completion should be projected through this same API family rather than left to prose or operator memory
 - this planned API should eventually align stylistically with `docs/public-orchestration-api.md` without pretending the commands are already live in that facade

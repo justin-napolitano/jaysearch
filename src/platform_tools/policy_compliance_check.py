@@ -512,6 +512,27 @@ def _requires_published_implementation_branch(branch: str) -> bool:
     return bool(branch) and branch.startswith("impl-execplan/")
 
 
+def _implementation_branch_is_current_with_initiative(
+    cwd: Path,
+    *,
+    branch: str,
+    graph_node: dict[str, Any] | None,
+) -> tuple[bool, str]:
+    if not branch.startswith("impl-execplan/") or not isinstance(graph_node, dict):
+        return True, ""
+    initiative_branch = str(graph_node.get("initiative_branch", "")).strip()
+    if not initiative_branch:
+        return False, "implementation_initiative_branch_missing"
+    remote_ref = f"refs/remotes/origin/{initiative_branch}"
+    local_ref = f"refs/heads/{initiative_branch}"
+    target_ref = remote_ref if _ref_exists(cwd, remote_ref) else local_ref if _ref_exists(cwd, local_ref) else ""
+    if not target_ref:
+        return False, f"implementation_initiative_ref_missing:{initiative_branch}"
+    if not _is_ancestor(cwd, target_ref, "HEAD"):
+        return False, "implementation_branch_stale_against_initiative"
+    return True, ""
+
+
 def check_policy_compliance(
     *,
     root: str = ".",
@@ -552,6 +573,11 @@ def check_policy_compliance(
     )
     graph_node = _graph_node_for_execplan(cwd, execplan_id)
     queue_has_execplan = _queue_has_execplan(cwd, execplan_id)
+    implementation_current, implementation_current_detail = _implementation_branch_is_current_with_initiative(
+        cwd,
+        branch=branch,
+        graph_node=graph_node,
+    )
 
     blockers: list[str] = []
     if not branch_aligned:
@@ -560,6 +586,8 @@ def check_policy_compliance(
         blockers.append("implementation_branch_not_published")
     if not rewrite_guard["ok"]:
         blockers.append("published_branch_history_rewrite_violation")
+    if not implementation_current and implementation_current_detail:
+        blockers.append(implementation_current_detail)
     if dirty_artifacts:
         blockers.append("dirty_generated_artifacts")
     blockers.extend(commit_errors)
@@ -615,6 +643,11 @@ def check_policy_compliance(
                 "base_head": base_head,
             },
             "branch_rewrite_guard": rewrite_guard,
+            "implementation_ancestry": {
+                "ok": implementation_current,
+                "detail": implementation_current_detail,
+                "initiative_branch": str(graph_node.get("initiative_branch", "")).strip() if isinstance(graph_node, dict) else "",
+            },
             "graph_binding": {
                 "ok": graph_node is not None and remaining_work_code == 0,
                 "graph_path": GRAPH_PATH,
