@@ -268,9 +268,15 @@ This document turns the remaining-work graph into an explicit near-term queue of
    - implementation branch: `impl-execplan/20260327-control-plane-api-check-codex-01`
    - gate: `finalized draft ExecPlan required before execution`
 
+50. `20260327-managed-repo-control-plane-codex-01-execplan`
+   - status: `decision_gated`
+   - goal: Make the composite control-plane commands explicitly managed-repo aware
+   - implementation branch: `impl-execplan/20260327-managed-repo-control-plane-codex-01`
+   - gate: `finalized draft ExecPlan required before execution`
+
 ## Mirror Metadata
 
-- canonical_last_graph_action_id: `rwg-action-20260327-register-rwg-049`
+- canonical_last_graph_action_id: `rwg-action-20260327-register-rwg-050`
 - canonical_ready_order: ``
 - projection_authority: `projection_only`
 

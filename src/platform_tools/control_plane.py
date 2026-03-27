@@ -8,6 +8,7 @@ from platform_tools.branch_policy import get_current_branch
 from platform_tools.get_graph_state import get_graph_state
 from platform_tools.get_worker_status import get_worker_status
 from platform_tools.local_runtime.runtime_check import check_local_runtime
+from platform_tools.managed_repo_status import get_managed_repo_status
 from platform_tools.mergeback_orchestration import (
     prepare_next_impl_branch,
     project_merge_readiness,
@@ -67,18 +68,27 @@ def _projection(report: dict[str, Any] | None) -> dict[str, Any] | None:
     }
 
 
-def get_control_plane_status(*, root: str = ".") -> tuple[int, dict[str, Any]]:
+def get_control_plane_status(*, root: str = ".", repo_root: str | None = None) -> tuple[int, dict[str, Any]]:
     root_path = Path(root).resolve()
+    target_root = Path(repo_root).resolve() if repo_root else root_path
     current_branch = get_current_branch(root=root_path)
     branch_role = _branch_role(current_branch)
     initiative_branch = _derive_initiative_branch(root=root_path, branch=current_branch)
 
     graph_code, graph_report = get_graph_state(
-        root=root_path.as_posix(),
+        root=target_root.as_posix(),
         initiative_branch=initiative_branch or None,
     )
-    runtime_code, runtime_report = check_local_runtime(root=root_path.as_posix())
-    worker_code, worker_report = get_worker_status(root=root_path.as_posix())
+    runtime_code, runtime_report = check_local_runtime(
+        root=root_path.as_posix(),
+        repo_root=target_root.as_posix(),
+        verify_managed_repo=True,
+    )
+    worker_code, worker_report = get_worker_status(root=target_root.as_posix())
+    managed_repo_code, managed_repo_report = get_managed_repo_status(
+        root=target_root.as_posix(),
+        branch=initiative_branch or current_branch or None,
+    )
 
     branch_preparation_report: dict[str, Any] | None = None
     merge_readiness_report: dict[str, Any] | None = None
@@ -103,6 +113,7 @@ def get_control_plane_status(*, root: str = ".") -> tuple[int, dict[str, Any]]:
 
     blockers: list[str] = []
     for report in (
+        managed_repo_report,
         graph_report,
         runtime_report,
         worker_report,
@@ -113,7 +124,13 @@ def get_control_plane_status(*, root: str = ".") -> tuple[int, dict[str, Any]]:
         if isinstance(report, dict):
             blockers.extend(str(item).strip() for item in report.get("blockers", []) if str(item).strip())
 
-    ok = graph_code == 0 and runtime_code == 0 and worker_code == 0 and not blockers
+    ok = (
+        managed_repo_code == 0
+        and graph_code == 0
+        and runtime_code == 0
+        and worker_code == 0
+        and not blockers
+    )
     return (0 if ok else 1), envelope(
         command="get-control-plane-status",
         status="ok" if ok else "blocked",
@@ -122,8 +139,10 @@ def get_control_plane_status(*, root: str = ".") -> tuple[int, dict[str, Any]]:
             "current_branch": current_branch,
             "branch_role": branch_role,
             "initiative_branch": initiative_branch,
+            "repo_root": target_root.as_posix(),
             "blockers": sorted(set(blockers)),
             "checks": {
+                "managed_repo": _projection(managed_repo_report),
                 "graph": _projection(graph_report),
                 "local_runtime": _projection(runtime_report),
                 "worker_status": _projection(worker_report),
@@ -135,17 +154,22 @@ def get_control_plane_status(*, root: str = ".") -> tuple[int, dict[str, Any]]:
     )
 
 
-def get_next_orchestration_action(*, root: str = ".") -> tuple[int, dict[str, Any]]:
-    _, status_report = get_control_plane_status(root=root)
+def get_next_orchestration_action(*, root: str = ".", repo_root: str | None = None) -> tuple[int, dict[str, Any]]:
+    _, status_report = get_control_plane_status(root=root, repo_root=repo_root)
     current_branch = str(status_report.get("current_branch", "")).strip()
     branch_role = str(status_report.get("branch_role", "")).strip()
     initiative_branch = str(status_report.get("initiative_branch", "")).strip()
+    resolved_repo_root = str(status_report.get("repo_root", "")).strip()
     checks = status_report.get("checks", {}) if isinstance(status_report.get("checks"), dict) else {}
     blockers = [str(item).strip() for item in status_report.get("blockers", []) if str(item).strip()]
 
     recommended_action = "none"
     command_ref = ""
-    if branch_role == "other":
+    managed_repo = checks.get("managed_repo") or {}
+    if managed_repo.get("blockers"):
+        recommended_action = "resolve_control_plane_blockers"
+        command_ref = "bin/managed-repo-status"
+    elif branch_role == "other":
         recommended_action = "switch_to_initiative_branch"
         command_ref = "git switch initiative/<name>"
     elif checks.get("worker_status", {}).get("blockers"):
@@ -184,6 +208,7 @@ def get_next_orchestration_action(*, root: str = ".") -> tuple[int, dict[str, An
             "current_branch": current_branch,
             "branch_role": branch_role,
             "initiative_branch": initiative_branch,
+            "repo_root": resolved_repo_root,
             "recommended_action": recommended_action,
             "command_ref": command_ref,
             "blockers": blockers,
