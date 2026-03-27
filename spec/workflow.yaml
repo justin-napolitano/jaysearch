@@ -156,6 +156,10 @@ execution_requirements:
     worker_sessions_require_active_lease_artifact: true
     worker_session_lease_directory: artifacts/governance/worker-sessions
     worker_session_audit_log: artifacts/governance/worker-session-events.jsonl
+    worker_session_audit_log_is_canonical_append_only_evidence: true
+    worker_session_audit_log_should_merge_when_changed: true
+    worker_session_lease_directory_is_operational_runtime_state: true
+    worker_session_lease_directory_not_default_merge_artifact: true
     worker_sessions_require_git_backed_handoff: true
     worker_sessions_are_ephemeral: true
     preferred_local_isolation_backends:

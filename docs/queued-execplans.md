@@ -240,9 +240,14 @@ This document turns the remaining-work graph into an explicit near-term queue of
    - goal: define a machine-readable API contract for implementation merge-back readiness and PR integration targeting
    - gate: `finalized draft ExecPlan required before execution`
 
+45. `20260326-worker-audit-log-canonicalization-codex-01-execplan`
+   - status: `decision_gated`
+   - goal: classify worker session audit logs as canonical append-only evidence while keeping live lease directories operational
+   - gate: `finalized draft ExecPlan required before execution`
+
 ## Mirror Metadata
 
-- canonical_last_graph_action_id: `rwg-action-20260326-register-rwg-044`
+- canonical_last_graph_action_id: `rwg-action-20260326-register-rwg-045`
 - canonical_ready_order: ``
 - projection_authority: `projection_only`
 
