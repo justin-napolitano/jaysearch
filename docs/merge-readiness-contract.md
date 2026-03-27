@@ -54,6 +54,10 @@ Generated artifacts from smoke or validation runs must not be ignored at merge t
 - removed because they are disposable
 - stashed because they are temporary verification output
 
+Canonical append-only audit artifacts should also be committed when they change as part of governed work. The worker session event log at `artifacts/governance/worker-session-events.jsonl` is in this category.
+
+Operational runtime state is different from canonical audit evidence. The live worker lease directory at `artifacts/governance/worker-sessions/` is not a default merge artifact and should remain uncommitted unless an active ExecPlan explicitly promotes it as required evidence.
+
 A dirty branch containing disposable generated artifacts is not merge-ready.
 
 ## Human Authority

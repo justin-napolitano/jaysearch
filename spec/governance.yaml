@@ -43,6 +43,10 @@ finalization:
   implementation_slice_integration_event: pull_request_merge_to_initiative
   implementation_slice_normal_integration_target: initiative_branch
   implementation_slice_manual_cherry_pick_policy: exception_only_human_directed
+  canonical_append_only_audit_artifacts:
+    - artifacts/governance/worker-session-events.jsonl
+  operational_runtime_state_not_default_merge_artifacts:
+    - artifacts/governance/worker-sessions
   allowed_signature_statuses:
     - G
   derived_fields:
