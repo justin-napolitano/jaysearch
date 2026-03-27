@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import subprocess
 from pathlib import Path
 from typing import Any
 
@@ -16,6 +17,7 @@ ALLOWED_VALIDATIONS = {
     "bin/remaining-work-graph-check",
     "bin/policy-compliance-check",
 }
+PENDING_IMPL_NODE_STATUSES = {"decision_gated", "review_gated", "ready"}
 
 
 def envelope(*, command: str, status: str, ok: bool, payload: dict[str, Any] | None = None) -> dict[str, Any]:
@@ -33,6 +35,149 @@ def envelope(*, command: str, status: str, ok: bool, payload: dict[str, Any] | N
 def _load_graph(root: Path) -> dict[str, Any]:
     graph_path = root / "artifacts" / "planner" / "research" / "remaining-work-graph.json"
     return json.loads(graph_path.read_text(encoding="utf-8"))
+
+
+def _git(root: Path, *args: str) -> str:
+    proc = subprocess.run(
+        ["git", *args],
+        cwd=root,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    if proc.returncode != 0:
+        raise RuntimeError(proc.stderr.strip() or f"git_command_failed:{' '.join(args)}")
+    return proc.stdout.strip()
+
+
+def _ref_exists(root: Path, ref: str) -> bool:
+    proc = subprocess.run(
+        ["git", "rev-parse", "--verify", "--quiet", ref],
+        cwd=root,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    return proc.returncode == 0
+
+
+def _is_ancestor(root: Path, ancestor_ref: str, descendant_ref: str) -> bool:
+    proc = subprocess.run(
+        ["git", "merge-base", "--is-ancestor", ancestor_ref, descendant_ref],
+        cwd=root,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    return proc.returncode == 0
+
+
+def _resolve_branch_ref(root: Path, branch: str, *, current_branch: str | None = None) -> str:
+    current = (current_branch or get_current_branch(root=root)).strip()
+    candidates = [
+        f"refs/remotes/origin/{branch}",
+        f"refs/heads/{branch}",
+    ]
+    if branch == current:
+        candidates.insert(0, "HEAD")
+    for candidate in candidates:
+        if candidate == "HEAD" or _ref_exists(root, candidate):
+            return candidate
+    return ""
+
+
+def _same_initiative_pending_nodes(graph: dict[str, Any], initiative_branch: str) -> list[dict[str, Any]]:
+    nodes = graph.get("nodes", [])
+    if not isinstance(nodes, list):
+        return []
+    return [
+        node
+        for node in nodes
+        if isinstance(node, dict)
+        and str(node.get("initiative_branch", "")).strip() == initiative_branch
+        and str(node.get("status", "")).strip() in PENDING_IMPL_NODE_STATUSES
+        and str(node.get("node_id", "")).strip() != str(node.get("parent_initiative_node", "")).strip()
+        and str(node.get("target_execplan_id", "")).strip()
+    ]
+
+
+def _queue_position(node: dict[str, Any]) -> int:
+    ordering = node.get("ordering", {}) if isinstance(node.get("ordering"), dict) else {}
+    value = ordering.get("queue_position")
+    return value if isinstance(value, int) else 10**9
+
+
+def _active_node(graph: dict[str, Any], initiative_branch: str) -> dict[str, Any] | None:
+    matches = [
+        node
+        for node in _same_initiative_pending_nodes(graph, initiative_branch)
+        if str(node.get("node_id", "")).strip() == str(graph.get("active_node", {}).get("node_id", "")).strip()
+    ]
+    if len(matches) == 1:
+        return matches[0]
+    ordered = sorted(
+        _same_initiative_pending_nodes(graph, initiative_branch),
+        key=lambda node: (
+            _queue_position(node),
+            str(node.get("target_execplan_id", "")).strip(),
+            str(node.get("node_id", "")).strip(),
+        ),
+    )
+    return ordered[0] if ordered else None
+
+
+def _stale_initiative_base(root: Path, *, source_branch: str, initiative_branch: str) -> bool | None:
+    current_branch = get_current_branch(root=root)
+    source_ref = _resolve_branch_ref(root, source_branch, current_branch=current_branch)
+    target_ref = _resolve_branch_ref(root, initiative_branch, current_branch=current_branch)
+    if not source_ref or not target_ref:
+        return None
+    return not _is_ancestor(root, target_ref, source_ref)
+
+
+def _prior_unmerged_impl_slices(
+    root: Path,
+    *,
+    initiative_branch: str,
+    selected_node_id: str = "",
+) -> list[dict[str, str]]:
+    graph = _load_graph(root)
+    initiative_ref = _resolve_branch_ref(root, initiative_branch, current_branch=get_current_branch(root=root))
+    if not initiative_ref:
+        return [{"blocker": "initiative_branch_not_current", "initiative_branch": initiative_branch}]
+
+    unresolved: list[dict[str, str]] = []
+    for node in sorted(
+        _same_initiative_pending_nodes(graph, initiative_branch),
+        key=lambda item: (_queue_position(item), str(item.get("node_id", "")).strip()),
+    ):
+        node_id = str(node.get("node_id", "")).strip()
+        if selected_node_id and node_id == selected_node_id:
+            continue
+        branch = str(node.get("implementation_branch", "")).strip()
+        if not branch:
+            continue
+        branch_ref = _resolve_branch_ref(root, branch, current_branch=get_current_branch(root=root))
+        if not branch_ref:
+            unresolved.append(
+                {
+                    "blocker": "prior_impl_slice_unmerged",
+                    "node_id": node_id,
+                    "implementation_branch": branch,
+                    "reason": "branch_ref_missing",
+                }
+            )
+            continue
+        if not _is_ancestor(root, branch_ref, initiative_ref):
+            unresolved.append(
+                {
+                    "blocker": "prior_impl_slice_unmerged",
+                    "node_id": node_id,
+                    "implementation_branch": branch,
+                    "reason": "branch_not_merged_into_initiative",
+                }
+            )
+    return unresolved
 
 
 def _execplan_path_from_id(root: Path, execplan_id: str) -> Path | None:
@@ -138,6 +283,8 @@ def blockers_from_merge_readiness(report: dict[str, Any]) -> list[str]:
         blockers.append("required_validation_failed")
     if "dirty_generated_artifacts" in failing_checks:
         blockers.append("working_tree_hygiene_failed")
+    if "implementation_branch_stale_against_initiative" in failing_checks:
+        blockers.append("stale_initiative_base")
     if failing_checks and not blockers:
         blockers.append("merge_readiness_failed")
     seen: set[str] = set()
@@ -169,6 +316,7 @@ def project_merge_readiness(
     initiative_branch: str | None = None,
     execplan_id: str | None = None,
 ) -> tuple[int, dict[str, Any]]:
+    root_path = Path(root).resolve()
     blockers, context = resolve_mergeback_context(
         root=root,
         source_branch=source_branch,
@@ -231,13 +379,35 @@ def project_merge_readiness(
         "next_validations": [] if readiness else next_validations_from_merge_readiness(report),
         "next_action": "open_pr_to_initiative" if readiness else "run_merge_readiness_check",
     }
+    stale_base = _stale_initiative_base(
+        root=root_path,
+        source_branch=str(context.get("source_branch", "")).strip(),
+        initiative_branch=str(context.get("initiative_branch", "")).strip(),
+    )
+    if stale_base is None:
+        blockers = list(payload["blockers"])
+        blockers.append("target_branch_resolution_failed")
+        payload["blockers"] = sorted(set(blockers))
+        payload["next_action"] = "resolve_initiative_target"
+    elif stale_base:
+        blockers = list(payload["blockers"])
+        blockers.append("stale_initiative_base")
+        payload["blockers"] = sorted(set(blockers))
+        payload["next_action"] = "restack_on_initiative"
     if blockers:
         payload["problem"] = {
-            "type": "https://platform-template-bootstrap/problems/merge-readiness-failed",
-            "title": "Merge readiness failed",
+            "type": "https://platform-template-bootstrap/problems/stale-initiative-base"
+            if "stale_initiative_base" in payload["blockers"]
+            else "https://platform-template-bootstrap/problems/merge-readiness-failed",
+            "title": "Implementation branch no longer contains the current initiative head"
+            if "stale_initiative_base" in payload["blockers"]
+            else "Merge readiness failed",
             "status": 409,
-            "detail": "One or more merge-readiness checks are still failing for the implementation branch.",
+            "detail": "Restack or rebase the implementation branch onto the current initiative head before merge-back."
+            if "stale_initiative_base" in payload["blockers"]
+            else "One or more merge-readiness checks are still failing for the implementation branch.",
         }
+    readiness = not payload["blockers"] and code == 0
     return (0 if readiness else 1), envelope(
         command="get-merge-readiness",
         status="ok" if readiness else "blocked",
@@ -308,5 +478,157 @@ def project_pr_integration_contract(
             ],
             "blockers": [],
             "next_action": "open_pr_to_initiative",
+        },
+    )
+
+
+def prepare_next_impl_branch(
+    *,
+    root: str = ".",
+    initiative_branch: str | None = None,
+    execplan_id: str | None = None,
+    node_id: str | None = None,
+) -> tuple[int, dict[str, Any]]:
+    root_path = Path(root).resolve()
+    resolved_initiative = (initiative_branch or "").strip() or get_current_branch(root=root_path)
+    if not resolved_initiative.startswith("initiative/"):
+        return 1, envelope(
+            command="prepare-next-impl-branch",
+            status="blocked",
+            ok=False,
+            payload={
+                "initiative_branch": resolved_initiative,
+                "blockers": ["target_branch_role_invalid"],
+                "next_action": "refresh_initiative_branch",
+                "problem": {
+                    "type": "https://platform-template-bootstrap/problems/invalid-branch-role",
+                    "title": "Initiative branch required",
+                    "status": 409,
+                    "detail": "The next implementation slice must be prepared from an initiative branch context.",
+                },
+            },
+        )
+
+    current_branch = get_current_branch(root=root_path)
+    if current_branch != resolved_initiative:
+        return 1, envelope(
+            command="prepare-next-impl-branch",
+            status="blocked",
+            ok=False,
+            payload={
+                "initiative_branch": resolved_initiative,
+                "blockers": ["initiative_branch_not_current"],
+                "next_action": "refresh_initiative_branch",
+                "problem": {
+                    "type": "https://platform-template-bootstrap/problems/stale-initiative-base",
+                    "title": "Current branch is not the initiative branch",
+                    "status": 409,
+                    "detail": "Switch to the initiative branch before preparing the next implementation slice.",
+                },
+            },
+        )
+
+    initiative_ref = _resolve_branch_ref(root_path, resolved_initiative, current_branch=current_branch)
+    if initiative_ref != "HEAD" and initiative_ref and not _is_ancestor(root_path, initiative_ref, "HEAD"):
+        return 1, envelope(
+            command="prepare-next-impl-branch",
+            status="blocked",
+            ok=False,
+            payload={
+                "initiative_branch": resolved_initiative,
+                "blockers": ["initiative_branch_not_current"],
+                "next_action": "refresh_initiative_branch",
+                "problem": {
+                    "type": "https://platform-template-bootstrap/problems/stale-initiative-base",
+                    "title": "Initiative branch is behind its current published head",
+                    "status": 409,
+                    "detail": "Fast-forward the initiative branch before cutting the next implementation slice.",
+                },
+            },
+        )
+
+    graph = _load_graph(root_path)
+    candidates = _same_initiative_pending_nodes(graph, resolved_initiative)
+    if execplan_id:
+        candidates = [
+            node for node in candidates if str(node.get("target_execplan_id", "")).strip() == execplan_id.strip()
+        ]
+    if node_id:
+        candidates = [node for node in candidates if str(node.get("node_id", "")).strip() == node_id.strip()]
+    if not execplan_id and not node_id:
+        active = _active_node(graph, resolved_initiative)
+        candidates = [active] if active is not None else []
+
+    if len(candidates) != 1:
+        blocker = "ambiguous_initiative_mapping" if len(candidates) > 1 else "missing_active_execplan"
+        return 1, envelope(
+            command="prepare-next-impl-branch",
+            status="blocked",
+            ok=False,
+            payload={
+                "initiative_branch": resolved_initiative,
+                "selectors": {
+                    "execplan_id": (execplan_id or "").strip(),
+                    "node_id": (node_id or "").strip(),
+                },
+                "blockers": [blocker],
+                "next_action": "resolve_initiative_target",
+                "problem": {
+                    "type": "https://platform-template-bootstrap/problems/ambiguous-initiative-mapping",
+                    "title": "The next implementation slice is not deterministic",
+                    "status": 409,
+                    "detail": "Specify the target execplan or reconcile the active node before cutting the next implementation branch.",
+                },
+            },
+        )
+
+    selected = candidates[0]
+    selected_node_id = str(selected.get("node_id", "")).strip()
+    unresolved = _prior_unmerged_impl_slices(
+        root_path,
+        initiative_branch=resolved_initiative,
+        selected_node_id=selected_node_id,
+    )
+    if unresolved:
+        return 1, envelope(
+            command="prepare-next-impl-branch",
+            status="blocked",
+            ok=False,
+            payload={
+                "initiative_branch": resolved_initiative,
+                "selected": {
+                    "node_id": selected_node_id,
+                    "execplan_id": str(selected.get("target_execplan_id", "")).strip(),
+                    "implementation_branch": str(selected.get("implementation_branch", "")).strip(),
+                },
+                "blockers": ["prior_impl_slice_unmerged"],
+                "prior_impl_slices": unresolved,
+                "next_action": "resolve_prior_impl_slice",
+                "problem": {
+                    "type": "https://platform-template-bootstrap/problems/prior-impl-slice-unmerged",
+                    "title": "An earlier implementation slice is still unmerged",
+                    "status": 409,
+                    "detail": "Merge or close the older implementation slice before cutting the next one.",
+                },
+            },
+        )
+
+    suggested_branch = str(selected.get("implementation_branch", "")).strip() or (
+        f"impl-execplan/{str(selected.get('target_execplan_id', '')).strip()}"
+    )
+    return 0, envelope(
+        command="prepare-next-impl-branch",
+        status="ok",
+        ok=True,
+        payload={
+            "initiative_branch": resolved_initiative,
+            "selected": {
+                "node_id": selected_node_id,
+                "title": str(selected.get("title", "")).strip(),
+                "execplan_id": str(selected.get("target_execplan_id", "")).strip(),
+                "implementation_branch": suggested_branch,
+            },
+            "blockers": [],
+            "next_action": "cut_impl_branch",
         },
     )
