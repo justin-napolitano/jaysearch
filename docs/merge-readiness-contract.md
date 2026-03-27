@@ -9,6 +9,9 @@ Merge readiness must be machine-checkable. Codex must be able to determine wheth
 A branch is merge-ready only if all of the following are true:
 
 - the active ExecPlan validations pass
+- the active ExecPlan is authoritative for the branch context:
+  - initiative branch for in-flight initiative integration
+  - implementation branch inheriting authority from its parent initiative branch
 - the slice-specific smoke test passes
 - required focused tests pass
 - generated smoke artifacts are intentionally committed, removed, or stashed
@@ -59,7 +62,9 @@ Codex may prepare merge-readiness evidence but may not replace:
 
 - human review
 - human exception approval
-- human ExecPlan finalization requirements
+- human historical approval and completion events on `main`
+
+During an active initiative, merge readiness for implementation or initiative merge-back does not require that partial planning updates have already been merged to `main`. It does require that the initiative branch exposes one authoritative active ExecPlan and that the branch context and plan authority are unambiguous.
 
 ## Design Consequence
 
