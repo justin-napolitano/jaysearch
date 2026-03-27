@@ -9,6 +9,7 @@ from platform_tools.control_plane import get_control_plane_status
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--root", default=".")
+    parser.add_argument("--repo-root", default=None)
     args = parser.parse_args()
     code, report = get_control_plane_status(**vars(args))
     print(json.dumps(report, indent=2, sort_keys=True))
