@@ -46,6 +46,13 @@ def test_orchestrate_governed_slice_api_check_passes(monkeypatch, tmp_path: Path
                     "command_ref": "bin/prepare-next-impl-branch",
                     "blockers": [],
                 },
+                "execution": {
+                    "mode": "project_only",
+                    "executed": False,
+                    "status": "deferred",
+                    "command": "",
+                    "result": None,
+                },
                 "post_merge_reconciliation": {
                     "command": "reconcile-pending-merge-completions",
                     "status": "ok",
@@ -95,6 +102,13 @@ def test_orchestrate_governed_slice_api_check_blocks_on_missing_field(monkeypatc
                     "recommended_action": "cut_impl_branch",
                     "command_ref": "bin/prepare-next-impl-branch",
                     "blockers": [],
+                },
+                "execution": {
+                    "mode": "project_only",
+                    "executed": False,
+                    "status": "deferred",
+                    "command": "",
+                    "result": None,
                 },
                 "post_merge_reconciliation": {
                     "command": "reconcile-pending-merge-completions",
