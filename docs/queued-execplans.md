@@ -274,6 +274,10 @@ This document turns the remaining-work graph into an explicit near-term queue of
    - implementation branch: `impl-execplan/20260327-managed-repo-control-plane-codex-01`
    - gate: `finalized draft ExecPlan required before execution`
 
+52. `20260327-orchestrate-governed-slice-api-check-codex-01-execplan`
+   - status: `decision_gated`
+   - goal: Add a schema and checker for orchestrate-governed-slice
+   - implementation branch: `impl-execplan/20260327-orchestrate-governed-slice-api-check-codex-01`
 51. `20260327-orchestrate-governed-slice-control-plane-codex-01-execplan`
    - status: `decision_gated`
    - goal: Make orchestrate-governed-slice compose the control-plane APIs
@@ -282,6 +286,7 @@ This document turns the remaining-work graph into an explicit near-term queue of
 
 ## Mirror Metadata
 
+- canonical_last_graph_action_id: `rwg-action-20260327-register-rwg-052`
 - canonical_last_graph_action_id: `rwg-action-20260327-register-rwg-051`
 - canonical_ready_order: ``
 - projection_authority: `projection_only`
