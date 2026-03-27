@@ -29,6 +29,8 @@ bin/start-next-worker
 bin/public-orchestration-api-check
 bin/get-graph-state
 bin/get-worker-status
+bin/get-control-plane-status
+bin/get-next-orchestration-action
 bin/get-merge-readiness
 bin/get-pr-integration-contract
 bin/prepare-next-impl-branch
@@ -55,6 +57,8 @@ Notes:
 - `bin/public-orchestration-api-check` validates that the facade commands still emit outputs compatible with the versioned public orchestration contract catalog.
 - `bin/get-graph-state` provides a compact orchestration-facing view of canonical graph state without exposing the full raw graph payload.
 - `bin/get-worker-status` provides a compact orchestration-facing view of worker session and recent run state.
+- `bin/get-control-plane-status` summarizes current branch, graph, runtime, worker, and merge-back posture for the terminal operator.
+- `bin/get-next-orchestration-action` reduces current repo state to one bounded next step for the orchestrator.
 - `bin/get-merge-readiness` projects whether the current implementation slice is ready to merge back into its lawful initiative target.
 - `bin/get-pr-integration-contract` resolves the lawful initiative PR target and required validations for implementation merge-back.
 - `bin/prepare-next-impl-branch` projects whether the next implementation slice may be cut from the current initiative head and returns the lawful branch target when it may proceed.
