@@ -100,6 +100,8 @@ Bootstrap a local-first orchestration loop that can run cheaply and offline on t
 - treat `ollama` as the first backend because it is the fastest bootstrap path, not because it is the final architecture
 - do not build autonomous execution or multi-backend complexity in this first slice
 - keep the prompt artifact as supporting context and the ExecPlan as the canonical authority
+- treat prose docs and prompts as explanatory support for humans rather than required operational context for the orchestrator
+- if the local orchestrator needs prose to understand a governance-critical rule or execution precondition, that rule surface is incomplete and must be promoted into a deterministic spec, schema, or stable command output before the slice is considered complete
 - keep the terminal as the operator UI and treat the local model as a decision engine within that UI
 - split planning workers and execution workers as separate governed roles from the start
 
@@ -111,6 +113,7 @@ Bootstrap a local-first orchestration loop that can run cheaply and offline on t
 
 - the current repo already has graph-backed planning, governed `bin/` commands, worker contracts, and a versioned public orchestration facade
 - the new local orchestration work should call those surfaces, not replace them
+- the orchestrator should be able to operate from deterministic repo-owned APIs and machine-readable artifacts without needing to infer workflow rules from prose narratives
 - `docs/local-offline-orchestration-bootstrap.md` contains the operating model, host constraints, and recommended phase-1 cut
 - `prompts/20260326-local-offline-orchestration-bootstrap-codex-01.md` captures the intended narrow implementation prompt for the first slice
 - DeerFlow provides a role-and-capability reference for planner, researcher, coder, and human-in-the-loop behaviors, but this repo should implement those capabilities over compact API surfaces and terminal workflows
@@ -137,6 +140,7 @@ Bootstrap a local-first orchestration loop that can run cheaply and offline on t
 - `bin/execplan-validate .agent/execplans/20260326-local-offline-orchestration-bootstrap-codex-01-execplan.md`
 - `bin/remaining-work-graph-check`
 - the later implementation slice must add focused tests for adapter, router, and runtime-check behavior
+- the phase-1 contract is not acceptable if the local orchestrator must read prose docs to discover governance-critical routing rules, authority boundaries, or execution preconditions that could have been exposed through deterministic specs or stable command outputs
 
 ## Idempotence and Recovery
 
