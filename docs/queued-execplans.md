@@ -226,9 +226,9 @@ This document turns the remaining-work graph into an explicit near-term queue of
    - gate: `finalized draft ExecPlan required before execution`
 
 42. `20260326-local-orchestration-contract-surface-codex-01-execplan`
-   - status: `decision_gated`
+   - status: `completed`
    - goal: Define the local orchestration contract surface before implementation workers execute
-   - gate: `finalized draft ExecPlan required before execution`
+   - completion ref: `merged:2eb310abf265201989f7d4647f62253dede267ca`
 
 43. `20260326-initiative-branch-plan-authority-correction-codex-01-execplan`
    - status: `decision_gated`
@@ -236,9 +236,9 @@ This document turns the remaining-work graph into an explicit near-term queue of
    - gate: `finalized draft ExecPlan required before execution`
 
 44. `20260326-mergeback-orchestration-api-contract-codex-01-execplan`
-   - status: `decision_gated`
+   - status: `completed`
    - goal: define a machine-readable API contract for implementation merge-back readiness and PR integration targeting
-   - gate: `finalized draft ExecPlan required before execution`
+   - completion ref: `merged:2eb310abf265201989f7d4647f62253dede267ca`
 
 45. `20260326-worker-audit-log-canonicalization-codex-01-execplan`
    - status: `decision_gated`
@@ -274,20 +274,21 @@ This document turns the remaining-work graph into an explicit near-term queue of
    - implementation branch: `impl-execplan/20260327-managed-repo-control-plane-codex-01`
    - gate: `finalized draft ExecPlan required before execution`
 
-52. `20260327-orchestrate-governed-slice-api-check-codex-01-execplan`
-   - status: `decision_gated`
-   - goal: Add a schema and checker for orchestrate-governed-slice
-   - implementation branch: `impl-execplan/20260327-orchestrate-governed-slice-api-check-codex-01`
 51. `20260327-orchestrate-governed-slice-control-plane-codex-01-execplan`
    - status: `decision_gated`
    - goal: Make orchestrate-governed-slice compose the control-plane APIs
    - implementation branch: `impl-execplan/20260327-orchestrate-governed-slice-control-plane-codex-01`
    - gate: `finalized draft ExecPlan required before execution`
 
+52. `20260327-orchestrate-governed-slice-api-check-codex-01-execplan`
+   - status: `decision_gated`
+   - goal: Add a schema and checker for orchestrate-governed-slice
+   - implementation branch: `impl-execplan/20260327-orchestrate-governed-slice-api-check-codex-01`
+   - gate: `finalized draft ExecPlan required before execution`
+
 ## Mirror Metadata
 
-- canonical_last_graph_action_id: `rwg-action-20260327-register-rwg-052`
-- canonical_last_graph_action_id: `rwg-action-20260327-register-rwg-051`
+- canonical_last_graph_action_id: `rwg-action-20260327-002-complete-rwg-044`
 - canonical_ready_order: ``
 - projection_authority: `projection_only`
 
