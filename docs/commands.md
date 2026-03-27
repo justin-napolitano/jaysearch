@@ -32,6 +32,7 @@ bin/get-worker-status
 bin/get-control-plane-status
 bin/get-next-orchestration-action
 bin/control-plane-api-check
+bin/orchestrate-governed-slice-api-check
 bin/get-merge-readiness
 bin/get-pr-integration-contract
 bin/prepare-next-impl-branch
@@ -61,6 +62,7 @@ Notes:
 - `bin/get-control-plane-status` summarizes current branch, graph, runtime, worker, and merge-back posture for the terminal operator.
 - `bin/get-next-orchestration-action` reduces current repo state to one bounded next step for the orchestrator.
 - `bin/control-plane-api-check` validates that the composite control-plane commands still emit outputs compatible with the control-plane schema.
+- `bin/orchestrate-governed-slice-api-check` validates that the top-level orchestration entrypoint still emits outputs compatible with the orchestrate-governed-slice schema.
 - `bin/get-merge-readiness` projects whether the current implementation slice is ready to merge back into its lawful initiative target.
 - `bin/get-pr-integration-contract` resolves the lawful initiative PR target and required validations for implementation merge-back.
 - `bin/prepare-next-impl-branch` projects whether the next implementation slice may be cut from the current initiative head and returns the lawful branch target when it may proceed.
