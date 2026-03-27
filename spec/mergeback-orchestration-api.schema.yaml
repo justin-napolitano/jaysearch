@@ -1,0 +1,226 @@
+$schema: "https://json-schema.org/draft/2020-12/schema"
+title: "Merge-Back Orchestration API v1"
+description: "Planned contract catalog for implementation-slice merge-back into initiative branches."
+type: object
+additionalProperties: true
+required:
+  - api_version
+  - command
+  - status
+  - ok
+properties:
+  api_version:
+    type: string
+    const: "mergeback-orchestration.v1"
+  command:
+    type: string
+    enum:
+      - "get-merge-readiness"
+      - "get-pr-integration-contract"
+  status:
+    type: string
+    enum:
+      - "ok"
+      - "blocked"
+  ok:
+    type: boolean
+$defs:
+  blocker_id:
+    type: string
+    enum:
+      - "ambiguous_initiative_mapping"
+      - "missing_active_execplan"
+      - "merge_readiness_failed"
+      - "required_validation_failed"
+      - "required_human_review_pending"
+      - "source_branch_role_invalid"
+      - "target_branch_role_invalid"
+      - "target_branch_resolution_failed"
+      - "working_tree_hygiene_failed"
+  next_action_id:
+    type: string
+    enum:
+      - "run_merge_readiness_check"
+      - "resolve_initiative_target"
+      - "open_pr_to_initiative"
+      - "request_human_review"
+      - "do_not_merge"
+  validation_id:
+    type: string
+    enum:
+      - "bin/merge-readiness-check"
+      - "bin/execplan-validate"
+      - "bin/remaining-work-graph-check"
+      - "bin/policy-compliance-check"
+  problem_type:
+    type: string
+    enum:
+      - "https://platform-template-bootstrap/problems/ambiguous-initiative-mapping"
+      - "https://platform-template-bootstrap/problems/merge-readiness-failed"
+      - "https://platform-template-bootstrap/problems/invalid-branch-role"
+      - "https://platform-template-bootstrap/problems/target-resolution-failed"
+  branch_role:
+    type: string
+    enum:
+      - "implementation_execplan"
+      - "initiative"
+  problem:
+    type: object
+    additionalProperties: true
+    required:
+      - type
+      - title
+      - status
+    properties:
+      type:
+        $ref: "#/$defs/problem_type"
+      title:
+        type: string
+      status:
+        type: integer
+      detail:
+        type: string
+      instance:
+        type: string
+  request_get_merge_readiness:
+    type: object
+    additionalProperties: false
+    properties:
+      source_branch:
+        type: string
+      target_branch:
+        type: string
+      initiative_branch:
+        type: string
+      execplan_id:
+        type: string
+  response_get_merge_readiness:
+    allOf:
+      - $ref: "#"
+      - type: object
+        additionalProperties: true
+        required:
+          - source_branch
+          - target_branch
+          - readiness_checks
+          - blockers
+          - next_validations
+          - next_action
+        properties:
+          command:
+            const: "get-merge-readiness"
+          source_branch:
+            type: string
+          target_branch:
+            type: string
+          source_branch_role:
+            $ref: "#/$defs/branch_role"
+          target_branch_role:
+            type: string
+            const: "initiative"
+          readiness_checks:
+            type: array
+            items:
+              type: object
+              additionalProperties: false
+              required:
+                - check_id
+                - status
+              properties:
+                check_id:
+                  $ref: "#/$defs/validation_id"
+                status:
+                  type: string
+                  enum:
+                    - "passed"
+                    - "failed"
+                    - "pending"
+          blockers:
+            type: array
+            items:
+              $ref: "#/$defs/blocker_id"
+          next_validations:
+            type: array
+            items:
+              $ref: "#/$defs/validation_id"
+          next_action:
+            $ref: "#/$defs/next_action_id"
+          problem:
+            $ref: "#/$defs/problem"
+  request_get_pr_integration_contract:
+    type: object
+    additionalProperties: false
+    properties:
+      source_branch:
+        type: string
+      initiative_branch:
+        type: string
+      execplan_id:
+        type: string
+  response_get_pr_integration_contract:
+    allOf:
+      - $ref: "#"
+      - type: object
+        additionalProperties: true
+        required:
+          - source_branch
+          - target_branch
+          - integration_mode
+          - required_validations
+          - required_human_actions
+          - next_action
+        properties:
+          command:
+            const: "get-pr-integration-contract"
+          source_branch:
+            type: string
+          target_branch:
+            type: string
+          source_branch_role:
+            $ref: "#/$defs/branch_role"
+          target_branch_role:
+            type: string
+            const: "initiative"
+          integration_mode:
+            type: string
+            const: "via_initiative"
+          required_validations:
+            type: array
+            items:
+              $ref: "#/$defs/validation_id"
+          required_human_actions:
+            type: array
+            items:
+              type: string
+              enum:
+                - "review_pr"
+                - "approve_pr"
+                - "merge_pr"
+          blockers:
+            type: array
+            items:
+              $ref: "#/$defs/blocker_id"
+          next_action:
+            $ref: "#/$defs/next_action_id"
+          problem:
+            $ref: "#/$defs/problem"
+  command_catalog:
+    type: object
+    additionalProperties: false
+    properties:
+      get-merge-readiness:
+        type: object
+        additionalProperties: false
+        properties:
+          request_schema:
+            const: "#/$defs/request_get_merge_readiness"
+          response_schema:
+            const: "#/$defs/response_get_merge_readiness"
+      get-pr-integration-contract:
+        type: object
+        additionalProperties: false
+        properties:
+          request_schema:
+            const: "#/$defs/request_get_pr_integration_contract"
+          response_schema:
+            const: "#/$defs/response_get_pr_integration_contract"

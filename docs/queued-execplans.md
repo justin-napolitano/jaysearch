@@ -230,9 +230,19 @@ This document turns the remaining-work graph into an explicit near-term queue of
    - goal: Define the local orchestration contract surface before implementation workers execute
    - gate: `finalized draft ExecPlan required before execution`
 
+43. `20260326-initiative-branch-plan-authority-correction-codex-01-execplan`
+   - status: `decision_gated`
+   - goal: correct initiative-branch plan authority so implementation slices integrate under one authoritative in-flight ExecPlan
+   - gate: `finalized draft ExecPlan required before execution`
+
+44. `20260326-mergeback-orchestration-api-contract-codex-01-execplan`
+   - status: `decision_gated`
+   - goal: define a machine-readable API contract for implementation merge-back readiness and PR integration targeting
+   - gate: `finalized draft ExecPlan required before execution`
+
 ## Mirror Metadata
 
-- canonical_last_graph_action_id: `rwg-action-20260326-register-rwg-043`
+- canonical_last_graph_action_id: `rwg-action-20260326-register-rwg-044`
 - canonical_ready_order: ``
 - projection_authority: `projection_only`
 
