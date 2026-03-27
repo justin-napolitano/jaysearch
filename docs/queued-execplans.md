@@ -232,7 +232,7 @@ This document turns the remaining-work graph into an explicit near-term queue of
 
 ## Mirror Metadata
 
-- canonical_last_graph_action_id: `rwg-action-20260326-register-rwg-042`
+- canonical_last_graph_action_id: `rwg-action-20260326-register-rwg-043`
 - canonical_ready_order: ``
 - projection_authority: `projection_only`
 

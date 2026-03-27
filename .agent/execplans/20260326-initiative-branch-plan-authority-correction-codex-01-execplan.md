@@ -23,7 +23,7 @@ graph_registration:
   node_id: "rwg-043"
   queue_position: 43
   goal_area: "governance"
-  implementation_branch: "impl-execplan/20260326-initiative-branch-plan-authority-correction-codex-01-20260326"
+  implementation_branch: "impl-execplan/20260326-initiative-branch-plan-authority-pr-mergeback-clarification"
   conflict_domains:
     - "governance"
     - "workflow"
@@ -91,6 +91,7 @@ Correct the workflow model so the active initiative branch may carry the authori
 - the initiative branch should be allowed to carry the authoritative in-flight ExecPlan for that initiative while the initiative is active
 - `draft-execplan/*` branches should remain useful for isolated drafting or review, but they should not be the only lawful planning location
 - implementation slices should be allowed to execute under initiative-branch plan authority when deterministic validation and authority boundaries are satisfied
+- implementation slices should normally integrate back into the initiative branch by PR rather than by local cherry-pick so worker execution remains reviewable and machine-auditable
 - merge to `main` should remain authoritative for completed historical finalization, but it should not be a prerequisite for every intermediate planning update inside an active initiative
 - the correction must fail closed if initiative-to-plan mapping is ambiguous
 
