@@ -31,6 +31,7 @@ bin/get-graph-state
 bin/get-worker-status
 bin/get-merge-readiness
 bin/get-pr-integration-contract
+bin/prepare-next-impl-branch
 bin/github-projects-bootstrap
 bin/github-projects-sync
 bin/finalize-execplan
@@ -56,5 +57,6 @@ Notes:
 - `bin/get-worker-status` provides a compact orchestration-facing view of worker session and recent run state.
 - `bin/get-merge-readiness` projects whether the current implementation slice is ready to merge back into its lawful initiative target.
 - `bin/get-pr-integration-contract` resolves the lawful initiative PR target and required validations for implementation merge-back.
+- `bin/prepare-next-impl-branch` projects whether the next implementation slice may be cut from the current initiative head and returns the lawful branch target when it may proceed.
 - the public orchestration facade commands emit a shared versioned envelope: `public-orchestration.v1`.
 - `bin/github-projects-bootstrap` and `bin/github-projects-sync` are provider runtimes; they are meant to be invoked directly or by higher-level platform commands, not replaced by ad hoc shell usage.
