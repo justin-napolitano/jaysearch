@@ -737,6 +737,14 @@
       "rationale": "node registered deterministically from ExecPlan graph_registration metadata",
       "evidence_ref": ".agent/execplans/20260326-worker-audit-log-canonicalization-codex-01-execplan.md",
       "queue_reconciled": true
+    },
+    {
+      "action_id": "rwg-action-20260327-register-rwg-046",
+      "action": "block",
+      "node_id": "rwg-046",
+      "rationale": "node registered deterministically from ExecPlan graph_registration metadata",
+      "evidence_ref": ".agent/execplans/20260327-mergeback-orchestration-api-runtime-codex-01-execplan.md",
+      "queue_reconciled": true
     }
   ],
   "graph_id": "remaining-work-graph-20260311",
@@ -2270,6 +2278,47 @@
         "reorder_requires_human": false,
         "reorder_blockers": []
       }
+    },
+    {
+      "node_id": "rwg-046",
+      "title": "Implement merge-back orchestration commands for readiness and PR target resolution",
+      "status": "decision_gated",
+      "status_reason": "registered from ExecPlan metadata; finalized draft ExecPlan required before execution",
+      "gating_class": "decision_gated",
+      "conflict_domains": [
+        "governance",
+        "orchestrator-runtime",
+        "workflow"
+      ],
+      "target_execplan_id": "20260327-mergeback-orchestration-api-runtime-codex-01-execplan",
+      "goal_area": "orchestrator-runtime",
+      "implementation_branch": "impl-execplan/20260327-mergeback-orchestration-api-codex-01",
+      "initiative_branch": "initiative/local-offline-orchestration-bootstrap",
+      "parent_initiative_node": "initiative-local-offline-orchestration-bootstrap",
+      "integration_mode": "via_initiative",
+      "expected_artifacts": [
+        ".agent/execplans/20260327-mergeback-orchestration-api-runtime-codex-01-execplan.md",
+        "artifacts/planner/research/remaining-work-graph.json",
+        "docs/commands.md",
+        "docs/queued-execplans.md",
+        "pyproject.toml",
+        "src/platform_tools/get_merge_readiness.py",
+        "src/platform_tools/get_pr_integration_contract.py",
+        "src/platform_tools/mergeback_orchestration.py",
+        "tests/test_mergeback_orchestration_api.py"
+      ],
+      "ordering": {
+        "queue_position": 46,
+        "tie_breaker": "20260327-mergeback-orchestration-api-runtime-codex-01-execplan",
+        "source_action_id": "rwg-action-20260327-register-rwg-046"
+      },
+      "action_state": {
+        "last_action_id": "rwg-action-20260327-register-rwg-046",
+        "last_action": "block",
+        "action_required": false,
+        "reorder_requires_human": false,
+        "reorder_blockers": []
+      }
     }
   ],
   "ordering_policy": {
@@ -2285,7 +2334,7 @@
     "reorder_requires_explicit_action": true
   },
   "queue_projection": {
-    "last_reconciled_action_id": "rwg-action-20260326-register-rwg-045",
+    "last_reconciled_action_id": "rwg-action-20260327-register-rwg-046",
     "path": "docs/queued-execplans.md",
     "projection_authority": "projection_only",
     "ready_execplan_ids": []
