@@ -1,5 +1,5 @@
 version: v1
-last_updated: 2026-03-19
+last_updated: 2026-03-26
 lifecycle:
   - draft
   - proposed
@@ -34,14 +34,15 @@ execution_requirements:
     release: "release/*"
   execution_branch_roles:
     initiative:
-      purpose: "integrate one graph-backed initiative through child governed slices before merge to main"
+      purpose: "carry one graph-backed initiative, its authoritative in-flight ExecPlan, and integration of child governed slices before merge to main"
       parent_integration_branch: true
-      not_canonical_for_individual_slice_execution: true
+      authoritative_for_inflight_plan_state: true
+      authoritative_for_individual_slice_selection: true
     draft_execplan:
-      purpose: "draft and review the ExecPlan artifact"
+      purpose: "draft or review bounded ExecPlan changes without becoming the only lawful planning location"
       not_canonical_for_slice_execution: true
     implementation_execplan:
-      purpose: "execute one approved implementation ExecPlan slice"
+      purpose: "execute one approved implementation ExecPlan slice under initiative plan authority"
       required_for_parallel_slice_execution: true
     queue_execplan:
       purpose: "stack already-executed slices for deliberate integration"
@@ -49,8 +50,11 @@ execution_requirements:
   finalization_requirements:
     governed_execplans_require_signed_merge_commit_on_main: true
     governed_execplans_merge_commit_is_canonical_finalization_event: true
+    initiative_branch_may_hold_authoritative_inflight_execplan_until_completion: true
+    signed_merge_commit_on_main_records_historical_finalization_not_inflight_authority: true
   draft_review_requirements:
-    governed_draft_execplans_require_dedicated_draft_branch: true
+    governed_draft_execplans_require_dedicated_draft_branch: false
+    governed_draft_execplans_allow_dedicated_review_branch: true
     governed_draft_execplans_require_agent_self_review_before_pr: true
     governed_draft_execplan_pr_requires_stable_template: true
     governed_draft_execplan_pr_template_mode: additive_only
@@ -61,12 +65,20 @@ execution_requirements:
       - self_review
       - validation
       - handoff
-    implementation_execution_requires_human_finalized_draft_execplan: true
+    implementation_execution_requires_human_finalized_draft_execplan: false
+    implementation_execution_requires_authoritative_active_execplan: true
+    implementation_execution_accepts_initiative_branch_execplan_authority: true
     merged_draft_execplans_must_be_reflected_in_canonical_graph_and_queue_state: true
   initiative_requirements:
     governed_initiative_branches_require_parent_graph_node: true
-    governed_initiative_branches_are_integration_only: true
+    governed_initiative_branches_are_integration_only: false
     governed_child_slices_may_branch_from_initiative: true
+    initiative_branch_is_authoritative_for_inflight_plan_state: true
+    initiative_branch_must_expose_single_authoritative_active_execplan: true
+    implementation_slice_mergeback_requires_pull_request: true
+    implementation_slice_normal_integration_target: initiative
+    manual_cherry_pick_is_not_normal_governed_integration: true
+    ambiguous_initiative_plan_authority_blocks_execution: true
     initiative_to_main_requires_parent_node_completion: true
     fail_closed_on_missing_initiative_mapping: true
     default_integration_mode: via_initiative
@@ -84,6 +96,7 @@ execution_requirements:
       impl_execplan_merge_to_initiative:
         source_branch_role: implementation_execplan
         integration_mode: via_initiative
+        required_evidence: pull_request
         target_branch_role: initiative
         resulting_state: completed
       impl_execplan_merge_to_main_exception:
