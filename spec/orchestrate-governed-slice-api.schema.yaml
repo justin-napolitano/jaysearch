@@ -14,6 +14,7 @@ required:
   - blockers
   - control_plane_status
   - next_orchestration_action
+  - execution
   - next_actions
 properties:
   command:
@@ -81,6 +82,35 @@ properties:
           - status
           - ok
           - blockers
+  execution:
+    type: object
+    additionalProperties: true
+    required:
+      - mode
+      - executed
+      - status
+      - command
+    properties:
+      mode:
+        type: string
+        enum:
+          - "project_only"
+          - "execute_next_step"
+      executed:
+        type: boolean
+      status:
+        type: string
+        enum:
+          - "ok"
+          - "blocked"
+          - "deferred"
+      command:
+        type: string
+      result:
+        oneOf:
+          - type: "null"
+          - type: object
+            additionalProperties: true
   next_actions:
     type: array
     items:
