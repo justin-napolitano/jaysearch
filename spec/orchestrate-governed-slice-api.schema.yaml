@@ -1,0 +1,98 @@
+$schema: "https://json-schema.org/draft/2020-12/schema"
+title: "Orchestrate Governed Slice API v1"
+description: "Top-level terminal control-loop entrypoint over the control-plane APIs."
+type: object
+additionalProperties: true
+required:
+  - command
+  - status
+  - ok
+  - branch
+  - branch_role
+  - initiative_branch
+  - repo_root
+  - blockers
+  - control_plane_status
+  - next_orchestration_action
+  - next_actions
+properties:
+  command:
+    type: string
+    const: "orchestrate-governed-slice"
+  status:
+    type: string
+    enum:
+      - "ok"
+      - "blocked"
+  ok:
+    type: boolean
+  branch:
+    type: string
+  branch_role:
+    type: string
+    enum:
+      - "initiative"
+      - "implementation_execplan"
+      - "other"
+  initiative_branch:
+    type: string
+  repo_root:
+    type: string
+  base_ref:
+    type: string
+  execplan_path:
+    type: string
+  blockers:
+    type: array
+    items:
+      type: string
+  control_plane_status:
+    type: object
+    additionalProperties: true
+    required:
+      - api_version
+      - command
+      - status
+      - ok
+  next_orchestration_action:
+    type: object
+    additionalProperties: true
+    required:
+      - api_version
+      - command
+      - status
+      - ok
+      - recommended_action
+      - command_ref
+      - blockers
+  post_merge_reconciliation:
+    type: object
+    additionalProperties: true
+    required:
+      - command
+      - status
+      - ok
+  managed_repo:
+    oneOf:
+      - type: "null"
+      - type: object
+        additionalProperties: true
+        required:
+          - status
+          - ok
+          - blockers
+  next_actions:
+    type: array
+    items:
+      type: object
+      additionalProperties: true
+      required:
+        - action
+        - reason
+      properties:
+        action:
+          type: string
+        command_ref:
+          type: string
+        reason:
+          type: string
