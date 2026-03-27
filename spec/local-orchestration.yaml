@@ -1,0 +1,164 @@
+version: v1
+last_updated: 2026-03-26
+authority_model:
+  canonical_profile_scope: local_orchestration_runtime
+  canonical_command_contract_catalog: spec/local-orchestration-api.schema.yaml
+  subordinate_to:
+    - spec/workflow.yaml
+    - spec/ruleset.yaml
+    - spec/codex-orchestrator.yaml
+    - spec/agent-capability-policy.yaml
+  prose_role: explanatory_only
+  failure_mode_on_contract_gap: fail_closed
+runtime_profile:
+  default_backend: ollama
+  allowed_backends:
+    - ollama
+  internet_mode:
+    default: disabled
+    enablement_requires_explicit_approved_contract: true
+  token_economy:
+    structured_outputs_required: true
+    prefer_ids_and_refs_over_narrative: true
+    bounded_rationale_required: true
+    oversized_freeform_output_is_contract_violation: true
+backends:
+  ollama:
+    transport: http_json
+    locality: local_only
+    health_probe:
+      method: GET
+      path: /api/tags
+    model_selection_fields:
+      - planner_model
+      - router_model
+    runtime_absence_is_blocking: true
+commands:
+  - id: local-runtime-check
+    purpose: validate local runtime reachability, model availability, and policy-safe configuration
+    request_schema_ref: "#/$defs/request_local_runtime_check"
+    response_schema_ref: "#/$defs/response_local_runtime_check"
+    problem_schema_ref: "#/$defs/problem"
+  - id: local-task-router
+    purpose: classify one bounded task into a governed routing target using deterministic contract fields
+    request_schema_ref: "#/$defs/request_local_task_router"
+    response_schema_ref: "#/$defs/response_local_task_router"
+    problem_schema_ref: "#/$defs/problem"
+routing:
+  targets:
+    - id: local_planner
+      description: local model can complete the planning/routing task without a worker handoff
+    - id: planning_worker
+      description: use a bounded planning worker for graph, contract, sequencing, or research work
+    - id: local_execution_worker
+      description: use a bounded local execution worker for implementation work that stays within approved local runtime constraints
+    - id: remote_execution_worker
+      description: hand off to a stronger or specialized remote worker when policy allows and local execution is not appropriate
+    - id: human_escalation
+      description: stop and require human authority or decision
+  required_decision_fields:
+    - route_target
+    - reason_codes
+    - policy_basis
+    - next_action
+  reason_code_catalog:
+    - task_is_local_planning
+    - task_requires_graph_or_contract_changes
+    - task_requires_code_changes
+    - task_requires_specialized_execution
+    - task_requires_internet_access
+    - local_runtime_unavailable
+    - managed_repo_target_missing
+    - managed_repo_target_ambiguous
+    - governance_authority_ambiguous
+    - human_approval_required
+    - policy_forbids_requested_mode
+    - existing_public_api_can_serve_request
+  policy_basis_catalog:
+    - workflow.execution_requirements
+    - ruleset.execution_constraints
+    - codex_orchestrator.authority
+    - codex_orchestrator.stop_conditions
+    - agent_capability_policy.capability_rules
+    - local_orchestration.authority_model
+    - local_orchestration.routing
+    - public_orchestration_api.contract
+  next_action_catalog:
+    - none
+    - bin/local-runtime-check
+    - bin/local-task-router
+    - bin/get-graph-state
+    - bin/resolve-worker-contract
+    - bin/run-worker-contract
+    - bin/start-next-worker
+    - bin/get-worker-status
+    - human_review_required
+  next_validation_catalog:
+    - bin/local-runtime-check
+    - bin/local-task-router
+    - bin/get-graph-state
+    - bin/resolve-worker-contract
+    - bin/run-worker-contract
+    - bin/start-next-worker
+    - bin/get-worker-status
+    - bin/public-orchestration-api-check
+    - bin/remaining-work-graph-check
+    - bin/execplan-validate
+  fail_closed_when:
+    - required_local_runtime_missing
+    - configured_model_unavailable
+    - governance_authority_is_ambiguous
+    - internet_access_is_required_but_not_approved
+    - target_repo_root_is_missing_or_ambiguous
+managed_repo_targeting:
+  enabled: true
+  root_parameter: repo_root
+  canonicality_rule: target_repo_owns_canonical_state
+  platform_role: runtime_only
+  required_target_artifacts:
+    - spec/workflow.yaml
+    - artifacts/planner/research/remaining-work-graph.json
+    - docs/queued-execplans.md
+    - .agent/execplans
+  ambiguity_behavior: fail_closed
+problems:
+  style: rfc9457_aligned
+  type_catalog:
+    - urn:local-orchestration:problem:required-local-runtime-missing
+    - urn:local-orchestration:problem:configured-model-unavailable
+    - urn:local-orchestration:problem:governance-authority-ambiguous
+    - urn:local-orchestration:problem:internet-access-not-approved
+    - urn:local-orchestration:problem:target-repo-root-missing
+    - urn:local-orchestration:problem:target-repo-root-ambiguous
+    - urn:local-orchestration:problem:required-target-artifact-missing
+    - urn:local-orchestration:problem:unsupported-backend
+    - urn:local-orchestration:problem:unsupported-mode
+    - urn:local-orchestration:problem:runtime-endpoint-unreachable
+  blocker_catalog:
+    - required_local_runtime_missing
+    - configured_model_unavailable
+    - governance_authority_is_ambiguous
+    - internet_access_is_required_but_not_approved
+    - target_repo_root_is_missing
+    - target_repo_root_is_ambiguous
+    - required_target_artifact_missing
+    - unsupported_backend
+    - unsupported_mode
+    - runtime_endpoint_unreachable
+  required_fields:
+    - type
+    - title
+    - status
+    - detail
+  optional_fields:
+    - instance
+    - command
+    - api_version
+    - blockers
+evidence:
+  ref_format: "<kind>:<value>"
+  allowed_kinds:
+    - spec
+    - doc
+    - artifact
+    - command

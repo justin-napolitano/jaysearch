@@ -1,5 +1,5 @@
 version: v1
-last_updated: 2026-03-18
+last_updated: 2026-03-26
 required_checks:
   name_regex: "^[a-z][a-z0-9_]*$"
   contract:
@@ -38,6 +38,11 @@ exception_lifecycle:
   bypass_evidence_min_items: 1
 finalization:
   canonical_event: signed_merge_commit_on_main
+  inflight_authority_source: initiative_branch_execplan
+  signed_mainline_finalization_role: historical_approval_and_completion
+  implementation_slice_integration_event: pull_request_merge_to_initiative
+  implementation_slice_normal_integration_target: initiative_branch
+  implementation_slice_manual_cherry_pick_policy: exception_only_human_directed
   allowed_signature_statuses:
     - G
   derived_fields:

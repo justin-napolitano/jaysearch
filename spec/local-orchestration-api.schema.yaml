@@ -1,0 +1,288 @@
+$schema: "https://json-schema.org/draft/2020-12/schema"
+title: "Local Orchestration API v1"
+description: "Versioned request and response contract catalog for the local orchestration edge."
+type: object
+additionalProperties: true
+required:
+  - api_version
+  - command
+  - status
+  - ok
+properties:
+  api_version:
+    type: string
+    const: "local-orchestration.v1"
+  command:
+    type: string
+    enum:
+      - "local-runtime-check"
+      - "local-task-router"
+  status:
+    type: string
+    enum:
+      - "ok"
+      - "blocked"
+  ok:
+    type: boolean
+$defs:
+  blocker_code:
+    type: string
+    enum:
+      - "required_local_runtime_missing"
+      - "configured_model_unavailable"
+      - "governance_authority_is_ambiguous"
+      - "internet_access_is_required_but_not_approved"
+      - "target_repo_root_is_missing"
+      - "target_repo_root_is_ambiguous"
+      - "required_target_artifact_missing"
+      - "unsupported_backend"
+      - "unsupported_mode"
+      - "runtime_endpoint_unreachable"
+  problem_type_uri:
+    type: string
+    enum:
+      - "urn:local-orchestration:problem:required-local-runtime-missing"
+      - "urn:local-orchestration:problem:configured-model-unavailable"
+      - "urn:local-orchestration:problem:governance-authority-ambiguous"
+      - "urn:local-orchestration:problem:internet-access-not-approved"
+      - "urn:local-orchestration:problem:target-repo-root-missing"
+      - "urn:local-orchestration:problem:target-repo-root-ambiguous"
+      - "urn:local-orchestration:problem:required-target-artifact-missing"
+      - "urn:local-orchestration:problem:unsupported-backend"
+      - "urn:local-orchestration:problem:unsupported-mode"
+      - "urn:local-orchestration:problem:runtime-endpoint-unreachable"
+  problem:
+    type: object
+    additionalProperties: true
+    required:
+      - type
+      - title
+      - status
+      - detail
+    properties:
+      type:
+        $ref: "#/$defs/problem_type_uri"
+      title:
+        type: string
+      status:
+        type: integer
+      detail:
+        type: string
+      instance:
+        type: string
+        format: uri-reference
+      command:
+        type: string
+      api_version:
+        type: string
+      blockers:
+        type: array
+        items:
+          $ref: "#/$defs/blocker_code"
+  runtime_probe:
+    type: object
+    additionalProperties: false
+    required:
+      - backend
+      - reachable
+      - models_checked
+    properties:
+      backend:
+        type: string
+      reachable:
+        type: boolean
+      models_checked:
+        type: array
+        items:
+          type: string
+      endpoint:
+        type: string
+      latency_ms:
+        type: integer
+        minimum: 0
+  routing_target:
+    type: string
+    enum:
+      - "local_planner"
+      - "planning_worker"
+      - "local_execution_worker"
+      - "remote_execution_worker"
+      - "human_escalation"
+  routing_reason_code:
+    type: string
+    enum:
+      - "task_is_local_planning"
+      - "task_requires_graph_or_contract_changes"
+      - "task_requires_code_changes"
+      - "task_requires_specialized_execution"
+      - "task_requires_internet_access"
+      - "local_runtime_unavailable"
+      - "managed_repo_target_missing"
+      - "managed_repo_target_ambiguous"
+      - "governance_authority_ambiguous"
+      - "human_approval_required"
+      - "policy_forbids_requested_mode"
+      - "existing_public_api_can_serve_request"
+  policy_basis_code:
+    type: string
+    enum:
+      - "workflow.execution_requirements"
+      - "ruleset.execution_constraints"
+      - "codex_orchestrator.authority"
+      - "codex_orchestrator.stop_conditions"
+      - "agent_capability_policy.capability_rules"
+      - "local_orchestration.authority_model"
+      - "local_orchestration.routing"
+      - "public_orchestration_api.contract"
+  next_action_id:
+    type: string
+    enum:
+      - "none"
+      - "bin/local-runtime-check"
+      - "bin/local-task-router"
+      - "bin/get-graph-state"
+      - "bin/resolve-worker-contract"
+      - "bin/run-worker-contract"
+      - "bin/start-next-worker"
+      - "bin/get-worker-status"
+      - "human_review_required"
+  validation_id:
+    type: string
+    enum:
+      - "bin/local-runtime-check"
+      - "bin/local-task-router"
+      - "bin/get-graph-state"
+      - "bin/resolve-worker-contract"
+      - "bin/run-worker-contract"
+      - "bin/start-next-worker"
+      - "bin/get-worker-status"
+      - "bin/public-orchestration-api-check"
+      - "bin/remaining-work-graph-check"
+      - "bin/execplan-validate"
+  evidence_ref:
+    type: string
+    pattern: "^(spec|doc|artifact|command):.+$"
+  request_local_runtime_check:
+    type: object
+    additionalProperties: false
+    properties:
+      repo_root:
+        type: string
+      backend:
+        type: string
+        enum:
+          - "ollama"
+      model:
+        type: string
+      required_models:
+        type: array
+        items:
+          type: string
+      verify_managed_repo:
+        type: boolean
+  response_local_runtime_check:
+    allOf:
+      - $ref: "#"
+      - type: object
+        additionalProperties: true
+        required:
+          - backend
+          - runtime
+          - next_validations
+          - blockers
+        properties:
+          command:
+            const: "local-runtime-check"
+          backend:
+            type: string
+          runtime:
+            $ref: "#/$defs/runtime_probe"
+          repo_root:
+            type: string
+          blockers:
+            type: array
+            items:
+              $ref: "#/$defs/blocker_code"
+          next_validations:
+            type: array
+            items:
+              $ref: "#/$defs/validation_id"
+          evidence_refs:
+            type: array
+            items:
+              $ref: "#/$defs/evidence_ref"
+          problem:
+            $ref: "#/$defs/problem"
+  request_local_task_router:
+    type: object
+    additionalProperties: false
+    required:
+      - task
+    properties:
+      task:
+        type: string
+      repo_root:
+        type: string
+      initiative_branch:
+        type: string
+      execplan_id:
+        type: string
+      internet_required:
+        type: boolean
+      requires_code_changes:
+        type: boolean
+      requires_graph_changes:
+        type: boolean
+      context_refs:
+        type: array
+        items:
+          type: string
+  response_local_task_router:
+    allOf:
+      - $ref: "#"
+      - type: object
+        additionalProperties: true
+        required:
+          - route_target
+          - reason_codes
+          - policy_basis
+          - next_action
+          - next_validations
+          - blockers
+        properties:
+          command:
+            const: "local-task-router"
+          repo_root:
+            type: string
+          initiative_branch:
+            type: string
+          execplan_id:
+            type: string
+          route_target:
+            $ref: "#/$defs/routing_target"
+          reason_codes:
+            type: array
+            minItems: 1
+            items:
+              $ref: "#/$defs/routing_reason_code"
+          policy_basis:
+            type: array
+            minItems: 1
+            items:
+              $ref: "#/$defs/policy_basis_code"
+          next_action:
+            $ref: "#/$defs/next_action_id"
+          next_validations:
+            type: array
+            items:
+              $ref: "#/$defs/validation_id"
+          blockers:
+            type: array
+            items:
+              $ref: "#/$defs/blocker_code"
+          evidence_refs:
+            type: array
+            items:
+              $ref: "#/$defs/evidence_ref"
+          problem:
+            $ref: "#/$defs/problem"
