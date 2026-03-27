@@ -225,9 +225,14 @@ This document turns the remaining-work graph into an explicit near-term queue of
    - draft branch: `draft-execplan/20260326-local-offline-orchestration-bootstrap-codex-01-20260326`
    - gate: `finalized draft ExecPlan required before execution`
 
+42. `20260326-local-orchestration-contract-surface-codex-01-execplan`
+   - status: `decision_gated`
+   - goal: Define the local orchestration contract surface before implementation workers execute
+   - gate: `finalized draft ExecPlan required before execution`
+
 ## Mirror Metadata
 
-- canonical_last_graph_action_id: `rwg-action-20260326-register-rwg-041`
+- canonical_last_graph_action_id: `rwg-action-20260326-register-rwg-042`
 - canonical_ready_order: ``
 - projection_authority: `projection_only`
 
