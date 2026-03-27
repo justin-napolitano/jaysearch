@@ -2151,7 +2151,7 @@
       ],
       "target_execplan_id": "20260326-initiative-branch-plan-authority-correction-codex-01-execplan",
       "goal_area": "governance",
-      "implementation_branch": "impl-execplan/20260326-initiative-branch-plan-authority-correction-codex-01-20260326",
+      "implementation_branch": "impl-execplan/20260326-initiative-branch-plan-authority-pr-mergeback-clarification",
       "initiative_branch": "initiative/local-offline-orchestration-bootstrap",
       "parent_initiative_node": "initiative-local-offline-orchestration-bootstrap",
       "integration_mode": "via_initiative",

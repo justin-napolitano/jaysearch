@@ -66,6 +66,8 @@ Codex may prepare merge-readiness evidence but may not replace:
 
 During an active initiative, merge readiness for implementation or initiative merge-back does not require that partial planning updates have already been merged to `main`. It does require that the initiative branch exposes one authoritative active ExecPlan and that the branch context and plan authority are unambiguous.
 
+For `impl-execplan/*` branches, merge readiness should be evaluated for PR merge-back into the parent `initiative/*` branch. Local cherry-pick into the initiative branch is not the default governed merge path and should be treated as exception-only recovery or human-directed action.
+
 ## Design Consequence
 
 This contract implies a later merge-readiness engine that aggregates validator results, artifact hygiene checks, and authority requirements into one machine-readable output.

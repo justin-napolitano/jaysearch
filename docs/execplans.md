@@ -29,6 +29,7 @@ Draft Review Procedure:
 6. Human review and signed finalization on `main` record canonical historical approval or completion, but they are not required before every in-flight implementation slice under an active initiative.
 7. Governed implementation execution may proceed on the dedicated `impl-execplan/*` branch when the initiative branch exposes one authoritative active ExecPlan and required validations and authority checks pass.
 8. Canonical graph and queue state must reflect authoritative plan and initiative state before the next implementation slice advances.
+9. The normal governed integration path for an `impl-execplan/*` branch is a PR into its parent `initiative/*` branch, not an ad hoc local cherry-pick.
 
 Initiative Branch Procedure:
 
@@ -36,11 +37,13 @@ Initiative Branch Procedure:
 2. Treat the initiative branch as the home of one bounded authoritative in-flight ExecPlan for that initiative.
 3. Worker `impl-execplan/*` branches may branch from and merge back into that initiative branch, but they inherit initiative plan authority rather than creating competing ExecPlans.
 4. Worker contracts should define narrow owned scope, validations, merge criteria, and explicit non-goals for each worker branch.
+5. Merge-back from `impl-execplan/*` to `initiative/*` should happen by PR so the slice remains reviewable and machine-auditable as one governed unit.
 5. Initiative branch legality is fail-closed:
    - if the branch does not map to one parent graph node, the workflow should block rather than warn
    - if the branch does not expose one authoritative active ExecPlan, the workflow should block rather than warn
    - unknown initiative parent/child relationships are not valid governed execution
-6. Merge to `main` should occur from the initiative branch only when the parent initiative node is complete.
+6. Manual cherry-pick into the initiative branch is exception-only and should occur only under explicit human direction or documented recovery conditions.
+7. Merge to `main` should occur from the initiative branch only when the parent initiative node is complete.
 
 Template:
 

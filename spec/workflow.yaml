@@ -75,6 +75,9 @@ execution_requirements:
     governed_child_slices_may_branch_from_initiative: true
     initiative_branch_is_authoritative_for_inflight_plan_state: true
     initiative_branch_must_expose_single_authoritative_active_execplan: true
+    implementation_slice_mergeback_requires_pull_request: true
+    implementation_slice_normal_integration_target: initiative
+    manual_cherry_pick_is_not_normal_governed_integration: true
     ambiguous_initiative_plan_authority_blocks_execution: true
     initiative_to_main_requires_parent_node_completion: true
     fail_closed_on_missing_initiative_mapping: true
@@ -93,6 +96,7 @@ execution_requirements:
       impl_execplan_merge_to_initiative:
         source_branch_role: implementation_execplan
         integration_mode: via_initiative
+        required_evidence: pull_request
         target_branch_role: initiative
         resulting_state: completed
       impl_execplan_merge_to_main_exception:
