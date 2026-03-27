@@ -20,6 +20,7 @@ graph_registration:
   node_id: "rwg-041"
   queue_position: 41
   goal_area: "orchestrator-runtime"
+  implementation_branch: "impl-execplan/20260327-local-offline-orchestration-runtime-restack"
   conflict_domains:
     - "governance"
     - "orchestrator-runtime"
@@ -56,6 +57,9 @@ validation:
       expected_exit: 0
     - name: "remaining work graph check"
       command: "bin/remaining-work-graph-check"
+      expected_exit: 0
+    - name: "policy compliance check"
+      command: "bin/policy-compliance-check --execplan-path .agent/execplans/20260326-local-offline-orchestration-bootstrap-codex-01-execplan.md"
       expected_exit: 0
 tasks:
   - title: "Capture a governed local-first orchestration posture that can run without internet access"
