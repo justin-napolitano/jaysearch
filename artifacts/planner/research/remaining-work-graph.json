@@ -2109,6 +2109,7 @@
       ],
       "gating_class": "decision_gated",
       "goal_area": "orchestrator-runtime",
+      "implementation_branch": "impl-execplan/20260327-local-offline-orchestration-runtime-restack",
       "initiative_branch": "initiative/local-offline-orchestration-bootstrap",
       "integration_mode": "via_initiative",
       "node_id": "rwg-041",
