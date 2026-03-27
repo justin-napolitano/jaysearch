@@ -20,8 +20,11 @@ These commands are read-only projections over existing repo-owned command surfac
 `get-control-plane-status`
 - purpose: summarize current operator state for the terminal
 - required output focus:
+  - repo root
+  - explicit target repo root when operating on a managed repo outside the current checkout
   - current branch and branch role
   - initiative branch
+  - managed repo status as a first-class projection over the target repo
   - graph check summary
   - local runtime summary
   - worker session summary
@@ -32,6 +35,8 @@ These commands are read-only projections over existing repo-owned command surfac
 `get-next-orchestration-action`
 - purpose: reduce current control-plane state to one bounded next step
 - required output focus:
+  - repo root
+  - explicit target repo root when operating on a managed repo outside the current checkout
   - current branch and branch role
   - initiative branch
   - recommended action id
@@ -41,9 +46,14 @@ These commands are read-only projections over existing repo-owned command surfac
 ## Relationship to Existing Surfaces
 
 - graph state remains authoritative through `bin/get-graph-state`
+- managed-repo bootstrap/readiness remains authoritative through `bin/managed-repo-status`
 - runtime reachability remains authoritative through `bin/local-runtime-check`
 - worker runtime remains authoritative through `bin/get-worker-status`
 - implementation branch gating remains authoritative through `bin/prepare-next-impl-branch`
 - merge-back remains authoritative through `bin/get-merge-readiness` and `bin/get-pr-integration-contract`
 
 If the orchestrator still needs prose to know what to do next once these commands are present, the control-plane contract is incomplete and should be widened before more automation is added.
+
+## Managed Repo Targeting
+
+Both commands accept an optional `repo_root` parameter. When present, the control plane evaluates canonical managed-repo readiness, graph state, runtime checks, and worker status against that target repo while preserving branch-role and merge-back context from the current orchestration checkout.
