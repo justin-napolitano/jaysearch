@@ -92,6 +92,7 @@ Correct the workflow model so the active initiative branch may carry the authori
 - `draft-execplan/*` branches should remain useful for isolated drafting or review, but they should not be the only lawful planning location
 - implementation slices should be allowed to execute under initiative-branch plan authority when deterministic validation and authority boundaries are satisfied
 - implementation slices should normally integrate back into the initiative branch by PR rather than by local cherry-pick so worker execution remains reviewable and machine-auditable
+- canonical append-only worker audit logs should merge with governed work, while live worker lease directories should remain operational runtime state unless a slice explicitly promotes them
 - merge to `main` should remain authoritative for completed historical finalization, but it should not be a prerequisite for every intermediate planning update inside an active initiative
 - the correction must fail closed if initiative-to-plan mapping is ambiguous
 
