@@ -779,16 +779,35 @@
       "queue_reconciled": true
     },
     {
-      "action_id": "rwg-action-20260327-register-rwg-052",
-      "action": "block",
-      "node_id": "rwg-052",
-      "rationale": "node registered deterministically from ExecPlan graph_registration metadata",
-      "evidence_ref": ".agent/execplans/20260327-orchestrate-governed-slice-api-check-codex-01-execplan.md",
       "action_id": "rwg-action-20260327-register-rwg-051",
       "action": "block",
       "node_id": "rwg-051",
       "rationale": "node registered deterministically from ExecPlan graph_registration metadata",
       "evidence_ref": ".agent/execplans/20260327-orchestrate-governed-slice-control-plane-codex-01-execplan.md",
+      "queue_reconciled": true
+    },
+    {
+      "action_id": "rwg-action-20260327-register-rwg-052",
+      "action": "block",
+      "node_id": "rwg-052",
+      "rationale": "node registered deterministically from ExecPlan graph_registration metadata",
+      "evidence_ref": ".agent/execplans/20260327-orchestrate-governed-slice-api-check-codex-01-execplan.md",
+      "queue_reconciled": true
+    },
+    {
+      "action_id": "rwg-action-20260327-001-complete-rwg-042",
+      "action": "complete",
+      "node_id": "rwg-042",
+      "rationale": "20260326-local-orchestration-contract-surface-codex-01-execplan merged to initiative/local-offline-orchestration-bootstrap and is now canonical completed state",
+      "evidence_ref": "merged:2eb310abf265201989f7d4647f62253dede267ca",
+      "queue_reconciled": true
+    },
+    {
+      "action_id": "rwg-action-20260327-002-complete-rwg-044",
+      "action": "complete",
+      "node_id": "rwg-044",
+      "rationale": "20260326-mergeback-orchestration-api-contract-codex-01-execplan merged to initiative/local-offline-orchestration-bootstrap and is now canonical completed state",
+      "evidence_ref": "merged:2eb310abf265201989f7d4647f62253dede267ca",
       "queue_reconciled": true
     }
   ],
@@ -2172,8 +2191,8 @@
     {
       "node_id": "rwg-042",
       "title": "Define the local orchestration contract surface before implementation workers execute",
-      "status": "decision_gated",
-      "status_reason": "registered from ExecPlan metadata; finalized draft ExecPlan required before execution",
+      "status": "completed",
+      "status_reason": "",
       "gating_class": "decision_gated",
       "conflict_domains": [
         "documentation",
@@ -2198,15 +2217,16 @@
       "ordering": {
         "queue_position": 42,
         "tie_breaker": "20260326-local-orchestration-contract-surface-codex-01-execplan",
-        "source_action_id": "rwg-action-20260326-register-rwg-042"
+        "source_action_id": "rwg-action-20260327-001-complete-rwg-042"
       },
       "action_state": {
-        "last_action_id": "rwg-action-20260326-register-rwg-042",
-        "last_action": "block",
+        "last_action_id": "rwg-action-20260327-001-complete-rwg-042",
+        "last_action": "complete",
         "action_required": false,
         "reorder_requires_human": false,
         "reorder_blockers": []
-      }
+      },
+      "completion_ref": "merged:2eb310abf265201989f7d4647f62253dede267ca"
     },
     {
       "node_id": "rwg-043",
@@ -2251,8 +2271,8 @@
     {
       "node_id": "rwg-044",
       "title": "Define a machine-readable API contract for implementation merge-back into initiative branches",
-      "status": "decision_gated",
-      "status_reason": "registered from ExecPlan metadata; finalized draft ExecPlan required before execution",
+      "status": "completed",
+      "status_reason": "",
       "gating_class": "decision_gated",
       "conflict_domains": [
         "governance",
@@ -2275,15 +2295,16 @@
       "ordering": {
         "queue_position": 44,
         "tie_breaker": "20260326-mergeback-orchestration-api-contract-codex-01-execplan",
-        "source_action_id": "rwg-action-20260326-register-rwg-044"
+        "source_action_id": "rwg-action-20260327-002-complete-rwg-044"
       },
       "action_state": {
-        "last_action_id": "rwg-action-20260326-register-rwg-044",
-        "last_action": "block",
+        "last_action_id": "rwg-action-20260327-002-complete-rwg-044",
+        "last_action": "complete",
         "action_required": false,
         "reorder_requires_human": false,
         "reorder_blockers": []
-      }
+      },
+      "completion_ref": "merged:2eb310abf265201989f7d4647f62253dede267ca"
     },
     {
       "node_id": "rwg-045",
@@ -2537,10 +2558,48 @@
       }
     },
     {
-      "node_id": "rwg-052",
-      "title": "Add a schema and checker for orchestrate-governed-slice",
       "node_id": "rwg-051",
       "title": "Make orchestrate-governed-slice compose the control-plane APIs",
+      "status": "decision_gated",
+      "status_reason": "registered from ExecPlan metadata; finalized draft ExecPlan required before execution",
+      "gating_class": "decision_gated",
+      "conflict_domains": [
+        "governance",
+        "orchestrator-runtime",
+        "workflow"
+      ],
+      "target_execplan_id": "20260327-orchestrate-governed-slice-control-plane-codex-01-execplan",
+      "goal_area": "orchestrator-runtime",
+      "implementation_branch": "impl-execplan/20260327-orchestrate-governed-slice-control-plane-codex-01",
+      "initiative_branch": "initiative/local-offline-orchestration-bootstrap",
+      "parent_initiative_node": "initiative-local-offline-orchestration-bootstrap",
+      "integration_mode": "via_initiative",
+      "expected_artifacts": [
+        ".agent/execplans/20260327-orchestrate-governed-slice-control-plane-codex-01-execplan.md",
+        "artifacts/governance/board-action-events.jsonl",
+        "artifacts/planner/research/remaining-work-graph.json",
+        "docs/commands.md",
+        "docs/queued-execplans.md",
+        "pyproject.toml",
+        "src/platform_tools/orchestrate_governed_slice.py",
+        "tests/test_orchestrate_governed_slice.py"
+      ],
+      "ordering": {
+        "queue_position": 51,
+        "tie_breaker": "20260327-orchestrate-governed-slice-control-plane-codex-01-execplan",
+        "source_action_id": "rwg-action-20260327-register-rwg-051"
+      },
+      "action_state": {
+        "last_action_id": "rwg-action-20260327-register-rwg-051",
+        "last_action": "block",
+        "action_required": false,
+        "reorder_requires_human": false,
+        "reorder_blockers": []
+      }
+    },
+    {
+      "node_id": "rwg-052",
+      "title": "Add a schema and checker for orchestrate-governed-slice",
       "status": "decision_gated",
       "status_reason": "registered from ExecPlan metadata; finalized draft ExecPlan required before execution",
       "gating_class": "decision_gated",
@@ -2552,9 +2611,6 @@
       "target_execplan_id": "20260327-orchestrate-governed-slice-api-check-codex-01-execplan",
       "goal_area": "orchestrator-runtime",
       "implementation_branch": "impl-execplan/20260327-orchestrate-governed-slice-api-check-codex-01",
-      "target_execplan_id": "20260327-orchestrate-governed-slice-control-plane-codex-01-execplan",
-      "goal_area": "orchestrator-runtime",
-      "implementation_branch": "impl-execplan/20260327-orchestrate-governed-slice-control-plane-codex-01",
       "initiative_branch": "initiative/local-offline-orchestration-bootstrap",
       "parent_initiative_node": "initiative-local-offline-orchestration-bootstrap",
       "integration_mode": "via_initiative",
@@ -2577,22 +2633,6 @@
       },
       "action_state": {
         "last_action_id": "rwg-action-20260327-register-rwg-052",
-        ".agent/execplans/20260327-orchestrate-governed-slice-control-plane-codex-01-execplan.md",
-        "artifacts/governance/board-action-events.jsonl",
-        "artifacts/planner/research/remaining-work-graph.json",
-        "docs/commands.md",
-        "docs/queued-execplans.md",
-        "pyproject.toml",
-        "src/platform_tools/orchestrate_governed_slice.py",
-        "tests/test_orchestrate_governed_slice.py"
-      ],
-      "ordering": {
-        "queue_position": 51,
-        "tie_breaker": "20260327-orchestrate-governed-slice-control-plane-codex-01-execplan",
-        "source_action_id": "rwg-action-20260327-register-rwg-051"
-      },
-      "action_state": {
-        "last_action_id": "rwg-action-20260327-register-rwg-051",
         "last_action": "block",
         "action_required": false,
         "reorder_requires_human": false,
@@ -2613,8 +2653,7 @@
     "reorder_requires_explicit_action": true
   },
   "queue_projection": {
-    "last_reconciled_action_id": "rwg-action-20260327-register-rwg-052",
-    "last_reconciled_action_id": "rwg-action-20260327-register-rwg-051",
+    "last_reconciled_action_id": "rwg-action-20260327-002-complete-rwg-044",
     "path": "docs/queued-execplans.md",
     "projection_authority": "projection_only",
     "ready_execplan_ids": []
