@@ -745,6 +745,14 @@
       "rationale": "node registered deterministically from ExecPlan graph_registration metadata",
       "evidence_ref": ".agent/execplans/20260327-mergeback-orchestration-api-runtime-codex-01-execplan.md",
       "queue_reconciled": true
+    },
+    {
+      "action_id": "rwg-action-20260327-register-rwg-047",
+      "action": "block",
+      "node_id": "rwg-047",
+      "rationale": "node registered deterministically from ExecPlan graph_registration metadata",
+      "evidence_ref": ".agent/execplans/20260327-implementation-branch-ancestry-enforcement-codex-01-execplan.md",
+      "queue_reconciled": true
     }
   ],
   "graph_id": "remaining-work-graph-20260311",
@@ -2320,6 +2328,50 @@
         "reorder_requires_human": false,
         "reorder_blockers": []
       }
+    },
+    {
+      "node_id": "rwg-047",
+      "title": "Enforce implementation branch ancestry and merge-back completion before new slices start",
+      "status": "decision_gated",
+      "status_reason": "registered from ExecPlan metadata; finalized draft ExecPlan required before execution",
+      "gating_class": "decision_gated",
+      "conflict_domains": [
+        "governance",
+        "orchestrator-runtime",
+        "workflow"
+      ],
+      "target_execplan_id": "20260327-implementation-branch-ancestry-enforcement-codex-01-execplan",
+      "goal_area": "orchestrator-runtime",
+      "implementation_branch": "impl-execplan/20260327-implementation-ancestry-enforcement-codex-01",
+      "initiative_branch": "initiative/local-offline-orchestration-bootstrap",
+      "parent_initiative_node": "initiative-local-offline-orchestration-bootstrap",
+      "integration_mode": "via_initiative",
+      "expected_artifacts": [
+        ".agent/execplans/20260327-implementation-branch-ancestry-enforcement-codex-01-execplan.md",
+        "artifacts/planner/research/remaining-work-graph.json",
+        "docs/commands.md",
+        "docs/mergeback-orchestration-api.md",
+        "docs/queued-execplans.md",
+        "pyproject.toml",
+        "spec/mergeback-orchestration-api.schema.yaml",
+        "src/platform_tools/mergeback_orchestration.py",
+        "src/platform_tools/prepare_next_impl_branch.py",
+        "src/platform_tools/policy_compliance_check.py",
+        "tests/test_mergeback_orchestration_api.py",
+        "tests/test_prepare_next_impl_branch.py"
+      ],
+      "ordering": {
+        "queue_position": 47,
+        "tie_breaker": "20260327-implementation-branch-ancestry-enforcement-codex-01-execplan",
+        "source_action_id": "rwg-action-20260327-register-rwg-047"
+      },
+      "action_state": {
+        "last_action_id": "rwg-action-20260327-register-rwg-047",
+        "last_action": "block",
+        "action_required": false,
+        "reorder_requires_human": false,
+        "reorder_blockers": []
+      }
     }
   ],
   "ordering_policy": {
@@ -2335,7 +2387,7 @@
     "reorder_requires_explicit_action": true
   },
   "queue_projection": {
-    "last_reconciled_action_id": "rwg-action-20260327-register-rwg-046",
+    "last_reconciled_action_id": "rwg-action-20260327-register-rwg-047",
     "path": "docs/queued-execplans.md",
     "projection_authority": "projection_only",
     "ready_execplan_ids": []

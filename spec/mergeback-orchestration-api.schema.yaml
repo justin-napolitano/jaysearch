@@ -17,6 +17,7 @@ properties:
     enum:
       - "get-merge-readiness"
       - "get-pr-integration-contract"
+      - "prepare-next-impl-branch"
   status:
     type: string
     enum:
@@ -34,8 +35,11 @@ $defs:
       - "required_validation_failed"
       - "required_human_review_pending"
       - "source_branch_role_invalid"
+      - "stale_initiative_base"
       - "target_branch_role_invalid"
       - "target_branch_resolution_failed"
+      - "prior_impl_slice_unmerged"
+      - "initiative_branch_not_current"
       - "working_tree_hygiene_failed"
   next_action_id:
     type: string
@@ -45,6 +49,10 @@ $defs:
       - "open_pr_to_initiative"
       - "request_human_review"
       - "do_not_merge"
+      - "restack_on_initiative"
+      - "refresh_initiative_branch"
+      - "resolve_prior_impl_slice"
+      - "cut_impl_branch"
   validation_id:
     type: string
     enum:
@@ -59,6 +67,8 @@ $defs:
       - "https://platform-template-bootstrap/problems/merge-readiness-failed"
       - "https://platform-template-bootstrap/problems/invalid-branch-role"
       - "https://platform-template-bootstrap/problems/target-resolution-failed"
+      - "https://platform-template-bootstrap/problems/stale-initiative-base"
+      - "https://platform-template-bootstrap/problems/prior-impl-slice-unmerged"
   branch_role:
     type: string
     enum:
@@ -204,6 +214,77 @@ $defs:
             $ref: "#/$defs/next_action_id"
           problem:
             $ref: "#/$defs/problem"
+  request_prepare_next_impl_branch:
+    type: object
+    additionalProperties: false
+    properties:
+      initiative_branch:
+        type: string
+      execplan_id:
+        type: string
+      node_id:
+        type: string
+  response_prepare_next_impl_branch:
+    allOf:
+      - $ref: "#"
+      - type: object
+        additionalProperties: true
+        required:
+          - initiative_branch
+          - blockers
+          - next_action
+        properties:
+          command:
+            const: "prepare-next-impl-branch"
+          initiative_branch:
+            type: string
+          selectors:
+            type: object
+            additionalProperties: false
+            properties:
+              execplan_id:
+                type: string
+              node_id:
+                type: string
+          selected:
+            type: object
+            additionalProperties: true
+            properties:
+              node_id:
+                type: string
+              title:
+                type: string
+              execplan_id:
+                type: string
+              implementation_branch:
+                type: string
+          prior_impl_slices:
+            type: array
+            items:
+              type: object
+              additionalProperties: false
+              required:
+                - blocker
+                - node_id
+                - implementation_branch
+                - reason
+              properties:
+                blocker:
+                  const: "prior_impl_slice_unmerged"
+                node_id:
+                  type: string
+                implementation_branch:
+                  type: string
+                reason:
+                  type: string
+          blockers:
+            type: array
+            items:
+              $ref: "#/$defs/blocker_id"
+          next_action:
+            $ref: "#/$defs/next_action_id"
+          problem:
+            $ref: "#/$defs/problem"
   command_catalog:
     type: object
     additionalProperties: false
@@ -224,3 +305,11 @@ $defs:
             const: "#/$defs/request_get_pr_integration_contract"
           response_schema:
             const: "#/$defs/response_get_pr_integration_contract"
+      prepare-next-impl-branch:
+        type: object
+        additionalProperties: false
+        properties:
+          request_schema:
+            const: "#/$defs/request_prepare_next_impl_branch"
+          response_schema:
+            const: "#/$defs/response_prepare_next_impl_branch"
