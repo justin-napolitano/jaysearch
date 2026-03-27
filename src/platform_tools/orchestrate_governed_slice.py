@@ -5,15 +5,9 @@ import json
 from pathlib import Path
 from typing import Any
 
-from platform_tools.game_status import get_game_status
-from platform_tools.human_operations_status import get_human_operations_status
-from platform_tools.managed_repo_status import get_managed_repo_status
-from platform_tools.merge_readiness import check_merge_readiness
-from platform_tools.orchestrator_status import get_orchestrator_status
+from platform_tools.control_plane import get_control_plane_status, get_next_orchestration_action
 from platform_tools.plan_utils import parse_plan
-from platform_tools.reconcile_governed_graph_events import reconcile_governed_graph_events
 from platform_tools.reconcile_remaining_work_merge import reconcile_pending_merge_completions
-from platform_tools.session_bootstrap import run_session_bootstrap_check
 
 
 COMMAND = "orchestrate-governed-slice"
@@ -65,137 +59,64 @@ def run_orchestrate_governed_slice(
 ) -> tuple[int, dict[str, Any]]:
     root_path = Path(root).resolve()
     local_repo_path = Path(".").resolve()
-    if root_path != local_repo_path:
-        managed_code, managed_report = get_managed_repo_status(
-            root=root,
-            branch=branch,
-            execplan_path=execplan_path,
-            base_ref=base_ref,
-        )
-        report = {
-            "command": COMMAND,
-            "status": managed_report.get("status", ""),
-            "ok": bool(managed_report.get("ok", False)),
-            "blockers": managed_report.get("blockers", []),
-            "branch": managed_report.get("branch", ""),
-            "execplan_path": (
-                managed_report.get("active_execplan", {}) or {}
-            ).get("path", execplan_path or ""),
-            "managed_repo": managed_report,
-            "next_actions": managed_report.get("next_actions", []),
-        }
-        return managed_code, report
-
-    post_merge_reconciliation = reconcile_pending_merge_completions(repo_root=root_path, main_ref=base_ref)
-
-    game_code, game_report = get_game_status(
-        root=root,
-        branch=branch,
-        execplan_path=execplan_path,
-        base_ref=base_ref,
-    )
-    active_execplan = game_report.get("active_execplan") if isinstance(game_report, dict) else None
-    resolved_execplan_path = execplan_path or (
-        str(active_execplan.get("path", "")).strip() if isinstance(active_execplan, dict) else ""
-    )
-    current_branch = str(game_report.get("branch", branch or "")).strip() if isinstance(game_report, dict) else (branch or "")
-    bootstrap_code, bootstrap_report = run_session_bootstrap_check(
-        root=root,
-        branch=current_branch or None,
-        base_ref=base_ref,
-        execplan_path=resolved_execplan_path or None,
-        session_kind="codex",
-    )
-    effective_base_ref = _effective_base_ref(
-        repo_root=root_path,
-        branch=current_branch,
-        execplan_path=resolved_execplan_path,
-        default_base_ref=base_ref,
+    target_repo_root = root_path if root_path != local_repo_path else local_repo_path
+    post_merge_reconciliation = reconcile_pending_merge_completions(
+        repo_root=local_repo_path,
+        main_ref=base_ref,
     )
 
-    blockers: list[str] = []
-    if bootstrap_code != 0:
-        blockers.extend(f"session_bootstrap:{item}" for item in bootstrap_report.get("blockers", []))
-    if game_code != 0:
-        blockers.extend(f"game_status:{item}" for item in game_report.get("blockers", []))
-    if not resolved_execplan_path:
-        blockers.append("active_execplan_not_deterministic")
+    status_code, control_plane_status = get_control_plane_status(
+        root=local_repo_path.as_posix(),
+        repo_root=target_repo_root.as_posix(),
+    )
+    action_code, next_action_report = get_next_orchestration_action(
+        root=local_repo_path.as_posix(),
+        repo_root=target_repo_root.as_posix(),
+    )
 
-    reconcile_report: dict[str, Any] = {
-        "command": "reconcile-governed-graph-events",
-        "status": "deferred",
-        "ok": False,
-        "steps": [],
-    }
-    if not blockers and resolved_execplan_path:
-        reconcile_report = reconcile_governed_graph_events(
-            execplan_path=Path(resolved_execplan_path),
-            repo_root=Path(root),
-        )
-        if not reconcile_report.get("ok", False):
-            blockers.append("graph_reconciliation_failed")
-
-    merge_report: dict[str, Any] = {"readiness": False, "failing_checks": []}
-    orchestrator_report: dict[str, Any] = {"status": "deferred", "next_actions": []}
-    human_ops_report: dict[str, Any] = {"status": "deferred", "next_actions": []}
-    if not blockers:
-        merge_code, merge_report = check_merge_readiness(
-            root=root,
-            execplan_path=resolved_execplan_path or None,
-            base_ref=effective_base_ref,
-            include_validation_runs=False,
-        )
-        if merge_code != 0:
-            blockers.extend(f"merge_readiness:{item}" for item in merge_report.get("failing_checks", []))
-
-        _, orchestrator_report = get_orchestrator_status(
-            root=root,
-            branch=current_branch or None,
-            execplan_path=resolved_execplan_path or None,
-            base_ref=base_ref,
-        )
-        _, human_ops_report = get_human_operations_status(
-            root=root,
-            branch=current_branch or None,
-            execplan_path=resolved_execplan_path or None,
+    blockers = [
+        str(item).strip()
+        for item in control_plane_status.get("blockers", [])
+        if str(item).strip()
+    ]
+    if action_code != 0:
+        blockers.extend(
+            str(item).strip()
+            for item in next_action_report.get("blockers", [])
+            if str(item).strip()
         )
 
     next_actions: list[dict[str, Any]] = []
-    if blockers:
-        next_actions.append({"action": "resolve_blockers", "reason": "orchestration_blocked"})
-    else:
-        next_actions.extend(orchestrator_report.get("next_actions", []))
-        for action in human_ops_report.get("next_actions", []):
-            if action not in next_actions:
-                next_actions.append(action)
+    recommended_action = str(next_action_report.get("recommended_action", "")).strip()
+    command_ref = str(next_action_report.get("command_ref", "")).strip()
+    if recommended_action and recommended_action != "none":
+        next_actions.append(
+            {
+                "action": recommended_action,
+                "command_ref": command_ref,
+                "reason": "control_plane_projection",
+            }
+        )
 
+    ok = status_code == 0 and action_code == 0 and not blockers
     report = {
         "command": COMMAND,
-        "status": "ok" if not blockers else "blocked",
-        "ok": not blockers,
+        "status": "ok" if ok else "blocked",
+        "ok": ok,
         "blockers": sorted(set(blockers)),
-        "branch": current_branch,
-        "base_ref": effective_base_ref,
-        "execplan_path": resolved_execplan_path,
-        "session_bootstrap": bootstrap_report,
-        "reconciliation": reconcile_report,
+        "branch": str(control_plane_status.get("current_branch", branch or "")).strip(),
+        "branch_role": str(control_plane_status.get("branch_role", "")).strip(),
+        "initiative_branch": str(control_plane_status.get("initiative_branch", "")).strip(),
+        "repo_root": target_repo_root.as_posix(),
+        "base_ref": base_ref,
+        "execplan_path": execplan_path or "",
+        "control_plane_status": control_plane_status,
+        "next_orchestration_action": next_action_report,
         "post_merge_reconciliation": post_merge_reconciliation,
-        "merge_readiness": {
-            "readiness": bool(merge_report.get("readiness", False)),
-            "failing_checks": merge_report.get("failing_checks", []),
-        },
-        "orchestrator_status": {
-            "status": orchestrator_report.get("status", ""),
-            "next_actions": orchestrator_report.get("next_actions", []),
-        },
-        "human_operations_status": {
-            "status": human_ops_report.get("status", ""),
-            "next_actions": human_ops_report.get("next_actions", []),
-        },
-        "managed_repo": None,
+        "managed_repo": (control_plane_status.get("checks", {}) or {}).get("managed_repo"),
         "next_actions": next_actions,
     }
-    return (0 if not blockers else 1), report
+    return (0 if ok else 1), report
 
 
 def main() -> int:
