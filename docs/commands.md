@@ -51,7 +51,7 @@ Notes:
 - `bin/run-governed-pre-push-checks` runs safe branch-aware governance checks before push on governed branches.
 - `bin/bootstrap-managed-repo` scaffolds a lightweight managed repo and writes repo-local provider-sync artifacts through platform-owned runtime code.
 - `bin/managed-repo-status` validates that an external repo has the required canonical and board-bootstrap artifacts before orchestration proceeds.
-- `bin/orchestrate-governed-slice` is the local control-loop entrypoint for both self-hosted and managed repos.
+- `bin/orchestrate-governed-slice` is the local control-loop entrypoint for both self-hosted and managed repos, composed over the control-plane status and next-action APIs.
 - `bin/resolve-worker-contract` resolves one runnable or explicit worker contract into a compact machine-shaped payload.
 - `bin/run-worker-contract` is the orchestrator-agnostic worker execution entrypoint; it resolves one bounded worker contract and delegates execution to the governed worker runtime.
 - `bin/start-next-worker` is a composite facade command for thin orchestrators that want “resolve next runnable contract and execute it” in one call.
