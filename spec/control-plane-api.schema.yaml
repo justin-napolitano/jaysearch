@@ -68,6 +68,7 @@ $defs:
           - current_branch
           - branch_role
           - initiative_branch
+          - repo_root
           - blockers
           - checks
         properties:
@@ -78,6 +79,8 @@ $defs:
           branch_role:
             $ref: "#/$defs/branch_role"
           initiative_branch:
+            type: string
+          repo_root:
             type: string
           blockers:
             type: array
@@ -91,6 +94,10 @@ $defs:
                 $ref: "#/$defs/check_projection"
               local_runtime:
                 $ref: "#/$defs/check_projection"
+              managed_repo:
+                oneOf:
+                  - type: "null"
+                  - $ref: "#/$defs/check_projection"
               worker_status:
                 $ref: "#/$defs/check_projection"
               branch_preparation:
@@ -114,6 +121,7 @@ $defs:
           - current_branch
           - branch_role
           - initiative_branch
+          - repo_root
           - recommended_action
           - command_ref
           - blockers
@@ -125,6 +133,8 @@ $defs:
           branch_role:
             $ref: "#/$defs/branch_role"
           initiative_branch:
+            type: string
+          repo_root:
             type: string
           recommended_action:
             $ref: "#/$defs/next_action_id"
