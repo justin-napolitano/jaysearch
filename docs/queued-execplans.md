@@ -245,9 +245,14 @@ This document turns the remaining-work graph into an explicit near-term queue of
    - goal: classify worker session audit logs as canonical append-only evidence while keeping live lease directories operational
    - gate: `finalized draft ExecPlan required before execution`
 
+46. `20260327-mergeback-orchestration-api-runtime-codex-01-execplan`
+   - status: `decision_gated`
+   - goal: implement merge-back orchestration commands for readiness and PR target resolution
+   - gate: `finalized draft ExecPlan required before execution`
+
 ## Mirror Metadata
 
-- canonical_last_graph_action_id: `rwg-action-20260326-register-rwg-045`
+- canonical_last_graph_action_id: `rwg-action-20260327-register-rwg-046`
 - canonical_ready_order: ``
 - projection_authority: `projection_only`
 
