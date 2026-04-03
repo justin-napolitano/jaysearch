@@ -61,10 +61,10 @@ Recommended next steps:
 
 ## Start Reading Here
 
-- [Getting Started](/mnt/c/Users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap/docs/getting-started.md)
-- [Platform Overview](/mnt/c/Users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap/docs/platform-overview.md)
-- [Template Maintenance](/mnt/c/Users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap/docs/template-maintenance.md)
-- [ExecPlans](/mnt/c/Users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap/docs/execplans.md)
+- [Getting Started](docs/getting-started.md)
+- [Platform Overview](docs/platform-overview.md)
+- [Template Maintenance](docs/template-maintenance.md)
+- [ExecPlans](docs/execplans.md)
 
 ## Default Expectations For Spawned Repos
 
