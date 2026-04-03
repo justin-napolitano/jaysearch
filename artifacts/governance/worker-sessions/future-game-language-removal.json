@@ -1,0 +1,18 @@
+{
+  "actor_id": "agent/codex-01",
+  "base_ref": "initiative/platform-surface-simplification",
+  "branch": "impl-execplan/future-game-language-removal",
+  "closed_at": "2026-03-24T19:35:29Z",
+  "contract_id": "rwg-034:20260324-game-language-removal-codex-01-execplan",
+  "execplan_id": "20260324-game-language-removal-codex-01-execplan",
+  "execplan_path": "/mnt/c/Users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap/.agent/execplans/20260324-game-language-removal-codex-01-execplan.md",
+  "initiative_branch": "initiative/platform-surface-simplification",
+  "issued_at": "2026-03-24T19:34:02Z",
+  "merge_target": "initiative/platform-surface-simplification",
+  "node_id": "rwg-034",
+  "outcome": "completed",
+  "parent_initiative_node": "initiative-platform-surface-simplification",
+  "status": "closed",
+  "version": "v1",
+  "worker_id": "future-game-language-removal"
+}
