@@ -1,0 +1,146 @@
+$schema: "https://json-schema.org/draft/2020-12/schema"
+title: "Control Plane API v1"
+description: "Composite operator-facing command catalog for terminal orchestration."
+type: object
+additionalProperties: true
+required:
+  - api_version
+  - command
+  - status
+  - ok
+properties:
+  api_version:
+    type: string
+    const: "control-plane.v1"
+  command:
+    type: string
+    enum:
+      - "get-control-plane-status"
+      - "get-next-orchestration-action"
+  status:
+    type: string
+    enum:
+      - "ok"
+      - "blocked"
+  ok:
+    type: boolean
+$defs:
+  branch_role:
+    type: string
+    enum:
+      - "initiative"
+      - "implementation_execplan"
+      - "other"
+  next_action_id:
+    type: string
+    enum:
+      - "cut_impl_branch"
+      - "open_pr_to_initiative"
+      - "restack_on_initiative"
+      - "run_local_runtime_check"
+      - "inspect_worker_sessions"
+      - "resolve_mergeback_blockers"
+      - "resolve_control_plane_blockers"
+      - "switch_to_initiative_branch"
+      - "none"
+  check_projection:
+    type: object
+    additionalProperties: true
+    required:
+      - status
+      - ok
+      - blockers
+    properties:
+      status:
+        type: string
+      ok:
+        type: boolean
+      blockers:
+        type: array
+        items:
+          type: string
+  response_get_control_plane_status:
+    allOf:
+      - $ref: "#"
+      - type: object
+        additionalProperties: true
+        required:
+          - current_branch
+          - branch_role
+          - initiative_branch
+          - repo_root
+          - blockers
+          - checks
+        properties:
+          command:
+            const: "get-control-plane-status"
+          current_branch:
+            type: string
+          branch_role:
+            $ref: "#/$defs/branch_role"
+          initiative_branch:
+            type: string
+          repo_root:
+            type: string
+          blockers:
+            type: array
+            items:
+              type: string
+          checks:
+            type: object
+            additionalProperties: false
+            properties:
+              graph:
+                $ref: "#/$defs/check_projection"
+              local_runtime:
+                $ref: "#/$defs/check_projection"
+              managed_repo:
+                oneOf:
+                  - type: "null"
+                  - $ref: "#/$defs/check_projection"
+              worker_status:
+                $ref: "#/$defs/check_projection"
+              branch_preparation:
+                oneOf:
+                  - type: "null"
+                  - $ref: "#/$defs/check_projection"
+              merge_readiness:
+                oneOf:
+                  - type: "null"
+                  - $ref: "#/$defs/check_projection"
+              pr_integration:
+                oneOf:
+                  - type: "null"
+                  - $ref: "#/$defs/check_projection"
+  response_get_next_orchestration_action:
+    allOf:
+      - $ref: "#"
+      - type: object
+        additionalProperties: true
+        required:
+          - current_branch
+          - branch_role
+          - initiative_branch
+          - repo_root
+          - recommended_action
+          - command_ref
+          - blockers
+        properties:
+          command:
+            const: "get-next-orchestration-action"
+          current_branch:
+            type: string
+          branch_role:
+            $ref: "#/$defs/branch_role"
+          initiative_branch:
+            type: string
+          repo_root:
+            type: string
+          recommended_action:
+            $ref: "#/$defs/next_action_id"
+          command_ref:
+            type: string
+          blockers:
+            type: array
+            items:
+              type: string
