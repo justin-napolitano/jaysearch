@@ -109,7 +109,8 @@ Codex may mutate:
 
 - planner session artifacts through governed planner commands
 - canonical graph state through legal move paths
-- draft ExecPlan artifacts through governed draft/import commands
+- active initiative ExecPlan artifacts when the initiative branch is authoritative for in-flight plan state
+- draft ExecPlan artifacts through governed draft/import commands when isolated review branches are used
 - implementation files only under an active implementation ExecPlan
 
 Codex may not mutate:
@@ -119,6 +120,12 @@ Codex may not mutate:
 - canonical state through direct ad hoc file edits when a governed command path exists
 
 Direct file edits remain allowed for implementation work, but they must be governed by the active ExecPlan, reflected in canonical state, and validated before merge readiness is claimed.
+
+Codex should preserve governed audit history when the repo declares it canonical. In particular, `artifacts/governance/worker-session-events.jsonl` is canonical append-only evidence, while `artifacts/governance/worker-sessions/` remains live operational runtime state and is not a default merge artifact.
+
+When an initiative branch is active, the orchestrator should treat the initiative branch ExecPlan as the authoritative in-flight planning source unless machine-readable state says otherwise. A signed merge on `main` remains the historical approval or completion event, not the only lawful place where plan authority may exist during active initiative execution.
+
+When Codex completes work on an `impl-execplan/*` branch under an active initiative, the normal integration path is a PR back into the parent `initiative/*` branch. Codex should not treat local cherry-pick as the default governed merge-back mechanism unless a machine-readable exception path or explicit human direction allows it.
 
 ## Stop Conditions
 

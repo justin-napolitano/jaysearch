@@ -9,6 +9,9 @@ Merge readiness must be machine-checkable. Codex must be able to determine wheth
 A branch is merge-ready only if all of the following are true:
 
 - the active ExecPlan validations pass
+- the active ExecPlan is authoritative for the branch context:
+  - initiative branch for in-flight initiative integration
+  - implementation branch inheriting authority from its parent initiative branch
 - the slice-specific smoke test passes
 - required focused tests pass
 - generated smoke artifacts are intentionally committed, removed, or stashed
@@ -51,6 +54,10 @@ Generated artifacts from smoke or validation runs must not be ignored at merge t
 - removed because they are disposable
 - stashed because they are temporary verification output
 
+Canonical append-only audit artifacts should also be committed when they change as part of governed work. The worker session event log at `artifacts/governance/worker-session-events.jsonl` is in this category.
+
+Operational runtime state is different from canonical audit evidence. The live worker lease directory at `artifacts/governance/worker-sessions/` is not a default merge artifact and should remain uncommitted unless an active ExecPlan explicitly promotes it as required evidence.
+
 A dirty branch containing disposable generated artifacts is not merge-ready.
 
 ## Human Authority
@@ -59,7 +66,11 @@ Codex may prepare merge-readiness evidence but may not replace:
 
 - human review
 - human exception approval
-- human ExecPlan finalization requirements
+- human historical approval and completion events on `main`
+
+During an active initiative, merge readiness for implementation or initiative merge-back does not require that partial planning updates have already been merged to `main`. It does require that the initiative branch exposes one authoritative active ExecPlan and that the branch context and plan authority are unambiguous.
+
+For `impl-execplan/*` branches, merge readiness should be evaluated for PR merge-back into the parent `initiative/*` branch. Local cherry-pick into the initiative branch is not the default governed merge path and should be treated as exception-only recovery or human-directed action.
 
 ## Design Consequence
 

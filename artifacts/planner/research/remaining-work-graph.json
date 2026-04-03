@@ -697,6 +697,126 @@
       "node_id": "rwg-040",
       "queue_reconciled": true,
       "rationale": "node registered deterministically from ExecPlan graph_registration metadata"
+    },
+    {
+      "action": "block",
+      "action_id": "rwg-action-20260326-register-rwg-041",
+      "evidence_ref": ".agent/execplans/20260326-local-offline-orchestration-bootstrap-codex-01-execplan.md",
+      "node_id": "rwg-041",
+      "queue_reconciled": true,
+      "rationale": "node registered deterministically from ExecPlan graph_registration metadata"
+    },
+    {
+      "action_id": "rwg-action-20260326-register-rwg-042",
+      "action": "block",
+      "node_id": "rwg-042",
+      "rationale": "node registered deterministically from ExecPlan graph_registration metadata",
+      "evidence_ref": ".agent/execplans/20260326-local-orchestration-contract-surface-codex-01-execplan.md",
+      "queue_reconciled": true
+    },
+    {
+      "action_id": "rwg-action-20260326-register-rwg-043",
+      "action": "block",
+      "node_id": "rwg-043",
+      "rationale": "node registered deterministically from ExecPlan graph_registration metadata",
+      "evidence_ref": ".agent/execplans/20260326-initiative-branch-plan-authority-correction-codex-01-execplan.md",
+      "queue_reconciled": true
+    },
+    {
+      "action_id": "rwg-action-20260326-register-rwg-044",
+      "action": "block",
+      "node_id": "rwg-044",
+      "rationale": "node registered deterministically from ExecPlan graph_registration metadata",
+      "evidence_ref": ".agent/execplans/20260326-mergeback-orchestration-api-contract-codex-01-execplan.md",
+      "queue_reconciled": true
+    },
+    {
+      "action_id": "rwg-action-20260326-register-rwg-045",
+      "action": "block",
+      "node_id": "rwg-045",
+      "rationale": "node registered deterministically from ExecPlan graph_registration metadata",
+      "evidence_ref": ".agent/execplans/20260326-worker-audit-log-canonicalization-codex-01-execplan.md",
+      "queue_reconciled": true
+    },
+    {
+      "action_id": "rwg-action-20260327-register-rwg-046",
+      "action": "block",
+      "node_id": "rwg-046",
+      "rationale": "node registered deterministically from ExecPlan graph_registration metadata",
+      "evidence_ref": ".agent/execplans/20260327-mergeback-orchestration-api-runtime-codex-01-execplan.md",
+      "queue_reconciled": true
+    },
+    {
+      "action_id": "rwg-action-20260327-register-rwg-047",
+      "action": "block",
+      "node_id": "rwg-047",
+      "rationale": "node registered deterministically from ExecPlan graph_registration metadata",
+      "evidence_ref": ".agent/execplans/20260327-implementation-branch-ancestry-enforcement-codex-01-execplan.md",
+      "queue_reconciled": true
+    },
+    {
+      "action_id": "rwg-action-20260327-register-rwg-048",
+      "action": "block",
+      "node_id": "rwg-048",
+      "rationale": "node registered deterministically from ExecPlan graph_registration metadata",
+      "evidence_ref": ".agent/execplans/20260327-control-plane-composite-runtime-codex-01-execplan.md",
+      "queue_reconciled": true
+    },
+    {
+      "action_id": "rwg-action-20260327-register-rwg-049",
+      "action": "block",
+      "node_id": "rwg-049",
+      "rationale": "node registered deterministically from ExecPlan graph_registration metadata",
+      "evidence_ref": ".agent/execplans/20260327-control-plane-api-check-codex-01-execplan.md",
+      "queue_reconciled": true
+    },
+    {
+      "action_id": "rwg-action-20260327-register-rwg-050",
+      "action": "block",
+      "node_id": "rwg-050",
+      "rationale": "node registered deterministically from ExecPlan graph_registration metadata",
+      "evidence_ref": ".agent/execplans/20260327-managed-repo-control-plane-codex-01-execplan.md",
+      "queue_reconciled": true
+    },
+    {
+      "action_id": "rwg-action-20260327-register-rwg-051",
+      "action": "block",
+      "node_id": "rwg-051",
+      "rationale": "node registered deterministically from ExecPlan graph_registration metadata",
+      "evidence_ref": ".agent/execplans/20260327-orchestrate-governed-slice-control-plane-codex-01-execplan.md",
+      "queue_reconciled": true
+    },
+    {
+      "action_id": "rwg-action-20260327-register-rwg-052",
+      "action": "block",
+      "node_id": "rwg-052",
+      "rationale": "node registered deterministically from ExecPlan graph_registration metadata",
+      "evidence_ref": ".agent/execplans/20260327-orchestrate-governed-slice-api-check-codex-01-execplan.md",
+      "queue_reconciled": true
+    },
+    {
+      "action_id": "rwg-action-20260327-001-complete-rwg-042",
+      "action": "complete",
+      "node_id": "rwg-042",
+      "rationale": "20260326-local-orchestration-contract-surface-codex-01-execplan merged to initiative/local-offline-orchestration-bootstrap and is now canonical completed state",
+      "evidence_ref": "merged:2eb310abf265201989f7d4647f62253dede267ca",
+      "queue_reconciled": true
+    },
+    {
+      "action_id": "rwg-action-20260327-002-complete-rwg-044",
+      "action": "complete",
+      "node_id": "rwg-044",
+      "rationale": "20260326-mergeback-orchestration-api-contract-codex-01-execplan merged to initiative/local-offline-orchestration-bootstrap and is now canonical completed state",
+      "evidence_ref": "merged:2eb310abf265201989f7d4647f62253dede267ca",
+      "queue_reconciled": true
+    },
+    {
+      "action_id": "rwg-action-20260327-register-rwg-053",
+      "action": "block",
+      "node_id": "rwg-053",
+      "rationale": "node registered deterministically from ExecPlan graph_registration metadata",
+      "evidence_ref": ".agent/execplans/20260327-orchestrate-governed-slice-action-loop-codex-01-execplan.md",
+      "queue_reconciled": true
     }
   ],
   "graph_id": "remaining-work-graph-20260311",
@@ -2010,6 +2130,563 @@
       "status_reason": "registered from ExecPlan metadata; finalized draft ExecPlan required before execution",
       "target_execplan_id": "20260326-worker-orchestration-api-codex-01-execplan",
       "title": "Add an orchestrator-agnostic worker contract execution API"
+    },
+    {
+      "conflict_domains": [
+        "governance",
+        "orchestrator-runtime",
+        "workflow"
+      ],
+      "gating_class": "auto_runnable",
+      "goal_area": "reference",
+      "initiative_branch": "initiative/local-offline-orchestration-bootstrap",
+      "node_id": "initiative-local-offline-orchestration-bootstrap",
+      "ordering": {},
+      "parent_initiative_node": "initiative-local-offline-orchestration-bootstrap",
+      "status": "ready",
+      "target_execplan_id": "initiative:local-offline-orchestration-bootstrap",
+      "title": "Initiative / local offline orchestration bootstrap"
+    },
+    {
+      "action_state": {
+        "action_required": false,
+        "last_action": "block",
+        "last_action_id": "rwg-action-20260326-register-rwg-041",
+        "reorder_blockers": [],
+        "reorder_requires_human": false
+      },
+      "conflict_domains": [
+        "governance",
+        "orchestrator-runtime",
+        "workflow"
+      ],
+      "expected_artifacts": [
+        ".agent/execplans/20260326-local-offline-orchestration-bootstrap-codex-01-execplan.md",
+        "artifacts/planner/research/remaining-work-graph.json",
+        "docs/local-offline-orchestration-bootstrap.md",
+        "docs/queued-execplans.md",
+        "prompts/20260326-local-offline-orchestration-bootstrap-codex-01.md",
+        "spec/local-orchestration.yaml",
+        "src/platform_tools/local_runtime/adapter.py",
+        "src/platform_tools/local_runtime/config.py",
+        "src/platform_tools/local_runtime/ollama_adapter.py",
+        "src/platform_tools/local_runtime/router.py",
+        "src/platform_tools/local_runtime/runtime_check.py",
+        "src/platform_tools/local_runtime/types.py",
+        "bin/local-runtime-check",
+        "bin/local-task-router",
+        "tests/test_local_runtime_adapter.py",
+        "tests/test_local_runtime_check.py",
+        "tests/test_local_runtime_router.py"
+      ],
+      "gating_class": "decision_gated",
+      "goal_area": "orchestrator-runtime",
+      "implementation_branch": "impl-execplan/20260327-local-offline-orchestration-runtime-restack",
+      "initiative_branch": "initiative/local-offline-orchestration-bootstrap",
+      "integration_mode": "via_initiative",
+      "node_id": "rwg-041",
+      "ordering": {
+        "queue_position": 41,
+        "source_action_id": "rwg-action-20260326-register-rwg-041",
+        "tie_breaker": "20260326-local-offline-orchestration-bootstrap-codex-01-execplan"
+      },
+      "parent_initiative_node": "initiative-local-offline-orchestration-bootstrap",
+      "status": "decision_gated",
+      "status_reason": "registered from ExecPlan metadata; finalized draft ExecPlan required before execution",
+      "target_execplan_id": "20260326-local-offline-orchestration-bootstrap-codex-01-execplan",
+      "title": "Bootstrap a local offline orchestration runtime and thin task router"
+    },
+    {
+      "node_id": "rwg-042",
+      "title": "Define the local orchestration contract surface before implementation workers execute",
+      "status": "completed",
+      "status_reason": "",
+      "gating_class": "decision_gated",
+      "conflict_domains": [
+        "documentation",
+        "governance",
+        "orchestrator-runtime",
+        "workflow"
+      ],
+      "target_execplan_id": "20260326-local-orchestration-contract-surface-codex-01-execplan",
+      "goal_area": "orchestrator-runtime",
+      "implementation_branch": "",
+      "initiative_branch": "initiative/local-offline-orchestration-bootstrap",
+      "parent_initiative_node": "initiative-local-offline-orchestration-bootstrap",
+      "integration_mode": "via_initiative",
+      "expected_artifacts": [
+        ".agent/execplans/20260326-local-orchestration-contract-surface-codex-01-execplan.md",
+        "artifacts/planner/research/remaining-work-graph.json",
+        "docs/local-orchestration-api.md",
+        "docs/queued-execplans.md",
+        "spec/local-orchestration.yaml",
+        "spec/local-orchestration-api.schema.yaml"
+      ],
+      "ordering": {
+        "queue_position": 42,
+        "tie_breaker": "20260326-local-orchestration-contract-surface-codex-01-execplan",
+        "source_action_id": "rwg-action-20260327-001-complete-rwg-042"
+      },
+      "action_state": {
+        "last_action_id": "rwg-action-20260327-001-complete-rwg-042",
+        "last_action": "complete",
+        "action_required": false,
+        "reorder_requires_human": false,
+        "reorder_blockers": []
+      },
+      "completion_ref": "merged:2eb310abf265201989f7d4647f62253dede267ca"
+    },
+    {
+      "node_id": "rwg-043",
+      "title": "Correct the workflow so initiative branches may carry authoritative in-flight ExecPlans until initiative completion",
+      "status": "decision_gated",
+      "status_reason": "registered from ExecPlan metadata; finalized draft ExecPlan required before execution",
+      "gating_class": "decision_gated",
+      "conflict_domains": [
+        "documentation",
+        "governance",
+        "workflow"
+      ],
+      "target_execplan_id": "20260326-initiative-branch-plan-authority-correction-codex-01-execplan",
+      "goal_area": "governance",
+      "implementation_branch": "impl-execplan/20260326-initiative-branch-plan-authority-pr-mergeback-clarification",
+      "initiative_branch": "initiative/local-offline-orchestration-bootstrap",
+      "parent_initiative_node": "initiative-local-offline-orchestration-bootstrap",
+      "integration_mode": "via_initiative",
+      "expected_artifacts": [
+        ".agent/execplans/20260326-initiative-branch-plan-authority-correction-codex-01-execplan.md",
+        "artifacts/planner/research/remaining-work-graph.json",
+        "docs/codex-orchestrator-contract.md",
+        "docs/execplans.md",
+        "docs/merge-readiness-contract.md",
+        "docs/queued-execplans.md",
+        "spec/governance.yaml",
+        "spec/workflow.yaml"
+      ],
+      "ordering": {
+        "queue_position": 43,
+        "tie_breaker": "20260326-initiative-branch-plan-authority-correction-codex-01-execplan",
+        "source_action_id": "rwg-action-20260326-register-rwg-043"
+      },
+      "action_state": {
+        "last_action_id": "rwg-action-20260326-register-rwg-043",
+        "last_action": "block",
+        "action_required": false,
+        "reorder_requires_human": false,
+        "reorder_blockers": []
+      }
+    },
+    {
+      "node_id": "rwg-044",
+      "title": "Define a machine-readable API contract for implementation merge-back into initiative branches",
+      "status": "completed",
+      "status_reason": "",
+      "gating_class": "decision_gated",
+      "conflict_domains": [
+        "governance",
+        "orchestrator-runtime",
+        "workflow"
+      ],
+      "target_execplan_id": "20260326-mergeback-orchestration-api-contract-codex-01-execplan",
+      "goal_area": "orchestrator-runtime",
+      "implementation_branch": "",
+      "initiative_branch": "initiative/local-offline-orchestration-bootstrap",
+      "parent_initiative_node": "initiative-local-offline-orchestration-bootstrap",
+      "integration_mode": "via_initiative",
+      "expected_artifacts": [
+        ".agent/execplans/20260326-mergeback-orchestration-api-contract-codex-01-execplan.md",
+        "artifacts/planner/research/remaining-work-graph.json",
+        "docs/mergeback-orchestration-api.md",
+        "docs/queued-execplans.md",
+        "spec/mergeback-orchestration-api.schema.yaml"
+      ],
+      "ordering": {
+        "queue_position": 44,
+        "tie_breaker": "20260326-mergeback-orchestration-api-contract-codex-01-execplan",
+        "source_action_id": "rwg-action-20260327-002-complete-rwg-044"
+      },
+      "action_state": {
+        "last_action_id": "rwg-action-20260327-002-complete-rwg-044",
+        "last_action": "complete",
+        "action_required": false,
+        "reorder_requires_human": false,
+        "reorder_blockers": []
+      },
+      "completion_ref": "merged:2eb310abf265201989f7d4647f62253dede267ca"
+    },
+    {
+      "node_id": "rwg-045",
+      "title": "Classify worker session audit logs as canonical append-only governance evidence",
+      "status": "decision_gated",
+      "status_reason": "registered from ExecPlan metadata; finalized draft ExecPlan required before execution",
+      "gating_class": "decision_gated",
+      "conflict_domains": [
+        "documentation",
+        "governance",
+        "workflow"
+      ],
+      "target_execplan_id": "20260326-worker-audit-log-canonicalization-codex-01-execplan",
+      "goal_area": "governance",
+      "implementation_branch": "impl-execplan/20260326-worker-audit-log-canonicalization",
+      "initiative_branch": "initiative/local-offline-orchestration-bootstrap",
+      "parent_initiative_node": "initiative-local-offline-orchestration-bootstrap",
+      "integration_mode": "via_initiative",
+      "expected_artifacts": [
+        ".agent/execplans/20260326-worker-audit-log-canonicalization-codex-01-execplan.md",
+        "artifacts/governance/worker-session-events.jsonl",
+        "artifacts/planner/research/remaining-work-graph.json",
+        "docs/codex-orchestrator-contract.md",
+        "docs/merge-readiness-contract.md",
+        "docs/queued-execplans.md",
+        "spec/governance.yaml",
+        "spec/workflow.yaml"
+      ],
+      "ordering": {
+        "queue_position": 45,
+        "tie_breaker": "20260326-worker-audit-log-canonicalization-codex-01-execplan",
+        "source_action_id": "rwg-action-20260326-register-rwg-045"
+      },
+      "action_state": {
+        "last_action_id": "rwg-action-20260326-register-rwg-045",
+        "last_action": "block",
+        "action_required": false,
+        "reorder_requires_human": false,
+        "reorder_blockers": []
+      }
+    },
+    {
+      "node_id": "rwg-046",
+      "title": "Implement merge-back orchestration commands for readiness and PR target resolution",
+      "status": "decision_gated",
+      "status_reason": "registered from ExecPlan metadata; finalized draft ExecPlan required before execution",
+      "gating_class": "decision_gated",
+      "conflict_domains": [
+        "governance",
+        "orchestrator-runtime",
+        "workflow"
+      ],
+      "target_execplan_id": "20260327-mergeback-orchestration-api-runtime-codex-01-execplan",
+      "goal_area": "orchestrator-runtime",
+      "implementation_branch": "impl-execplan/20260327-mergeback-orchestration-api-codex-01",
+      "initiative_branch": "initiative/local-offline-orchestration-bootstrap",
+      "parent_initiative_node": "initiative-local-offline-orchestration-bootstrap",
+      "integration_mode": "via_initiative",
+      "expected_artifacts": [
+        ".agent/execplans/20260327-mergeback-orchestration-api-runtime-codex-01-execplan.md",
+        "artifacts/planner/research/remaining-work-graph.json",
+        "docs/commands.md",
+        "docs/queued-execplans.md",
+        "pyproject.toml",
+        "src/platform_tools/get_merge_readiness.py",
+        "src/platform_tools/get_pr_integration_contract.py",
+        "src/platform_tools/mergeback_orchestration.py",
+        "tests/test_mergeback_orchestration_api.py"
+      ],
+      "ordering": {
+        "queue_position": 46,
+        "tie_breaker": "20260327-mergeback-orchestration-api-runtime-codex-01-execplan",
+        "source_action_id": "rwg-action-20260327-register-rwg-046"
+      },
+      "action_state": {
+        "last_action_id": "rwg-action-20260327-register-rwg-046",
+        "last_action": "block",
+        "action_required": false,
+        "reorder_requires_human": false,
+        "reorder_blockers": []
+      }
+    },
+    {
+      "node_id": "rwg-047",
+      "title": "Enforce implementation branch ancestry and merge-back completion before new slices start",
+      "status": "decision_gated",
+      "status_reason": "registered from ExecPlan metadata; finalized draft ExecPlan required before execution",
+      "gating_class": "decision_gated",
+      "conflict_domains": [
+        "governance",
+        "orchestrator-runtime",
+        "workflow"
+      ],
+      "target_execplan_id": "20260327-implementation-branch-ancestry-enforcement-codex-01-execplan",
+      "goal_area": "orchestrator-runtime",
+      "implementation_branch": "impl-execplan/20260327-implementation-ancestry-enforcement-codex-01",
+      "initiative_branch": "initiative/local-offline-orchestration-bootstrap",
+      "parent_initiative_node": "initiative-local-offline-orchestration-bootstrap",
+      "integration_mode": "via_initiative",
+      "expected_artifacts": [
+        ".agent/execplans/20260327-implementation-branch-ancestry-enforcement-codex-01-execplan.md",
+        "artifacts/planner/research/remaining-work-graph.json",
+        "docs/commands.md",
+        "docs/mergeback-orchestration-api.md",
+        "docs/queued-execplans.md",
+        "pyproject.toml",
+        "spec/mergeback-orchestration-api.schema.yaml",
+        "src/platform_tools/mergeback_orchestration.py",
+        "src/platform_tools/prepare_next_impl_branch.py",
+        "src/platform_tools/policy_compliance_check.py",
+        "tests/test_mergeback_orchestration_api.py",
+        "tests/test_prepare_next_impl_branch.py"
+      ],
+      "ordering": {
+        "queue_position": 47,
+        "tie_breaker": "20260327-implementation-branch-ancestry-enforcement-codex-01-execplan",
+        "source_action_id": "rwg-action-20260327-register-rwg-047"
+      },
+      "action_state": {
+        "last_action_id": "rwg-action-20260327-register-rwg-047",
+        "last_action": "block",
+        "action_required": false,
+        "reorder_requires_human": false,
+        "reorder_blockers": []
+      }
+    },
+    {
+      "node_id": "rwg-048",
+      "title": "Implement composite control-plane status and next-action commands for terminal orchestration",
+      "status": "decision_gated",
+      "status_reason": "registered from ExecPlan metadata; finalized draft ExecPlan required before execution",
+      "gating_class": "decision_gated",
+      "conflict_domains": [
+        "governance",
+        "orchestrator-runtime",
+        "workflow"
+      ],
+      "target_execplan_id": "20260327-control-plane-composite-runtime-codex-01-execplan",
+      "goal_area": "orchestrator-runtime",
+      "implementation_branch": "impl-execplan/20260327-control-plane-composite-runtime-codex-01",
+      "initiative_branch": "initiative/local-offline-orchestration-bootstrap",
+      "parent_initiative_node": "initiative-local-offline-orchestration-bootstrap",
+      "integration_mode": "via_initiative",
+      "expected_artifacts": [
+        ".agent/execplans/20260327-control-plane-composite-runtime-codex-01-execplan.md",
+        "artifacts/governance/board-action-events.jsonl",
+        "artifacts/planner/research/remaining-work-graph.json",
+        "docs/commands.md",
+        "docs/control-plane-api.md",
+        "docs/queued-execplans.md",
+        "pyproject.toml",
+        "spec/control-plane-api.schema.yaml",
+        "src/platform_tools/control_plane.py",
+        "src/platform_tools/get_control_plane_status.py",
+        "src/platform_tools/get_next_orchestration_action.py",
+        "tests/test_control_plane_api.py"
+      ],
+      "ordering": {
+        "queue_position": 48,
+        "tie_breaker": "20260327-control-plane-composite-runtime-codex-01-execplan",
+        "source_action_id": "rwg-action-20260327-register-rwg-048"
+      },
+      "action_state": {
+        "last_action_id": "rwg-action-20260327-register-rwg-048",
+        "last_action": "block",
+        "action_required": false,
+        "reorder_requires_human": false,
+        "reorder_blockers": []
+      }
+    },
+    {
+      "node_id": "rwg-049",
+      "title": "Validate control-plane composite commands against their versioned schema",
+      "status": "decision_gated",
+      "status_reason": "registered from ExecPlan metadata; finalized draft ExecPlan required before execution",
+      "gating_class": "decision_gated",
+      "conflict_domains": [
+        "governance",
+        "orchestrator-runtime",
+        "workflow"
+      ],
+      "target_execplan_id": "20260327-control-plane-api-check-codex-01-execplan",
+      "goal_area": "orchestrator-runtime",
+      "implementation_branch": "impl-execplan/20260327-control-plane-api-check-codex-01",
+      "initiative_branch": "initiative/local-offline-orchestration-bootstrap",
+      "parent_initiative_node": "initiative-local-offline-orchestration-bootstrap",
+      "integration_mode": "via_initiative",
+      "expected_artifacts": [
+        ".agent/execplans/20260327-control-plane-api-check-codex-01-execplan.md",
+        "artifacts/governance/board-action-events.jsonl",
+        "artifacts/planner/research/remaining-work-graph.json",
+        "docs/commands.md",
+        "docs/queued-execplans.md",
+        "pyproject.toml",
+        "src/platform_tools/control_plane_api_check.py",
+        "tests/test_control_plane_api_check.py"
+      ],
+      "ordering": {
+        "queue_position": 49,
+        "tie_breaker": "20260327-control-plane-api-check-codex-01-execplan",
+        "source_action_id": "rwg-action-20260327-register-rwg-049"
+      },
+      "action_state": {
+        "last_action_id": "rwg-action-20260327-register-rwg-049",
+        "last_action": "block",
+        "action_required": false,
+        "reorder_requires_human": false,
+        "reorder_blockers": []
+      }
+    },
+    {
+      "node_id": "rwg-050",
+      "title": "Make the composite control-plane commands explicitly managed-repo aware",
+      "status": "decision_gated",
+      "status_reason": "registered from ExecPlan metadata; finalized draft ExecPlan required before execution",
+      "gating_class": "decision_gated",
+      "conflict_domains": [
+        "governance",
+        "orchestrator-runtime",
+        "workflow"
+      ],
+      "target_execplan_id": "20260327-managed-repo-control-plane-codex-01-execplan",
+      "goal_area": "orchestrator-runtime",
+      "implementation_branch": "impl-execplan/20260327-managed-repo-control-plane-codex-01",
+      "initiative_branch": "initiative/local-offline-orchestration-bootstrap",
+      "parent_initiative_node": "initiative-local-offline-orchestration-bootstrap",
+      "integration_mode": "via_initiative",
+      "expected_artifacts": [
+        ".agent/execplans/20260327-managed-repo-control-plane-codex-01-execplan.md",
+        "artifacts/governance/board-action-events.jsonl",
+        "artifacts/planner/research/remaining-work-graph.json",
+        "docs/control-plane-api.md",
+        "docs/queued-execplans.md",
+        "spec/control-plane-api.schema.yaml",
+        "src/platform_tools/control_plane.py",
+        "src/platform_tools/get_control_plane_status.py",
+        "src/platform_tools/get_next_orchestration_action.py",
+        "tests/test_control_plane_api.py"
+      ],
+      "ordering": {
+        "queue_position": 50,
+        "tie_breaker": "20260327-managed-repo-control-plane-codex-01-execplan",
+        "source_action_id": "rwg-action-20260327-register-rwg-050"
+      },
+      "action_state": {
+        "last_action_id": "rwg-action-20260327-register-rwg-050",
+        "last_action": "block",
+        "action_required": false,
+        "reorder_requires_human": false,
+        "reorder_blockers": []
+      }
+    },
+    {
+      "node_id": "rwg-051",
+      "title": "Make orchestrate-governed-slice compose the control-plane APIs",
+      "status": "decision_gated",
+      "status_reason": "registered from ExecPlan metadata; finalized draft ExecPlan required before execution",
+      "gating_class": "decision_gated",
+      "conflict_domains": [
+        "governance",
+        "orchestrator-runtime",
+        "workflow"
+      ],
+      "target_execplan_id": "20260327-orchestrate-governed-slice-control-plane-codex-01-execplan",
+      "goal_area": "orchestrator-runtime",
+      "implementation_branch": "impl-execplan/20260327-orchestrate-governed-slice-control-plane-codex-01",
+      "initiative_branch": "initiative/local-offline-orchestration-bootstrap",
+      "parent_initiative_node": "initiative-local-offline-orchestration-bootstrap",
+      "integration_mode": "via_initiative",
+      "expected_artifacts": [
+        ".agent/execplans/20260327-orchestrate-governed-slice-control-plane-codex-01-execplan.md",
+        "artifacts/governance/board-action-events.jsonl",
+        "artifacts/planner/research/remaining-work-graph.json",
+        "docs/commands.md",
+        "docs/queued-execplans.md",
+        "pyproject.toml",
+        "src/platform_tools/orchestrate_governed_slice.py",
+        "tests/test_orchestrate_governed_slice.py"
+      ],
+      "ordering": {
+        "queue_position": 51,
+        "tie_breaker": "20260327-orchestrate-governed-slice-control-plane-codex-01-execplan",
+        "source_action_id": "rwg-action-20260327-register-rwg-051"
+      },
+      "action_state": {
+        "last_action_id": "rwg-action-20260327-register-rwg-051",
+        "last_action": "block",
+        "action_required": false,
+        "reorder_requires_human": false,
+        "reorder_blockers": []
+      }
+    },
+    {
+      "node_id": "rwg-052",
+      "title": "Add a schema and checker for orchestrate-governed-slice",
+      "status": "decision_gated",
+      "status_reason": "registered from ExecPlan metadata; finalized draft ExecPlan required before execution",
+      "gating_class": "decision_gated",
+      "conflict_domains": [
+        "governance",
+        "orchestrator-runtime",
+        "workflow"
+      ],
+      "target_execplan_id": "20260327-orchestrate-governed-slice-api-check-codex-01-execplan",
+      "goal_area": "orchestrator-runtime",
+      "implementation_branch": "impl-execplan/20260327-orchestrate-governed-slice-api-check-codex-01",
+      "initiative_branch": "initiative/local-offline-orchestration-bootstrap",
+      "parent_initiative_node": "initiative-local-offline-orchestration-bootstrap",
+      "integration_mode": "via_initiative",
+      "expected_artifacts": [
+        ".agent/execplans/20260327-orchestrate-governed-slice-api-check-codex-01-execplan.md",
+        "artifacts/governance/board-action-events.jsonl",
+        "artifacts/planner/research/remaining-work-graph.json",
+        "docs/commands.md",
+        "docs/orchestrate-governed-slice-api.md",
+        "docs/queued-execplans.md",
+        "pyproject.toml",
+        "spec/orchestrate-governed-slice-api.schema.yaml",
+        "src/platform_tools/orchestrate_governed_slice_api_check.py",
+        "tests/test_orchestrate_governed_slice_api_check.py"
+      ],
+      "ordering": {
+        "queue_position": 52,
+        "tie_breaker": "20260327-orchestrate-governed-slice-api-check-codex-01-execplan",
+        "source_action_id": "rwg-action-20260327-register-rwg-052"
+      },
+      "action_state": {
+        "last_action_id": "rwg-action-20260327-register-rwg-052",
+        "last_action": "block",
+        "action_required": false,
+        "reorder_requires_human": false,
+        "reorder_blockers": []
+      }
+    },
+    {
+      "node_id": "rwg-053",
+      "title": "Teach orchestrate-governed-slice to execute one bounded next step",
+      "status": "decision_gated",
+      "status_reason": "registered from ExecPlan metadata; finalized draft ExecPlan required before execution",
+      "gating_class": "decision_gated",
+      "conflict_domains": [
+        "governance",
+        "orchestrator-runtime",
+        "workflow"
+      ],
+      "target_execplan_id": "20260327-orchestrate-governed-slice-action-loop-codex-01-execplan",
+      "goal_area": "orchestrator-runtime",
+      "implementation_branch": "impl-execplan/20260327-orchestrate-governed-slice-action-loop-codex-01",
+      "initiative_branch": "initiative/local-offline-orchestration-bootstrap",
+      "parent_initiative_node": "initiative-local-offline-orchestration-bootstrap",
+      "integration_mode": "via_initiative",
+      "expected_artifacts": [
+        ".agent/execplans/20260327-orchestrate-governed-slice-action-loop-codex-01-execplan.md",
+        "artifacts/governance/board-action-events.jsonl",
+        "artifacts/planner/research/remaining-work-graph.json",
+        "docs/orchestrate-governed-slice-api.md",
+        "docs/queued-execplans.md",
+        "spec/orchestrate-governed-slice-api.schema.yaml",
+        "src/platform_tools/orchestrate_governed_slice.py",
+        "tests/test_orchestrate_governed_slice.py",
+        "tests/test_orchestrate_governed_slice_api_check.py"
+      ],
+      "ordering": {
+        "queue_position": 53,
+        "tie_breaker": "20260327-orchestrate-governed-slice-action-loop-codex-01-execplan",
+        "source_action_id": "rwg-action-20260327-register-rwg-053"
+      },
+      "action_state": {
+        "last_action_id": "rwg-action-20260327-register-rwg-053",
+        "last_action": "block",
+        "action_required": false,
+        "reorder_requires_human": false,
+        "reorder_blockers": []
+      }
     }
   ],
   "ordering_policy": {
@@ -2025,7 +2702,7 @@
     "reorder_requires_explicit_action": true
   },
   "queue_projection": {
-    "last_reconciled_action_id": "rwg-action-20260326-register-rwg-040",
+    "last_reconciled_action_id": "rwg-action-20260327-register-rwg-053",
     "path": "docs/queued-execplans.md",
     "projection_authority": "projection_only",
     "ready_execplan_ids": []

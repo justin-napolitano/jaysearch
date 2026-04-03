@@ -29,6 +29,13 @@ bin/start-next-worker
 bin/public-orchestration-api-check
 bin/get-graph-state
 bin/get-worker-status
+bin/get-control-plane-status
+bin/get-next-orchestration-action
+bin/control-plane-api-check
+bin/orchestrate-governed-slice-api-check
+bin/get-merge-readiness
+bin/get-pr-integration-contract
+bin/prepare-next-impl-branch
 bin/github-projects-bootstrap
 bin/github-projects-sync
 bin/finalize-execplan
@@ -45,12 +52,19 @@ Notes:
 - `bin/run-governed-pre-push-checks` runs safe branch-aware governance checks before push on governed branches.
 - `bin/bootstrap-managed-repo` scaffolds a lightweight managed repo and writes repo-local provider-sync artifacts through platform-owned runtime code.
 - `bin/managed-repo-status` validates that an external repo has the required canonical and board-bootstrap artifacts before orchestration proceeds.
-- `bin/orchestrate-governed-slice` is the local control-loop entrypoint for both self-hosted and managed repos.
+- `bin/orchestrate-governed-slice` is the local control-loop entrypoint for both self-hosted and managed repos, composed over the control-plane status and next-action APIs.
 - `bin/resolve-worker-contract` resolves one runnable or explicit worker contract into a compact machine-shaped payload.
 - `bin/run-worker-contract` is the orchestrator-agnostic worker execution entrypoint; it resolves one bounded worker contract and delegates execution to the governed worker runtime.
 - `bin/start-next-worker` is a composite facade command for thin orchestrators that want “resolve next runnable contract and execute it” in one call.
 - `bin/public-orchestration-api-check` validates that the facade commands still emit outputs compatible with the versioned public orchestration contract catalog.
 - `bin/get-graph-state` provides a compact orchestration-facing view of canonical graph state without exposing the full raw graph payload.
 - `bin/get-worker-status` provides a compact orchestration-facing view of worker session and recent run state.
+- `bin/get-control-plane-status` summarizes current branch, graph, runtime, worker, and merge-back posture for the terminal operator.
+- `bin/get-next-orchestration-action` reduces current repo state to one bounded next step for the orchestrator.
+- `bin/control-plane-api-check` validates that the composite control-plane commands still emit outputs compatible with the control-plane schema.
+- `bin/orchestrate-governed-slice-api-check` validates that the top-level orchestration entrypoint still emits outputs compatible with the orchestrate-governed-slice schema.
+- `bin/get-merge-readiness` projects whether the current implementation slice is ready to merge back into its lawful initiative target.
+- `bin/get-pr-integration-contract` resolves the lawful initiative PR target and required validations for implementation merge-back.
+- `bin/prepare-next-impl-branch` projects whether the next implementation slice may be cut from the current initiative head and returns the lawful branch target when it may proceed.
 - the public orchestration facade commands emit a shared versioned envelope: `public-orchestration.v1`.
 - `bin/github-projects-bootstrap` and `bin/github-projects-sync` are provider runtimes; they are meant to be invoked directly or by higher-level platform commands, not replaced by ad hoc shell usage.
