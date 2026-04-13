@@ -72,9 +72,13 @@ def validate_execplan(path: str | Path) -> dict[str, Any]:
             errors.append(f"invalid_status:{status}")
 
         if frontmatter.get("status") == "draft":
-            branch = frontmatter.get("draft_branch", "")
-            if not isinstance(branch, str) or not branch.startswith("draft-execplan/"):
+            draft_branch = str(frontmatter.get("draft_branch", "")).strip()
+            if draft_branch and not draft_branch.startswith("draft-execplan/"):
                 errors.append("invalid_draft_branch")
+            if isinstance(current_branch, str) and current_branch.startswith("draft-execplan/") and not draft_branch:
+                errors.append("missing_draft_branch_for_draft_execplan_branch")
+            if isinstance(current_branch, str) and current_branch.startswith("draft-execplan/") and draft_branch and draft_branch != current_branch:
+                errors.append("draft_branch_mismatch")
 
         initiative_branch = str(frontmatter.get("initiative_branch", "")).strip()
         initiative_node_id = str(frontmatter.get("initiative_node_id", "")).strip()

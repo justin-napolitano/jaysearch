@@ -817,6 +817,14 @@
       "rationale": "node registered deterministically from ExecPlan graph_registration metadata",
       "evidence_ref": ".agent/execplans/20260327-orchestrate-governed-slice-action-loop-codex-01-execplan.md",
       "queue_reconciled": true
+    },
+    {
+      "action_id": "rwg-action-20260326-001-complete-rwg-040",
+      "action": "complete",
+      "node_id": "rwg-040",
+      "rationale": "20260326-worker-orchestration-api-codex-01-execplan merged to main and is now canonical completed state",
+      "evidence_ref": "merged:pr-115",
+      "queue_reconciled": true
     }
   ],
   "graph_id": "remaining-work-graph-20260311",
@@ -2096,8 +2104,8 @@
     {
       "action_state": {
         "action_required": false,
-        "last_action": "block",
-        "last_action_id": "rwg-action-20260326-register-rwg-040",
+        "last_action": "complete",
+        "last_action_id": "rwg-action-20260326-001-complete-rwg-040",
         "reorder_blockers": [],
         "reorder_requires_human": false
       },
@@ -2122,14 +2130,15 @@
       "node_id": "rwg-040",
       "ordering": {
         "queue_position": 40,
-        "source_action_id": "rwg-action-20260326-register-rwg-040",
+        "source_action_id": "rwg-action-20260326-001-complete-rwg-040",
         "tie_breaker": "20260326-worker-orchestration-api-codex-01-execplan"
       },
       "parent_initiative_node": "initiative-worker-orchestration-api",
-      "status": "decision_gated",
-      "status_reason": "registered from ExecPlan metadata; finalized draft ExecPlan required before execution",
+      "status": "completed",
+      "status_reason": "",
       "target_execplan_id": "20260326-worker-orchestration-api-codex-01-execplan",
-      "title": "Add an orchestrator-agnostic worker contract execution API"
+      "title": "Add an orchestrator-agnostic worker contract execution API",
+      "completion_ref": "merged:pr-115"
     },
     {
       "conflict_domains": [
@@ -2606,6 +2615,21 @@
       }
     },
     {
+      "node_id": "initiative-contract-first-planning",
+      "title": "Initiative / Contract first planning",
+      "status": "review_gated",
+      "gating_class": "review_gated",
+      "conflict_domains": [
+        "governance",
+        "workflow"
+      ],
+      "target_execplan_id": "initiative:contract-first-planning",
+      "goal_area": "reference",
+      "initiative_branch": "initiative/contract-first-planning",
+      "parent_initiative_node": "initiative-contract-first-planning",
+      "ordering": {}
+    },
+    {
       "node_id": "initiative-session-bootstrap-harness-governance",
       "title": "Initiative / Session bootstrap harness governance",
       "status": "review_gated",
@@ -2717,7 +2741,7 @@
     "reorder_requires_explicit_action": true
   },
   "queue_projection": {
-    "last_reconciled_action_id": "rwg-action-20260327-register-rwg-053",
+    "last_reconciled_action_id": "rwg-action-20260326-001-complete-rwg-040",
     "path": "docs/queued-execplans.md",
     "projection_authority": "projection_only",
     "ready_execplan_ids": []
