@@ -21,6 +21,103 @@ REQUIRED_BOOTSTRAP_ARTIFACTS = (
     ".agent/PLANS.md",
     "spec/workflow.yaml",
 )
+REQUIRED_HARNESS_COMMANDS = (
+    "get-control-plane-status",
+    "local-task-router",
+    "control-plane-api-check",
+    "public-orchestration-api-check",
+    "local-runtime-check",
+)
+REQUIRED_HARNESS_SPECS = (
+    "spec/control-plane-api.schema.yaml",
+    "spec/public-orchestration-api.schema.yaml",
+    "spec/local-orchestration.yaml",
+    "spec/local-orchestration-api.schema.yaml",
+)
+
+
+def _load_pyproject_scripts(root: Path) -> dict[str, str]:
+    pyproject_path = root / "pyproject.toml"
+    if not pyproject_path.exists():
+        return {}
+    text = pyproject_path.read_text(encoding="utf-8")
+    scripts: dict[str, str] = {}
+    in_scripts = False
+    for raw_line in text.splitlines():
+        line = raw_line.strip()
+        if line.startswith("[") and line.endswith("]"):
+            in_scripts = line == "[project.scripts]"
+            continue
+        if not in_scripts or "=" not in line:
+            continue
+        name, value = line.split("=", 1)
+        script_name = name.strip()
+        target = value.strip().strip('"').strip("'")
+        if script_name:
+            scripts[script_name] = target
+    return scripts
+
+
+def _harness_surface_report(root: Path) -> tuple[list[str], dict[str, Any]]:
+    blockers: list[str] = []
+    scripts = _load_pyproject_scripts(root)
+    commands: list[dict[str, Any]] = []
+    for command in REQUIRED_HARNESS_COMMANDS:
+        entrypoint = scripts.get(command, "")
+        wrapper_path = root / "bin" / command
+        command_report = {
+            "command": command,
+            "registered": bool(entrypoint),
+            "entrypoint": entrypoint,
+            "bin_wrapper": wrapper_path.as_posix(),
+            "bin_wrapper_exists": wrapper_path.exists(),
+        }
+        commands.append(command_report)
+        if not entrypoint:
+            blockers.append(f"bootstrap_violation:missing_harness_command_registration:{command}")
+        if not wrapper_path.exists():
+            blockers.append(f"bootstrap_violation:missing_harness_bin_wrapper:{command}")
+    specs: list[dict[str, Any]] = []
+    for rel in REQUIRED_HARNESS_SPECS:
+        exists = (root / rel).exists()
+        specs.append({"path": rel, "exists": exists})
+        if not exists:
+            blockers.append(f"bootstrap_violation:missing_harness_spec:{rel}")
+    return blockers, {"commands": commands, "specs": specs}
+
+
+def _harness_health_report(root: Path) -> tuple[list[str], list[dict[str, Any]]]:
+    from platform_tools.control_plane_api_check import check_control_plane_api
+    from platform_tools.public_orchestration_api_check import check_public_orchestration_api
+
+    blockers: list[str] = []
+    checks: list[dict[str, Any]] = []
+
+    code, report = check_control_plane_api(root=root.as_posix())
+    errors = [str(item).strip() for item in report.get("errors", []) if str(item).strip()]
+    checks.append(
+        {
+            "name": "control_plane_api_check",
+            "ok": code == 0 and not errors,
+            "status": str(report.get("status", "")).strip(),
+            "errors": errors,
+        }
+    )
+    blockers.extend(f"bootstrap_violation:control_plane_api:{item}" for item in errors)
+
+    code, report = check_public_orchestration_api(root=root.as_posix())
+    errors = [str(item).strip() for item in report.get("errors", []) if str(item).strip()]
+    checks.append(
+        {
+            "name": "public_orchestration_api_check",
+            "ok": code == 0 and not errors,
+            "status": str(report.get("status", "")).strip(),
+            "errors": errors,
+        }
+    )
+    blockers.extend(f"bootstrap_violation:public_orchestration_api:{item}" for item in errors)
+
+    return blockers, checks
 
 
 def _required_artifact_findings(root: Path) -> list[str]:
@@ -148,6 +245,10 @@ def run_session_bootstrap_check(
     current_branch = branch or get_current_branch(root=root_path)
     role = _session_role(current_branch)
     blockers = _required_artifact_findings(root_path)
+    harness_surface_findings, harness_surface = _harness_surface_report(root_path)
+    blockers.extend(harness_surface_findings)
+    harness_health_findings, harness_health_checks = _harness_health_report(root_path)
+    blockers.extend(harness_health_findings)
 
     branch_policy = evaluate_branch_policy(current_branch, root=root_path) if current_branch else {
         "ok": False,
@@ -253,6 +354,8 @@ def run_session_bootstrap_check(
         "branch": current_branch,
         "role": role,
         "required_bootstrap_artifacts": list(REQUIRED_BOOTSTRAP_ARTIFACTS),
+        "harness_surface": harness_surface,
+        "harness_health_checks": harness_health_checks,
         "branch_policy": branch_policy,
         "execplan_discovery": {
             "strategy": discovery_strategy,

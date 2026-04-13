@@ -23,6 +23,14 @@ Finalization requires:
 - Updated ExecPlan frontmatter
 - Metadata reference to ExecPlan id
 
+Normal governed branch contract:
+
+- `main` is the protected finalization branch
+- `initiative/*` is the authoritative in-flight branch for one governed initiative and its active ExecPlan
+- `impl-execplan/*` is a bounded worker branch that inherits initiative authority for one implementation slice
+- normal governed merge flow is `impl-execplan/*` -> `initiative/*` -> `main`
+- direct `impl-execplan/*` -> `main` is exception-only and must use an explicit human-directed exception mode
+
 Bypass/exception approvals require:
 
 - Human approver identity
