@@ -29,6 +29,10 @@ Humans **finalize** work.
 Every new Codex session and every worker session must bootstrap from
 repository-local governance state before doing meaningful work.
 
+This repository's primary automation interface is the command-based
+repo-owned harness under `bin/`. Agents should prefer those command and
+schema surfaces over rediscovering workflow from prose alone.
+
 ------------------------------------------------------------------------
 
 # Identity Model
@@ -141,6 +145,25 @@ Implementation Workflow
 Approved governed implementation work should execute under one bounded
 initiative-scoped ExecPlan authority.
 
+Normal governed branch topology is:
+
+`main` -> `initiative/*` -> `impl-execplan/*`
+
+Interpretation:
+
+• `main` is reserved for human-reviewed, signed finalization and should
+  not be the active execution branch\
+• `initiative/*` is the authoritative in-flight home for one governed
+  initiative and its active ExecPlan\
+• `impl-execplan/*` is a bounded worker branch that inherits authority
+  from its parent initiative branch and should not invent a competing
+  active ExecPlan\
+• the normal governed integration path is PR merge from
+  `impl-execplan/*` back into the parent `initiative/*` branch, followed
+  later by initiative merge to `main`\
+• direct `impl-execplan/*` to `main` integration is exception-only
+  human-directed work and must not be assumed by default
+
 Worker implementation branches should match:
 
 impl-execplan/`<initiative-scope>`{=html}-`<worker>`{=html}
@@ -163,15 +186,38 @@ must:
 • read repository-local governance state from `.agent/AGENTS.md`,
   `.agent/PLANS.md`, `spec/workflow.yaml`, and the active ExecPlan when
   one exists\
+• treat the repo-owned command harness in `bin/` as the primary
+  operational interface for routing, status, orchestration, and
+  validation rather than inventing ad hoc shell workflows\
+• prefer command and schema authority in `bin/`, `spec/`, and `src/`
+  before falling back to explanatory prose in `docs/`\
 • determine the current branch role and stop if execution resolves to
   `main` or another protected branch\
 • determine whether the session is acting as an initiative coordinator,
   draft-plan author, implementation worker, or integration-only queue
   session\
+• for normal governed implementation, stop unless the active worker
+  branch can be mapped to one parent `initiative/*` branch and one
+  authoritative active initiative ExecPlan\
 • inherit the authority limits of that branch role rather than invent a
   new session-local rule set\
 • stop when the active ExecPlan, graph state, branch role, or required
   protected artifacts are ambiguous
+
+Command-harness bootstrap order:
+
+• use `bin/get-control-plane-status` to project current governed
+  operator state\
+• use `bin/local-task-router` when local orchestration routing is needed\
+• use public orchestration commands such as `bin/get-graph-state`,
+  `bin/resolve-worker-contract`, `bin/run-worker-contract`,
+  `bin/start-next-worker`, and `bin/get-worker-status` instead of
+  reaching into lower-level internals first\
+• use repo-owned validators such as `bin/control-plane-api-check`,
+  `bin/public-orchestration-api-check`, `bin/local-runtime-check`, and
+  `bin/run-local-ci` before claiming the harness is healthy\
+• if the command harness cannot express the next step deterministically,
+  stop with blockers instead of substituting freeform workflow logic
 
 Worker session-specific rules:
 

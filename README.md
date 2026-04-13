@@ -24,6 +24,10 @@ The platform assumes this flow:
 In practice that means:
 
 - agents draft and execute bounded work on policy-compliant non-`main` branches
+- normal governed work uses an explicit branch hierarchy: `main` -> `initiative/*` -> `impl-execplan/*`
+- the `initiative/*` branch is the authoritative in-flight home for one governed initiative and its active ExecPlan
+- `impl-execplan/*` branches execute one bounded slice under that initiative and normally merge back by PR into the parent `initiative/*` branch
+- direct `impl-execplan/*` -> `main` integration is exception-only human-directed work, not the default path
 - validation commands emit deterministic, machine-readable outputs
 - review happens through pull requests rather than ad hoc local integration
 - humans retain final authority for approval and signed merge/finalization
@@ -47,7 +51,8 @@ Recommended next steps:
    `bin/distribution-check`
    `bin/run-local-ci`
 5. Create the first ExecPlan in `.agent/execplans/`.
-6. Start implementation on a compliant non-`main` branch.
+6. Create an `initiative/*` branch for the governed workstream and keep the active in-flight ExecPlan there.
+7. Cut `impl-execplan/*` worker branches from that initiative branch for bounded implementation slices.
 
 ## Repository Map
 
