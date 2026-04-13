@@ -16,8 +16,11 @@ This repository is meant to be the starting point for new Codex-operated reposit
    - `bin/run-local-ci`
 6. Create the first ExecPlan in `.agent/execplans/`.
 7. If you want a local task projection, run `bin/sync-todos`.
-8. Implement work on a compliant non-`main` branch.
-9. Human-finalize with a signed commit.
+8. For normal governed work, create an `initiative/*` branch from the latest `main` and keep the active in-flight ExecPlan there.
+9. Cut bounded `impl-execplan/*` worker branches from that initiative branch for implementation slices.
+10. Merge worker branches back to the parent `initiative/*` branch by PR.
+11. Merge the completed initiative branch to `main` when the parent initiative node is complete.
+12. Human-finalize with a signed commit.
 
 ## Required Platform Workflow
 
@@ -29,6 +32,31 @@ Every spawned repository is expected to preserve:
 - human-only finalization
 - branch and governance enforcement
 - machine-readable validation outputs
+
+Primary automation interface for new sessions:
+
+- the repo-owned command harness under `bin/`
+- machine-readable contracts under `spec/`
+- runtime implementations under `src/`
+
+New LLM or agent sessions should prefer those command and schema
+surfaces over reconstructing workflow from prose. A good bootstrap pass
+for a fresh session is:
+
+- `bin/get-control-plane-status`
+- `bin/local-task-router`
+- `bin/control-plane-api-check`
+- `bin/public-orchestration-api-check`
+- `bin/local-runtime-check`
+- `bin/run-local-ci`
+
+Normal governed branch topology is:
+
+- `main` for human-signed finalization only
+- `initiative/*` for the authoritative in-flight initiative and active ExecPlan
+- `impl-execplan/*` for one bounded worker slice under that initiative
+
+Direct `impl-execplan/*` to `main` is not normal governed flow and should happen only under an explicit documented exception mode.
 
 ## Project Customization
 
