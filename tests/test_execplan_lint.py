@@ -42,9 +42,6 @@ changes:
 approve_policy: codeowners
 reviewers:
   - "github:justin-napolitano"
-draft_by: "agent/codex-01"
-draft_branch: "draft-execplan/20260312-test-plan-codex-01-execplan-codex-01-20260312"
-draft_created: "2026-03-12T00:00:00Z"
 finalized_by: ""
 finalized_at: ""
 finalized_in_pr: ""
@@ -52,22 +49,6 @@ validation:
   tests:
 {validation_text}
 ---
-
-# Purpose / Big Picture
-
-Test.
-
-## Progress
-
-- [ ] Test
-
-## Surprises & Discoveries
-
-None.
-
-## Decision Log
-
-None.
 
 ## Outcomes & Retrospective
 
@@ -89,15 +70,7 @@ Test.
 
 Test.
 
-## Idempotence and Recovery
-
-Test.
-
 ## Artifacts and Notes
-
-Test.
-
-## Interfaces and Dependencies
 
 Test.
 """
@@ -150,6 +123,34 @@ def test_execplan_lint_accepts_policy_compliance_validation_on_impl_branch(tmp_p
     plan = _init_repo(tmp_path)
     _write(plan, _plan_text(include_policy_check=True))
     monkeypatch.chdir(tmp_path)
+
+    code, report = run([plan.as_posix()])
+
+    assert code == 0
+    assert report["results"][0]["errors"] == []
+
+
+def test_execplan_lint_allows_draft_plan_on_initiative_branch_without_draft_branch(tmp_path: Path, monkeypatch) -> None:
+    plan = _init_repo(tmp_path)
+    subprocess.run(
+        ["git", "checkout", "-b", "initiative/contract-first-planning"],
+        cwd=tmp_path,
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+    _write(plan, _plan_text(include_policy_check=False))
+    monkeypatch.chdir(tmp_path)
+    monkeypatch.setattr(
+        "platform_tools.execplan_lint.evaluate_branch_policy",
+        lambda branch: {
+            "ok": True,
+            "current_branch": branch,
+            "forbidden_branches": [],
+            "allowed_branch_patterns": [],
+            "findings": [],
+        },
+    )
 
     code, report = run([plan.as_posix()])
 

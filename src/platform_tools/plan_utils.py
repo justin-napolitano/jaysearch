@@ -9,18 +9,11 @@ from typing import Any
 import yaml
 
 REQUIRED_HEADINGS = [
-    "Purpose / Big Picture",
-    "Progress",
-    "Surprises & Discoveries",
-    "Decision Log",
     "Outcomes & Retrospective",
     "Context and Orientation",
     "Plan of Work",
-    "Concrete Steps",
     "Validation and Acceptance",
-    "Idempotence and Recovery",
     "Artifacts and Notes",
-    "Interfaces and Dependencies",
 ]
 
 REQUIRED_FRONTMATTER_FIELDS = [
@@ -33,9 +26,6 @@ REQUIRED_FRONTMATTER_FIELDS = [
     "changes",
     "approve_policy",
     "reviewers",
-    "draft_by",
-    "draft_branch",
-    "draft_created",
     "finalized_by",
     "finalized_at",
     "finalized_in_pr",

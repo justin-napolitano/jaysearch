@@ -28,13 +28,14 @@ If you introduce a new persona, add a new governed `agent/<name>` identity throu
 Every agent run must be traceable through:
 
 - Branch name:
-  - `draft-execplan/<plan-id>-<agent>-YYYYMMDD`
+  - `initiative/<initiative-id>`
+  - `draft-execplan/<plan-id>-<agent>-YYYYMMDD` when isolated planning review is needed
   - `impl-execplan/<plan-id>-<agent>-YYYYMMDD`
   - `queue-execplan/<queue-name>-<agent>-YYYYMMDD`
 - ExecPlan frontmatter:
   - `owner: "agent/<name>"`
-  - `draft_by: "agent/<name>"`
-  - `draft_branch: "draft-execplan/..."`
+  - `initiative_branch: "initiative/..."`
+  - optional `draft_branch: "draft-execplan/..."`
 - Commit metadata:
   - Use `bin/codex-commit "message"` for Codex-authored commits
   - Commit subject prefix includes agent identity (example: `[agent/codex-01]`)
@@ -44,7 +45,8 @@ These conventions ensure persona-level actions are auditable across plans, branc
 
 ## Branch Roles
 
-- `draft-execplan/*` is for plan drafting and review.
+- `initiative/*` is the default planning and coordination branch for one governed initiative.
+- `draft-execplan/*` is optional and is for isolated plan drafting and review when needed.
 - `impl-execplan/*` is for one implementation ExecPlan slice.
 - Parallel implementation slices should not share one implementation branch.
 - `queue-execplan/*` is optional and should be treated as an integration branch, not as the sole execution branch for multiple slices.

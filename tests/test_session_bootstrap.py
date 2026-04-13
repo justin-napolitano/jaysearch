@@ -180,6 +180,82 @@ def test_session_bootstrap_blocks_when_harness_surface_is_missing(tmp_path: Path
     assert "bootstrap_violation:missing_harness_bin_wrapper:local-task-router" in report["blockers"]
 
 
+def test_initiative_branch_bootstrap_discovers_authoritative_execplan(tmp_path: Path) -> None:
+    _seed_common(tmp_path)
+    _write(
+        tmp_path / ".agent" / "execplans" / "plan.md",
+        "\n".join(
+            [
+                "---",
+                'id: "plan-id"',
+                'title: "Plan"',
+                'owner: "agent/codex-01"',
+                'created: "2026-03-24T00:00:00Z"',
+                'status: "draft"',
+                'base_branch: "main"',
+                "changes:",
+                "  - .agent/execplans/plan.md",
+                'approve_policy: "codeowners"',
+                'reviewers: ["github:test"]',
+                'initiative_branch: "initiative/example"',
+                'initiative_node_id: "initiative-example"',
+                'finalized_by: ""',
+                'finalized_at: ""',
+                'finalized_in_pr: ""',
+                "---",
+                "",
+                "## Outcomes & Retrospective",
+                "",
+                "Pending.",
+                "",
+                "## Context and Orientation",
+                "",
+                "Context.",
+                "",
+                "## Plan of Work",
+                "",
+                "Plan.",
+                "",
+                "## Validation and Acceptance",
+                "",
+                "Validate.",
+                "",
+                "## Artifacts and Notes",
+                "",
+                "Notes.",
+            ]
+        )
+        + "\n",
+    )
+    (tmp_path / "artifacts" / "planner" / "research").mkdir(parents=True, exist_ok=True)
+    (tmp_path / "artifacts" / "planner" / "research" / "remaining-work-graph.json").write_text(
+        json.dumps(
+            {
+                "nodes": [
+                    {
+                        "node_id": "initiative-example",
+                        "initiative_branch": "initiative/example",
+                        "parent_initiative_node": "initiative-example",
+                    }
+                ]
+            }
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+
+    code, report = run_session_bootstrap_check(
+        root=tmp_path.as_posix(),
+        branch="initiative/example",
+        session_kind="codex",
+    )
+
+    assert code == 0
+    assert report["role"] == "initiative_coordinator"
+    assert report["active_execplan"]["id"] == "plan-id"
+    assert report["execplan_discovery"]["strategy"] == "initiative_branch"
+
+
 def test_impl_branch_bootstrap_requires_parent_initiative_and_execplan(tmp_path: Path) -> None:
     _seed_common(tmp_path)
     _write(

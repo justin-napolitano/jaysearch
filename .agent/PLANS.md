@@ -65,18 +65,11 @@ Every ExecPlan must include the following sections.
 
 Required headings:
 
-Purpose / Big Picture\
-Progress\
-Surprises & Discoveries\
-Decision Log\
 Outcomes & Retrospective\
 Context and Orientation\
 Plan of Work\
-Concrete Steps\
 Validation and Acceptance\
-Idempotence and Recovery\
-Artifacts and Notes\
-Interfaces and Dependencies
+Artifacts and Notes
 
 Validators must enforce the presence of these sections.
 
@@ -98,7 +91,7 @@ changes\
 approve_policy\
 reviewers
 
-Draft metadata:
+Optional draft metadata:
 
 draft_by\
 draft_branch\
@@ -137,23 +130,27 @@ Only humans may change status beyond draft.
 
 ------------------------------------------------------------------------
 
-# Draft Workflow
+# Planning Workflow
 
-ExecPlans must be drafted on branches named:
+The default planning surface is the initiative branch.
+
+Default planning branch:
+
+initiative/`<initiative-id>`{=html}
+
+Optional isolated planning branch:
 
 draft-execplan/`<plan-id>`{=html}-`<agent>`{=html}-YYYYMMDD
 
-Example:
+Rules:
 
-draft-execplan/platform-validator-codex-20260304
-
-Draft plans must include:
-
-draft_by\
-draft_branch\
-draft_created
-
-Agents must populate the `changes` field with explicit paths.
+- the authoritative in-flight ExecPlan for governed work should live on
+  the parent `initiative/*` branch
+- `draft-execplan/*` is optional and should be used only when isolated
+  review or plan surgery is useful
+- draft metadata is required only when a plan is actually carried on a
+  `draft-execplan/*` branch
+- agents must populate the `changes` field with explicit paths
 
 ------------------------------------------------------------------------
 

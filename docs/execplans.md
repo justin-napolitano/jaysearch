@@ -16,12 +16,12 @@ Rules:
 - Draft TTL = 14 days
 - The active initiative branch may hold the authoritative in-flight ExecPlan while the initiative is in progress
 
-Draft Review Procedure:
+Planning Procedure:
 
 1. Keep one authoritative in-flight ExecPlan on the active `initiative/*` branch for the initiative.
-2. Optionally create a dedicated `draft-execplan/*` branch when isolated review or plan surgery is useful.
-3. Perform agent self-review on the draft branch and reconcile the plan if needed before opening the PR.
-4. Open one draft-plan PR using the governed pull-request template.
+2. Use a dedicated `draft-execplan/*` branch only when isolated review or plan surgery is useful.
+3. Perform agent self-review on the planning branch in use and reconcile the plan if needed before opening the PR.
+4. Open one draft-plan PR using the governed pull-request template when review isolation is needed.
 5. Treat the template as additive-only:
    - required sections stay present in every governed draft-plan PR
    - authors may add sections for extra evidence or nuance
@@ -47,4 +47,4 @@ Initiative Branch Procedure:
 
 Template:
 
-Use `examples/execplan-template.md` as the starting point for new ExecPlan drafts.
+Use `examples/execplan-template.md` as the starting point for new contract-first ExecPlans. Prefer frontmatter, validations, declared changes, and graph metadata over long explanatory prose.

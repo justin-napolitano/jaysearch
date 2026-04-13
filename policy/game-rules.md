@@ -22,7 +22,8 @@ Universal branch-first policy:
 
 Implementation branch policy:
 
-- Draft plans belong on `draft-execplan/*` branches.
+- The authoritative in-flight plan for governed work belongs on the parent `initiative/*` branch by default.
+- `draft-execplan/*` branches are optional review/isolation branches for plan work, not the default planning surface.
 - Individual implementation slices belong on `impl-execplan/*` branches.
 - Parallel implementation slices must use distinct implementation branches.
 - `queue-execplan/*` branches are allowed for integration stacking, but they are not the canonical execution branch for a slice.
