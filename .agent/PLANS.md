@@ -12,6 +12,10 @@ All meaningful work must originate from an ExecPlan.
 For initiative-based execution, the ExecPlan is the bounded authority
 contract for the initiative rather than a per-worker scratchpad.
 
+This repository's primary machine-facing workflow surface is the
+repo-owned command harness in `bin/`, backed by contracts in `spec/`
+and implementations in `src/`.
+
 ------------------------------------------------------------------------
 
 # Core Principles
@@ -22,6 +26,9 @@ contract for the initiative rather than a per-worker scratchpad.
 4.  Humans finalize work.
 5.  Finalization requires a **signed commit**.
 6.  Validation must be deterministic and machine‑checkable.
+
+Agents and orchestration runtimes should prefer repo-owned command and
+schema surfaces over rediscovering workflow rules from markdown prose.
 
 All ExecPlans execute on the shared platform board under inherited global
 board law before any domain-specific game rules are applied.
@@ -152,6 +159,24 @@ Agents must populate the `changes` field with explicit paths.
 
 # Implementation Workflow
 
+Normal governed branch topology is:
+
+`main` -> `initiative/*` -> `impl-execplan/*`
+
+Rules:
+
+- `main` is the protected human-finalization branch, not the normal
+  branch for agent execution
+- the active authoritative in-flight ExecPlan for governed work should
+  live on the parent `initiative/*` branch
+- each `impl-execplan/*` branch should execute one bounded worker slice
+  under that initiative authority
+- the normal governed merge path is PR merge from `impl-execplan/*`
+  into the parent `initiative/*` branch, followed by initiative merge
+  to `main`
+- direct `impl-execplan/*` to `main` is exception-only and must not be
+  treated as the default workflow
+
 Implementation execution should occur on worker branches named:
 
 impl-execplan/`<initiative-scope>`{=html}-`<worker>`{=html}
@@ -175,6 +200,20 @@ Initiative worker-contract model:
   and explicit non-goals
 - worker branches merge back into the initiative branch rather than
   creating competing plan authority
+
+Command-harness posture:
+
+- use `bin/get-control-plane-status` as the top-level projection of
+  current governed operator state
+- use `bin/local-task-router` for bounded local routing decisions
+- use the public orchestration commands for graph and worker operations
+  before reaching into lower-level internals
+- use validator entrypoints such as `bin/control-plane-api-check`,
+  `bin/public-orchestration-api-check`, `bin/local-runtime-check`, and
+  `bin/run-local-ci` to prove harness health
+- if the command harness cannot state the next legal step
+  deterministically, block and surface the missing contract rather than
+  improvising a prose-only workflow
 
 ------------------------------------------------------------------------
 
