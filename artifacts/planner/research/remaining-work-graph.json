@@ -2606,6 +2606,21 @@
       }
     },
     {
+      "node_id": "initiative-session-bootstrap-harness-governance",
+      "title": "Initiative / Session bootstrap harness governance",
+      "status": "review_gated",
+      "gating_class": "review_gated",
+      "conflict_domains": [
+        "governance",
+        "workflow"
+      ],
+      "target_execplan_id": "initiative:session-bootstrap-harness-governance",
+      "goal_area": "reference",
+      "initiative_branch": "initiative/session-bootstrap-harness-governance",
+      "parent_initiative_node": "initiative-session-bootstrap-harness-governance",
+      "ordering": {}
+    },
+    {
       "node_id": "rwg-052",
       "title": "Add a schema and checker for orchestrate-governed-slice",
       "status": "decision_gated",
