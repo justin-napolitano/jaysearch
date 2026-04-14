@@ -74,7 +74,7 @@ def run_governed_pre_push_checks(
 
     execplan_path = ""
     execplan_strategy = ""
-    if current_branch.startswith(("draft-execplan/", "impl-execplan/")):
+    if current_branch.startswith(("draft-execplan/", "impl-execplan/", "initiative/")):
         selected_execplan, candidates, strategy = discover_execplan(root_path, current_branch, base_ref)
         execplan_strategy = strategy
         if selected_execplan is None:

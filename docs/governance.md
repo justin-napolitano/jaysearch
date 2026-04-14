@@ -72,7 +72,7 @@ Bounded ExecPlan reconciliation rule:
 - During execution, Codex may update the active ExecPlan when real findings require plan, validation, or evidence reconciliation.
 - Allowed bounded updates include:
   - progress checkbox and execution-log updates
-  - `Surprises & Discoveries` and `Decision Log` entries
+  - entries added under `Artifacts and Notes` for discoveries, decisions, and dependency notes
   - validation command additions required to prove the current slice lawfully
   - `changes` field additions only for newly discovered files that are directly required to complete the same slice
 - Bounded reconciliation must stay within the active slice goal and must not silently turn one slice into a different slice.

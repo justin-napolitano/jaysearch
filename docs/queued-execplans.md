@@ -215,9 +215,10 @@ This document turns the remaining-work graph into an explicit near-term queue of
    - completion ref: `merged:pr-113`
 
 40. `20260326-worker-orchestration-api-codex-01-execplan`
-   - status: `decision_gated`
+   - status: `completed`
    - goal: add one orchestrator-agnostic command that resolves and runs a bounded worker contract with explicit executor and push policy
    - draft branch: `draft-execplan/20260326-worker-orchestration-api-codex-01-20260326`
+   - completion ref: `merged:pr-115`
 
 41. `20260326-local-offline-orchestration-bootstrap-codex-01-execplan`
    - status: `decision_gated`
@@ -292,9 +293,15 @@ This document turns the remaining-work graph into an explicit near-term queue of
    - implementation branch: `impl-execplan/20260327-orchestrate-governed-slice-action-loop-codex-01`
    - gate: `finalized draft ExecPlan required before execution`
 
+54. `20260413-contract-first-execplan-runtime-codex-01-execplan`
+   - status: `review_gated`
+   - goal: Hard-cut runtime and bootstrap surfaces to the contract-first planning model
+   - implementation branch: `impl-execplan/contract-first-execplan-runtime`
+   - gate: `authoritative ExecPlan is canonical; published implementation branch required before execution`
+
 ## Mirror Metadata
 
-- canonical_last_graph_action_id: `rwg-action-20260327-register-rwg-053`
+- canonical_last_graph_action_id: `rwg-action-20260413-001-unblock-rwg-054`
 - canonical_ready_order: ``
 - projection_authority: `projection_only`
 

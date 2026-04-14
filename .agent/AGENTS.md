@@ -82,7 +82,8 @@ New identities must be introduced via an ExecPlan.
 Agents MAY:
 
 • Read repository files\
-• Propose ExecPlans on draft branches\
+• Propose and refine ExecPlans on initiative branches\
+• Use `draft-execplan/*` only for isolated plan surgery when the initiative branch should remain undisturbed\
 • Generate TODO entries in draft state\
 • Run local validators and produce JSON output\
 • Suggest reviewers and approval policies\

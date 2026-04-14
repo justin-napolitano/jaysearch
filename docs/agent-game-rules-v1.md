@@ -301,7 +301,7 @@ Human decisions are authoritative when:
 - ambiguous interpretation of rules exists,
 - security or compliance risk is non-trivial.
 
-Override must be documented in plan `Decision Log` with rationale and date.
+Override must be documented in the active plan under `Artifacts and Notes` with rationale and date.
 
 ## 12. Go/No-Go Gate
 

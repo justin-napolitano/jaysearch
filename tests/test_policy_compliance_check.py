@@ -7,7 +7,7 @@ import sys
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
-from platform_tools.policy_compliance_check import check_policy_compliance
+from platform_tools.policy_compliance_check import _effective_base_ref, check_policy_compliance
 
 
 BRANCH = "impl-execplan/20260312-game-policy-compliance-codex-01-execplan-codex-01-20260312"
@@ -258,6 +258,7 @@ def _seed_repo(root: Path, *, graph_and_queue_on_main: bool, split_test_phase: b
         _write(root / "docs/queued-execplans.md", _queue_text())
     _git(root, "add", ".")
     _git(root, "commit", "-m", "docs: base")
+    _git(root, "checkout", "-b", "initiative/game-policy-compliance")
     _git(root, "checkout", "-b", BRANCH)
 
     execplan = root / ".agent" / "execplans" / f"{EXECPLAN_ID}.md"
@@ -294,11 +295,42 @@ def _seed_repo(root: Path, *, graph_and_queue_on_main: bool, split_test_phase: b
     return execplan
 
 
+def test_effective_base_ref_prefers_initiative_branch_for_impl_work(tmp_path: Path) -> None:
+    _git(tmp_path, "init", "-b", "main")
+    _git(tmp_path, "config", "user.name", "Tests")
+    _git(tmp_path, "config", "user.email", "tests@example.com")
+    _write(tmp_path / "README.md", "base\n")
+    _write_json(tmp_path / "artifacts/planner/research/remaining-work-graph.json", _remaining_work_graph())
+    _git(tmp_path, "add", ".")
+    _git(tmp_path, "commit", "-m", "docs: base")
+    _git(tmp_path, "checkout", "-b", "initiative/game-policy-compliance")
+    _write(tmp_path / "initiative.txt", "initiative\n")
+    _git(tmp_path, "add", "initiative.txt")
+    _git(tmp_path, "commit", "-m", "docs(governance): seed initiative branch")
+    _git(tmp_path, "checkout", "-b", BRANCH)
+    execplan = tmp_path / ".agent" / "execplans" / f"{EXECPLAN_ID}.md"
+    _write(execplan, _execplan_text())
+
+    effective = _effective_base_ref(
+        tmp_path,
+        branch=BRANCH,
+        plan_path=execplan,
+        default_base_ref="main",
+    )
+
+    assert effective == "initiative/game-policy-compliance"
+
+
 def _seed_remote(root: Path) -> Path:
     remote = root.parent / f"{root.name}-remote.git"
     subprocess.run(["git", "init", "--bare", remote.as_posix()], check=True, capture_output=True, text=True)
     subprocess.run(["git", "remote", "add", "origin", remote.as_posix()], cwd=root, check=True, capture_output=True, text=True)
     return remote
+
+
+def _seed_initiative_branch(root: Path) -> None:
+    _git(root, "checkout", "-b", "initiative/game-policy-compliance")
+    _git(root, "checkout", "-b", BRANCH)
 
 
 def test_policy_compliance_passes_for_ordered_branch_with_graph_reconciliation(tmp_path: Path) -> None:
@@ -482,7 +514,7 @@ def test_policy_compliance_allows_late_graph_queue_reconciliation_repair(tmp_pat
     _write(tmp_path / "spec" / "remaining-work-graph.schema.yaml", _remaining_work_schema_text())
     _git(tmp_path, "add", ".")
     _git(tmp_path, "commit", "-m", "docs: base")
-    _git(tmp_path, "checkout", "-b", BRANCH)
+    _seed_initiative_branch(tmp_path)
 
     execplan = tmp_path / ".agent" / "execplans" / f"{EXECPLAN_ID}.md"
     _write(execplan, _execplan_text())
@@ -521,7 +553,7 @@ def test_policy_compliance_allows_branch_reconciliation_with_active_execplan(tmp
     _write(tmp_path / "spec" / "remaining-work-graph.schema.yaml", _remaining_work_schema_text())
     _git(tmp_path, "add", ".")
     _git(tmp_path, "commit", "-m", "docs: base")
-    _git(tmp_path, "checkout", "-b", BRANCH)
+    _seed_initiative_branch(tmp_path)
 
     execplan = tmp_path / ".agent" / "execplans" / f"{EXECPLAN_ID}.md"
     _write(execplan, _execplan_text())
@@ -649,7 +681,7 @@ def test_policy_compliance_allows_published_branch_history_rewrite_with_exceptio
                 "    rationale: authorized history rewrite for branch repair",
                 "    approved_by: github:justin-napolitano",
                 "    created_at: 2026-03-12T00:00:00Z",
-                "    expires_at: 2026-03-20T00:00:00Z",
+                    "    expires_at: 2026-05-20T00:00:00Z",
                 "    status: active",
                 "    bypass_evidence:",
                 "      - chat:explicit-human-authorization",
@@ -696,7 +728,7 @@ def test_policy_compliance_allows_commit_hard_limit_with_active_exception(tmp_pa
     _write(tmp_path / "spec" / "remaining-work-graph.schema.yaml", _remaining_work_schema_text())
     _git(tmp_path, "add", ".")
     _git(tmp_path, "commit", "-m", "docs: base")
-    _git(tmp_path, "checkout", "-b", BRANCH)
+    _seed_initiative_branch(tmp_path)
 
     execplan = tmp_path / ".agent" / "execplans" / f"{EXECPLAN_ID}.md"
     _write(execplan, _execplan_text())
@@ -737,7 +769,7 @@ def test_policy_compliance_allows_commit_hard_limit_with_active_exception(tmp_pa
                 "    rationale: explicit human approval to tolerate one oversized runtime commit on the active branch",
                 "    approved_by: github:justin-napolitano",
                 "    created_at: 2026-03-13T00:00:00Z",
-                "    expires_at: 2026-03-20T00:00:00Z",
+                    "    expires_at: 2026-05-20T00:00:00Z",
                 "    status: active",
                 "    bypass_evidence:",
                 "      - chat:explicit-human-authorization",

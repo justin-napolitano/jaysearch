@@ -825,6 +825,14 @@
       "rationale": "20260326-worker-orchestration-api-codex-01-execplan merged to main and is now canonical completed state",
       "evidence_ref": "merged:pr-115",
       "queue_reconciled": true
+    },
+    {
+      "action_id": "rwg-action-20260413-001-unblock-rwg-054",
+      "action": "unblock",
+      "node_id": "rwg-054",
+      "rationale": "initiative_execplan_authorized derived deterministically from canonical branch and ExecPlan evidence",
+      "evidence_ref": "branch:initiative/contract-first-planning",
+      "queue_reconciled": true
     }
   ],
   "graph_id": "remaining-work-graph-20260311",
@@ -2726,6 +2734,49 @@
         "reorder_requires_human": false,
         "reorder_blockers": []
       }
+    },
+    {
+      "node_id": "rwg-054",
+      "title": "Hard-cut runtime and bootstrap surfaces to the contract-first planning model",
+      "status": "review_gated",
+      "status_reason": "authoritative plan is canonical; implementation branch publication required before execution",
+      "gating_class": "review_gated",
+      "conflict_domains": [
+        "governance",
+        "workflow",
+        "bootstrap",
+        "planner-runtime"
+      ],
+      "target_execplan_id": "20260413-contract-first-execplan-runtime-codex-01-execplan",
+      "goal_area": "governance",
+      "implementation_branch": "impl-execplan/contract-first-execplan-runtime",
+      "initiative_branch": "initiative/contract-first-planning",
+      "parent_initiative_node": "initiative-contract-first-planning",
+      "integration_mode": "via_initiative",
+      "expected_artifacts": [
+        ".agent/AGENTS.md",
+        ".agent/execplans/20260413-contract-first-execplan-runtime-codex-01-execplan.md",
+        "artifacts/planner/research/remaining-work-graph.json",
+        "docs/queued-execplans.md",
+        "src/platform_tools/bootstrap_managed_repo.py",
+        "src/platform_tools/planner_runtime.py",
+        "src/platform_tools/run_governed_pre_push_checks.py",
+        "tests/test_bootstrap_managed_repo.py",
+        "tests/test_planner_cli.py",
+        "tests/test_run_governed_pre_push_checks.py"
+      ],
+      "ordering": {
+        "queue_position": 54,
+        "tie_breaker": "20260413-contract-first-execplan-runtime-codex-01-execplan",
+        "source_action_id": "rwg-action-20260413-001-unblock-rwg-054"
+      },
+      "action_state": {
+        "last_action_id": "rwg-action-20260413-001-unblock-rwg-054",
+        "last_action": "unblock",
+        "action_required": false,
+        "reorder_requires_human": false,
+        "reorder_blockers": []
+      }
     }
   ],
   "ordering_policy": {
@@ -2741,7 +2792,7 @@
     "reorder_requires_explicit_action": true
   },
   "queue_projection": {
-    "last_reconciled_action_id": "rwg-action-20260326-001-complete-rwg-040",
+    "last_reconciled_action_id": "rwg-action-20260413-001-unblock-rwg-054",
     "path": "docs/queued-execplans.md",
     "projection_authority": "projection_only",
     "ready_execplan_ids": []
