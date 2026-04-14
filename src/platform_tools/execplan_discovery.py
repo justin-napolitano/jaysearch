@@ -64,6 +64,12 @@ def discover_execplan(cwd: Path, branch: str, base_ref: str) -> tuple[Path | Non
     if len(initiative_matches) == 1:
         return initiative_matches[0], [initiative_matches[0].as_posix()], "initiative_branch"
     if len(initiative_matches) > 1:
+        changed = _changed_execplans(cwd, base_ref)
+        changed_initiative_matches = sorted(
+            path for path in initiative_matches if path in set(changed)
+        )
+        if len(changed_initiative_matches) == 1:
+            return changed_initiative_matches[0], [changed_initiative_matches[0].as_posix()], "initiative_branch_changed_files"
         return None, [path.as_posix() for path in initiative_matches], "ambiguous_initiative_branch"
 
     graph_path = cwd / GRAPH_PATH
