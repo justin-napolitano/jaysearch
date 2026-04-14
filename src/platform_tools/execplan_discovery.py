@@ -30,6 +30,12 @@ def _changed_execplans(cwd: Path, base_ref: str) -> list[Path]:
     )
 
 
+def _created_sort_key(path: Path) -> tuple[str, str]:
+    parsed = parse_plan(path)
+    created = str(parsed.frontmatter.get("created", "")).strip()
+    return (created, path.as_posix())
+
+
 def _execplan_index(cwd: Path) -> tuple[dict[str, Path], dict[str, list[Path]]]:
     execplan_dir = cwd / ".agent" / "execplans"
     id_to_path: dict[str, Path] = {}
@@ -70,7 +76,8 @@ def discover_execplan(cwd: Path, branch: str, base_ref: str) -> tuple[Path | Non
         )
         if len(changed_initiative_matches) == 1:
             return changed_initiative_matches[0], [changed_initiative_matches[0].as_posix()], "initiative_branch_changed_files"
-        return None, [path.as_posix() for path in initiative_matches], "ambiguous_initiative_branch"
+        latest_initiative_match = max(initiative_matches, key=_created_sort_key)
+        return latest_initiative_match, [path.as_posix() for path in initiative_matches], "initiative_branch_latest_created"
 
     graph_path = cwd / GRAPH_PATH
     if graph_path.exists():

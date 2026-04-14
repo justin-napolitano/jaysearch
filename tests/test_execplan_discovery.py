@@ -87,3 +87,24 @@ def test_discover_execplan_prefers_single_changed_plan_on_initiative_branch(tmp_
     assert selected == second
     assert candidates == [second.as_posix()]
     assert strategy == "initiative_branch_changed_files"
+
+
+def test_discover_execplan_prefers_latest_created_plan_when_initiative_branch_has_multiple_matches(tmp_path: Path) -> None:
+    _git(tmp_path, "init", "-b", "main")
+    _git(tmp_path, "config", "user.name", "Tests")
+    _git(tmp_path, "config", "user.email", "tests@example.com")
+
+    first = tmp_path / ".agent" / "execplans" / "plan-a.md"
+    second = tmp_path / ".agent" / "execplans" / "plan-b.md"
+    _write(first, _plan("plan-a", "initiative/example"))
+    _write(second, _plan("plan-b", "initiative/example").replace('created: "2026-04-14T00:00:00Z"', 'created: "2026-04-15T00:00:00Z"'))
+    _git(tmp_path, "add", ".agent/execplans/plan-a.md", ".agent/execplans/plan-b.md")
+    _git(tmp_path, "commit", "-m", "docs(execplan): seed initiative plans")
+
+    _git(tmp_path, "checkout", "-b", "initiative/example")
+
+    selected, candidates, strategy = discover_execplan(tmp_path, "initiative/example", "main")
+
+    assert selected == second
+    assert candidates == [first.as_posix(), second.as_posix()]
+    assert strategy == "initiative_branch_latest_created"
