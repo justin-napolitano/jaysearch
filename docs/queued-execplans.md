@@ -305,9 +305,15 @@ This document turns the remaining-work graph into an explicit near-term queue of
    - implementation branch: `impl-execplan/contract-first-execplan-consumer-cleanup`
    - gate: `authoritative ExecPlan required before execution`
 
+56. `20260414-contract-first-planner-bootstrap-propagation-codex-01-execplan`
+   - status: `decision_gated`
+   - goal: Propagate contract-first planning through planner and bootstrap surfaces
+   - implementation branch: `impl-execplan/contract-first-planner-bootstrap-propagation`
+   - gate: `authoritative ExecPlan required before execution`
+
 ## Mirror Metadata
 
-- canonical_last_graph_action_id: `rwg-action-20260414-register-rwg-055`
+- canonical_last_graph_action_id: `rwg-action-20260414-001-block-rwg-056`
 - canonical_ready_order: ``
 - projection_authority: `projection_only`
 

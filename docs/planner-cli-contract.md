@@ -16,7 +16,7 @@ bin/planner graph ready
 bin/planner graph blocked
 bin/planner graph validate
 
-bin/planner contract draft-execplan
+bin/planner contract execplan
 bin/planner contract show
 
 bin/planner validate
@@ -78,7 +78,7 @@ bin/planner sync github-projects
 
 ## Contract Commands
 
-`contract draft-execplan`
+`contract execplan`
 
 - renders a draft ExecPlan from graph state only when readiness criteria are satisfied
 - records why drafting was allowed or refused
