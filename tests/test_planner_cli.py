@@ -7,7 +7,7 @@ from typing import Any
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
-from platform_tools import planner_cli
+from platform_tools import planner_cli, planner_runtime
 from platform_tools.planner_runtime import (
     apply_move,
     build_graph,
@@ -338,13 +338,21 @@ def test_contract_draft_and_import(tmp_path: Path) -> None:
     }
     _write_json(session_dir / "extracted-state.json", extracted)
     built = build_graph(root=tmp_path.as_posix(), session_id=session_id)
+    planner_runtime.get_current_branch = lambda **kwargs: "initiative/example"
     draft_code, draft_report = draft_execplan(
         root=tmp_path.as_posix(), graph_id=built["graph_id"], title="Generated Contract"
     )
     assert draft_code == 0
     original = Path(draft_report["path"])
+    generated = original.read_text(encoding="utf-8")
+    assert "initiative_branch: initiative/example" in generated
+    assert "base_branch: initiative/example" in generated
+    assert "## Outcomes & Retrospective" in generated
+    assert "# Purpose / Big Picture" not in generated
+    assert "## Concrete Steps" not in generated
+    assert "draft_branch:" not in generated
     edited = original.with_name("edited.md")
-    edited.write_text(original.read_text(encoding="utf-8") + "\nEdited\n", encoding="utf-8")
+    edited.write_text(generated + "\nEdited\n", encoding="utf-8")
     import_code, import_report = import_execplan(
         root=tmp_path.as_posix(),
         session_id=session_id,

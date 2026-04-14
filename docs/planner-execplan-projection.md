@@ -2,7 +2,7 @@
 
 ## Purpose
 
-This document defines how canonical planner state becomes a governed ExecPlan draft. The projection exists to create a human-reviewable execution contract, not to replace planner or graph state as the source of truth.
+This document defines how canonical planner state becomes a governed contract-first ExecPlan. The projection exists to create a human-reviewable execution contract, not to replace planner or graph state as the source of truth.
 
 ## Preconditions
 
@@ -20,20 +20,13 @@ If the planner cannot satisfy these conditions, the command should refuse projec
 
 ## Mapping
 
-The projection should map canonical planner state into ExecPlan sections as follows:
+The projection should map canonical planner state into the five required ExecPlan sections as follows:
 
-- purpose and goal context -> `Purpose / Big Picture`
-- current readiness and tracked work items -> `Progress`
-- unresolved or newly discovered facts -> `Surprises & Discoveries`
-- accepted architectural decisions -> `Decision Log`
-- expected deliverables and later review notes -> `Outcomes & Retrospective`
-- local repo and platform constraints -> `Context and Orientation`
-- high-level implementation sequence -> `Plan of Work`
-- concrete operator steps and validation commands -> `Concrete Steps`
-- pass/fail conditions -> `Validation and Acceptance`
-- rerun and partial-failure strategy -> `Idempotence and Recovery`
-- output artifact paths and notes -> `Artifacts and Notes`
-- touched systems, files, contracts, and providers -> `Interfaces and Dependencies`
+- expected deliverables and tracked readiness -> `Outcomes & Retrospective`
+- purpose, scope, constraints, and local orientation -> `Context and Orientation`
+- high-level implementation sequence and concrete steps -> `Plan of Work`
+- pass/fail conditions and rerun strategy -> `Validation and Acceptance`
+- output artifact paths, decisions, discoveries, and dependency notes -> `Artifacts and Notes`
 
 ## Projection Rules
 

@@ -35,7 +35,7 @@ Every agent run must be traceable through:
 - ExecPlan frontmatter:
   - `owner: "agent/<name>"`
   - `initiative_branch: "initiative/..."`
-  - optional `draft_branch: "draft-execplan/..."`
+  - optional `draft_branch: "draft-execplan/..."` only when isolated plan review actually exists
 - Commit metadata:
   - Use `bin/codex-commit "message"` for Codex-authored commits
   - Commit subject prefix includes agent identity (example: `[agent/codex-01]`)

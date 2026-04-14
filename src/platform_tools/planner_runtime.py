@@ -10,6 +10,8 @@ from typing import Any
 
 import yaml
 
+from platform_tools.branch_policy import get_current_branch
+
 
 SESSION_COLLECTIONS = [
     "goals",
@@ -566,21 +568,20 @@ def draft_execplan(*, root: str = ".", graph_id: str, title: str, owner: str = "
             "ok": False,
             "errors": ["no_ready_or_validated_nodes"],
         }
+    current_branch = get_current_branch(root=root)
+    initiative_branch = current_branch if current_branch.startswith("initiative/") else ""
+    base_branch = initiative_branch or "main"
     plan_id = f"{datetime.now(timezone.utc).strftime('%Y%m%d')}-{_slugify(title)}-codex-01-execplan"
-    branch = f"draft-execplan/{plan_id}-codex-01-{datetime.now(timezone.utc).strftime('%Y%m%d')}"
     frontmatter = {
         "id": plan_id,
         "title": title,
         "owner": owner,
         "created": utc_now(),
         "status": "draft",
-        "base_branch": "main",
+        "base_branch": base_branch,
         "changes": changes,
         "approve_policy": "codeowners",
         "reviewers": ["github:justin-napolitano"],
-        "draft_by": owner,
-        "draft_branch": branch,
-        "draft_created": utc_now(),
         "finalized_by": "",
         "finalized_at": "",
         "finalized_in_pr": "",
@@ -588,31 +589,27 @@ def draft_execplan(*, root: str = ".", graph_id: str, title: str, owner: str = "
         "tasks": [{"title": node["title"], "priority": node["priority"]} for node in ready_nodes[:20]],
         "depends_on": [graph["graph_id"]],
     }
+    if initiative_branch:
+        frontmatter["initiative_branch"] = initiative_branch
     goals = [node["title"] for node in graph["nodes"] if node["node_type"] == "goal"]
     tasks = [node["title"] for node in graph["nodes"] if node["node_type"] == "task"]
     text = "---\n"
     text += yaml.safe_dump(frontmatter, sort_keys=False)
     text += "---\n\n"
-    text += "# Purpose / Big Picture\n\n"
-    text += f"Derived from canonical graph `{graph_id}`.\n\n"
-    text += "## Progress\n\n- [ ] Draft ExecPlan generated from planner graph\n"
-    text += "- [ ] Review generated contract\n- [ ] Prepare for governed execution\n\n"
-    text += "## Surprises & Discoveries\n\n- None yet.\n\n"
-    text += "## Decision Log\n\n- Generated from planner graph state.\n\n"
     text += "## Outcomes & Retrospective\n\n- Pending execution.\n\n"
     text += "## Context and Orientation\n\n"
-    text += f"- Graph id: `{graph_id}`\n- Goals: {', '.join(goals) or 'none'}\n\n"
+    text += f"- Graph id: `{graph_id}`\n"
+    text += f"- Planning branch: `{base_branch}`\n"
+    text += f"- Goals: {', '.join(goals) or 'none'}\n\n"
     text += "## Plan of Work\n\n"
     for item in tasks or ["Review graph and refine scope."]:
         text += f"- {item}\n"
-    text += "\n## Concrete Steps\n\n"
-    text += "1. Review graph-backed tasks and scope.\n2. Execute governed implementation work.\n3. Run required validation.\n\n"
-    text += "## Validation and Acceptance\n\n- Contract must be reviewed before execution.\n\n"
-    text += "## Idempotence and Recovery\n\n- Regenerate from canonical graph if scope changes materially.\n\n"
+    text += "\n## Validation and Acceptance\n\n"
+    text += "- Review graph-backed scope before cutting implementation work.\n"
+    text += "- Run slice validation before mergeback.\n\n"
     text += "## Artifacts and Notes\n\n"
-    text += f"- Source graph: `{graph_id}`\n\n"
-    text += "## Interfaces and Dependencies\n\n"
-    text += "- planner graph state\n- generated contract artifact\n"
+    text += f"- Source graph: `{graph_id}`\n"
+    text += f"- Generated from planner graph state on `{base_branch}`\n"
 
     out_path = Path(root) / ".agent" / "execplans" / f"{plan_id}.md"
     out_path.parent.mkdir(parents=True, exist_ok=True)

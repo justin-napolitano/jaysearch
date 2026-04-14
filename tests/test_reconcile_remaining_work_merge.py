@@ -485,7 +485,7 @@ def test_reconcile_pending_merge_completion_from_initiative_merge_to_main_withou
     target.pop("implementation_branch", None)
     target["status"] = "decision_gated"
     target["gating_class"] = "decision_gated"
-    target["status_reason"] = "registered from ExecPlan metadata; finalized draft ExecPlan required before execution"
+    target["status_reason"] = "registered from ExecPlan metadata; authoritative ExecPlan required before execution"
     target["availability_target_ref"] = "main"
     target["action_state"]["last_action_id"] = "rwg-action-20260312-004-promote-rwg-020"
     target["action_state"]["last_action"] = "block"

@@ -95,6 +95,8 @@ def reconcile_remaining_work_transition(
     source_state = str(node.get("status", "")).strip()
     finalized_in_pr = str(frontmatter.get("finalized_in_pr", "")).strip()
     finalized_at = str(frontmatter.get("finalized_at", "")).strip()
+    created_at = str(frontmatter.get("created", "")).strip()
+    initiative_branch = str(frontmatter.get("initiative_branch", "")).strip()
     implementation_branch = str(node.get("implementation_branch", "")).strip()
     publish_evidence = _branch_publish_evidence(repo_root, implementation_branch)
 
@@ -117,6 +119,15 @@ def reconcile_remaining_work_transition(
         evidence_ref = f"merged:pr-{finalized_in_pr}"
         timestamp = finalized_at or ""
         github_evidence_refs = [f"pr:{finalized_in_pr}"]
+    elif source_state == "decision_gated" and initiative_branch:
+        transition_name = "initiative_execplan_authorized"
+        target_state = "review_gated"
+        action_name = "unblock"
+        action_family = "backlog_graph_action"
+        decision_reason = "initiative_branch_plan_authority"
+        evidence_ref = f"branch:{initiative_branch}"
+        timestamp = finalized_at or created_at
+        git_evidence_refs = [f"branch:{initiative_branch}"]
     elif source_state == "review_gated" and publish_evidence is not None:
         transition_name = "implementation_branch_publish"
         target_state = "ready"
@@ -158,7 +169,7 @@ def reconcile_remaining_work_transition(
 
     node["status"] = target_state
     node["gating_class"] = "auto_runnable" if target_state == "ready" else "review_gated"
-    node["status_reason"] = "" if target_state == "ready" else "finalized draft is canonical; implementation branch publication required before execution"
+    node["status_reason"] = "" if target_state == "ready" else "authoritative plan is canonical; implementation branch publication required before execution"
     ordering = node.get("ordering", {}) if isinstance(node.get("ordering"), dict) else {}
     ordering["source_action_id"] = action_id
     if target_state != "ready":
@@ -187,7 +198,7 @@ def reconcile_remaining_work_transition(
     queue_text = _update_queue_metadata(queue_text, last_action_id=action_id, ready_execplan_ids=ready_execplan_ids)
     gate_note = None
     if target_state == "review_gated":
-        gate_note = "canonical ExecPlan is finalized; published implementation branch required before execution"
+        gate_note = "authoritative ExecPlan is canonical; published implementation branch required before execution"
     queue_text = _update_queue_entry(
         queue_text,
         execplan_id=execplan_id,
