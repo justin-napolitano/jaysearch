@@ -22,6 +22,30 @@ def _write_json(path: Path, data: object) -> None:
     path.write_text(json.dumps(data, indent=2) + "\n", encoding="utf-8")
 
 
+def _minimal_body() -> str:
+    return """
+## Outcomes & Retrospective
+
+Test.
+
+## Context and Orientation
+
+Test.
+
+## Plan of Work
+
+Test.
+
+## Validation and Acceptance
+
+Test.
+
+## Artifacts and Notes
+
+Test.
+"""
+
+
 def _plan_text() -> str:
     return """---
 id: "20260312-remaining-work-graph-actions-and-ordering-codex-01-execplan"
@@ -35,62 +59,13 @@ changes:
 approve_policy: codeowners
 reviewers:
   - "github:justin-napolitano"
-draft_by: "agent/codex-01"
-draft_branch: "draft-execplan/20260312-remaining-work-graph-actions-and-ordering-codex-01-execplan-codex-01-20260312"
-draft_created: "2026-03-12T00:00:00Z"
+initiative_branch: "initiative/remaining-work-ordering"
 finalized_by: ""
 finalized_at: ""
 finalized_in_pr: ""
 ---
 
-# Purpose / Big Picture
-
-Test.
-
-## Progress
-
-- [x] Test
-
-## Surprises & Discoveries
-
-None.
-
-## Decision Log
-
-None.
-
-## Outcomes & Retrospective
-
-Test.
-
-## Context and Orientation
-
-Test.
-
-## Plan of Work
-
-Test.
-
-## Concrete Steps
-
-1. Test.
-
-## Validation and Acceptance
-
-Test.
-
-## Idempotence and Recovery
-
-Test.
-
-## Artifacts and Notes
-
-Test.
-
-## Interfaces and Dependencies
-
-Test.
-"""
+""" + _minimal_body().strip() + "\n"
 
 
 def _graph_data() -> dict[str, object]:
@@ -329,7 +304,7 @@ def test_reconcile_uses_initiative_branch_as_completion_target(monkeypatch, tmp_
         repo_root: Path,
         ref: str,
         plan_id: str,
-        draft_branch: str,
+        branch_markers,
         extra_markers=None,
     ) -> list[dict[str, str]]:
         seen["ref"] = ref
@@ -450,7 +425,7 @@ def test_pending_merge_reconciliation_activates_completed_node_when_initiative_r
     _write(tmp_path / "spec" / "remaining-work-graph.schema.yaml", _schema_text())
     _write(tmp_path / "docs" / "remaining-work-graph.md", "# Remaining Work Graph\n")
 
-    def _fake_merge_candidates(repo_root: Path, ref: str, plan_id: str, draft_branch: str, extra_markers=None) -> list[dict[str, str]]:
+    def _fake_merge_candidates(repo_root: Path, ref: str, plan_id: str, branch_markers, extra_markers=None) -> list[dict[str, str]]:
         if ref == "main":
             return [
                 {
@@ -495,7 +470,7 @@ def test_reconcile_pending_merge_completion_from_initiative_merge_to_main_withou
     _write(tmp_path / "spec" / "remaining-work-graph.schema.yaml", _schema_text())
     _write(tmp_path / "docs" / "remaining-work-graph.md", "# Remaining Work Graph\n")
 
-    def _fake_merge_candidates(repo_root: Path, ref: str, plan_id: str, draft_branch: str, extra_markers=None) -> list[dict[str, str]]:
+    def _fake_merge_candidates(repo_root: Path, ref: str, plan_id: str, branch_markers, extra_markers=None) -> list[dict[str, str]]:
         if ref == "initiative/remaining-work-ordering":
             return []
         if ref == "main":

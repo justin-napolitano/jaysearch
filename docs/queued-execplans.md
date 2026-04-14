@@ -299,9 +299,15 @@ This document turns the remaining-work graph into an explicit near-term queue of
    - implementation branch: `impl-execplan/contract-first-execplan-runtime`
    - gate: `authoritative ExecPlan is canonical; published implementation branch required before execution`
 
+55. `20260414-contract-first-execplan-consumer-cleanup-codex-01-execplan`
+   - status: `decision_gated`
+   - goal: Remove remaining downstream assumptions about the legacy verbose ExecPlan shape
+   - implementation branch: `impl-execplan/contract-first-execplan-consumer-cleanup`
+   - gate: `authoritative ExecPlan required before execution`
+
 ## Mirror Metadata
 
-- canonical_last_graph_action_id: `rwg-action-20260413-001-unblock-rwg-054`
+- canonical_last_graph_action_id: `rwg-action-20260414-register-rwg-055`
 - canonical_ready_order: ``
 - projection_authority: `projection_only`
 

@@ -13,6 +13,29 @@ def _write(path: Path, text: str) -> None:
     path.write_text(text, encoding="utf-8")
 
 
+PLAN_BODY = """
+## Outcomes & Retrospective
+
+Test.
+
+## Context and Orientation
+
+Test.
+
+## Plan of Work
+
+Test.
+
+## Validation and Acceptance
+
+Test.
+
+## Artifacts and Notes
+
+Test.
+""".strip()
+
+
 def test_reconcile_governed_graph_events_runs_registration_and_transition(monkeypatch, tmp_path: Path) -> None:
     plan = tmp_path / ".agent" / "execplans" / "plan.md"
     _write(
@@ -23,7 +46,7 @@ def test_reconcile_governed_graph_events_runs_registration_and_transition(monkey
                 'id: "plan-id"',
                 "---",
                 "",
-                "# Purpose / Big Picture",
+                PLAN_BODY,
             ]
         )
         + "\n",
@@ -56,7 +79,7 @@ def test_reconcile_governed_graph_events_attempts_merge_after_ready(monkeypatch,
                 'id: "plan-id"',
                 "---",
                 "",
-                "# Purpose / Big Picture",
+                PLAN_BODY,
             ]
         )
         + "\n",
@@ -95,7 +118,7 @@ def test_reconcile_governed_graph_events_treats_already_registered_plan_as_noop(
                 'id: "plan-id"',
                 "---",
                 "",
-                "# Purpose / Big Picture",
+                PLAN_BODY,
             ]
         )
         + "\n",
