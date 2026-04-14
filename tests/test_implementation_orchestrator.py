@@ -20,6 +20,32 @@ def _write_text(path: Path, text: str) -> None:
     path.write_text(text, encoding="utf-8")
 
 
+def _minimal_body() -> str:
+    return "\n".join(
+        [
+            "## Outcomes & Retrospective",
+            "",
+            "Test.",
+            "",
+            "## Context and Orientation",
+            "",
+            "Test.",
+            "",
+            "## Plan of Work",
+            "",
+            "Test.",
+            "",
+            "## Validation and Acceptance",
+            "",
+            "Test.",
+            "",
+            "## Artifacts and Notes",
+            "",
+            "Test.",
+        ]
+    )
+
+
 def _seed_execplan(root: Path, branch: str) -> Path:
     path = root / ".agent" / "execplans" / "20260311-implementation-orchestrator-runtime-codex-01-execplan.md"
     _write_text(
@@ -38,9 +64,7 @@ def _seed_execplan(root: Path, branch: str) -> Path:
                 "  - bin/implementation-orchestrator",
                 'approve_policy: "codeowners"',
                 'reviewers: ["github:test"]',
-                'draft_by: "agent/codex-01"',
-                f'draft_branch: "{branch}"',
-                'draft_created: "2026-03-11T00:00:00Z"',
+                'initiative_branch: "initiative/implementation-orchestrator-runtime"',
                 'finalized_by: ""',
                 'finalized_at: ""',
                 'finalized_in_pr: ""',
@@ -54,7 +78,7 @@ def _seed_execplan(root: Path, branch: str) -> Path:
                 '      expected_exit: 0',
                 "---",
                 "",
-                "# Purpose / Big Picture",
+                _minimal_body(),
             ]
         )
         + "\n",

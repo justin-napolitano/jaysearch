@@ -833,6 +833,14 @@
       "rationale": "initiative_execplan_authorized derived deterministically from canonical branch and ExecPlan evidence",
       "evidence_ref": "branch:initiative/contract-first-planning",
       "queue_reconciled": true
+    },
+    {
+      "action_id": "rwg-action-20260414-register-rwg-055",
+      "action": "block",
+      "node_id": "rwg-055",
+      "rationale": "node registered deterministically from ExecPlan graph_registration metadata",
+      "evidence_ref": ".agent/execplans/20260414-contract-first-execplan-consumer-cleanup-codex-01-execplan.md",
+      "queue_reconciled": true
     }
   ],
   "graph_id": "remaining-work-graph-20260311",
@@ -2777,6 +2785,47 @@
         "reorder_requires_human": false,
         "reorder_blockers": []
       }
+    },
+    {
+      "node_id": "rwg-055",
+      "title": "Remove remaining downstream assumptions about the legacy verbose ExecPlan shape",
+      "status": "decision_gated",
+      "status_reason": "registered from ExecPlan metadata; authoritative ExecPlan required before execution",
+      "gating_class": "decision_gated",
+      "conflict_domains": [
+        "governance",
+        "workflow",
+        "planner-runtime",
+        "orchestration"
+      ],
+      "target_execplan_id": "20260414-contract-first-execplan-consumer-cleanup-codex-01-execplan",
+      "goal_area": "governance",
+      "implementation_branch": "impl-execplan/contract-first-execplan-consumer-cleanup",
+      "initiative_branch": "initiative/contract-first-planning",
+      "parent_initiative_node": "initiative-contract-first-planning",
+      "integration_mode": "via_initiative",
+      "expected_artifacts": [
+        ".agent/execplans/20260414-contract-first-execplan-consumer-cleanup-codex-01-execplan.md",
+        "artifacts/planner/research/remaining-work-graph.json",
+        "docs/queued-execplans.md",
+        "src/platform_tools/finalize_execplan.py",
+        "src/platform_tools/merge_readiness.py",
+        "src/platform_tools/reconcile_remaining_work_merge.py",
+        "tests/test_finalize_execplan.py",
+        "tests/test_merge_readiness.py"
+      ],
+      "ordering": {
+        "queue_position": 55,
+        "tie_breaker": "20260414-contract-first-execplan-consumer-cleanup-codex-01-execplan",
+        "source_action_id": "rwg-action-20260414-register-rwg-055"
+      },
+      "action_state": {
+        "last_action_id": "rwg-action-20260414-register-rwg-055",
+        "last_action": "block",
+        "action_required": false,
+        "reorder_requires_human": false,
+        "reorder_blockers": []
+      }
     }
   ],
   "ordering_policy": {
@@ -2792,7 +2841,7 @@
     "reorder_requires_explicit_action": true
   },
   "queue_projection": {
-    "last_reconciled_action_id": "rwg-action-20260413-001-unblock-rwg-054",
+    "last_reconciled_action_id": "rwg-action-20260414-register-rwg-055",
     "path": "docs/queued-execplans.md",
     "projection_authority": "projection_only",
     "ready_execplan_ids": []

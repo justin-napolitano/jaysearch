@@ -6,7 +6,7 @@ This document defines how canonical planner state becomes a governed contract-fi
 
 ## Preconditions
 
-`bin/planner contract draft-execplan` should only succeed when:
+`bin/planner contract execplan` should only succeed when:
 
 - the graph has a bounded objective
 - major constraints are captured

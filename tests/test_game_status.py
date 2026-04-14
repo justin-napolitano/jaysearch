@@ -19,6 +19,32 @@ def _write_text(path: Path, text: str) -> None:
     path.write_text(text, encoding="utf-8")
 
 
+def _minimal_body() -> str:
+    return "\n".join(
+        [
+            "## Outcomes & Retrospective",
+            "",
+            "Test.",
+            "",
+            "## Context and Orientation",
+            "",
+            "Test.",
+            "",
+            "## Plan of Work",
+            "",
+            "Test.",
+            "",
+            "## Validation and Acceptance",
+            "",
+            "Test.",
+            "",
+            "## Artifacts and Notes",
+            "",
+            "Test.",
+        ]
+    )
+
+
 def _seed_branch_policy(root: Path) -> None:
     _write_text(
         root / "platform.engine.yaml",
@@ -321,15 +347,13 @@ def _seed_execplan(root: Path, branch: str) -> Path:
                 "  - src/platform_tools/game_status.py",
                 'approve_policy: "codeowners"',
                 'reviewers: ["github:test"]',
-                'draft_by: "agent/codex-01"',
                 f'draft_branch: "{branch}"',
-                'draft_created: "2026-03-11T00:00:00Z"',
                 'finalized_by: ""',
                 'finalized_at: ""',
                 'finalized_in_pr: ""',
                 "---",
                 "",
-                "# Purpose / Big Picture",
+                _minimal_body(),
             ]
         )
         + "\n",
@@ -375,4 +399,4 @@ def test_game_status_falls_back_to_execplan_game_on_draft_branch(tmp_path: Path)
         "active_domain_game",
         "active_subgame",
     ]
-    assert report["active_game"]["reason"] == "draft_execplan_branch_without_explicit_execplan"
+    assert report["active_game"]["reason"] == "draft_execplan_branch_without_resolved_execplan"

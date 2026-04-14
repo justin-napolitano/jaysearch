@@ -228,7 +228,7 @@ Latest-main branching rule:
 
 Implementation-branch split rule:
 
-- `draft-execplan/*` branches are for drafting and review of ExecPlan artifacts.
+- `draft-execplan/*` branches are optional isolation branches for deliberate ExecPlan drafting or review.
 - `impl-execplan/*` branches are the canonical execution branches for individual implementation slices.
 - Each parallel implementation ExecPlan must run on its own `impl-execplan/*` branch.
 - `queue-execplan/*` branches are optional integration-only branches and do not replace slice-local implementation branches.

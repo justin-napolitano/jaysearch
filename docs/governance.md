@@ -101,7 +101,7 @@ Latest-main branching rule:
 
 Implementation-branch split rule:
 
-- `draft-execplan/*` branches exist to draft and review ExecPlan artifacts.
+- `draft-execplan/*` branches are optional isolation branches for deliberate ExecPlan-only review or surgery.
 - `impl-execplan/*` branches are the canonical execution branches for individual implementation ExecPlans.
 - Parallel implementation ExecPlans must not share one implementation branch.
 - `queue-execplan/*` branches are optional integration branches for deliberate stacking after slice-local implementation exists.
@@ -113,7 +113,7 @@ Governed finalization authority rule:
 - The signed merge commit is the canonical authority event for `finalized_by`, `finalized_at`, and merge-backed `finalized_in_pr` metadata.
 - Signature verification must succeed for the selected merge commit before reconciliation may claim completion.
 - When merge-backed evidence is deterministic, governed ExecPlans should be reconciled to `status: completed` from that canonical merge event.
-- Reconciliation must prefer an `impl-execplan/*` merge over a `draft-execplan/*` merge for the same ExecPlan id when both exist.
+- Reconciliation must prefer an `impl-execplan/*` merge over a `draft-execplan/*` merge when both exist for the same ExecPlan id, and it must accept initiative-branch merge evidence when no draft branch exists.
 - `finalized_by` must be resolved through the canonical signer identity map in `spec/governance.yaml`, not inferred from a single maintainer entry in repository prose.
 - If merge history, signature verification, or finalizer identity is ambiguous, the reconciliation command must fail with explicit blockers rather than invent completion metadata.
 - Future automation should derive finalization metadata from the signed merge event wherever possible.
