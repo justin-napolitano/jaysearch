@@ -94,7 +94,7 @@ def _workflow_doc() -> str:
             "  - create_or_select_initiative_node",
             "  - create_initiative_branch",
             "  - plan_on_initiative_branch",
-            "  - optionally_isolate_plan_edits_on_draft_branch",
+            "  - optionally_isolate_execplan_review_on_draft_branch",
             "  - implement_on_impl_branch",
             "  - merge_impl_to_initiative",
             "  - merge_initiative_to_main",

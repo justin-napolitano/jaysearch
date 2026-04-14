@@ -374,6 +374,56 @@ def test_validate_all_checks_research_artifacts(tmp_path: Path) -> None:
     assert report["research"]["ok"] is True
 
 
+def test_planner_cli_execplan_contract_command_projects_execplan(
+    tmp_path: Path,
+    monkeypatch,
+    capsys,
+) -> None:
+    _seed_runtime_specs(tmp_path)
+    started = create_session(root=tmp_path.as_posix(), title="CLI ExecPlan")
+    session_id = started["session_id"]
+    session_dir = tmp_path / "artifacts" / "planner" / "sessions" / session_id
+    _write_json(
+        session_dir / "extracted-state.json",
+        {
+            "goals": [{"title": "Project execplan", "success_criteria": "created", "scope": "cli", "status": "validated"}],
+            "constraints": [],
+            "assumptions": [],
+            "decisions": [],
+            "questions": [],
+            "tasks": [
+                {
+                    "title": "Generate plan",
+                    "description": "Generate plan",
+                    "ready_definition": "",
+                    "done_definition": "",
+                    "status": "ready",
+                    "changes": ["src/platform_tools/planner_cli.py"],
+                }
+            ],
+            "risks": [],
+            "evidence": [{"title": "Planner CLI", "artifact_type": "file", "path": "src/platform_tools/planner_cli.py"}],
+        },
+    )
+    built = build_graph(root=tmp_path.as_posix(), session_id=session_id)
+
+    monkeypatch.chdir(tmp_path)
+    monkeypatch.setattr(planner_runtime, "get_current_branch", lambda **kwargs: "initiative/example")
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        ["planner_cli.py", "contract", "execplan", "--graph-id", built["graph_id"], "--title", "Generated Contract"],
+    )
+    exit_code = planner_cli.main()
+    report = _read_cli_report(capsys.readouterr().out)
+
+    assert exit_code == 0
+    assert report["operation"] == "contract.execplan"
+    assert report["status"] == "ok"
+    assert report["next_validations"] == [f"bin/execplan-validate {report['path']}"]
+    assert report["ok"] is True
+
+
 def test_planner_cli_wraps_graph_validation_in_orchestrator_contract(
     tmp_path: Path,
     monkeypatch,

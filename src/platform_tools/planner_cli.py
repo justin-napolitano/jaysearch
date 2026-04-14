@@ -65,7 +65,7 @@ def _next_validations(args: argparse.Namespace, payload: dict[str, Any]) -> list
         return [f"bin/planner graph validate --graph-id {payload['graph_id']}"]
     if operation == "move.apply" and payload.get("graph_id"):
         return [f"bin/planner graph validate --graph-id {payload['graph_id']}"]
-    if operation == "contract.draft-execplan" and payload.get("path"):
+    if operation == "contract.execplan" and payload.get("path"):
         return [f"bin/execplan-validate {payload['path']}"]
     return []
 
@@ -155,9 +155,9 @@ def main() -> int:
 
     contract_parser = subparsers.add_parser("contract")
     contract_sub = contract_parser.add_subparsers(dest="contract_command", required=True)
-    draft = contract_sub.add_parser("draft-execplan")
-    draft.add_argument("--graph-id", required=True)
-    draft.add_argument("--title", required=True)
+    execplan_contract = contract_sub.add_parser("execplan")
+    execplan_contract.add_argument("--graph-id", required=True)
+    execplan_contract.add_argument("--title", required=True)
     contract_import = contract_sub.add_parser("import-execplan")
     contract_import.add_argument("--session-id", required=True)
     contract_import.add_argument("--graph-id", required=True)
@@ -246,7 +246,7 @@ def main() -> int:
                 return code
 
         if args.command == "contract":
-            if args.contract_command == "draft-execplan":
+            if args.contract_command == "execplan":
                 code, report = draft_execplan(graph_id=args.graph_id, title=args.title)
                 _print(_normalize_payload(args, report, code))
                 return code
