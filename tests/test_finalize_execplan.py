@@ -13,6 +13,30 @@ def _write(path: Path, text: str) -> None:
     path.write_text(text, encoding="utf-8")
 
 
+def _minimal_body() -> str:
+    return """
+## Outcomes & Retrospective
+
+Test.
+
+## Context and Orientation
+
+Test.
+
+## Plan of Work
+
+Test.
+
+## Validation and Acceptance
+
+Test.
+
+## Artifacts and Notes
+
+Test.
+"""
+
+
 def _plan_text(draft_branch: str) -> str:
     return f"""---
 id: "20260312-test-plan-codex-01-execplan"
@@ -43,9 +67,7 @@ tasks:
 depends_on: []
 ---
 
-# Purpose / Big Picture
-
-Test.
+{_minimal_body().strip()}
 """
 
 

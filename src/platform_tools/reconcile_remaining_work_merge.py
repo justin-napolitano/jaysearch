@@ -195,6 +195,25 @@ def _merge_search_ref(node: dict[str, Any], main_ref: str) -> str:
     return main_ref
 
 
+def _plan_branch_markers(plan: Any, node: dict[str, Any]) -> list[str]:
+    markers: list[str] = []
+    frontmatter = plan.frontmatter if hasattr(plan, "frontmatter") and isinstance(plan.frontmatter, dict) else {}
+    for value in (
+        str(frontmatter.get("draft_branch", "")).strip(),
+        str(frontmatter.get("initiative_branch", "")).strip(),
+        str(frontmatter.get("base_branch", "")).strip(),
+        str(node.get("initiative_branch", "")).strip(),
+        str(node.get("implementation_branch", "")).strip(),
+    ):
+        if not value:
+            continue
+        if value == "main":
+            continue
+        if value.startswith(("initiative/", "impl-execplan/", "draft-execplan/")) and value not in markers:
+            markers.append(value)
+    return markers
+
+
 def _completion_search_refs(node: dict[str, Any], main_ref: str, *, plan_base_branch: str = "") -> list[str]:
     integration_mode = str(node.get("integration_mode", "")).strip()
     initiative_branch = str(node.get("initiative_branch", "")).strip()
@@ -301,11 +320,11 @@ def _safe_merge_candidates(
     repo_root: Path,
     merge_ref: str,
     execplan_id: str,
-    draft_branch: str,
+    branch_markers: list[str] | tuple[str, ...],
     extra_markers: list[str] | None = None,
 ) -> list[dict[str, str]]:
     try:
-        return _merge_candidates(repo_root, merge_ref, execplan_id, draft_branch, extra_markers=extra_markers)
+        return _merge_candidates(repo_root, merge_ref, execplan_id, branch_markers, extra_markers=extra_markers)
     except ValueError as exc:
         message = str(exc).strip()
         if message.startswith("fatal: ambiguous argument "):
@@ -320,7 +339,7 @@ def _reconcile_mainline_activation(
     node: dict[str, Any],
     repo_root: Path,
     execplan_id: str,
-    draft_branch: str,
+    branch_markers: list[str] | tuple[str, ...],
     main_ref: str,
     actions: list[dict[str, Any]],
 ) -> str | None:
@@ -333,7 +352,7 @@ def _reconcile_mainline_activation(
         repo_root,
         main_ref,
         execplan_id,
-        draft_branch,
+        branch_markers,
         extra_markers=[initiative_branch],
     )
     selected = _select_activation_candidate(candidates=candidates, target_branch=initiative_branch)
@@ -409,7 +428,7 @@ def find_pending_merge_reconciliations(
         if plan_path is None:
             continue
         plan = parse_plan(plan_path)
-        draft_branch = str(plan.frontmatter.get("draft_branch", "")).strip()
+        branch_markers = _plan_branch_markers(plan, node)
         plan_base_branch = str(plan.frontmatter.get("base_branch", "")).strip()
         selected = None
         selected_ref = ""
@@ -418,7 +437,7 @@ def find_pending_merge_reconciliations(
                 repo_root,
                 merge_ref,
                 execplan_id,
-                draft_branch,
+                branch_markers,
                 extra_markers=_completion_extra_markers(node, plan_base_branch=plan_base_branch),
             )
             selected = _select_merge_candidate(
@@ -502,7 +521,7 @@ def reconcile_pending_mainline_activations(
             node=node,
             repo_root=repo_root,
             execplan_id=execplan_id,
-            draft_branch=str(plan.frontmatter.get("draft_branch", "")).strip(),
+            branch_markers=_plan_branch_markers(plan, node),
             main_ref=main_ref,
             actions=actions,
         )
@@ -552,14 +571,14 @@ def reconcile_remaining_work_merge(
         raise ValueError("remaining_work_node_not_found")
 
     if merge_evidence is None:
-        draft_branch = str(plan.frontmatter.get("draft_branch", "")).strip()
+        branch_markers = _plan_branch_markers(plan, node)
         plan_base_branch = str(plan.frontmatter.get("base_branch", "")).strip()
         for candidate_ref in _completion_search_refs(node, main_ref, plan_base_branch=plan_base_branch):
             candidates = _merge_candidates(
                 repo_root,
                 candidate_ref,
                 execplan_id,
-                draft_branch,
+                branch_markers,
                 extra_markers=_completion_extra_markers(node, plan_base_branch=plan_base_branch),
             )
             if not candidates:
@@ -686,7 +705,7 @@ def reconcile_remaining_work_merge(
         node=node,
         repo_root=repo_root,
         execplan_id=execplan_id,
-        draft_branch=str(plan.frontmatter.get("draft_branch", "")).strip(),
+        branch_markers=_plan_branch_markers(plan, node),
         main_ref=main_ref,
         actions=actions,
     )

@@ -33,7 +33,7 @@ def _seed_specs(root: Path) -> None:
     _write(root / "spec/remaining-work-graph.schema.yaml", Path("spec/remaining-work-graph.schema.yaml").read_text(encoding="utf-8"))
 
 
-def _plan_text(*, finalized_in_pr: str = "", finalized_at: str = "") -> str:
+def _plan_text(*, finalized_in_pr: str = "", finalized_at: str = "", initiative_branch: str = "initiative/graph-transition-runtime") -> str:
     return f"""---
 id: "20260319-graph-transition-runtime-codex-01-execplan"
 title: "Graph transition runtime"
@@ -46,6 +46,7 @@ changes:
 approve_policy: codeowners
 reviewers:
   - "github:test-owner"
+initiative_branch: "{initiative_branch}"
 draft_by: "agent/codex-01"
 draft_branch: "draft-execplan/20260319-graph-transition-runtime"
 draft_created: "2026-03-19T00:00:00Z"
@@ -155,6 +156,23 @@ def test_reconcile_transition_promotes_finalized_draft_to_review_gated(tmp_path:
     event_lines = (tmp_path / "artifacts" / "governance" / "board-action-events.jsonl").read_text(encoding="utf-8").splitlines()
     assert len(event_lines) == 1
     assert json.loads(event_lines[0])["action_family"] == "backlog_graph_action"
+
+
+def test_reconcile_transition_promotes_initiative_plan_to_review_gated(tmp_path: Path) -> None:
+    _seed_specs(tmp_path)
+    plan = tmp_path / ".agent" / "execplans" / "20260319-graph-transition-runtime-codex-01-execplan.md"
+    _write(plan, _plan_text(finalized_in_pr="", finalized_at="", initiative_branch="initiative/graph-transition-runtime"))
+    _write_json(tmp_path / "artifacts" / "planner" / "research" / "remaining-work-graph.json", _graph_data("decision_gated"))
+    _write(tmp_path / "docs" / "queued-execplans.md", _queue_text("decision_gated"))
+
+    report = reconcile_remaining_work_transition(execplan_path=plan, repo_root=tmp_path)
+
+    assert report["ok"] is True
+    assert report["transition_event"] == "initiative_execplan_authorized"
+    graph = json.loads((tmp_path / "artifacts" / "planner" / "research" / "remaining-work-graph.json").read_text(encoding="utf-8"))
+    node = next(item for item in graph["nodes"] if item["node_id"] == "rwg-027")
+    assert node["status"] == "review_gated"
+    assert node["status_reason"] == "authoritative plan is canonical; implementation branch publication required before execution"
 
 
 def test_reconcile_transition_promotes_published_impl_branch_to_ready(tmp_path: Path) -> None:

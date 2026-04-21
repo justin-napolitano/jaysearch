@@ -19,6 +19,19 @@ MERGE_ROLE_PRIORITY = {
 DEFAULT_ALLOWED_SIGNATURE_STATUSES = {"G"}
 
 
+def _branch_markers(frontmatter: dict[str, Any]) -> list[str]:
+    markers: list[str] = []
+    for key in ("draft_branch", "initiative_branch", "base_branch"):
+        value = str(frontmatter.get(key, "")).strip()
+        if not value:
+            continue
+        if key == "base_branch" and not value.startswith(("initiative/", "impl-execplan/", "draft-execplan/")):
+            continue
+        if value not in markers:
+            markers.append(value)
+    return markers
+
+
 def _git(root: Path, *args: str) -> str:
     proc = subprocess.run(["git", *args], cwd=root, capture_output=True, text=True, check=False)
     if proc.returncode != 0:
@@ -112,7 +125,7 @@ def _merge_candidates(
     repo_root: Path,
     main_ref: str,
     plan_id: str,
-    draft_branch: str,
+    branch_markers: list[str] | tuple[str, ...],
     extra_markers: list[str] | tuple[str, ...] | None = None,
 ) -> list[dict[str, str]]:
     output = _git(
@@ -122,7 +135,7 @@ def _merge_candidates(
         "--format=%H%x1f%cI%x1f%an%x1f%ae%x1f%G?%x1f%GS%x1f%GK%x1f%s%x1f%b%x1e",
         main_ref,
     )
-    markers = [plan_id, draft_branch]
+    markers = [plan_id, *[str(item).strip() for item in branch_markers if str(item).strip()]]
     if extra_markers:
         markers.extend(str(item).strip() for item in extra_markers if str(item).strip())
     markers = [item for item in markers if item]
@@ -168,8 +181,13 @@ def _merge_candidates(
     return candidates
 
 
-def _select_merge_candidate(repo_root: Path, main_ref: str, plan_id: str, draft_branch: str) -> dict[str, str]:
-    candidates = _merge_candidates(repo_root, main_ref, plan_id, draft_branch)
+def _select_merge_candidate(
+    repo_root: Path,
+    main_ref: str,
+    plan_id: str,
+    branch_markers: list[str] | tuple[str, ...],
+) -> dict[str, str]:
+    candidates = _merge_candidates(repo_root, main_ref, plan_id, branch_markers)
     if not candidates:
         raise ValueError("missing_merge_commit")
 
@@ -203,11 +221,11 @@ def finalize_execplan(
     repo_root = repo_root or path.parent.parent.parent
     frontmatter, body, before = _read_frontmatter(path)
     plan_id = str(frontmatter.get("id", "")).strip()
-    draft_branch = str(frontmatter.get("draft_branch", "")).strip()
+    branch_markers = _branch_markers(frontmatter)
 
     merge_evidence: dict[str, str] | None = None
     if derive_from_merge:
-        merge_evidence = _select_merge_candidate(repo_root, main_ref, plan_id, draft_branch)
+        merge_evidence = _select_merge_candidate(repo_root, main_ref, plan_id, branch_markers)
         status = status or "completed"
         finalized_at = finalized_at or merge_evidence["committed_at"]
         finalized_in_pr = finalized_in_pr or merge_evidence["pull_request"]

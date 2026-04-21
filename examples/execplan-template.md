@@ -12,9 +12,8 @@ approve_policy: codeowners
 reviewers:
   - "github:<reviewer-username>"
 
-draft_by: "agent/<agent-name>"
-draft_branch: "draft-execplan/<plan-id>-<agent-name>-YYYYMMDD"
-draft_created: "YYYY-MM-DDTHH:MM:SSZ"
+initiative_branch: "initiative/<initiative-id>"
+initiative_node_id: "initiative-<initiative-id>"
 
 finalized_by: ""
 finalized_at: ""
@@ -34,55 +33,22 @@ depends_on:
   - "<other-plan-id>"
 ---
 
-# Purpose / Big Picture
-
-State the objective, why it matters, and the observable outcome.
-
-## Progress
-
-- [ ] Create draft ExecPlan
-- [ ] Implement scoped changes
-- [ ] Run validation steps
-- [ ] Prepare for human finalization
-
-## Surprises & Discoveries
-
-Record unexpected findings and how they affect the plan.
-
-## Decision Log
-
-Capture key decisions with rationale and date/author.
-
 ## Outcomes & Retrospective
 
-Document final outcomes, gaps, and lessons after execution/finalization.
+Keep this short while planning. Expand only when human readers need context that the contract fields cannot express.
 
 ## Context and Orientation
 
-Provide enough local context so a novice can execute this plan without external references.
+List the minimum local context a worker needs to execute safely under this initiative.
 
 ## Plan of Work
 
-Describe the implementation strategy and sequence.
-
-## Concrete Steps
-
-1. List exact commands and file edits.
-2. Include deterministic verification commands.
-3. Keep steps actionable and reproducible.
+Prefer contract fields, explicit validations, and declared changes over narrative planning prose.
 
 ## Validation and Acceptance
 
-Define pass/fail checks, expected command outputs, and acceptance criteria.
-
-## Idempotence and Recovery
-
-Explain how to rerun safely and how to recover from partial failures.
+Define pass/fail checks and acceptance criteria that are not already obvious from `validation.tests`.
 
 ## Artifacts and Notes
 
-List generated artifacts, logs, and any operator notes.
-
-## Interfaces and Dependencies
-
-List touched interfaces, tools, and dependencies (including plan dependencies).
+List only operator notes or generated artifacts that are not already captured elsewhere.

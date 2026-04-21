@@ -82,7 +82,8 @@ New identities must be introduced via an ExecPlan.
 Agents MAY:
 
 • Read repository files\
-• Propose ExecPlans on draft branches\
+• Propose and refine ExecPlans on initiative branches\
+• Use `draft-execplan/*` only for isolated plan surgery when the initiative branch should remain undisturbed\
 • Generate TODO entries in draft state\
 • Run local validators and produce JSON output\
 • Suggest reviewers and approval policies\
@@ -112,21 +113,23 @@ policy.
 
 ------------------------------------------------------------------------
 
-# Draft Workflow
+# Planning Workflow
 
-Agents must create ExecPlans only on branches matching:
+The default planning surface is the initiative branch.
+
+Default planning branch:
+
+initiative/`<initiative-id>`{=html}
+
+Optional isolated planning branch:
 
 draft-execplan/`<plan-id>`{=html}-`<agent>`{=html}-YYYYMMDD
-
-Example:
-
-draft-execplan/platform-validator-codex-20260304
 
 ExecPlans must be stored in:
 
 .agent/execplans/
 
-Draft ExecPlan frontmatter must include:
+Required ExecPlan frontmatter must include:
 
 id\
 title\
@@ -137,6 +140,9 @@ draft_by\
 draft_branch\
 draft_created\
 changes
+
+`draft_by`, `draft_branch`, and `draft_created` are required only when
+the plan is actually being carried on a `draft-execplan/*` branch.
 
 Agents must populate `changes` with explicit paths.
 

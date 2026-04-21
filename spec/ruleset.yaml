@@ -36,8 +36,9 @@ move_set:
 execution_constraints:
   referees_must_check_global_board_law_before_local_rules: true
   governed_slice_advancement_requires_referee_chain: true
-  execplan_branch_review_required: true
-  required_branch_format: "draft-execplan/<plan-id>-<agent>-YYYYMMDD"
+  execplan_branch_review_required: false
+  planning_branch_format: "initiative/<initiative-id>"
+  optional_draft_branch_format: "draft-execplan/<plan-id>-<agent>-YYYYMMDD"
   initiative_branch_format: "initiative/<initiative-id>"
   implementation_branch_format: "impl-execplan/<plan-id>-<agent>-YYYYMMDD"
   queue_branch_format: "queue-execplan/<queue-name>-<agent>-YYYYMMDD"

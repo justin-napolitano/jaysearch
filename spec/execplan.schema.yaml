@@ -14,29 +14,25 @@ frontmatter:
     - changes
     - approve_policy
     - reviewers
-    - draft_by
-    - draft_branch
-    - draft_created
     - finalized_by
     - finalized_at
     - finalized_in_pr
   optional:
+    - draft_by
+    - draft_branch
+    - draft_created
+    - initiative_branch
+    - initiative_node_id
+    - graph_registration
     - validation
     - tasks
     - depends_on
 sections_required:
-  - Purpose / Big Picture
-  - Progress
-  - Surprises & Discoveries
-  - Decision Log
   - Outcomes & Retrospective
   - Context and Orientation
   - Plan of Work
-  - Concrete Steps
   - Validation and Acceptance
-  - Idempotence and Recovery
   - Artifacts and Notes
-  - Interfaces and Dependencies
 constraints:
   status_allowed:
     - draft
@@ -51,4 +47,4 @@ constraints:
   changes_must_be_explicit_paths: true
 identity_validation:
   filename_stem_must_equal_frontmatter_id: true
-  branch_name_format: "draft-execplan/<plan-id>-<agent>-YYYYMMDD"
+  draft_branch_name_format: "draft-execplan/<plan-id>-<agent>-YYYYMMDD"
