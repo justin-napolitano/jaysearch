@@ -130,7 +130,7 @@ def get_game_status(
         active_game_reason = "active_execplan_detected"
     elif current_branch.startswith("draft-execplan/"):
         active_game_id = "game-execplan"
-        active_game_reason = "draft_execplan_branch_without_explicit_execplan"
+        active_game_reason = "draft_execplan_branch_without_resolved_execplan"
     elif not branch_report.get("ok", False):
         active_game_reason = "branch_policy_blocked"
 

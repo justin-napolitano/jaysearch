@@ -120,6 +120,27 @@ def _discover_execplan(cwd: Path, base_ref: str) -> Path:
     return selected
 
 
+def _effective_base_ref(cwd: Path, *, branch: str, plan_path: Path, default_base_ref: str) -> str:
+    if not branch.startswith("impl-execplan/") or default_base_ref != "main":
+        return default_base_ref
+    initiative_branch = ""
+    try:
+        parsed = parse_plan(plan_path)
+        execplan_id = str(parsed.frontmatter.get("id", "")).strip()
+        initiative_branch = str(parsed.frontmatter.get("initiative_branch", "")).strip()
+    except Exception:
+        execplan_id = ""
+    if execplan_id:
+        graph_node = _graph_node_for_execplan(cwd, execplan_id)
+        if isinstance(graph_node, dict):
+            initiative_branch = str(graph_node.get("initiative_branch", "")).strip() or initiative_branch
+    if not initiative_branch:
+        return default_base_ref
+    if _ref_exists(cwd, f"refs/heads/{initiative_branch}") or _ref_exists(cwd, f"refs/remotes/origin/{initiative_branch}"):
+        return initiative_branch
+    return default_base_ref
+
+
 def _classify_commit(subject: str) -> str:
     if subject.startswith("docs(execplan):"):
         return "execplan"
@@ -542,24 +563,25 @@ def check_policy_compliance(
     cwd = Path(root)
     branch = _current_branch(cwd)
     plan_path = Path(execplan_path) if execplan_path else _discover_execplan(cwd, base_ref)
+    effective_base_ref = _effective_base_ref(cwd, branch=branch, plan_path=plan_path, default_base_ref=base_ref)
     parsed = parse_plan(plan_path)
     execplan_id = str(parsed.frontmatter.get("id", "")).strip()
-    changed_files = _changed_files(cwd, base_ref)
+    changed_files = _changed_files(cwd, effective_base_ref)
     state_transition_code, state_transition_report = check_state_transition_legality(
         root=root,
         execplan_path=plan_path.as_posix(),
-        base_ref=base_ref,
+        base_ref=effective_base_ref,
     )
     state_transition_ok = state_transition_code == 0 and state_transition_report.get("status") == "ok"
     enforce_procedural_order = not branch.startswith("impl-execplan/") or not state_transition_ok
     commit_stack, commit_errors, commit_warnings = _commit_reports(
         cwd,
-        base_ref,
+        effective_base_ref,
         active_execplan_path=_repo_relative_path(plan_path, root=cwd),
         enforce_procedural_order=enforce_procedural_order,
     )
     dirty_artifacts = _dirty_generated_artifacts(cwd)
-    branch_aligned, merge_base, base_head = _branch_is_aligned_with_base(cwd, base_ref)
+    branch_aligned, merge_base, base_head = _branch_is_aligned_with_base(cwd, effective_base_ref)
     rewrite_guard = _published_branch_rewrite_status(cwd, branch)
     remaining_work_code, remaining_work_report = check_remaining_work_graph(
         root=root,
@@ -569,7 +591,7 @@ def check_policy_compliance(
     anti_cheat_code, anti_cheat_report = check_anti_cheat(
         root=root,
         execplan_path=plan_path.as_posix(),
-        base_ref=base_ref,
+        base_ref=effective_base_ref,
     )
     graph_node = _graph_node_for_execplan(cwd, execplan_id)
     queue_has_execplan = _queue_has_execplan(cwd, execplan_id)
@@ -631,7 +653,7 @@ def check_policy_compliance(
         "status": "ok" if not blockers else "blocked",
         "ok": not blockers,
         "branch": branch,
-        "base_ref": base_ref,
+        "base_ref": effective_base_ref,
         "execplan_id": execplan_id,
         "execplan_path": plan_path.as_posix(),
         "blockers": sorted(set(blockers)),

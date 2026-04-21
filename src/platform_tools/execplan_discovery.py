@@ -30,31 +30,54 @@ def _changed_execplans(cwd: Path, base_ref: str) -> list[Path]:
     )
 
 
+def _created_sort_key(path: Path) -> tuple[str, str]:
+    parsed = parse_plan(path)
+    created = str(parsed.frontmatter.get("created", "")).strip()
+    return (created, path.as_posix())
+
+
 def _execplan_index(cwd: Path) -> tuple[dict[str, Path], dict[str, list[Path]]]:
     execplan_dir = cwd / ".agent" / "execplans"
     id_to_path: dict[str, Path] = {}
     draft_branch_to_paths: dict[str, list[Path]] = {}
+    initiative_branch_to_paths: dict[str, list[Path]] = {}
     if not execplan_dir.exists():
-        return id_to_path, draft_branch_to_paths
+        return id_to_path, draft_branch_to_paths, initiative_branch_to_paths
     for path in sorted(execplan_dir.glob("*.md")):
         parsed = parse_plan(path)
         plan_id = str(parsed.frontmatter.get("id", "")).strip()
         draft_branch = str(parsed.frontmatter.get("draft_branch", "")).strip()
+        initiative_branch = str(parsed.frontmatter.get("initiative_branch", "")).strip()
         if plan_id and plan_id not in id_to_path:
             id_to_path[plan_id] = path
         if draft_branch:
             draft_branch_to_paths.setdefault(draft_branch, []).append(path)
-    return id_to_path, draft_branch_to_paths
+        if initiative_branch:
+            initiative_branch_to_paths.setdefault(initiative_branch, []).append(path)
+    return id_to_path, draft_branch_to_paths, initiative_branch_to_paths
 
 
 def discover_execplan(cwd: Path, branch: str, base_ref: str) -> tuple[Path | None, list[str], str]:
-    id_to_path, draft_branch_to_paths = _execplan_index(cwd)
+    id_to_path, draft_branch_to_paths, initiative_branch_to_paths = _execplan_index(cwd)
 
     draft_matches = sorted(draft_branch_to_paths.get(branch, []))
     if len(draft_matches) == 1:
         return draft_matches[0], [draft_matches[0].as_posix()], "draft_branch"
     if len(draft_matches) > 1:
         return None, [path.as_posix() for path in draft_matches], "ambiguous_draft_branch"
+
+    initiative_matches = sorted(initiative_branch_to_paths.get(branch, []))
+    if len(initiative_matches) == 1:
+        return initiative_matches[0], [initiative_matches[0].as_posix()], "initiative_branch"
+    if len(initiative_matches) > 1:
+        changed = _changed_execplans(cwd, base_ref)
+        changed_initiative_matches = sorted(
+            path for path in initiative_matches if path in set(changed)
+        )
+        if len(changed_initiative_matches) == 1:
+            return changed_initiative_matches[0], [changed_initiative_matches[0].as_posix()], "initiative_branch_changed_files"
+        latest_initiative_match = max(initiative_matches, key=_created_sort_key)
+        return latest_initiative_match, [path.as_posix() for path in initiative_matches], "initiative_branch_latest_created"
 
     graph_path = cwd / GRAPH_PATH
     if graph_path.exists():

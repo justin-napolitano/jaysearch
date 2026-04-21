@@ -85,6 +85,40 @@ def _graph_node_for_execplan(graph: dict[str, Any], execplan_id: str) -> dict[st
     return None
 
 
+def _ref_exists(cwd: Path, ref: str) -> bool:
+    proc = subprocess.run(
+        ["git", "rev-parse", "--verify", "--quiet", ref],
+        cwd=cwd,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    return proc.returncode == 0
+
+
+def _effective_base_ref(
+    *,
+    cwd: Path,
+    branch: str,
+    parsed_plan: Any,
+    graph: dict[str, Any],
+    default_base_ref: str,
+) -> str:
+    if not branch.startswith("impl-execplan/") or default_base_ref != "main":
+        return default_base_ref
+    initiative_branch = str(parsed_plan.frontmatter.get("initiative_branch", "")).strip()
+    execplan_id = str(parsed_plan.frontmatter.get("id", "")).strip()
+    if execplan_id:
+        graph_node = _graph_node_for_execplan(graph, execplan_id)
+        if isinstance(graph_node, dict):
+            initiative_branch = str(graph_node.get("initiative_branch", "")).strip() or initiative_branch
+    if not initiative_branch:
+        return default_base_ref
+    if _ref_exists(cwd, f"refs/heads/{initiative_branch}") or _ref_exists(cwd, f"refs/remotes/origin/{initiative_branch}"):
+        return initiative_branch
+    return default_base_ref
+
+
 def _dependency_blockers(graph: dict[str, Any], node_id: str) -> list[str]:
     nodes = {
         str(node.get("node_id", "")).strip(): node
@@ -159,12 +193,19 @@ def check_state_transition_legality(
     if not isinstance(surface_entries, list):
         surface_entries = []
 
-    changed_files = _changed_files(cwd, base_ref)
+    effective_base_ref = _effective_base_ref(
+        cwd=cwd,
+        branch=branch,
+        parsed_plan=parsed,
+        graph=graph,
+        default_base_ref=base_ref,
+    )
+    changed_files = _changed_files(cwd, effective_base_ref)
     _, remaining_report = check_remaining_work_graph(root=root, branch=branch, execplan_path=plan_path.as_posix())
     anti_cheat_code, anti_cheat_report = check_anti_cheat(
         root=root,
         execplan_path=plan_path.as_posix(),
-        base_ref=base_ref,
+        base_ref=effective_base_ref,
     )
 
     active_node = remaining_report.get("active_node") or _graph_node_for_execplan(graph, execplan_id) or {}

@@ -11,10 +11,33 @@ from platform_tools.reconcile_remaining_work_merge import (
 )
 
 
+PLAN_BODY = """
+## Outcomes & Retrospective
+
+Test.
+
+## Context and Orientation
+
+Test.
+
+## Plan of Work
+
+Test.
+
+## Validation and Acceptance
+
+Test.
+
+## Artifacts and Notes
+
+Test.
+""".strip()
+
+
 def test_reconcile_pending_merge_completions_runs_for_pending_candidates(monkeypatch, tmp_path: Path) -> None:
     execplan_path = tmp_path / ".agent" / "execplans" / "plan.md"
     execplan_path.parent.mkdir(parents=True, exist_ok=True)
-    execplan_path.write_text("---\nid: \"plan-id\"\n---\n\n# Purpose / Big Picture\n", encoding="utf-8")
+    execplan_path.write_text(f"---\nid: \"plan-id\"\n---\n\n{PLAN_BODY}\n", encoding="utf-8")
 
     monkeypatch.setattr(
         "platform_tools.reconcile_remaining_work_merge.find_pending_merge_reconciliations",
@@ -68,7 +91,7 @@ def test_find_pending_merge_reconciliations_skips_unknown_merge_refs(monkeypatch
     execplan_path = tmp_path / ".agent" / "execplans" / "plan-id.md"
     execplan_path.parent.mkdir(parents=True, exist_ok=True)
     execplan_path.write_text(
-        "---\nid: \"plan-id\"\ndraft_branch: \"draft-execplan/test\"\n---\n\n# Purpose / Big Picture\n",
+        f"---\nid: \"plan-id\"\ninitiative_branch: \"initiative/test\"\n---\n\n{PLAN_BODY}\n",
         encoding="utf-8",
     )
 
@@ -109,7 +132,7 @@ def test_find_pending_merge_reconciliations_skips_draft_only_history_for_via_ini
     execplan_path = tmp_path / ".agent" / "execplans" / "plan-id.md"
     execplan_path.parent.mkdir(parents=True, exist_ok=True)
     execplan_path.write_text(
-        "---\nid: \"plan-id\"\ndraft_branch: \"draft-execplan/test\"\n---\n\n# Purpose / Big Picture\n",
+        f"---\nid: \"plan-id\"\ninitiative_branch: \"initiative/test\"\n---\n\n{PLAN_BODY}\n",
         encoding="utf-8",
     )
 
@@ -157,11 +180,11 @@ def test_find_pending_merge_reconciliations_accepts_initiative_merge_to_main_wit
     execplan_path = tmp_path / ".agent" / "execplans" / "plan-id.md"
     execplan_path.parent.mkdir(parents=True, exist_ok=True)
     execplan_path.write_text(
-        "---\nid: \"plan-id\"\nbase_branch: \"initiative/test\"\ndraft_branch: \"draft-execplan/test\"\n---\n\n# Purpose / Big Picture\n",
+        f"---\nid: \"plan-id\"\nbase_branch: \"initiative/test\"\ninitiative_branch: \"initiative/test\"\n---\n\n{PLAN_BODY}\n",
         encoding="utf-8",
     )
 
-    def _fake_merge_candidates(repo_root: Path, ref: str, plan_id: str, draft_branch: str, extra_markers=None) -> list[dict[str, str]]:
+    def _fake_merge_candidates(repo_root: Path, ref: str, plan_id: str, branch_markers, extra_markers=None) -> list[dict[str, str]]:
         if ref == "initiative/test":
             return []
         if ref == "main":

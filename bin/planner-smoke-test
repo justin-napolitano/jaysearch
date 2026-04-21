@@ -98,7 +98,7 @@ else
 fi
 
 echo "[6/7] draft contract"
-bin/planner contract draft-execplan --graph-id "$GRAPH_ID" --title "Smoke Draft Contract"
+bin/planner contract execplan --graph-id "$GRAPH_ID" --title "Smoke Draft Contract"
 
 echo "[7/7] run focused pytest"
 uv run pytest tests/test_planner_cli.py

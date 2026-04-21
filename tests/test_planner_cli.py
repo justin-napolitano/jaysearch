@@ -7,7 +7,7 @@ from typing import Any
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
-from platform_tools import planner_cli
+from platform_tools import planner_cli, planner_runtime
 from platform_tools.planner_runtime import (
     apply_move,
     build_graph,
@@ -338,13 +338,21 @@ def test_contract_draft_and_import(tmp_path: Path) -> None:
     }
     _write_json(session_dir / "extracted-state.json", extracted)
     built = build_graph(root=tmp_path.as_posix(), session_id=session_id)
+    planner_runtime.get_current_branch = lambda **kwargs: "initiative/example"
     draft_code, draft_report = draft_execplan(
         root=tmp_path.as_posix(), graph_id=built["graph_id"], title="Generated Contract"
     )
     assert draft_code == 0
     original = Path(draft_report["path"])
+    generated = original.read_text(encoding="utf-8")
+    assert "initiative_branch: initiative/example" in generated
+    assert "base_branch: initiative/example" in generated
+    assert "## Outcomes & Retrospective" in generated
+    assert "# Purpose / Big Picture" not in generated
+    assert "## Concrete Steps" not in generated
+    assert "draft_branch:" not in generated
     edited = original.with_name("edited.md")
-    edited.write_text(original.read_text(encoding="utf-8") + "\nEdited\n", encoding="utf-8")
+    edited.write_text(generated + "\nEdited\n", encoding="utf-8")
     import_code, import_report = import_execplan(
         root=tmp_path.as_posix(),
         session_id=session_id,
@@ -364,6 +372,56 @@ def test_validate_all_checks_research_artifacts(tmp_path: Path) -> None:
     code, report = validate_all(root=tmp_path.as_posix())
     assert code == 0
     assert report["research"]["ok"] is True
+
+
+def test_planner_cli_execplan_contract_command_projects_execplan(
+    tmp_path: Path,
+    monkeypatch,
+    capsys,
+) -> None:
+    _seed_runtime_specs(tmp_path)
+    started = create_session(root=tmp_path.as_posix(), title="CLI ExecPlan")
+    session_id = started["session_id"]
+    session_dir = tmp_path / "artifacts" / "planner" / "sessions" / session_id
+    _write_json(
+        session_dir / "extracted-state.json",
+        {
+            "goals": [{"title": "Project execplan", "success_criteria": "created", "scope": "cli", "status": "validated"}],
+            "constraints": [],
+            "assumptions": [],
+            "decisions": [],
+            "questions": [],
+            "tasks": [
+                {
+                    "title": "Generate plan",
+                    "description": "Generate plan",
+                    "ready_definition": "",
+                    "done_definition": "",
+                    "status": "ready",
+                    "changes": ["src/platform_tools/planner_cli.py"],
+                }
+            ],
+            "risks": [],
+            "evidence": [{"title": "Planner CLI", "artifact_type": "file", "path": "src/platform_tools/planner_cli.py"}],
+        },
+    )
+    built = build_graph(root=tmp_path.as_posix(), session_id=session_id)
+
+    monkeypatch.chdir(tmp_path)
+    monkeypatch.setattr(planner_runtime, "get_current_branch", lambda **kwargs: "initiative/example")
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        ["planner_cli.py", "contract", "execplan", "--graph-id", built["graph_id"], "--title", "Generated Contract"],
+    )
+    exit_code = planner_cli.main()
+    report = _read_cli_report(capsys.readouterr().out)
+
+    assert exit_code == 0
+    assert report["operation"] == "contract.execplan"
+    assert report["status"] == "ok"
+    assert report["next_validations"] == [f"bin/execplan-validate {report['path']}"]
+    assert report["ok"] is True
 
 
 def test_planner_cli_wraps_graph_validation_in_orchestrator_contract(

@@ -262,7 +262,7 @@ def run_session_bootstrap_check(
     selected_execplan_path = execplan_path
     discovery_strategy = "explicit" if execplan_path else "not_run"
     discovery_candidates: list[str] = []
-    if selected_execplan_path is None and role in {"draft_execplan_author", "implementation_worker"}:
+    if selected_execplan_path is None and role in {"draft_execplan_author", "implementation_worker", "initiative_coordinator"}:
         selected, candidates, strategy = discover_execplan(root_path, current_branch, base_ref)
         discovery_strategy = strategy
         discovery_candidates = candidates
@@ -283,7 +283,7 @@ def run_session_bootstrap_check(
             "title": str(parsed.frontmatter.get("title", "")).strip(),
         }
 
-    if role in {"draft_execplan_author", "implementation_worker"} and not execplan_summary:
+    if role in {"draft_execplan_author", "implementation_worker", "initiative_coordinator"} and not execplan_summary:
         blockers.append("bootstrap_violation:active_execplan_required")
 
     initiative_findings, active_node = ([], None)

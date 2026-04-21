@@ -817,6 +817,38 @@
       "rationale": "node registered deterministically from ExecPlan graph_registration metadata",
       "evidence_ref": ".agent/execplans/20260327-orchestrate-governed-slice-action-loop-codex-01-execplan.md",
       "queue_reconciled": true
+    },
+    {
+      "action_id": "rwg-action-20260326-001-complete-rwg-040",
+      "action": "complete",
+      "node_id": "rwg-040",
+      "rationale": "20260326-worker-orchestration-api-codex-01-execplan merged to main and is now canonical completed state",
+      "evidence_ref": "merged:pr-115",
+      "queue_reconciled": true
+    },
+    {
+      "action_id": "rwg-action-20260413-001-unblock-rwg-054",
+      "action": "unblock",
+      "node_id": "rwg-054",
+      "rationale": "initiative_execplan_authorized derived deterministically from canonical branch and ExecPlan evidence",
+      "evidence_ref": "branch:initiative/contract-first-planning",
+      "queue_reconciled": true
+    },
+    {
+      "action_id": "rwg-action-20260414-register-rwg-055",
+      "action": "block",
+      "node_id": "rwg-055",
+      "rationale": "node registered deterministically from ExecPlan graph_registration metadata",
+      "evidence_ref": ".agent/execplans/20260414-contract-first-execplan-consumer-cleanup-codex-01-execplan.md",
+      "queue_reconciled": true
+    },
+    {
+      "action_id": "rwg-action-20260414-001-block-rwg-056",
+      "action": "block",
+      "node_id": "rwg-056",
+      "rationale": "node registered deterministically from ExecPlan graph_registration metadata",
+      "evidence_ref": ".agent/execplans/20260414-contract-first-planner-bootstrap-propagation-codex-01-execplan.md",
+      "queue_reconciled": true
     }
   ],
   "graph_id": "remaining-work-graph-20260311",
@@ -2096,8 +2128,8 @@
     {
       "action_state": {
         "action_required": false,
-        "last_action": "block",
-        "last_action_id": "rwg-action-20260326-register-rwg-040",
+        "last_action": "complete",
+        "last_action_id": "rwg-action-20260326-001-complete-rwg-040",
         "reorder_blockers": [],
         "reorder_requires_human": false
       },
@@ -2122,14 +2154,15 @@
       "node_id": "rwg-040",
       "ordering": {
         "queue_position": 40,
-        "source_action_id": "rwg-action-20260326-register-rwg-040",
+        "source_action_id": "rwg-action-20260326-001-complete-rwg-040",
         "tie_breaker": "20260326-worker-orchestration-api-codex-01-execplan"
       },
       "parent_initiative_node": "initiative-worker-orchestration-api",
-      "status": "decision_gated",
-      "status_reason": "registered from ExecPlan metadata; finalized draft ExecPlan required before execution",
+      "status": "completed",
+      "status_reason": "",
       "target_execplan_id": "20260326-worker-orchestration-api-codex-01-execplan",
-      "title": "Add an orchestrator-agnostic worker contract execution API"
+      "title": "Add an orchestrator-agnostic worker contract execution API",
+      "completion_ref": "merged:pr-115"
     },
     {
       "conflict_domains": [
@@ -2606,6 +2639,21 @@
       }
     },
     {
+      "node_id": "initiative-contract-first-planning",
+      "title": "Initiative / Contract first planning",
+      "status": "review_gated",
+      "gating_class": "review_gated",
+      "conflict_domains": [
+        "governance",
+        "workflow"
+      ],
+      "target_execplan_id": "initiative:contract-first-planning",
+      "goal_area": "reference",
+      "initiative_branch": "initiative/contract-first-planning",
+      "parent_initiative_node": "initiative-contract-first-planning",
+      "ordering": {}
+    },
+    {
       "node_id": "initiative-session-bootstrap-harness-governance",
       "title": "Initiative / Session bootstrap harness governance",
       "status": "review_gated",
@@ -2702,6 +2750,130 @@
         "reorder_requires_human": false,
         "reorder_blockers": []
       }
+    },
+    {
+      "node_id": "rwg-054",
+      "title": "Hard-cut runtime and bootstrap surfaces to the contract-first planning model",
+      "status": "review_gated",
+      "status_reason": "authoritative plan is canonical; implementation branch publication required before execution",
+      "gating_class": "review_gated",
+      "conflict_domains": [
+        "governance",
+        "workflow",
+        "bootstrap",
+        "planner-runtime"
+      ],
+      "target_execplan_id": "20260413-contract-first-execplan-runtime-codex-01-execplan",
+      "goal_area": "governance",
+      "implementation_branch": "impl-execplan/contract-first-execplan-runtime",
+      "initiative_branch": "initiative/contract-first-planning",
+      "parent_initiative_node": "initiative-contract-first-planning",
+      "integration_mode": "via_initiative",
+      "expected_artifacts": [
+        ".agent/AGENTS.md",
+        ".agent/execplans/20260413-contract-first-execplan-runtime-codex-01-execplan.md",
+        "artifacts/planner/research/remaining-work-graph.json",
+        "docs/queued-execplans.md",
+        "src/platform_tools/bootstrap_managed_repo.py",
+        "src/platform_tools/planner_runtime.py",
+        "src/platform_tools/run_governed_pre_push_checks.py",
+        "tests/test_bootstrap_managed_repo.py",
+        "tests/test_planner_cli.py",
+        "tests/test_run_governed_pre_push_checks.py"
+      ],
+      "ordering": {
+        "queue_position": 54,
+        "tie_breaker": "20260413-contract-first-execplan-runtime-codex-01-execplan",
+        "source_action_id": "rwg-action-20260413-001-unblock-rwg-054"
+      },
+      "action_state": {
+        "last_action_id": "rwg-action-20260413-001-unblock-rwg-054",
+        "last_action": "unblock",
+        "action_required": false,
+        "reorder_requires_human": false,
+        "reorder_blockers": []
+      }
+    },
+    {
+      "node_id": "rwg-055",
+      "title": "Remove remaining downstream assumptions about the legacy verbose ExecPlan shape",
+      "status": "decision_gated",
+      "status_reason": "registered from ExecPlan metadata; authoritative ExecPlan required before execution",
+      "gating_class": "decision_gated",
+      "conflict_domains": [
+        "governance",
+        "workflow",
+        "planner-runtime",
+        "orchestration"
+      ],
+      "target_execplan_id": "20260414-contract-first-execplan-consumer-cleanup-codex-01-execplan",
+      "goal_area": "governance",
+      "implementation_branch": "impl-execplan/contract-first-execplan-consumer-cleanup",
+      "initiative_branch": "initiative/contract-first-planning",
+      "parent_initiative_node": "initiative-contract-first-planning",
+      "integration_mode": "via_initiative",
+      "expected_artifacts": [
+        ".agent/execplans/20260414-contract-first-execplan-consumer-cleanup-codex-01-execplan.md",
+        "artifacts/planner/research/remaining-work-graph.json",
+        "docs/queued-execplans.md",
+        "src/platform_tools/finalize_execplan.py",
+        "src/platform_tools/merge_readiness.py",
+        "src/platform_tools/reconcile_remaining_work_merge.py",
+        "tests/test_finalize_execplan.py",
+        "tests/test_merge_readiness.py"
+      ],
+      "ordering": {
+        "queue_position": 55,
+        "tie_breaker": "20260414-contract-first-execplan-consumer-cleanup-codex-01-execplan",
+        "source_action_id": "rwg-action-20260414-register-rwg-055"
+      },
+      "action_state": {
+        "last_action_id": "rwg-action-20260414-register-rwg-055",
+        "last_action": "block",
+        "action_required": false,
+        "reorder_requires_human": false,
+        "reorder_blockers": []
+      }
+    },
+    {
+      "node_id": "rwg-056",
+      "title": "Propagate contract-first planning through planner and bootstrap surfaces",
+      "status": "decision_gated",
+      "status_reason": "registered from ExecPlan metadata; authoritative ExecPlan required before execution",
+      "gating_class": "decision_gated",
+      "conflict_domains": [
+        "governance",
+        "workflow",
+        "planner-runtime",
+        "bootstrap"
+      ],
+      "target_execplan_id": "20260414-contract-first-planner-bootstrap-propagation-codex-01-execplan",
+      "goal_area": "governance",
+      "implementation_branch": "impl-execplan/contract-first-planner-bootstrap-propagation",
+      "initiative_branch": "initiative/contract-first-planning",
+      "parent_initiative_node": "initiative-contract-first-planning",
+      "integration_mode": "via_initiative",
+      "expected_artifacts": [
+        ".agent/execplans/20260414-contract-first-planner-bootstrap-propagation-codex-01-execplan.md",
+        "artifacts/planner/research/remaining-work-graph.json",
+        "docs/queued-execplans.md",
+        "src/platform_tools/planner_cli.py",
+        "src/platform_tools/bootstrap_managed_repo.py",
+        "docs/planner-cli-contract.md",
+        "tests/test_planner_cli.py"
+      ],
+      "ordering": {
+        "queue_position": 56,
+        "tie_breaker": "20260414-contract-first-planner-bootstrap-propagation-codex-01-execplan",
+        "source_action_id": "rwg-action-20260414-001-block-rwg-056"
+      },
+      "action_state": {
+        "last_action_id": "rwg-action-20260414-001-block-rwg-056",
+        "last_action": "block",
+        "action_required": false,
+        "reorder_requires_human": false,
+        "reorder_blockers": []
+      }
     }
   ],
   "ordering_policy": {
@@ -2717,7 +2889,7 @@
     "reorder_requires_explicit_action": true
   },
   "queue_projection": {
-    "last_reconciled_action_id": "rwg-action-20260327-register-rwg-053",
+    "last_reconciled_action_id": "rwg-action-20260414-001-block-rwg-056",
     "path": "docs/queued-execplans.md",
     "projection_authority": "projection_only",
     "ready_execplan_ids": []

@@ -44,9 +44,12 @@ def test_bootstrap_managed_repo_writes_lightweight_repo_artifacts(tmp_path: Path
     assert (tmp_path / "spec" / "workflow.yaml").exists()
     assert (tmp_path / ".agent" / "execplans").is_dir()
     assert (tmp_path / "docs" / "queued-execplans.md").exists()
+    workflow = (tmp_path / "spec" / "workflow.yaml").read_text(encoding="utf-8")
+    assert "plan_on_initiative_branch" in workflow
+    assert "draft_execplan" not in workflow
+    assert "human_finalize_plan" not in workflow
     graph = json.loads((tmp_path / "artifacts" / "planner" / "research" / "remaining-work-graph.json").read_text(encoding="utf-8"))
     assert graph["nodes"][0]["node_id"] == "initiative-jayrun-foundation"
     field_map = json.loads((tmp_path / "artifacts" / "provider-sync" / "github-projects-field-map.json").read_text(encoding="utf-8"))
     assert field_map["fields"]["completion_pr"]["data_type"] == "text"
     assert report["provider_bootstrap"]["dry_run"] is True
-

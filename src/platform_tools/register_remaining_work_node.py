@@ -48,7 +48,7 @@ def _insert_queue_entry(text: str, *, queue_position: int, execplan_id: str, tit
     ]
     if implementation_branch:
         entry.append(f"   - implementation branch: `{implementation_branch}`")
-    entry.append("   - gate: `finalized draft ExecPlan required before execution`")
+    entry.append("   - gate: `authoritative ExecPlan required before execution`")
     if insert_at > 0 and lines[insert_at - 1] != "":
         entry.insert(0, "")
     if insert_at < len(lines) and lines[insert_at] != "":
@@ -131,7 +131,7 @@ def register_remaining_work_node(
             "node_id": node_id,
             "title": title,
             "status": "decision_gated",
-            "status_reason": "registered from ExecPlan metadata; finalized draft ExecPlan required before execution",
+            "status_reason": "registered from ExecPlan metadata; authoritative ExecPlan required before execution",
             "gating_class": "decision_gated",
             "conflict_domains": sorted(set(conflict_domains)),
             "target_execplan_id": execplan_id,

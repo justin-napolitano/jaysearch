@@ -28,6 +28,30 @@ def _git(root: Path, *args: str) -> None:
     subprocess.run(command, cwd=root, check=True, capture_output=True, text=True)
 
 
+def _minimal_body() -> str:
+    return """
+## Outcomes & Retrospective
+
+Test.
+
+## Context and Orientation
+
+Test.
+
+## Plan of Work
+
+Test.
+
+## Validation and Acceptance
+
+Test.
+
+## Artifacts and Notes
+
+Test.
+"""
+
+
 def _seed_repo(root: Path) -> Path:
     _git(root, "init", "-b", "main")
     _git(root, "config", "user.name", "Tests")
@@ -40,7 +64,7 @@ def _seed_repo(root: Path) -> Path:
     execplan = root / ".agent" / "execplans" / "20260310-test-plan-codex-01-execplan.md"
     _write(
         execplan,
-        """---
+        f"""---
 id: "20260310-test-plan-codex-01-execplan"
 title: "Test plan"
 owner: "agent/codex-01"
@@ -52,9 +76,7 @@ changes:
 approve_policy: codeowners
 reviewers:
   - "github:justin-napolitano"
-draft_by: "agent/codex-01"
-draft_branch: "draft-execplan/test"
-draft_created: "2026-03-10T00:00:00Z"
+initiative_branch: "initiative/test"
 finalized_by: ""
 finalized_at: ""
 finalized_in_pr: ""
@@ -72,53 +94,7 @@ tasks:
 depends_on: []
 ---
 
-# Purpose / Big Picture
-
-Test.
-
-## Progress
-
-- [ ] Test
-
-## Surprises & Discoveries
-
-None.
-
-## Decision Log
-
-None.
-
-## Outcomes & Retrospective
-
-Test.
-
-## Context and Orientation
-
-Test.
-
-## Plan of Work
-
-Test.
-
-## Concrete Steps
-
-1. Test.
-
-## Validation and Acceptance
-
-Test.
-
-## Idempotence and Recovery
-
-Test.
-
-## Artifacts and Notes
-
-Test.
-
-## Interfaces and Dependencies
-
-Test.
+{_minimal_body().strip()}
 """,
     )
     _write(root / "spec" / "slice.yaml", "slice: true\n")
@@ -205,7 +181,7 @@ def test_merge_readiness_fails_for_wrong_commit_order(tmp_path: Path) -> None:
     execplan = tmp_path / ".agent" / "execplans" / "20260310-test-plan-codex-01-execplan.md"
     _write(
         execplan,
-        """---
+        f"""---
 id: "20260310-test-plan-codex-01-execplan"
 title: "Test plan"
 owner: "agent/codex-01"
@@ -217,9 +193,7 @@ changes:
 approve_policy: codeowners
 reviewers:
   - "github:justin-napolitano"
-draft_by: "agent/codex-01"
-draft_branch: "draft-execplan/test"
-draft_created: "2026-03-10T00:00:00Z"
+initiative_branch: "initiative/test"
 finalized_by: ""
 finalized_at: ""
 finalized_in_pr: ""
@@ -237,53 +211,7 @@ tasks:
 depends_on: []
 ---
 
-# Purpose / Big Picture
-
-Test.
-
-## Progress
-
-- [ ] Test
-
-## Surprises & Discoveries
-
-None.
-
-## Decision Log
-
-None.
-
-## Outcomes & Retrospective
-
-Test.
-
-## Context and Orientation
-
-Test.
-
-## Plan of Work
-
-Test.
-
-## Concrete Steps
-
-1. Test.
-
-## Validation and Acceptance
-
-Test.
-
-## Idempotence and Recovery
-
-Test.
-
-## Artifacts and Notes
-
-Test.
-
-## Interfaces and Dependencies
-
-Test.
+{_minimal_body().strip()}
 """,
     )
     _write(tmp_path / "docs" / "note.md", "note\n")
@@ -343,7 +271,7 @@ def test_merge_readiness_allows_commit_hard_limit_with_active_exception(tmp_path
     execplan = tmp_path / ".agent" / "execplans" / "20260310-test-plan-codex-01-execplan.md"
     _write(
         execplan,
-        """---
+        f"""---
 id: "20260310-test-plan-codex-01-execplan"
 title: "Test plan"
 owner: "agent/codex-01"
@@ -355,9 +283,7 @@ changes:
 approve_policy: codeowners
 reviewers:
   - "github:justin-napolitano"
-draft_by: "agent/codex-01"
-draft_branch: "draft-execplan/test"
-draft_created: "2026-03-10T00:00:00Z"
+initiative_branch: "initiative/test"
 finalized_by: ""
 finalized_at: ""
 finalized_in_pr: ""
@@ -375,53 +301,7 @@ tasks:
 depends_on: []
 ---
 
-# Purpose / Big Picture
-
-Test.
-
-## Progress
-
-- [ ] Test
-
-## Surprises & Discoveries
-
-None.
-
-## Decision Log
-
-None.
-
-## Outcomes & Retrospective
-
-Test.
-
-## Context and Orientation
-
-Test.
-
-## Plan of Work
-
-Test.
-
-## Concrete Steps
-
-1. Test.
-
-## Validation and Acceptance
-
-Test.
-
-## Idempotence and Recovery
-
-Test.
-
-## Artifacts and Notes
-
-Test.
-
-## Interfaces and Dependencies
-
-Test.
+{_minimal_body().strip()}
 """,
     )
     _write(tmp_path / "spec" / "slice.yaml", "slice: true\n")
@@ -465,8 +345,8 @@ Test.
                 '    owner: "github:test-owner"',
                 '    approved_by: "github:test-owner"',
                 '    rationale: "Allow one bounded oversized runtime commit during transition."',
-                '    created_at: "2026-03-13T00:00:00Z"',
-                '    expires_at: "2026-03-20T00:00:00Z"',
+                '    created_at: "2026-04-13T00:00:00Z"',
+                '    expires_at: "2026-04-20T00:00:00Z"',
                 "    bypass_evidence:",
                 '      - "chat:explicit-human-authorization"',
                 "",
@@ -499,7 +379,7 @@ def test_merge_readiness_discovers_execplan_from_implementation_branch_mapping(t
     execplan = tmp_path / execplan_rel
     _write(
         execplan,
-        """---
+        f"""---
 id: "20260318-test-ready-codex-01-execplan"
 title: "Ready implementation test"
 owner: "agent/codex-01"
@@ -511,9 +391,7 @@ changes:
 approve_policy: codeowners
 reviewers:
   - "github:test-owner"
-draft_by: "agent/codex-01"
-draft_branch: "draft-execplan/20260318-test-ready-codex-01"
-draft_created: "2026-03-18T00:00:00Z"
+initiative_branch: "initiative/test-ready"
 finalized_by: "github:test-owner"
 finalized_at: "2026-03-18T00:00:00Z"
 finalized_in_pr: "82"
@@ -531,53 +409,7 @@ tasks:
 depends_on: []
 ---
 
-# Purpose / Big Picture
-
-Test.
-
-## Progress
-
-- [ ] Test
-
-## Surprises & Discoveries
-
-None.
-
-## Decision Log
-
-None.
-
-## Outcomes & Retrospective
-
-Test.
-
-## Context and Orientation
-
-Test.
-
-## Plan of Work
-
-Test.
-
-## Concrete Steps
-
-1. Test.
-
-## Validation and Acceptance
-
-Test.
-
-## Idempotence and Recovery
-
-Test.
-
-## Artifacts and Notes
-
-Test.
-
-## Interfaces and Dependencies
-
-Test.
+{_minimal_body().strip()}
 """,
     )
     _write_json(
@@ -668,7 +500,7 @@ def test_merge_readiness_fails_when_impl_branch_targets_main_instead_of_initiati
     execplan_rel = ".agent/execplans/20260319-initiative-target-test-codex-01-execplan.md"
     _write(
         tmp_path / execplan_rel,
-        """---
+        f"""---
 id: "20260319-initiative-target-test-codex-01-execplan"
 title: "Initiative target test"
 owner: "agent/codex-01"
@@ -680,9 +512,7 @@ changes:
 approve_policy: codeowners
 reviewers:
   - "github:test-owner"
-draft_by: "agent/codex-01"
-draft_branch: "draft-execplan/20260319-initiative-target-test-codex-01"
-draft_created: "2026-03-19T00:00:00Z"
+initiative_branch: "initiative/transition-automation"
 finalized_by: "github:test-owner"
 finalized_at: "2026-03-19T00:00:00Z"
 finalized_in_pr: "99"
@@ -700,53 +530,7 @@ tasks:
 depends_on: []
 ---
 
-# Purpose / Big Picture
-
-Test.
-
-## Progress
-
-- [ ] Test
-
-## Surprises & Discoveries
-
-None.
-
-## Decision Log
-
-None.
-
-## Outcomes & Retrospective
-
-Test.
-
-## Context and Orientation
-
-Test.
-
-## Plan of Work
-
-Test.
-
-## Concrete Steps
-
-1. Test.
-
-## Validation and Acceptance
-
-Test.
-
-## Idempotence and Recovery
-
-Test.
-
-## Artifacts and Notes
-
-Test.
-
-## Interfaces and Dependencies
-
-Test.
+{_minimal_body().strip()}
 """,
     )
     _write_json(
