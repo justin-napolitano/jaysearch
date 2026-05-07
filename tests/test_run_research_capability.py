@@ -86,6 +86,7 @@ def test_run_research_capability_executes_and_projects_response(monkeypatch, tmp
                 "self_review_path": str(tmp_path / "output" / "execution" / "self_review" / "req-1.md"),
                 "improvement_proposal_path": str(tmp_path / "output" / "execution" / "improvement_proposals" / "req-1.md"),
                 "improvement_proposal_json_path": str(tmp_path / "output" / "execution" / "improvement_proposals" / "req-1.json"),
+                "improvement_candidates_path": str(tmp_path / "output" / "execution" / "improvement_candidates" / "req-1.json"),
                 "warnings": [],
             }
         )
@@ -108,6 +109,36 @@ def test_run_research_capability_executes_and_projects_response(monkeypatch, tmp
             }
         ),
     )
+    _write(
+        tmp_path / "output" / "execution" / "improvement_candidates" / "req-1.json",
+        json.dumps(
+            {
+                "request_id": "req-1",
+                "question_origin": "user",
+                "candidates": [
+                    {
+                        "candidate_id": "req-1-cand-01",
+                        "target": "researcher-harness",
+                        "disposition": "promote-to-execplan",
+                        "total_score": 4.6,
+                    },
+                    {
+                        "candidate_id": "req-1-cand-02",
+                        "target": "platform-control-plane",
+                        "disposition": "research-more",
+                        "total_score": 3.8,
+                    }
+                ],
+                "follow_up_questions": [
+                    {
+                        "question_id": "req-1-followup-01",
+                        "origin": "researcher",
+                        "topic": "What is the smallest governed implementation slice to improve researcher-harness next?"
+                    }
+                ]
+            }
+        ),
+    )
     monkeypatch.setattr("platform_tools.run_research_capability.subprocess.run", lambda *args, **kwargs: Completed())
 
     code, report = run_research_capability(
@@ -127,3 +158,9 @@ def test_run_research_capability_executes_and_projects_response(monkeypatch, tmp
     assert report["improvement_targets"] == ["researcher-harness", "platform-control-plane"]
     assert report["improvement_observed_gaps"] == ["Source coverage was minimal."]
     assert report["improvement_proposals"][0]["owning_repo_hint"] == "researcher-harness"
+    assert report["improvement_candidates_path"].endswith("req-1.json")
+    assert report["question_origin"] == "user"
+    assert len(report["ranked_candidates"]) == 2
+    assert len(report["promotable_candidates"]) == 1
+    assert report["promotable_candidates"][0]["candidate_id"] == "req-1-cand-01"
+    assert report["follow_up_questions"][0]["origin"] == "researcher"
