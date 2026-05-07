@@ -78,6 +78,25 @@ Orchestrators should prefer these commands instead of calling lower-level intern
 - example call:
   - `bin/run-worker-contract --contract-id contract-1 --executor local_clone --push-mode staging`
 
+`bin/run-research-capability`
+- invokes the external `researcher-harness` repo through its CLI contract
+- required inputs:
+  - `--researcher-root`
+  - `--request-path`
+- optional input:
+  - `--python-executable`
+- output focus:
+  - request id
+  - research status
+  - output root
+  - recommendation
+  - summary artifact path
+  - self-review artifact path
+- request schema: `#/$defs/request_run_research_capability`
+- response schema: `#/$defs/response_run_research_capability`
+- example call:
+  - `bin/run-research-capability --researcher-root ../researcher-harness --request-path /path/to/request.json`
+
 `bin/start-next-worker`
 - composite helper
 - resolves the next runnable worker contract for an initiative and runs it
