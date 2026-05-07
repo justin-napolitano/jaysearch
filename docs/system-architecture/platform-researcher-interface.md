@@ -66,6 +66,7 @@ That command should:
 - validate the bounded request file exists and contains the minimum contract fields
 - invoke `researcher_harness.cli`
 - project the result into the platform's versioned public orchestration envelope
+- expose structured improvement targets and proposal records when the harness emits them
 
 ## Platform Responsibilities
 
