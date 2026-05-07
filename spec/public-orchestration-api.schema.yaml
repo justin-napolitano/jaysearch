@@ -17,6 +17,7 @@ properties:
     enum:
       - "get-graph-state"
       - "get-worker-status"
+      - "run-research-capability"
       - "resolve-worker-contract"
       - "run-worker-contract"
       - "start-next-worker"
@@ -364,6 +365,59 @@ $defs:
             type: array
             items:
               type: string
+  request_run_research_capability:
+    type: object
+    additionalProperties: false
+    required:
+      - researcher_root
+      - request_path
+    properties:
+      researcher_root:
+        type: string
+      request_path:
+        type: string
+      python_executable:
+        type: string
+  response_run_research_capability:
+    allOf:
+      - $ref: "#"
+      - type: object
+        additionalProperties: true
+        required:
+          - researcher_root
+          - request_path
+          - blockers
+        properties:
+          command:
+            const: "run-research-capability"
+          researcher_root:
+            type: string
+          request_path:
+            type: string
+          request_id:
+            type: string
+          research_status:
+            type: string
+          output_root:
+            type: string
+          recommendation:
+            type: string
+          summary_path:
+            type: string
+          self_review_path:
+            type: string
+          artifact_paths:
+            type: object
+            additionalProperties:
+              type: string
+          warnings:
+            type: array
+            items:
+              type: string
+          blockers:
+            type: array
+            items:
+              type: string
   command_catalog:
     type: object
     additionalProperties: false
@@ -408,3 +462,11 @@ $defs:
             const: "#/$defs/request_get_worker_status"
           response_schema:
             const: "#/$defs/response_get_worker_status"
+      run-research-capability:
+        type: object
+        additionalProperties: false
+        properties:
+          request_schema:
+            const: "#/$defs/request_run_research_capability"
+          response_schema:
+            const: "#/$defs/response_run_research_capability"
