@@ -323,9 +323,15 @@ This document turns the remaining-work graph into an explicit near-term queue of
    - implementation branch: `impl-execplan/20260507-researcher-repo-architecture-codex-01`
    - gate: `authoritative ExecPlan required before execution`
 
+59. `20260507-platform-researcher-integration-codex-01-execplan`
+   - status: `decision_gated`
+   - goal: Add the first platform command for invoking the external researcher capability
+   - implementation branch: `impl-execplan/20260507-platform-researcher-integration-codex-01`
+   - gate: `authoritative ExecPlan required before execution`
+
 ## Mirror Metadata
 
-- canonical_last_graph_action_id: `rwg-action-20260507-register-rwg-058`
+- canonical_last_graph_action_id: `rwg-action-20260507-register-rwg-059`
 - canonical_ready_order: ``
 - projection_authority: `projection_only`
 
