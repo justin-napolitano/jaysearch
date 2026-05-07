@@ -17,6 +17,8 @@ properties:
     enum:
       - "get-graph-state"
       - "get-worker-status"
+      - "materialize-research-followup-assets"
+      - "render-platform-execplan-drafts"
       - "project-research-followup-packets"
       - "prepare-research-followups"
       - "run-research-capability"
@@ -572,6 +574,100 @@ $defs:
             type: array
             items:
               type: string
+  request_materialize_research_followup_assets:
+    type: object
+    additionalProperties: false
+    required:
+      - packets_path
+      - output_root
+    properties:
+      packets_path:
+        type: string
+      output_root:
+        type: string
+  response_materialize_research_followup_assets:
+    allOf:
+      - $ref: "#"
+      - type: object
+        additionalProperties: true
+        required:
+          - packets_path
+          - output_root
+          - blockers
+        properties:
+          command:
+            const: "materialize-research-followup-assets"
+          packets_path:
+            type: string
+          output_root:
+            type: string
+          source_request_id:
+            type: string
+          source_question_id:
+            type: string
+          source_question_origin:
+            type: string
+          manifest_path:
+            type: string
+          platform_seed_files:
+            type: array
+            items:
+              type: object
+          repo_request_files:
+            type: array
+            items:
+              type: object
+          next_action:
+            type: string
+          blockers:
+            type: array
+            items:
+              type: string
+  request_render_platform_execplan_drafts:
+    type: object
+    additionalProperties: false
+    required:
+      - materialized_manifest_path
+      - output_root
+    properties:
+      materialized_manifest_path:
+        type: string
+      output_root:
+        type: string
+  response_render_platform_execplan_drafts:
+    allOf:
+      - $ref: "#"
+      - type: object
+        additionalProperties: true
+        required:
+          - materialized_manifest_path
+          - output_root
+          - blockers
+        properties:
+          command:
+            const: "render-platform-execplan-drafts"
+          materialized_manifest_path:
+            type: string
+          output_root:
+            type: string
+          source_request_id:
+            type: string
+          source_question_id:
+            type: string
+          source_question_origin:
+            type: string
+          draft_manifest_path:
+            type: string
+          draft_files:
+            type: array
+            items:
+              type: object
+          next_action:
+            type: string
+          blockers:
+            type: array
+            items:
+              type: string
   command_catalog:
     type: object
     additionalProperties: false
@@ -640,3 +736,19 @@ $defs:
             const: "#/$defs/request_project_research_followup_packets"
           response_schema:
             const: "#/$defs/response_project_research_followup_packets"
+      materialize-research-followup-assets:
+        type: object
+        additionalProperties: false
+        properties:
+          request_schema:
+            const: "#/$defs/request_materialize_research_followup_assets"
+          response_schema:
+            const: "#/$defs/response_materialize_research_followup_assets"
+      render-platform-execplan-drafts:
+        type: object
+        additionalProperties: false
+        properties:
+          request_schema:
+            const: "#/$defs/request_render_platform_execplan_drafts"
+          response_schema:
+            const: "#/$defs/response_render_platform_execplan_drafts"
