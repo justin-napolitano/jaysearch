@@ -17,6 +17,7 @@ properties:
     enum:
       - "get-graph-state"
       - "get-worker-status"
+      - "project-research-followup-packets"
       - "prepare-research-followups"
       - "run-research-capability"
       - "resolve-worker-contract"
@@ -522,6 +523,55 @@ $defs:
             type: array
             items:
               type: string
+  request_project_research_followup_packets:
+    type: object
+    additionalProperties: false
+    required:
+      - prepared_followups_path
+      - output_root
+    properties:
+      prepared_followups_path:
+        type: string
+      output_root:
+        type: string
+  response_project_research_followup_packets:
+    allOf:
+      - $ref: "#"
+      - type: object
+        additionalProperties: true
+        required:
+          - prepared_followups_path
+          - output_root
+          - blockers
+        properties:
+          command:
+            const: "project-research-followup-packets"
+          prepared_followups_path:
+            type: string
+          output_root:
+            type: string
+          source_request_id:
+            type: string
+          source_question_id:
+            type: string
+          source_question_origin:
+            type: string
+          packets_path:
+            type: string
+          platform_execplan_seeds:
+            type: array
+            items:
+              type: object
+          repo_followup_requests:
+            type: array
+            items:
+              type: object
+          next_action:
+            type: string
+          blockers:
+            type: array
+            items:
+              type: string
   command_catalog:
     type: object
     additionalProperties: false
@@ -582,3 +632,11 @@ $defs:
             const: "#/$defs/request_prepare_research_followups"
           response_schema:
             const: "#/$defs/response_prepare_research_followups"
+      project-research-followup-packets:
+        type: object
+        additionalProperties: false
+        properties:
+          request_schema:
+            const: "#/$defs/request_project_research_followup_packets"
+          response_schema:
+            const: "#/$defs/response_project_research_followup_packets"
