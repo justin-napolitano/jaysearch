@@ -849,6 +849,102 @@
       "rationale": "node registered deterministically from ExecPlan graph_registration metadata",
       "evidence_ref": ".agent/execplans/20260414-contract-first-planner-bootstrap-propagation-codex-01-execplan.md",
       "queue_reconciled": true
+    },
+    {
+      "action_id": "rwg-action-20260327-003-complete-rwg-041",
+      "action": "complete",
+      "node_id": "rwg-041",
+      "rationale": "20260326-local-offline-orchestration-bootstrap-codex-01-execplan merged to initiative/local-offline-orchestration-bootstrap and is now canonical completed state",
+      "evidence_ref": "merged:pr-119",
+      "queue_reconciled": true
+    },
+    {
+      "action_id": "rwg-action-20260327-004-complete-rwg-043",
+      "action": "complete",
+      "node_id": "rwg-043",
+      "rationale": "20260326-initiative-branch-plan-authority-correction-codex-01-execplan merged to initiative/local-offline-orchestration-bootstrap and is now canonical completed state",
+      "evidence_ref": "merged:pr-116",
+      "queue_reconciled": true
+    },
+    {
+      "action_id": "rwg-action-20260327-005-complete-rwg-045",
+      "action": "complete",
+      "node_id": "rwg-045",
+      "rationale": "20260326-worker-audit-log-canonicalization-codex-01-execplan merged to initiative/local-offline-orchestration-bootstrap and is now canonical completed state",
+      "evidence_ref": "merged:pr-117",
+      "queue_reconciled": true
+    },
+    {
+      "action_id": "rwg-action-20260327-006-complete-rwg-046",
+      "action": "complete",
+      "node_id": "rwg-046",
+      "rationale": "20260327-mergeback-orchestration-api-runtime-codex-01-execplan merged to initiative/local-offline-orchestration-bootstrap and is now canonical completed state",
+      "evidence_ref": "merged:pr-118",
+      "queue_reconciled": true
+    },
+    {
+      "action_id": "rwg-action-20260327-007-complete-rwg-047",
+      "action": "complete",
+      "node_id": "rwg-047",
+      "rationale": "20260327-implementation-branch-ancestry-enforcement-codex-01-execplan merged to initiative/local-offline-orchestration-bootstrap and is now canonical completed state",
+      "evidence_ref": "merged:pr-120",
+      "queue_reconciled": true
+    },
+    {
+      "action_id": "rwg-action-20260327-008-complete-rwg-048",
+      "action": "complete",
+      "node_id": "rwg-048",
+      "rationale": "20260327-control-plane-composite-runtime-codex-01-execplan merged to initiative/local-offline-orchestration-bootstrap and is now canonical completed state",
+      "evidence_ref": "merged:pr-121",
+      "queue_reconciled": true
+    },
+    {
+      "action_id": "rwg-action-20260327-009-complete-rwg-049",
+      "action": "complete",
+      "node_id": "rwg-049",
+      "rationale": "20260327-control-plane-api-check-codex-01-execplan merged to initiative/local-offline-orchestration-bootstrap and is now canonical completed state",
+      "evidence_ref": "merged:pr-122",
+      "queue_reconciled": true
+    },
+    {
+      "action_id": "rwg-action-20260327-010-complete-rwg-050",
+      "action": "complete",
+      "node_id": "rwg-050",
+      "rationale": "20260327-managed-repo-control-plane-codex-01-execplan merged to initiative/local-offline-orchestration-bootstrap and is now canonical completed state",
+      "evidence_ref": "merged:pr-123",
+      "queue_reconciled": true
+    },
+    {
+      "action_id": "rwg-action-20260327-011-complete-rwg-051",
+      "action": "complete",
+      "node_id": "rwg-051",
+      "rationale": "20260327-orchestrate-governed-slice-control-plane-codex-01-execplan merged to initiative/local-offline-orchestration-bootstrap and is now canonical completed state",
+      "evidence_ref": "merged:pr-124",
+      "queue_reconciled": true
+    },
+    {
+      "action_id": "rwg-action-20260327-012-complete-rwg-052",
+      "action": "complete",
+      "node_id": "rwg-052",
+      "rationale": "20260327-orchestrate-governed-slice-api-check-codex-01-execplan merged to initiative/local-offline-orchestration-bootstrap and is now canonical completed state",
+      "evidence_ref": "merged:pr-125",
+      "queue_reconciled": true
+    },
+    {
+      "action_id": "rwg-action-20260327-013-complete-rwg-053",
+      "action": "complete",
+      "node_id": "rwg-053",
+      "rationale": "20260327-orchestrate-governed-slice-action-loop-codex-01-execplan merged to initiative/local-offline-orchestration-bootstrap and is now canonical completed state",
+      "evidence_ref": "merged:pr-126",
+      "queue_reconciled": true
+    },
+    {
+      "action_id": "rwg-action-20260507-register-rwg-057",
+      "action": "block",
+      "node_id": "rwg-057",
+      "rationale": "node registered deterministically from ExecPlan graph_registration metadata",
+      "evidence_ref": ".agent/execplans/20260507-research-control-plane-codex-01-execplan.md",
+      "queue_reconciled": true
     }
   ],
   "graph_id": "remaining-work-graph-20260311",
@@ -2183,8 +2279,8 @@
     {
       "action_state": {
         "action_required": false,
-        "last_action": "block",
-        "last_action_id": "rwg-action-20260326-register-rwg-041",
+        "last_action": "complete",
+        "last_action_id": "rwg-action-20260327-003-complete-rwg-041",
         "reorder_blockers": [],
         "reorder_requires_human": false
       },
@@ -2220,14 +2316,15 @@
       "node_id": "rwg-041",
       "ordering": {
         "queue_position": 41,
-        "source_action_id": "rwg-action-20260326-register-rwg-041",
+        "source_action_id": "rwg-action-20260327-003-complete-rwg-041",
         "tie_breaker": "20260326-local-offline-orchestration-bootstrap-codex-01-execplan"
       },
       "parent_initiative_node": "initiative-local-offline-orchestration-bootstrap",
-      "status": "decision_gated",
-      "status_reason": "registered from ExecPlan metadata; finalized draft ExecPlan required before execution",
+      "status": "completed",
+      "status_reason": "",
       "target_execplan_id": "20260326-local-offline-orchestration-bootstrap-codex-01-execplan",
-      "title": "Bootstrap a local offline orchestration runtime and thin task router"
+      "title": "Bootstrap a local offline orchestration runtime and thin task router",
+      "completion_ref": "merged:pr-119"
     },
     {
       "node_id": "rwg-042",
@@ -2272,8 +2369,8 @@
     {
       "node_id": "rwg-043",
       "title": "Correct the workflow so initiative branches may carry authoritative in-flight ExecPlans until initiative completion",
-      "status": "decision_gated",
-      "status_reason": "registered from ExecPlan metadata; finalized draft ExecPlan required before execution",
+      "status": "completed",
+      "status_reason": "",
       "gating_class": "decision_gated",
       "conflict_domains": [
         "documentation",
@@ -2299,15 +2396,16 @@
       "ordering": {
         "queue_position": 43,
         "tie_breaker": "20260326-initiative-branch-plan-authority-correction-codex-01-execplan",
-        "source_action_id": "rwg-action-20260326-register-rwg-043"
+        "source_action_id": "rwg-action-20260327-004-complete-rwg-043"
       },
       "action_state": {
-        "last_action_id": "rwg-action-20260326-register-rwg-043",
-        "last_action": "block",
+        "last_action_id": "rwg-action-20260327-004-complete-rwg-043",
+        "last_action": "complete",
         "action_required": false,
         "reorder_requires_human": false,
         "reorder_blockers": []
-      }
+      },
+      "completion_ref": "merged:pr-116"
     },
     {
       "node_id": "rwg-044",
@@ -2350,8 +2448,8 @@
     {
       "node_id": "rwg-045",
       "title": "Classify worker session audit logs as canonical append-only governance evidence",
-      "status": "decision_gated",
-      "status_reason": "registered from ExecPlan metadata; finalized draft ExecPlan required before execution",
+      "status": "completed",
+      "status_reason": "",
       "gating_class": "decision_gated",
       "conflict_domains": [
         "documentation",
@@ -2377,21 +2475,22 @@
       "ordering": {
         "queue_position": 45,
         "tie_breaker": "20260326-worker-audit-log-canonicalization-codex-01-execplan",
-        "source_action_id": "rwg-action-20260326-register-rwg-045"
+        "source_action_id": "rwg-action-20260327-005-complete-rwg-045"
       },
       "action_state": {
-        "last_action_id": "rwg-action-20260326-register-rwg-045",
-        "last_action": "block",
+        "last_action_id": "rwg-action-20260327-005-complete-rwg-045",
+        "last_action": "complete",
         "action_required": false,
         "reorder_requires_human": false,
         "reorder_blockers": []
-      }
+      },
+      "completion_ref": "merged:pr-117"
     },
     {
       "node_id": "rwg-046",
       "title": "Implement merge-back orchestration commands for readiness and PR target resolution",
-      "status": "decision_gated",
-      "status_reason": "registered from ExecPlan metadata; finalized draft ExecPlan required before execution",
+      "status": "completed",
+      "status_reason": "",
       "gating_class": "decision_gated",
       "conflict_domains": [
         "governance",
@@ -2418,21 +2517,22 @@
       "ordering": {
         "queue_position": 46,
         "tie_breaker": "20260327-mergeback-orchestration-api-runtime-codex-01-execplan",
-        "source_action_id": "rwg-action-20260327-register-rwg-046"
+        "source_action_id": "rwg-action-20260327-006-complete-rwg-046"
       },
       "action_state": {
-        "last_action_id": "rwg-action-20260327-register-rwg-046",
-        "last_action": "block",
+        "last_action_id": "rwg-action-20260327-006-complete-rwg-046",
+        "last_action": "complete",
         "action_required": false,
         "reorder_requires_human": false,
         "reorder_blockers": []
-      }
+      },
+      "completion_ref": "merged:pr-118"
     },
     {
       "node_id": "rwg-047",
       "title": "Enforce implementation branch ancestry and merge-back completion before new slices start",
-      "status": "decision_gated",
-      "status_reason": "registered from ExecPlan metadata; finalized draft ExecPlan required before execution",
+      "status": "completed",
+      "status_reason": "",
       "gating_class": "decision_gated",
       "conflict_domains": [
         "governance",
@@ -2462,21 +2562,22 @@
       "ordering": {
         "queue_position": 47,
         "tie_breaker": "20260327-implementation-branch-ancestry-enforcement-codex-01-execplan",
-        "source_action_id": "rwg-action-20260327-register-rwg-047"
+        "source_action_id": "rwg-action-20260327-007-complete-rwg-047"
       },
       "action_state": {
-        "last_action_id": "rwg-action-20260327-register-rwg-047",
-        "last_action": "block",
+        "last_action_id": "rwg-action-20260327-007-complete-rwg-047",
+        "last_action": "complete",
         "action_required": false,
         "reorder_requires_human": false,
         "reorder_blockers": []
-      }
+      },
+      "completion_ref": "merged:pr-120"
     },
     {
       "node_id": "rwg-048",
       "title": "Implement composite control-plane status and next-action commands for terminal orchestration",
-      "status": "decision_gated",
-      "status_reason": "registered from ExecPlan metadata; finalized draft ExecPlan required before execution",
+      "status": "completed",
+      "status_reason": "",
       "gating_class": "decision_gated",
       "conflict_domains": [
         "governance",
@@ -2506,21 +2607,22 @@
       "ordering": {
         "queue_position": 48,
         "tie_breaker": "20260327-control-plane-composite-runtime-codex-01-execplan",
-        "source_action_id": "rwg-action-20260327-register-rwg-048"
+        "source_action_id": "rwg-action-20260327-008-complete-rwg-048"
       },
       "action_state": {
-        "last_action_id": "rwg-action-20260327-register-rwg-048",
-        "last_action": "block",
+        "last_action_id": "rwg-action-20260327-008-complete-rwg-048",
+        "last_action": "complete",
         "action_required": false,
         "reorder_requires_human": false,
         "reorder_blockers": []
-      }
+      },
+      "completion_ref": "merged:pr-121"
     },
     {
       "node_id": "rwg-049",
       "title": "Validate control-plane composite commands against their versioned schema",
-      "status": "decision_gated",
-      "status_reason": "registered from ExecPlan metadata; finalized draft ExecPlan required before execution",
+      "status": "completed",
+      "status_reason": "",
       "gating_class": "decision_gated",
       "conflict_domains": [
         "governance",
@@ -2546,21 +2648,22 @@
       "ordering": {
         "queue_position": 49,
         "tie_breaker": "20260327-control-plane-api-check-codex-01-execplan",
-        "source_action_id": "rwg-action-20260327-register-rwg-049"
+        "source_action_id": "rwg-action-20260327-009-complete-rwg-049"
       },
       "action_state": {
-        "last_action_id": "rwg-action-20260327-register-rwg-049",
-        "last_action": "block",
+        "last_action_id": "rwg-action-20260327-009-complete-rwg-049",
+        "last_action": "complete",
         "action_required": false,
         "reorder_requires_human": false,
         "reorder_blockers": []
-      }
+      },
+      "completion_ref": "merged:pr-122"
     },
     {
       "node_id": "rwg-050",
       "title": "Make the composite control-plane commands explicitly managed-repo aware",
-      "status": "decision_gated",
-      "status_reason": "registered from ExecPlan metadata; finalized draft ExecPlan required before execution",
+      "status": "completed",
+      "status_reason": "",
       "gating_class": "decision_gated",
       "conflict_domains": [
         "governance",
@@ -2588,21 +2691,22 @@
       "ordering": {
         "queue_position": 50,
         "tie_breaker": "20260327-managed-repo-control-plane-codex-01-execplan",
-        "source_action_id": "rwg-action-20260327-register-rwg-050"
+        "source_action_id": "rwg-action-20260327-010-complete-rwg-050"
       },
       "action_state": {
-        "last_action_id": "rwg-action-20260327-register-rwg-050",
-        "last_action": "block",
+        "last_action_id": "rwg-action-20260327-010-complete-rwg-050",
+        "last_action": "complete",
         "action_required": false,
         "reorder_requires_human": false,
         "reorder_blockers": []
-      }
+      },
+      "completion_ref": "merged:pr-123"
     },
     {
       "node_id": "rwg-051",
       "title": "Make orchestrate-governed-slice compose the control-plane APIs",
-      "status": "decision_gated",
-      "status_reason": "registered from ExecPlan metadata; finalized draft ExecPlan required before execution",
+      "status": "completed",
+      "status_reason": "",
       "gating_class": "decision_gated",
       "conflict_domains": [
         "governance",
@@ -2628,15 +2732,16 @@
       "ordering": {
         "queue_position": 51,
         "tie_breaker": "20260327-orchestrate-governed-slice-control-plane-codex-01-execplan",
-        "source_action_id": "rwg-action-20260327-register-rwg-051"
+        "source_action_id": "rwg-action-20260327-011-complete-rwg-051"
       },
       "action_state": {
-        "last_action_id": "rwg-action-20260327-register-rwg-051",
-        "last_action": "block",
+        "last_action_id": "rwg-action-20260327-011-complete-rwg-051",
+        "last_action": "complete",
         "action_required": false,
         "reorder_requires_human": false,
         "reorder_blockers": []
-      }
+      },
+      "completion_ref": "merged:pr-124"
     },
     {
       "node_id": "initiative-contract-first-planning",
@@ -2671,8 +2776,8 @@
     {
       "node_id": "rwg-052",
       "title": "Add a schema and checker for orchestrate-governed-slice",
-      "status": "decision_gated",
-      "status_reason": "registered from ExecPlan metadata; finalized draft ExecPlan required before execution",
+      "status": "completed",
+      "status_reason": "",
       "gating_class": "decision_gated",
       "conflict_domains": [
         "governance",
@@ -2700,21 +2805,22 @@
       "ordering": {
         "queue_position": 52,
         "tie_breaker": "20260327-orchestrate-governed-slice-api-check-codex-01-execplan",
-        "source_action_id": "rwg-action-20260327-register-rwg-052"
+        "source_action_id": "rwg-action-20260327-012-complete-rwg-052"
       },
       "action_state": {
-        "last_action_id": "rwg-action-20260327-register-rwg-052",
-        "last_action": "block",
+        "last_action_id": "rwg-action-20260327-012-complete-rwg-052",
+        "last_action": "complete",
         "action_required": false,
         "reorder_requires_human": false,
         "reorder_blockers": []
-      }
+      },
+      "completion_ref": "merged:pr-125"
     },
     {
       "node_id": "rwg-053",
       "title": "Teach orchestrate-governed-slice to execute one bounded next step",
-      "status": "decision_gated",
-      "status_reason": "registered from ExecPlan metadata; finalized draft ExecPlan required before execution",
+      "status": "completed",
+      "status_reason": "",
       "gating_class": "decision_gated",
       "conflict_domains": [
         "governance",
@@ -2741,15 +2847,16 @@
       "ordering": {
         "queue_position": 53,
         "tie_breaker": "20260327-orchestrate-governed-slice-action-loop-codex-01-execplan",
-        "source_action_id": "rwg-action-20260327-register-rwg-053"
+        "source_action_id": "rwg-action-20260327-013-complete-rwg-053"
       },
       "action_state": {
-        "last_action_id": "rwg-action-20260327-register-rwg-053",
-        "last_action": "block",
+        "last_action_id": "rwg-action-20260327-013-complete-rwg-053",
+        "last_action": "complete",
         "action_required": false,
         "reorder_requires_human": false,
         "reorder_blockers": []
-      }
+      },
+      "completion_ref": "merged:pr-126"
     },
     {
       "node_id": "rwg-054",
@@ -2874,6 +2981,65 @@
         "reorder_requires_human": false,
         "reorder_blockers": []
       }
+    },
+    {
+      "node_id": "initiative-research-control-plane",
+      "title": "Initiative / research control plane",
+      "status": "ready",
+      "gating_class": "auto_runnable",
+      "conflict_domains": [
+        "capability-contracts",
+        "governance",
+        "orchestration",
+        "research-runtime"
+      ],
+      "target_execplan_id": "initiative:research-control-plane",
+      "goal_area": "reference",
+      "initiative_branch": "initiative/research-control-plane",
+      "parent_initiative_node": "initiative-research-control-plane",
+      "ordering": {}
+    },
+    {
+      "node_id": "rwg-057",
+      "title": "Formalize cross-repo research orchestration in the platform control plane",
+      "status": "decision_gated",
+      "status_reason": "registered from ExecPlan metadata; authoritative ExecPlan required before execution",
+      "gating_class": "decision_gated",
+      "conflict_domains": [
+        "capability-contracts",
+        "governance",
+        "orchestration",
+        "research-runtime"
+      ],
+      "target_execplan_id": "20260507-research-control-plane-codex-01-execplan",
+      "goal_area": "governance",
+      "implementation_branch": "impl-execplan/20260507-research-control-plane-codex-01",
+      "initiative_branch": "initiative/research-control-plane",
+      "parent_initiative_node": "initiative-research-control-plane",
+      "integration_mode": "via_initiative",
+      "expected_artifacts": [
+        ".agent/execplans/20260507-research-control-plane-codex-01-execplan.md",
+        "docs/system-architecture/README.md",
+        "docs/system-architecture/control-plane-principles.md",
+        "docs/system-architecture/cross-repo-boundaries.md",
+        "docs/system-architecture/orchestration-model.md",
+        "docs/system-architecture/research-capability-contract.md",
+        "docs/system-architecture/researcher-self-improvement-loop.md",
+        "docs/adr/ADR-0002-cross-repo-integration-is-contract-first.md",
+        "docs/adr/ADR-0003-researcher-capability-is-external-and-self-critical.md"
+      ],
+      "ordering": {
+        "queue_position": 57,
+        "tie_breaker": "20260507-research-control-plane-codex-01-execplan",
+        "source_action_id": "rwg-action-20260507-register-rwg-057"
+      },
+      "action_state": {
+        "last_action_id": "rwg-action-20260507-register-rwg-057",
+        "last_action": "block",
+        "action_required": false,
+        "reorder_requires_human": false,
+        "reorder_blockers": []
+      }
     }
   ],
   "ordering_policy": {
@@ -2889,7 +3055,7 @@
     "reorder_requires_explicit_action": true
   },
   "queue_projection": {
-    "last_reconciled_action_id": "rwg-action-20260414-001-block-rwg-056",
+    "last_reconciled_action_id": "rwg-action-20260507-register-rwg-057",
     "path": "docs/queued-execplans.md",
     "projection_authority": "projection_only",
     "ready_execplan_ids": []
