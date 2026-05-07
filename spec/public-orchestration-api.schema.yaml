@@ -17,6 +17,7 @@ properties:
     enum:
       - "get-graph-state"
       - "get-worker-status"
+      - "prepare-research-followups"
       - "run-research-capability"
       - "resolve-worker-contract"
       - "run-worker-contract"
@@ -450,6 +451,77 @@ $defs:
             type: array
             items:
               type: string
+  request_prepare_research_followups:
+    type: object
+    additionalProperties: false
+    required:
+      - report_path
+      - output_root
+    properties:
+      report_path:
+        type: string
+      output_root:
+        type: string
+      max_promotions:
+        type: integer
+        minimum: 1
+      minimum_total_score:
+        type: number
+        exclusiveMinimum: 0
+  response_prepare_research_followups:
+    allOf:
+      - $ref: "#"
+      - type: object
+        additionalProperties: true
+        required:
+          - report_path
+          - output_root
+          - blockers
+        properties:
+          command:
+            const: "prepare-research-followups"
+          report_path:
+            type: string
+          output_root:
+            type: string
+          source_request_id:
+            type: string
+          source_question_id:
+            type: string
+          source_question_origin:
+            type: string
+          promotion_gate:
+            type: object
+            additionalProperties: false
+            properties:
+              minimum_rigor:
+                type: number
+              minimum_feasibility:
+                type: number
+              minimum_total_score:
+                type: number
+          max_promotions:
+            type: integer
+          draft_followups_path:
+            type: string
+          selected_candidates:
+            type: array
+            items:
+              type: object
+          deferred_candidates:
+            type: array
+            items:
+              type: object
+          follow_up_questions:
+            type: array
+            items:
+              type: object
+          next_action:
+            type: string
+          blockers:
+            type: array
+            items:
+              type: string
   command_catalog:
     type: object
     additionalProperties: false
@@ -502,3 +574,11 @@ $defs:
             const: "#/$defs/request_run_research_capability"
           response_schema:
             const: "#/$defs/response_run_research_capability"
+      prepare-research-followups:
+        type: object
+        additionalProperties: false
+        properties:
+          request_schema:
+            const: "#/$defs/request_prepare_research_followups"
+          response_schema:
+            const: "#/$defs/response_prepare_research_followups"
