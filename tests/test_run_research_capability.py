@@ -84,11 +84,30 @@ def test_run_research_capability_executes_and_projects_response(monkeypatch, tmp
                 },
                 "recommendation": "opt-1",
                 "self_review_path": str(tmp_path / "output" / "execution" / "self_review" / "req-1.md"),
+                "improvement_proposal_path": str(tmp_path / "output" / "execution" / "improvement_proposals" / "req-1.md"),
+                "improvement_proposal_json_path": str(tmp_path / "output" / "execution" / "improvement_proposals" / "req-1.json"),
                 "warnings": [],
             }
         )
         stderr = ""
 
+    _write(
+        tmp_path / "output" / "execution" / "improvement_proposals" / "req-1.json",
+        json.dumps(
+            {
+                "request_id": "req-1",
+                "targets": ["researcher-harness", "platform-control-plane"],
+                "observed_gaps": ["Source coverage was minimal."],
+                "proposals": [
+                    {
+                        "target": "researcher-harness",
+                        "proposed_change": "Add stronger evidence validation hooks.",
+                        "owning_repo_hint": "researcher-harness",
+                    }
+                ],
+            }
+        ),
+    )
     monkeypatch.setattr("platform_tools.run_research_capability.subprocess.run", lambda *args, **kwargs: Completed())
 
     code, report = run_research_capability(
@@ -104,3 +123,7 @@ def test_run_research_capability_executes_and_projects_response(monkeypatch, tmp
     assert report["research_status"] == "completed"
     assert report["recommendation"] == "opt-1"
     assert report["summary_path"].endswith("req-1.json")
+    assert report["improvement_proposal_json_path"].endswith("req-1.json")
+    assert report["improvement_targets"] == ["researcher-harness", "platform-control-plane"]
+    assert report["improvement_observed_gaps"] == ["Source coverage was minimal."]
+    assert report["improvement_proposals"][0]["owning_repo_hint"] == "researcher-harness"
