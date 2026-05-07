@@ -341,9 +341,15 @@ This document turns the remaining-work graph into an explicit near-term queue of
    - implementation branch: `impl-execplan/20260507-ranked-candidate-promotion-codex-01`
    - gate: `authoritative ExecPlan required before execution`
 
+62. `20260507-ranked-candidate-followup-preparation-codex-01-execplan`
+   - status: `decision_gated`
+   - goal: Prepare ranked research follow-up inputs from promotable candidates
+   - implementation branch: `impl-execplan/20260507-ranked-candidate-followup-preparation-codex-01`
+   - gate: `authoritative ExecPlan required before execution`
+
 ## Mirror Metadata
 
-- canonical_last_graph_action_id: `rwg-action-20260507-register-rwg-061`
+- canonical_last_graph_action_id: `rwg-action-20260507-register-rwg-062`
 - canonical_ready_order: ``
 - projection_authority: `projection_only`
 

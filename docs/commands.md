@@ -26,6 +26,7 @@ bin/orchestrate-governed-slice
 bin/resolve-worker-contract
 bin/run-worker-contract
 bin/run-research-capability
+bin/prepare-research-followups
 bin/start-next-worker
 bin/public-orchestration-api-check
 bin/get-graph-state
@@ -57,6 +58,7 @@ Notes:
 - `bin/resolve-worker-contract` resolves one runnable or explicit worker contract into a compact machine-shaped payload.
 - `bin/run-worker-contract` is the orchestrator-agnostic worker execution entrypoint; it resolves one bounded worker contract and delegates execution to the governed worker runtime.
 - `bin/run-research-capability` invokes the external `researcher-harness` repo through its CLI request contract and returns a compact machine-readable summary.
+- `bin/prepare-research-followups` turns a completed `run-research-capability` report into deterministic draft follow-up inputs using the researcher’s ranked candidate artifact and promotion gate.
 - `bin/start-next-worker` is a composite facade command for thin orchestrators that want “resolve next runnable contract and execute it” in one call.
 - `bin/public-orchestration-api-check` validates that the facade commands still emit outputs compatible with the versioned public orchestration contract catalog.
 - `bin/get-graph-state` provides a compact orchestration-facing view of canonical graph state without exposing the full raw graph payload.
