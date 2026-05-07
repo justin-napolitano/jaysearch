@@ -102,6 +102,26 @@ Orchestrators should prefer these commands instead of calling lower-level intern
 - example call:
   - `bin/run-research-capability --researcher-root ../researcher-harness --request-path /path/to/request.json`
 
+`bin/prepare-research-followups`
+- reads a completed `run-research-capability` report and emits deterministic draft follow-up inputs from ranked candidates
+- required inputs:
+  - `--report-path`
+  - `--output-root`
+- optional inputs:
+  - `--max-promotions`
+  - `--minimum-total-score`
+- output focus:
+  - source request and question provenance
+  - applied promotion gate
+  - selected promotable candidates
+  - deferred candidates
+  - follow-up questions
+  - generated draft follow-up artifact path
+- request schema: `#/$defs/request_prepare_research_followups`
+- response schema: `#/$defs/response_prepare_research_followups`
+- example call:
+  - `bin/prepare-research-followups --report-path /path/to/research-report.json --output-root /path/to/prepared-followups`
+
 `bin/start-next-worker`
 - composite helper
 - resolves the next runnable worker contract for an initiative and runs it
