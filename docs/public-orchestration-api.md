@@ -122,6 +122,21 @@ Orchestrators should prefer these commands instead of calling lower-level intern
 - example call:
   - `bin/prepare-research-followups --report-path /path/to/research-report.json --output-root /path/to/prepared-followups`
 
+`bin/project-research-followup-packets`
+- reads a prepared follow-up artifact and emits repo-specific follow-up packets
+- required inputs:
+  - `--prepared-followups-path`
+  - `--output-root`
+- output focus:
+  - source request and question provenance
+  - platform ExecPlan seed packets
+  - external repo follow-up request packets
+  - generated packets artifact path
+- request schema: `#/$defs/request_project_research_followup_packets`
+- response schema: `#/$defs/response_project_research_followup_packets`
+- example call:
+  - `bin/project-research-followup-packets --prepared-followups-path /path/to/draft-followups.json --output-root /path/to/projected-packets`
+
 `bin/start-next-worker`
 - composite helper
 - resolves the next runnable worker contract for an initiative and runs it

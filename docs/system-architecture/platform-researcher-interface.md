@@ -69,6 +69,7 @@ That command should:
 - expose structured improvement targets and proposal records when the harness emits them
 - expose ranked candidates and the promotable subset so later orchestration layers can prepare governed follow-up work
 - provide a deterministic promotion bridge that turns completed ranked-candidate reports into draft follow-up inputs without mutating governed graph state automatically
+- project prepared follow-up inputs into repo-specific packet outputs so platform-owned and external repo work can be supervised independently
 
 ## Platform Responsibilities
 
