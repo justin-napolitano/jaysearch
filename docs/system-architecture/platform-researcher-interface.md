@@ -50,6 +50,23 @@ researcher-harness run \
   [--domain-plugin <plugin-id> ...]
 ```
 
+## Platform Invocation Surface
+
+The first platform-owned command should be:
+
+```text
+bin/run-research-capability \
+  --researcher-root <repo-path> \
+  --request-path <request.json>
+```
+
+That command should:
+
+- validate the external repo shape
+- validate the bounded request file exists and contains the minimum contract fields
+- invoke `researcher_harness.cli`
+- project the result into the platform's versioned public orchestration envelope
+
 ## Platform Responsibilities
 
 The platform repo should:
