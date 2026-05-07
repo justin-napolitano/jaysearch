@@ -410,6 +410,8 @@ $defs:
             type: string
           improvement_proposal_json_path:
             type: string
+          improvement_candidates_path:
+            type: string
           improvement_targets:
             type: array
             items:
@@ -419,6 +421,20 @@ $defs:
             items:
               type: string
           improvement_proposals:
+            type: array
+            items:
+              type: object
+          question_origin:
+            type: string
+          ranked_candidates:
+            type: array
+            items:
+              type: object
+          promotable_candidates:
+            type: array
+            items:
+              type: object
+          follow_up_questions:
             type: array
             items:
               type: object
