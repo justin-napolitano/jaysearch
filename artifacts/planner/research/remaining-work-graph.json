@@ -937,6 +937,14 @@
       "rationale": "20260327-orchestrate-governed-slice-action-loop-codex-01-execplan merged to initiative/local-offline-orchestration-bootstrap and is now canonical completed state",
       "evidence_ref": "merged:pr-126",
       "queue_reconciled": true
+    },
+    {
+      "action_id": "rwg-action-20260507-register-rwg-057",
+      "action": "block",
+      "node_id": "rwg-057",
+      "rationale": "node registered deterministically from ExecPlan graph_registration metadata",
+      "evidence_ref": ".agent/execplans/20260507-research-control-plane-codex-01-execplan.md",
+      "queue_reconciled": true
     }
   ],
   "graph_id": "remaining-work-graph-20260311",
@@ -2973,6 +2981,65 @@
         "reorder_requires_human": false,
         "reorder_blockers": []
       }
+    },
+    {
+      "node_id": "initiative-research-control-plane",
+      "title": "Initiative / research control plane",
+      "status": "ready",
+      "gating_class": "auto_runnable",
+      "conflict_domains": [
+        "capability-contracts",
+        "governance",
+        "orchestration",
+        "research-runtime"
+      ],
+      "target_execplan_id": "initiative:research-control-plane",
+      "goal_area": "reference",
+      "initiative_branch": "initiative/research-control-plane",
+      "parent_initiative_node": "initiative-research-control-plane",
+      "ordering": {}
+    },
+    {
+      "node_id": "rwg-057",
+      "title": "Formalize cross-repo research orchestration in the platform control plane",
+      "status": "decision_gated",
+      "status_reason": "registered from ExecPlan metadata; authoritative ExecPlan required before execution",
+      "gating_class": "decision_gated",
+      "conflict_domains": [
+        "capability-contracts",
+        "governance",
+        "orchestration",
+        "research-runtime"
+      ],
+      "target_execplan_id": "20260507-research-control-plane-codex-01-execplan",
+      "goal_area": "governance",
+      "implementation_branch": "impl-execplan/20260507-research-control-plane-codex-01",
+      "initiative_branch": "initiative/research-control-plane",
+      "parent_initiative_node": "initiative-research-control-plane",
+      "integration_mode": "via_initiative",
+      "expected_artifacts": [
+        ".agent/execplans/20260507-research-control-plane-codex-01-execplan.md",
+        "docs/system-architecture/README.md",
+        "docs/system-architecture/control-plane-principles.md",
+        "docs/system-architecture/cross-repo-boundaries.md",
+        "docs/system-architecture/orchestration-model.md",
+        "docs/system-architecture/research-capability-contract.md",
+        "docs/system-architecture/researcher-self-improvement-loop.md",
+        "docs/adr/ADR-0002-cross-repo-integration-is-contract-first.md",
+        "docs/adr/ADR-0003-researcher-capability-is-external-and-self-critical.md"
+      ],
+      "ordering": {
+        "queue_position": 57,
+        "tie_breaker": "20260507-research-control-plane-codex-01-execplan",
+        "source_action_id": "rwg-action-20260507-register-rwg-057"
+      },
+      "action_state": {
+        "last_action_id": "rwg-action-20260507-register-rwg-057",
+        "last_action": "block",
+        "action_required": false,
+        "reorder_requires_human": false,
+        "reorder_blockers": []
+      }
     }
   ],
   "ordering_policy": {
@@ -2988,7 +3055,7 @@
     "reorder_requires_explicit_action": true
   },
   "queue_projection": {
-    "last_reconciled_action_id": "rwg-action-20260327-013-complete-rwg-053",
+    "last_reconciled_action_id": "rwg-action-20260507-register-rwg-057",
     "path": "docs/queued-execplans.md",
     "projection_authority": "projection_only",
     "ready_execplan_ids": []
