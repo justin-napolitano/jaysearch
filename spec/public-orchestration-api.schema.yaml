@@ -406,6 +406,22 @@ $defs:
             type: string
           self_review_path:
             type: string
+          improvement_proposal_path:
+            type: string
+          improvement_proposal_json_path:
+            type: string
+          improvement_targets:
+            type: array
+            items:
+              type: string
+          improvement_observed_gaps:
+            type: array
+            items:
+              type: string
+          improvement_proposals:
+            type: array
+            items:
+              type: object
           artifact_paths:
             type: object
             additionalProperties:

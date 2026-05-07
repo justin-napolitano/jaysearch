@@ -20,6 +20,13 @@ def _load_request(path: Path) -> dict[str, Any]:
     return payload
 
 
+def _load_json_file(path: Path) -> dict[str, Any]:
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    if not isinstance(payload, dict):
+        raise ValueError("json_payload_not_object")
+    return payload
+
+
 def _validate_researcher_root(path: Path) -> list[str]:
     blockers: list[str] = []
     if not path.exists():
@@ -143,6 +150,14 @@ def run_research_capability(
 
     artifact_paths = response.get("artifact_paths", {})
     summary_path = str(artifact_paths.get("summary", "")).strip() if isinstance(artifact_paths, dict) else ""
+    improvement_proposal_json_path = str(response.get("improvement_proposal_json_path", "")).strip()
+    improvement_payload: dict[str, Any] = {}
+    if improvement_proposal_json_path:
+        proposal_path = Path(improvement_proposal_json_path)
+        try:
+            improvement_payload = _load_json_file(proposal_path)
+        except (json.JSONDecodeError, OSError, ValueError):
+            improvement_payload = {}
     return 0, envelope(
         command=COMMAND,
         status="ok",
@@ -157,6 +172,21 @@ def run_research_capability(
             "recommendation": str(response.get("recommendation", "")).strip(),
             "summary_path": summary_path,
             "self_review_path": str(response.get("self_review_path", "")).strip(),
+            "improvement_proposal_path": str(response.get("improvement_proposal_path", "")).strip(),
+            "improvement_proposal_json_path": improvement_proposal_json_path,
+            "improvement_targets": [
+                str(item).strip()
+                for item in improvement_payload.get("targets", [])
+                if str(item).strip()
+            ],
+            "improvement_observed_gaps": [
+                str(item).strip()
+                for item in improvement_payload.get("observed_gaps", [])
+                if str(item).strip()
+            ],
+            "improvement_proposals": improvement_payload.get("proposals", [])
+            if isinstance(improvement_payload.get("proposals"), list)
+            else [],
             "artifact_paths": artifact_paths if isinstance(artifact_paths, dict) else {},
             "warnings": [str(item).strip() for item in response.get("warnings", []) if str(item).strip()],
             "blockers": [],
