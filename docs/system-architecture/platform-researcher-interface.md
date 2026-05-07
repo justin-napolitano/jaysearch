@@ -67,6 +67,7 @@ That command should:
 - invoke `researcher_harness.cli`
 - project the result into the platform's versioned public orchestration envelope
 - expose structured improvement targets and proposal records when the harness emits them
+- expose ranked candidates and the promotable subset so later orchestration layers can prepare governed follow-up work
 
 ## Platform Responsibilities
 

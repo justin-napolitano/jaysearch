@@ -151,13 +151,27 @@ def run_research_capability(
     artifact_paths = response.get("artifact_paths", {})
     summary_path = str(artifact_paths.get("summary", "")).strip() if isinstance(artifact_paths, dict) else ""
     improvement_proposal_json_path = str(response.get("improvement_proposal_json_path", "")).strip()
+    improvement_candidates_path = str(response.get("improvement_candidates_path", "")).strip()
     improvement_payload: dict[str, Any] = {}
+    candidate_payload: dict[str, Any] = {}
     if improvement_proposal_json_path:
         proposal_path = Path(improvement_proposal_json_path)
         try:
             improvement_payload = _load_json_file(proposal_path)
         except (json.JSONDecodeError, OSError, ValueError):
             improvement_payload = {}
+    if improvement_candidates_path:
+        candidates_path = Path(improvement_candidates_path)
+        try:
+            candidate_payload = _load_json_file(candidates_path)
+        except (json.JSONDecodeError, OSError, ValueError):
+            candidate_payload = {}
+    ranked_candidates = candidate_payload.get("candidates", []) if isinstance(candidate_payload.get("candidates"), list) else []
+    promotable_candidates = [
+        item for item in ranked_candidates
+        if isinstance(item, dict) and str(item.get("disposition", "")).strip() == "promote-to-execplan"
+    ]
+    follow_up_questions = candidate_payload.get("follow_up_questions", []) if isinstance(candidate_payload.get("follow_up_questions"), list) else []
     return 0, envelope(
         command=COMMAND,
         status="ok",
@@ -174,6 +188,7 @@ def run_research_capability(
             "self_review_path": str(response.get("self_review_path", "")).strip(),
             "improvement_proposal_path": str(response.get("improvement_proposal_path", "")).strip(),
             "improvement_proposal_json_path": improvement_proposal_json_path,
+            "improvement_candidates_path": improvement_candidates_path,
             "improvement_targets": [
                 str(item).strip()
                 for item in improvement_payload.get("targets", [])
@@ -187,6 +202,10 @@ def run_research_capability(
             "improvement_proposals": improvement_payload.get("proposals", [])
             if isinstance(improvement_payload.get("proposals"), list)
             else [],
+            "question_origin": str(candidate_payload.get("question_origin", "")).strip(),
+            "ranked_candidates": ranked_candidates,
+            "promotable_candidates": promotable_candidates,
+            "follow_up_questions": follow_up_questions,
             "artifact_paths": artifact_paths if isinstance(artifact_paths, dict) else {},
             "warnings": [str(item).strip() for item in response.get("warnings", []) if str(item).strip()],
             "blockers": [],

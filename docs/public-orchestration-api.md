@@ -94,6 +94,9 @@ Orchestrators should prefer these commands instead of calling lower-level intern
   - self-review artifact path
   - structured improvement targets
   - structured improvement proposals
+  - ranked improvement candidates
+  - promotable candidate subset
+  - follow-up questions proposed by the researcher
 - request schema: `#/$defs/request_run_research_capability`
 - response schema: `#/$defs/response_run_research_capability`
 - example call:
