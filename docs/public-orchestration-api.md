@@ -137,6 +137,35 @@ Orchestrators should prefer these commands instead of calling lower-level intern
 - example call:
   - `bin/project-research-followup-packets --prepared-followups-path /path/to/draft-followups.json --output-root /path/to/projected-packets`
 
+`bin/materialize-research-followup-assets`
+- reads projected repo follow-up packets and writes actual handoff assets
+- required inputs:
+  - `--packets-path`
+  - `--output-root`
+- output focus:
+  - source request and question provenance
+  - platform seed file paths
+  - external repo request packet paths
+  - generated manifest path
+- request schema: `#/$defs/request_materialize_research_followup_assets`
+- response schema: `#/$defs/response_materialize_research_followup_assets`
+- example call:
+  - `bin/materialize-research-followup-assets --packets-path /path/to/projected-packets.json --output-root /path/to/materialized-assets`
+
+`bin/render-platform-execplan-drafts`
+- reads materialized platform seed assets and renders draft ExecPlan candidate files
+- required inputs:
+  - `--materialized-manifest-path`
+  - `--output-root`
+- output focus:
+  - source request and question provenance
+  - rendered draft file paths
+  - generated draft manifest path
+- request schema: `#/$defs/request_render_platform_execplan_drafts`
+- response schema: `#/$defs/response_render_platform_execplan_drafts`
+- example call:
+  - `bin/render-platform-execplan-drafts --materialized-manifest-path /path/to/materialized-assets.json --output-root /path/to/rendered-drafts`
+
 `bin/start-next-worker`
 - composite helper
 - resolves the next runnable worker contract for an initiative and runs it

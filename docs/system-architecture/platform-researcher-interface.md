@@ -70,6 +70,7 @@ That command should:
 - expose ranked candidates and the promotable subset so later orchestration layers can prepare governed follow-up work
 - provide a deterministic promotion bridge that turns completed ranked-candidate reports into draft follow-up inputs without mutating governed graph state automatically
 - project prepared follow-up inputs into repo-specific packet outputs so platform-owned and external repo work can be supervised independently
+- materialize those packet outputs into stable handoff assets and render platform-owned seed files into draft ExecPlan candidates without mutating canonical governed state
 
 ## Platform Responsibilities
 
