@@ -18,6 +18,10 @@ The immediate target is a researcher capability that is:
 - `orchestration-model.md`
 - `research-capability-contract.md`
 - `researcher-self-improvement-loop.md`
+- `researcher-repo-architecture.md`
+- `researcher-plugin-model.md`
+- `platform-researcher-interface.md`
+- `researcher-mvp-backlog.md`
 
 ## Operating Model
 
@@ -45,3 +49,12 @@ That capability should:
 - execute under explicit artifact contracts
 - emit governed outputs into a declared destination
 - surface self-critique and improvement proposals as review artifacts, not silent self-modifications
+
+## Next Slice
+
+The next architectural layer defines the separate researcher repo itself:
+
+- its runtime ownership boundaries
+- its plugin model
+- its platform-facing invocation interface
+- its MVP implementation path
