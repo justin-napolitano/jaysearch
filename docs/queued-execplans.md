@@ -221,10 +221,10 @@ This document turns the remaining-work graph into an explicit near-term queue of
    - completion ref: `merged:pr-115`
 
 41. `20260326-local-offline-orchestration-bootstrap-codex-01-execplan`
-   - status: `decision_gated`
+   - status: `completed`
    - goal: bootstrap a local-first offline orchestration loop with a thin runtime adapter, runtime-check command, and task-router command that stay subordinate to repo-native authority surfaces
    - draft branch: `draft-execplan/20260326-local-offline-orchestration-bootstrap-codex-01-20260326`
-   - gate: `finalized draft ExecPlan required before execution`
+   - completion ref: `merged:pr-119`
 
 42. `20260326-local-orchestration-contract-surface-codex-01-execplan`
    - status: `completed`
@@ -232,9 +232,9 @@ This document turns the remaining-work graph into an explicit near-term queue of
    - completion ref: `merged:2eb310abf265201989f7d4647f62253dede267ca`
 
 43. `20260326-initiative-branch-plan-authority-correction-codex-01-execplan`
-   - status: `decision_gated`
+   - status: `completed`
    - goal: correct initiative-branch plan authority so implementation slices integrate under one authoritative in-flight ExecPlan
-   - gate: `finalized draft ExecPlan required before execution`
+   - completion ref: `merged:pr-116`
 
 44. `20260326-mergeback-orchestration-api-contract-codex-01-execplan`
    - status: `completed`
@@ -242,56 +242,56 @@ This document turns the remaining-work graph into an explicit near-term queue of
    - completion ref: `merged:2eb310abf265201989f7d4647f62253dede267ca`
 
 45. `20260326-worker-audit-log-canonicalization-codex-01-execplan`
-   - status: `decision_gated`
+   - status: `completed`
    - goal: classify worker session audit logs as canonical append-only evidence while keeping live lease directories operational
-   - gate: `finalized draft ExecPlan required before execution`
+   - completion ref: `merged:pr-117`
 
 46. `20260327-mergeback-orchestration-api-runtime-codex-01-execplan`
-   - status: `decision_gated`
+   - status: `completed`
    - goal: implement merge-back orchestration commands for readiness and PR target resolution
-   - gate: `finalized draft ExecPlan required before execution`
+   - completion ref: `merged:pr-118`
 
 47. `20260327-implementation-branch-ancestry-enforcement-codex-01-execplan`
-   - status: `decision_gated`
+   - status: `completed`
    - goal: Enforce implementation branch ancestry and merge-back completion before new slices start
    - implementation branch: `impl-execplan/20260327-implementation-ancestry-enforcement-codex-01`
-   - gate: `finalized draft ExecPlan required before execution`
+   - completion ref: `merged:pr-120`
 
 48. `20260327-control-plane-composite-runtime-codex-01-execplan`
-   - status: `decision_gated`
+   - status: `completed`
    - goal: Implement composite control-plane status and next-action commands for terminal orchestration
    - implementation branch: `impl-execplan/20260327-control-plane-composite-runtime-codex-01`
-   - gate: `finalized draft ExecPlan required before execution`
+   - completion ref: `merged:pr-121`
 
 49. `20260327-control-plane-api-check-codex-01-execplan`
-   - status: `decision_gated`
+   - status: `completed`
    - goal: Validate control-plane composite commands against their versioned schema
    - implementation branch: `impl-execplan/20260327-control-plane-api-check-codex-01`
-   - gate: `finalized draft ExecPlan required before execution`
+   - completion ref: `merged:pr-122`
 
 50. `20260327-managed-repo-control-plane-codex-01-execplan`
-   - status: `decision_gated`
+   - status: `completed`
    - goal: Make the composite control-plane commands explicitly managed-repo aware
    - implementation branch: `impl-execplan/20260327-managed-repo-control-plane-codex-01`
-   - gate: `finalized draft ExecPlan required before execution`
+   - completion ref: `merged:pr-123`
 
 51. `20260327-orchestrate-governed-slice-control-plane-codex-01-execplan`
-   - status: `decision_gated`
+   - status: `completed`
    - goal: Make orchestrate-governed-slice compose the control-plane APIs
    - implementation branch: `impl-execplan/20260327-orchestrate-governed-slice-control-plane-codex-01`
-   - gate: `finalized draft ExecPlan required before execution`
+   - completion ref: `merged:pr-124`
 
 52. `20260327-orchestrate-governed-slice-api-check-codex-01-execplan`
-   - status: `decision_gated`
+   - status: `completed`
    - goal: Add a schema and checker for orchestrate-governed-slice
    - implementation branch: `impl-execplan/20260327-orchestrate-governed-slice-api-check-codex-01`
-   - gate: `finalized draft ExecPlan required before execution`
+   - completion ref: `merged:pr-125`
 
 53. `20260327-orchestrate-governed-slice-action-loop-codex-01-execplan`
-   - status: `decision_gated`
+   - status: `completed`
    - goal: Teach orchestrate-governed-slice to execute one bounded next step
    - implementation branch: `impl-execplan/20260327-orchestrate-governed-slice-action-loop-codex-01`
-   - gate: `finalized draft ExecPlan required before execution`
+   - completion ref: `merged:pr-126`
 
 54. `20260413-contract-first-execplan-runtime-codex-01-execplan`
    - status: `review_gated`
@@ -311,9 +311,15 @@ This document turns the remaining-work graph into an explicit near-term queue of
    - implementation branch: `impl-execplan/contract-first-planner-bootstrap-propagation`
    - gate: `authoritative ExecPlan required before execution`
 
+57. `20260507-research-control-plane-codex-01-execplan`
+   - status: `decision_gated`
+   - goal: Formalize cross-repo research orchestration in the platform control plane
+   - implementation branch: `impl-execplan/20260507-research-control-plane-codex-01`
+   - gate: `authoritative ExecPlan required before execution`
+
 ## Mirror Metadata
 
-- canonical_last_graph_action_id: `rwg-action-20260414-001-block-rwg-056`
+- canonical_last_graph_action_id: `rwg-action-20260507-register-rwg-057`
 - canonical_ready_order: ``
 - projection_authority: `projection_only`
 
