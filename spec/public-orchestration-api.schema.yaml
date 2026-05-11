@@ -18,10 +18,12 @@ properties:
       - "get-graph-state"
       - "get-worker-status"
       - "materialize-research-followup-assets"
+      - "render-researcher-followup-handoffs"
       - "render-platform-execplan-drafts"
       - "project-research-followup-packets"
       - "prepare-research-followups"
       - "run-research-capability"
+      - "run-research-improvement-loop"
       - "resolve-worker-contract"
       - "run-worker-contract"
       - "start-next-worker"
@@ -668,6 +670,116 @@ $defs:
             type: array
             items:
               type: string
+  request_render_researcher_followup_handoffs:
+    type: object
+    additionalProperties: false
+    required:
+      - materialized_manifest_path
+      - output_root
+    properties:
+      materialized_manifest_path:
+        type: string
+      output_root:
+        type: string
+  response_render_researcher_followup_handoffs:
+    allOf:
+      - $ref: "#"
+      - type: object
+        additionalProperties: true
+        required:
+          - materialized_manifest_path
+          - output_root
+          - blockers
+        properties:
+          command:
+            const: "render-researcher-followup-handoffs"
+          materialized_manifest_path:
+            type: string
+          output_root:
+            type: string
+          source_request_id:
+            type: string
+          source_question_id:
+            type: string
+          source_question_origin:
+            type: string
+          handoff_manifest_path:
+            type: string
+          handoff_files:
+            type: array
+            items:
+              type: object
+          next_action:
+            type: string
+          blockers:
+            type: array
+            items:
+              type: string
+  request_run_research_improvement_loop:
+    type: object
+    additionalProperties: false
+    required:
+      - researcher_root
+      - request_path
+      - output_root
+    properties:
+      researcher_root:
+        type: string
+      request_path:
+        type: string
+      output_root:
+        type: string
+      python_executable:
+        type: string
+      max_promotions:
+        type: integer
+      minimum_total_score:
+        type: number
+  response_run_research_improvement_loop:
+    allOf:
+      - $ref: "#"
+      - type: object
+        additionalProperties: true
+        required:
+          - researcher_root
+          - request_path
+          - output_root
+          - blockers
+        properties:
+          command:
+            const: "run-research-improvement-loop"
+          researcher_root:
+            type: string
+          request_path:
+            type: string
+          output_root:
+            type: string
+          request_id:
+            type: string
+          step_reports:
+            type: array
+            items:
+              type: object
+          draft_followups_path:
+            type: string
+          packets_path:
+            type: string
+          materialized_manifest_path:
+            type: string
+          draft_manifest_path:
+            type: string
+          handoff_manifest_path:
+            type: string
+          loop_manifest_path:
+            type: string
+          failed_step:
+            type: string
+          next_action:
+            type: string
+          blockers:
+            type: array
+            items:
+              type: string
   command_catalog:
     type: object
     additionalProperties: false
@@ -752,3 +864,19 @@ $defs:
             const: "#/$defs/request_render_platform_execplan_drafts"
           response_schema:
             const: "#/$defs/response_render_platform_execplan_drafts"
+      render-researcher-followup-handoffs:
+        type: object
+        additionalProperties: false
+        properties:
+          request_schema:
+            const: "#/$defs/request_render_researcher_followup_handoffs"
+          response_schema:
+            const: "#/$defs/response_render_researcher_followup_handoffs"
+      run-research-improvement-loop:
+        type: object
+        additionalProperties: false
+        properties:
+          request_schema:
+            const: "#/$defs/request_run_research_improvement_loop"
+          response_schema:
+            const: "#/$defs/response_run_research_improvement_loop"

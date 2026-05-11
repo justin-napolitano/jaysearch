@@ -166,6 +166,40 @@ Orchestrators should prefer these commands instead of calling lower-level intern
 - example call:
   - `bin/render-platform-execplan-drafts --materialized-manifest-path /path/to/materialized-assets.json --output-root /path/to/rendered-drafts`
 
+`bin/render-researcher-followup-handoffs`
+- reads materialized external repo request assets and renders `researcher-harness` execution-ready request packets
+- required inputs:
+  - `--materialized-manifest-path`
+  - `--output-root`
+- output focus:
+  - source request and question provenance
+  - rendered researcher handoff request paths
+  - generated handoff manifest path
+- request schema: `#/$defs/request_render_researcher_followup_handoffs`
+- response schema: `#/$defs/response_render_researcher_followup_handoffs`
+- example call:
+  - `bin/render-researcher-followup-handoffs --materialized-manifest-path /path/to/materialized-assets.json --output-root /path/to/rendered-handoffs`
+
+`bin/run-research-improvement-loop`
+- composite helper
+- runs the full supervised research loop end to end and writes per-step reports
+- required inputs:
+  - `--researcher-root`
+  - `--request-path`
+  - `--output-root`
+- optional inputs:
+  - `--python-executable`
+  - `--max-promotions`
+  - `--minimum-total-score`
+- output focus:
+  - per-step report paths
+  - prepared follow-up, packet, materialized, draft, and external handoff manifest paths
+  - overall loop manifest path
+- request schema: `#/$defs/request_run_research_improvement_loop`
+- response schema: `#/$defs/response_run_research_improvement_loop`
+- example call:
+  - `bin/run-research-improvement-loop --researcher-root /path/to/researcher-harness --request-path /path/to/request.json --output-root /path/to/loop-run`
+
 `bin/start-next-worker`
 - composite helper
 - resolves the next runnable worker contract for an initiative and runs it
