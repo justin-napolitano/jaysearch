@@ -21,6 +21,7 @@ The immediate target is a researcher capability that is:
 - `researcher-repo-architecture.md`
 - `researcher-plugin-model.md`
 - `platform-researcher-interface.md`
+- `candidate-selection-and-conflict-resolution.md`
 - `researcher-mvp-backlog.md`
 
 ## Operating Model
