@@ -30,6 +30,8 @@ bin/prepare-research-followups
 bin/project-research-followup-packets
 bin/materialize-research-followup-assets
 bin/render-platform-execplan-drafts
+bin/render-researcher-followup-handoffs
+bin/run-research-improvement-loop
 bin/start-next-worker
 bin/public-orchestration-api-check
 bin/get-graph-state
@@ -65,6 +67,8 @@ Notes:
 - `bin/project-research-followup-packets` splits prepared follow-up inputs into repo-specific packet outputs, including platform ExecPlan seeds and external repo request packets.
 - `bin/materialize-research-followup-assets` writes tangible handoff assets from projected repo packets, including platform seed files and external repo request packet files.
 - `bin/render-platform-execplan-drafts` turns materialized platform seed assets into draft ExecPlan candidate markdown and JSON files for supervised review.
+- `bin/render-researcher-followup-handoffs` turns materialized `researcher-harness` repo request packets into execution-ready bounded research requests plus operator instructions.
+- `bin/run-research-improvement-loop` composes the supervised research chain end to end: run research, prepare follow-ups, project repo packets, materialize assets, render platform drafts, and render external researcher handoffs.
 - `bin/start-next-worker` is a composite facade command for thin orchestrators that want “resolve next runnable contract and execute it” in one call.
 - `bin/public-orchestration-api-check` validates that the facade commands still emit outputs compatible with the versioned public orchestration contract catalog.
 - `bin/get-graph-state` provides a compact orchestration-facing view of canonical graph state without exposing the full raw graph payload.
