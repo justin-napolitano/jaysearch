@@ -365,9 +365,15 @@ This document turns the remaining-work graph into an explicit near-term queue of
    - implementation branch: `impl-execplan/20260507-external-handoff-and-loop-runner-codex-01`
    - gate: `authoritative ExecPlan required before execution`
 
+66. `20260511-supervised-loop-smoke-run-codex-01-execplan`
+   - status: `decision_gated`
+   - goal: Add a live supervised research loop smoke test
+   - implementation branch: `impl-execplan/20260511-supervised-loop-smoke-run-codex-01`
+   - gate: `authoritative ExecPlan required before execution`
+
 ## Mirror Metadata
 
-- canonical_last_graph_action_id: `rwg-action-20260508-register-rwg-065`
+- canonical_last_graph_action_id: `rwg-action-20260511-register-rwg-066`
 - canonical_ready_order: ``
 - projection_authority: `projection_only`
 
