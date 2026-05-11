@@ -371,9 +371,15 @@ This document turns the remaining-work graph into an explicit near-term queue of
    - implementation branch: `impl-execplan/20260511-supervised-loop-smoke-run-codex-01`
    - gate: `authoritative ExecPlan required before execution`
 
+67. `20260511-candidate-selection-contract-codex-01-execplan`
+   - status: `decision_gated`
+   - goal: Formalize candidate selection and conflict resolution rules
+   - implementation branch: `impl-execplan/20260511-candidate-selection-contract-codex-01`
+   - gate: `authoritative ExecPlan required before execution`
+
 ## Mirror Metadata
 
-- canonical_last_graph_action_id: `rwg-action-20260511-register-rwg-066`
+- canonical_last_graph_action_id: `rwg-action-20260511-register-rwg-067`
 - canonical_ready_order: ``
 - projection_authority: `projection_only`
 
