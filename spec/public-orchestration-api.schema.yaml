@@ -16,6 +16,7 @@ properties:
     type: string
     enum:
       - "get-graph-state"
+      - "get-research-run-history"
       - "get-worker-status"
       - "materialize-research-followup-assets"
       - "render-researcher-followup-handoffs"
@@ -181,6 +182,51 @@ $defs:
             const: "resolve-worker-contract"
           initiative_branch:
             type: string
+          blockers:
+            type: array
+            items:
+              type: string
+  request_get_research_run_history:
+    type: object
+    additionalProperties: false
+    properties:
+      request_id:
+        type: string
+      status:
+        type: string
+      limit:
+        type: integer
+      history_log_path:
+        type: string
+  response_get_research_run_history:
+    allOf:
+      - $ref: "#"
+      - type: object
+        additionalProperties: true
+        required:
+          - history_log_path
+          - blockers
+        properties:
+          command:
+            const: "get-research-run-history"
+          request_id:
+            type: string
+          status_filter:
+            type: string
+          limit:
+            type: integer
+          count:
+            type: integer
+          counts_by_status:
+            type: object
+            additionalProperties:
+              type: integer
+          history_log_path:
+            type: string
+          recent_runs:
+            type: array
+            items:
+              type: object
           blockers:
             type: array
             items:
@@ -772,6 +818,14 @@ $defs:
             type: string
           loop_manifest_path:
             type: string
+          history_log_path:
+            type: string
+          history_entry_path:
+            type: string
+          run_id:
+            type: string
+          recorded_at:
+            type: string
           failed_step:
             type: string
           next_action:
@@ -792,6 +846,14 @@ $defs:
             const: "#/$defs/request_get_graph_state"
           response_schema:
             const: "#/$defs/response_get_graph_state"
+      get-research-run-history:
+        type: object
+        additionalProperties: false
+        properties:
+          request_schema:
+            const: "#/$defs/request_get_research_run_history"
+          response_schema:
+            const: "#/$defs/response_get_research_run_history"
       resolve-worker-contract:
         type: object
         additionalProperties: false

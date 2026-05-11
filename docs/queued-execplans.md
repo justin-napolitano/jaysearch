@@ -377,9 +377,15 @@ This document turns the remaining-work graph into an explicit near-term queue of
    - implementation branch: `impl-execplan/20260511-candidate-selection-contract-codex-01`
    - gate: `authoritative ExecPlan required before execution`
 
+68. `20260511-persistent-research-run-history-codex-01-execplan`
+   - status: `decision_gated`
+   - goal: Persist and query research improvement loop run history
+   - implementation branch: `impl-execplan/20260511-persistent-research-run-history-codex-01`
+   - gate: `authoritative ExecPlan required before execution`
+
 ## Mirror Metadata
 
-- canonical_last_graph_action_id: `rwg-action-20260511-register-rwg-067`
+- canonical_last_graph_action_id: `rwg-action-20260511-register-rwg-068`
 - canonical_ready_order: ``
 - projection_authority: `projection_only`
 

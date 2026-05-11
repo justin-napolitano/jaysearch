@@ -44,6 +44,23 @@ Orchestrators should prefer these commands instead of calling lower-level intern
 - example call:
   - `bin/get-graph-state --initiative-branch initiative/worker-orchestration-api`
 
+`bin/get-research-run-history`
+- returns persisted research loop runs from the canonical platform ledger
+- optional inputs:
+  - `--request-id`
+  - `--status`
+  - `--limit`
+  - `--history-log-path`
+- output focus:
+  - filtered recent runs
+  - counts by status
+  - canonical history log path
+- request schema: `#/$defs/request_get_research_run_history`
+- response schema: `#/$defs/response_get_research_run_history`
+- example call:
+  - `bin/get-research-run-history --limit 20`
+  - `bin/get-research-run-history --request-id smoke-loop-001`
+
 `bin/resolve-worker-contract`
 - resolves one explicit or next runnable worker contract
 - optional inputs:
@@ -194,6 +211,7 @@ Orchestrators should prefer these commands instead of calling lower-level intern
 - output focus:
   - per-step report paths
   - prepared follow-up, packet, materialized, draft, and external handoff manifest paths
+  - persistent history log and per-run history entry paths
   - overall loop manifest path
 - request schema: `#/$defs/request_run_research_improvement_loop`
 - response schema: `#/$defs/response_run_research_improvement_loop`
