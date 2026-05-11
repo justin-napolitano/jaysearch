@@ -1,0 +1,128 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+ROOT="$(pwd)"
+RESEARCHER_ROOT="${RESEARCHER_ROOT:-/mnt/c/Users/jna31a/advent-repos/jna31a_ait/researcher-harness}"
+
+if [[ ! -d "$RESEARCHER_ROOT" ]]; then
+  echo "researcher-harness repo not found at: $RESEARCHER_ROOT" >&2
+  exit 1
+fi
+
+TMPDIR="$(mktemp -d)"
+trap 'rm -rf "$TMPDIR"' EXIT
+
+REQUEST_PATH="$TMPDIR/request.json"
+PLATFORM_OUTPUT="$TMPDIR/platform-output"
+LOOP_REPORT="$TMPDIR/loop-report.json"
+HANDOFF_RESPONSE="$TMPDIR/handoff-response.json"
+
+echo "[1/3] writing bounded research request"
+python3 - <<'PY' "$REQUEST_PATH" "$TMPDIR"
+import json
+import sys
+from pathlib import Path
+
+request_path = Path(sys.argv[1])
+tmpdir = Path(sys.argv[2])
+payload = {
+    "request_id": "smoke-loop-001",
+    "question_id": "platform-research-loop-smoke",
+    "question_origin": "user",
+    "topic": "Validate the first supervised research improvement loop end to end.",
+    "study_design": "option-comparison",
+    "artifact_contract": "v1",
+    "output_root": (tmpdir / "researcher-output").as_posix(),
+    "domain_plugins": ["governed-research-ops"],
+    "improvement_targets": ["researcher-harness", "platform-control-plane"],
+    "hypotheses": [
+        {
+            "hypothesis_id": "hyp-smoke-001",
+            "statement": "The current control plane can emit reviewable platform drafts and runnable researcher handoff requests in one supervised pass.",
+            "expected_outcome": "The platform loop completes and the first returned handoff can be rerun through researcher-harness.",
+            "falsifiable_condition": "The loop fails to produce stable artifacts or the handoff request cannot complete.",
+            "evidence_required": ["bounded smoke artifacts", "runtime validation"],
+        }
+    ],
+    "required_sources": [
+        {
+            "title": "Control plane contract docs",
+            "url": "https://github.com/JNA31A_AIT/codex_platform",
+            "note": "Bounded local smoke-test provenance.",
+        }
+    ],
+    "options": [
+        {
+            "option_id": "loop-as-built",
+            "summary": "Use the current platform loop and researcher handoff contracts as implemented.",
+            "strengths": ["Exercises the real orchestration chain."],
+            "risks": ["May expose remaining contract gaps."],
+            "score": 5,
+        },
+        {
+            "option_id": "manual-only",
+            "summary": "Keep the flow manual and avoid the composite loop.",
+            "strengths": ["Lower immediate orchestration complexity."],
+            "risks": ["No reusable supervised control loop."],
+            "score": 2,
+        },
+    ],
+    "stable_recommendation": True,
+    "recommendation": "loop-as-built",
+    "recommendation_rationale": "The supervised loop is the target capability and should be validated directly.",
+    "self_review_focus": "Check that platform draft outputs and external handoff requests are both reviewable and bounded.",
+}
+request_path.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
+PY
+
+echo "[2/3] running platform supervised loop"
+bin/run-research-improvement-loop \
+  --researcher-root "$RESEARCHER_ROOT" \
+  --request-path "$REQUEST_PATH" \
+  --output-root "$PLATFORM_OUTPUT" | tee "$LOOP_REPORT"
+
+echo "[3/3] validating outputs and rerunning one generated handoff request"
+python3 - <<'PY' "$LOOP_REPORT" "$RESEARCHER_ROOT" "$HANDOFF_RESPONSE"
+import json
+import os
+import subprocess
+import sys
+from pathlib import Path
+
+loop_report = json.loads(Path(sys.argv[1]).read_text(encoding="utf-8"))
+researcher_root = Path(sys.argv[2]).resolve()
+handoff_response_path = Path(sys.argv[3])
+
+assert loop_report["command"] == "run-research-improvement-loop"
+assert loop_report["status"] == "ok"
+assert Path(loop_report["draft_manifest_path"]).exists()
+assert Path(loop_report["handoff_manifest_path"]).exists()
+assert len(loop_report["step_reports"]) == 6
+
+handoff_manifest = json.loads(Path(loop_report["handoff_manifest_path"]).read_text(encoding="utf-8"))
+handoff_files = handoff_manifest.get("handoff_files", [])
+assert handoff_files, "expected at least one handoff file"
+first_handoff = handoff_files[0]
+request_path = Path(first_handoff["request_path"])
+instructions_path = Path(first_handoff["instructions_path"])
+assert request_path.exists()
+assert instructions_path.exists()
+
+env = os.environ.copy()
+pythonpath = str(researcher_root / "src")
+env["PYTHONPATH"] = pythonpath if not env.get("PYTHONPATH") else f"{pythonpath}:{env['PYTHONPATH']}"
+completed = subprocess.run(
+    [sys.executable, "-m", "researcher_harness.cli", "run", "--request", request_path.as_posix()],
+    cwd=researcher_root,
+    env=env,
+    capture_output=True,
+    text=True,
+    check=True,
+)
+payload = json.loads(completed.stdout)
+assert payload["status"] == "completed"
+assert Path(payload["improvement_candidates_path"]).exists()
+handoff_response_path.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
+PY
+
+echo "supervised research improvement loop smoke test completed"

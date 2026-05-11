@@ -73,6 +73,7 @@ That command should:
 - materialize those packet outputs into stable handoff assets and render platform-owned seed files into draft ExecPlan candidates without mutating canonical governed state
 - render `researcher-harness` packet outputs into execution-ready bounded requests so the external runtime can be reinvoked under supervision
 - compose the entire supervised loop into one façade command for repeatable bounded runs
+- keep one live smoke-test entrypoint that proves the platform loop and one external handoff round-trip still work together after future changes
 
 ## Platform Responsibilities
 
