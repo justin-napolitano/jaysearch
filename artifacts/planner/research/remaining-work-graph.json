@@ -1017,6 +1017,14 @@
       "rationale": "node registered deterministically from ExecPlan graph_registration metadata",
       "evidence_ref": ".agent/execplans/20260511-supervised-loop-smoke-run-codex-01-execplan.md",
       "queue_reconciled": true
+    },
+    {
+      "action_id": "rwg-action-20260511-register-rwg-067",
+      "action": "block",
+      "node_id": "rwg-067",
+      "rationale": "node registered deterministically from ExecPlan graph_registration metadata",
+      "evidence_ref": ".agent/execplans/20260511-candidate-selection-contract-codex-01-execplan.md",
+      "queue_reconciled": true
     }
   ],
   "graph_id": "remaining-work-graph-20260311",
@@ -3503,6 +3511,45 @@
         "reorder_requires_human": false,
         "reorder_blockers": []
       }
+    },
+    {
+      "node_id": "rwg-067",
+      "title": "Formalize candidate selection and conflict resolution rules",
+      "status": "decision_gated",
+      "status_reason": "registered from ExecPlan metadata; authoritative ExecPlan required before execution",
+      "gating_class": "decision_gated",
+      "conflict_domains": [
+        "capability-contracts",
+        "governance",
+        "orchestration",
+        "research-runtime"
+      ],
+      "target_execplan_id": "20260511-candidate-selection-contract-codex-01-execplan",
+      "goal_area": "governance",
+      "implementation_branch": "impl-execplan/20260511-candidate-selection-contract-codex-01",
+      "initiative_branch": "initiative/research-control-plane",
+      "parent_initiative_node": "initiative-research-control-plane",
+      "integration_mode": "via_initiative",
+      "expected_artifacts": [
+        ".agent/execplans/20260511-candidate-selection-contract-codex-01-execplan.md",
+        "artifacts/governance/board-action-events.jsonl",
+        "artifacts/planner/research/remaining-work-graph.json",
+        "docs/queued-execplans.md",
+        "docs/system-architecture/README.md",
+        "docs/system-architecture/candidate-selection-and-conflict-resolution.md"
+      ],
+      "ordering": {
+        "queue_position": 67,
+        "tie_breaker": "20260511-candidate-selection-contract-codex-01-execplan",
+        "source_action_id": "rwg-action-20260511-register-rwg-067"
+      },
+      "action_state": {
+        "last_action_id": "rwg-action-20260511-register-rwg-067",
+        "last_action": "block",
+        "action_required": false,
+        "reorder_requires_human": false,
+        "reorder_blockers": []
+      }
     }
   ],
   "ordering_policy": {
@@ -3518,7 +3565,7 @@
     "reorder_requires_explicit_action": true
   },
   "queue_projection": {
-    "last_reconciled_action_id": "rwg-action-20260511-register-rwg-066",
+    "last_reconciled_action_id": "rwg-action-20260511-register-rwg-067",
     "path": "docs/queued-execplans.md",
     "projection_authority": "projection_only",
     "ready_execplan_ids": []
