@@ -16,7 +16,10 @@ properties:
     type: string
     enum:
       - "get-graph-state"
+      - "get-research-question-backlog"
       - "get-research-run-history"
+      - "intake-research-question"
+      - "materialize-research-request-from-question"
       - "get-worker-status"
       - "materialize-research-followup-assets"
       - "render-researcher-followup-handoffs"
@@ -237,6 +240,154 @@ $defs:
               type: object
           selected:
             $ref: "#/$defs/worker_contract_projection"
+  request_intake_research_question:
+    type: object
+    additionalProperties: false
+    required:
+      - question_path
+    properties:
+      question_path:
+        type: string
+  response_intake_research_question:
+    allOf:
+      - $ref: "#"
+      - type: object
+        additionalProperties: true
+        required:
+          - question_path
+          - artifact_path
+          - backlog_log_path
+          - blockers
+        properties:
+          command:
+            const: "intake-research-question"
+          question_path:
+            type: string
+          artifact_path:
+            type: string
+          backlog_log_path:
+            type: string
+          question_id:
+            type: string
+          title:
+            type: string
+          question_origin:
+            type: string
+          status_value:
+            type: string
+          target_repos:
+            type: array
+            items:
+              type: string
+          target_systems:
+            type: array
+            items:
+              type: string
+          blockers:
+            type: array
+            items:
+              type: string
+  request_get_research_question_backlog:
+    type: object
+    additionalProperties: false
+    properties:
+      question_origin:
+        type: string
+      status:
+        type: string
+      target_repo:
+        type: string
+      limit:
+        type: integer
+      backlog_log_path:
+        type: string
+  response_get_research_question_backlog:
+    allOf:
+      - $ref: "#"
+      - type: object
+        additionalProperties: true
+        required:
+          - backlog_log_path
+          - blockers
+        properties:
+          command:
+            const: "get-research-question-backlog"
+          question_origin_filter:
+            type: string
+          status_filter:
+            type: string
+          target_repo_filter:
+            type: string
+          limit:
+            type: integer
+          count:
+            type: integer
+          counts_by_status:
+            type: object
+            additionalProperties:
+              type: integer
+          backlog_log_path:
+            type: string
+          questions:
+            type: array
+            items:
+              type: object
+          blockers:
+            type: array
+            items:
+              type: string
+  request_materialize_research_request_from_question:
+    type: object
+    additionalProperties: false
+    required:
+      - question_path
+      - output_root
+    properties:
+      question_path:
+        type: string
+      output_root:
+        type: string
+      study_design:
+        type: string
+      artifact_contract:
+        type: string
+      request_id:
+        type: string
+      researcher_output_root:
+        type: string
+  response_materialize_research_request_from_question:
+    allOf:
+      - $ref: "#"
+      - type: object
+        additionalProperties: true
+        required:
+          - question_path
+          - output_root
+          - request_path
+          - blockers
+        properties:
+          command:
+            const: "materialize-research-request-from-question"
+          question_path:
+            type: string
+          output_root:
+            type: string
+          request_path:
+            type: string
+          request_id:
+            type: string
+          question_id:
+            type: string
+          question_origin:
+            type: string
+          study_design:
+            type: string
+          researcher_output_root:
+            type: string
+          blockers:
+            type: array
+            items:
+              type: string
   request_run_worker_contract:
     type: object
     additionalProperties: false
@@ -766,12 +917,13 @@ $defs:
     additionalProperties: false
     required:
       - researcher_root
-      - request_path
       - output_root
     properties:
       researcher_root:
         type: string
       request_path:
+        type: string
+      question_path:
         type: string
       output_root:
         type: string
@@ -781,6 +933,14 @@ $defs:
         type: integer
       minimum_total_score:
         type: number
+      study_design:
+        type: string
+      artifact_contract:
+        type: string
+      request_id:
+        type: string
+      researcher_output_root:
+        type: string
   response_run_research_improvement_loop:
     allOf:
       - $ref: "#"
@@ -788,7 +948,6 @@ $defs:
         additionalProperties: true
         required:
           - researcher_root
-          - request_path
           - output_root
           - blockers
         properties:
@@ -797,6 +956,8 @@ $defs:
           researcher_root:
             type: string
           request_path:
+            type: string
+          question_path:
             type: string
           output_root:
             type: string
@@ -846,6 +1007,22 @@ $defs:
             const: "#/$defs/request_get_graph_state"
           response_schema:
             const: "#/$defs/response_get_graph_state"
+      intake-research-question:
+        type: object
+        additionalProperties: false
+        properties:
+          request_schema:
+            const: "#/$defs/request_intake_research_question"
+          response_schema:
+            const: "#/$defs/response_intake_research_question"
+      get-research-question-backlog:
+        type: object
+        additionalProperties: false
+        properties:
+          request_schema:
+            const: "#/$defs/request_get_research_question_backlog"
+          response_schema:
+            const: "#/$defs/response_get_research_question_backlog"
       get-research-run-history:
         type: object
         additionalProperties: false
@@ -854,6 +1031,14 @@ $defs:
             const: "#/$defs/request_get_research_run_history"
           response_schema:
             const: "#/$defs/response_get_research_run_history"
+      materialize-research-request-from-question:
+        type: object
+        additionalProperties: false
+        properties:
+          request_schema:
+            const: "#/$defs/request_materialize_research_request_from_question"
+          response_schema:
+            const: "#/$defs/response_materialize_research_request_from_question"
       resolve-worker-contract:
         type: object
         additionalProperties: false

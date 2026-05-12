@@ -36,6 +36,9 @@ bin/run-research-improvement-loop-smoke-test
 bin/start-next-worker
 bin/public-orchestration-api-check
 bin/get-graph-state
+bin/intake-research-question
+bin/get-research-question-backlog
+bin/materialize-research-request-from-question
 bin/get-research-run-history
 bin/get-worker-status
 bin/get-control-plane-status
@@ -75,6 +78,9 @@ Notes:
 - `bin/start-next-worker` is a composite facade command for thin orchestrators that want “resolve next runnable contract and execute it” in one call.
 - `bin/public-orchestration-api-check` validates that the facade commands still emit outputs compatible with the versioned public orchestration contract catalog.
 - `bin/get-graph-state` provides a compact orchestration-facing view of canonical graph state without exposing the full raw graph payload.
+- `bin/intake-research-question` writes a durable governed research-question artifact plus an append-only backlog ledger entry.
+- `bin/get-research-question-backlog` reads the canonical research-question backlog ledger and returns recent queued or filtered questions.
+- `bin/materialize-research-request-from-question` converts a governed question artifact into a bounded `researcher-harness` request payload.
 - `bin/get-research-run-history` reads the canonical research loop ledger and returns recent persisted runs with optional filtering.
 - `bin/get-worker-status` provides a compact orchestration-facing view of worker session and recent run state.
 - `bin/get-control-plane-status` summarizes current branch, graph, runtime, worker, and merge-back posture for the terminal operator.
