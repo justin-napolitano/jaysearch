@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+from datetime import datetime, timezone
 import json
 from pathlib import Path
 from typing import Any, Callable
@@ -15,11 +16,20 @@ from platform_tools.run_research_capability import run_research_capability
 
 
 COMMAND = "run-research-improvement-loop"
+HISTORY_LOG_PATH = Path("artifacts/governance/research-run-history.jsonl")
+HISTORY_RUNS_DIR = Path("artifacts/governance/research-run-history/runs")
 
 
 def _write_json(path: Path, payload: dict[str, Any]) -> Path:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
+    return path
+
+
+def _append_jsonl(path: Path, payload: dict[str, Any]) -> Path:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("a", encoding="utf-8") as handle:
+        handle.write(json.dumps(payload, sort_keys=True) + "\n")
     return path
 
 
@@ -61,6 +71,62 @@ def _blocked_envelope(
             "blockers": blockers,
         },
     )
+
+
+def _record_run_history(
+    *,
+    platform_root: Path,
+    request_id: str,
+    request_path: Path,
+    researcher_root: str,
+    output_root: Path,
+    step_reports: list[dict[str, Any]],
+    draft_followups_path: str,
+    packets_path: str,
+    materialized_manifest_path: str,
+    draft_manifest_path: str,
+    handoff_manifest_path: str,
+    loop_manifest_path: str,
+) -> dict[str, str]:
+    recorded_at = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    run_id = f"{request_id}-{datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%SZ')}"
+    snapshot = {
+        "run_id": run_id,
+        "recorded_at": recorded_at,
+        "request_id": request_id,
+        "request_path": request_path.as_posix(),
+        "researcher_root": str(Path(researcher_root).resolve()),
+        "output_root": output_root.as_posix(),
+        "status": "ok",
+        "step_reports": step_reports,
+        "draft_followups_path": draft_followups_path,
+        "packets_path": packets_path,
+        "materialized_manifest_path": materialized_manifest_path,
+        "draft_manifest_path": draft_manifest_path,
+        "handoff_manifest_path": handoff_manifest_path,
+        "loop_manifest_path": loop_manifest_path,
+    }
+    snapshot_path = _write_json(platform_root / HISTORY_RUNS_DIR / request_id / f"{run_id}.json", snapshot)
+    log_entry = {
+        "run_id": run_id,
+        "recorded_at": recorded_at,
+        "request_id": request_id,
+        "status": "ok",
+        "request_path": request_path.as_posix(),
+        "researcher_root": str(Path(researcher_root).resolve()),
+        "output_root": output_root.as_posix(),
+        "history_entry_path": snapshot_path.as_posix(),
+        "loop_manifest_path": loop_manifest_path,
+        "draft_manifest_path": draft_manifest_path,
+        "handoff_manifest_path": handoff_manifest_path,
+    }
+    log_path = _append_jsonl(platform_root / HISTORY_LOG_PATH, log_entry)
+    return {
+        "history_log_path": log_path.as_posix(),
+        "history_entry_path": snapshot_path.as_posix(),
+        "run_id": run_id,
+        "recorded_at": recorded_at,
+    }
 
 
 def run_research_improvement_loop(
@@ -257,6 +323,20 @@ def run_research_improvement_loop(
         destination_root / "execution" / "research_improvement_loops" / f"{source_request_id}.json",
         loop_manifest,
     )
+    history = _record_run_history(
+        platform_root=platform_root,
+        request_id=source_request_id,
+        request_path=request_file,
+        researcher_root=researcher_root,
+        output_root=destination_root,
+        step_reports=step_reports,
+        draft_followups_path=str(prepared_report.get("draft_followups_path", "")).strip(),
+        packets_path=str(projected_report.get("packets_path", "")).strip(),
+        materialized_manifest_path=str(materialized_report.get("manifest_path", "")).strip(),
+        draft_manifest_path=str(draft_report.get("draft_manifest_path", "")).strip(),
+        handoff_manifest_path=str(handoff_report.get("handoff_manifest_path", "")).strip(),
+        loop_manifest_path=loop_manifest_path.as_posix(),
+    )
 
     return 0, envelope(
         command=COMMAND,
@@ -275,6 +355,10 @@ def run_research_improvement_loop(
             "draft_manifest_path": str(draft_report.get("draft_manifest_path", "")).strip(),
             "handoff_manifest_path": str(handoff_report.get("handoff_manifest_path", "")).strip(),
             "loop_manifest_path": loop_manifest_path.as_posix(),
+            "history_log_path": history["history_log_path"],
+            "history_entry_path": history["history_entry_path"],
+            "run_id": history["run_id"],
+            "recorded_at": history["recorded_at"],
             "next_action": "review_loop_outputs_and_run_external_handoffs",
             "blockers": [],
         },

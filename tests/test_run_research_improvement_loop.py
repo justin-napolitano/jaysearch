@@ -130,3 +130,5 @@ def test_run_research_improvement_loop_runs_chain(monkeypatch, tmp_path: Path) -
     assert report["status"] == "ok"
     assert len(report["step_reports"]) == 6
     assert Path(report["loop_manifest_path"]).exists()
+    assert Path(report["history_entry_path"]).exists()
+    assert Path(report["history_log_path"]).exists()
