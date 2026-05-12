@@ -44,6 +44,55 @@ Orchestrators should prefer these commands instead of calling lower-level intern
 - example call:
   - `bin/get-graph-state --initiative-branch initiative/worker-orchestration-api`
 
+`bin/intake-research-question`
+- writes a canonical governed research-question artifact and backlog ledger entry
+- required input:
+  - `--question-path`
+- output focus:
+  - canonical artifact path
+  - canonical backlog log path
+  - question provenance and targets
+- request schema: `#/$defs/request_intake_research_question`
+- response schema: `#/$defs/response_intake_research_question`
+- example call:
+  - `bin/intake-research-question --question-path /path/to/question.json`
+
+`bin/get-research-question-backlog`
+- returns persisted governed research questions from the canonical platform ledger
+- optional inputs:
+  - `--question-origin`
+  - `--status`
+  - `--target-repo`
+  - `--limit`
+  - `--backlog-log-path`
+- output focus:
+  - filtered recent questions
+  - counts by status
+  - canonical backlog log path
+- request schema: `#/$defs/request_get_research_question_backlog`
+- response schema: `#/$defs/response_get_research_question_backlog`
+- example call:
+  - `bin/get-research-question-backlog --status queued --limit 20`
+
+`bin/materialize-research-request-from-question`
+- converts a canonical governed question artifact into a bounded `researcher-harness` request payload
+- required inputs:
+  - `--question-path`
+  - `--output-root`
+- optional inputs:
+  - `--study-design`
+  - `--artifact-contract`
+  - `--request-id`
+  - `--researcher-output-root`
+- output focus:
+  - materialized request path
+  - selected study design
+  - request and question provenance
+- request schema: `#/$defs/request_materialize_research_request_from_question`
+- response schema: `#/$defs/response_materialize_research_request_from_question`
+- example call:
+  - `bin/materialize-research-request-from-question --question-path /path/to/question.json --output-root /path/to/materialized-request`
+
 `bin/get-research-run-history`
 - returns persisted research loop runs from the canonical platform ledger
 - optional inputs:
@@ -202,13 +251,20 @@ Orchestrators should prefer these commands instead of calling lower-level intern
 - runs the full supervised research loop end to end and writes per-step reports
 - required inputs:
   - `--researcher-root`
-  - `--request-path`
   - `--output-root`
+- one of:
+  - `--request-path`
+  - `--question-path`
 - optional inputs:
   - `--python-executable`
   - `--max-promotions`
   - `--minimum-total-score`
+  - `--study-design`
+  - `--artifact-contract`
+  - `--request-id`
+  - `--researcher-output-root`
 - output focus:
+  - optional request materialization step report
   - per-step report paths
   - prepared follow-up, packet, materialized, draft, and external handoff manifest paths
   - persistent history log and per-run history entry paths
@@ -217,6 +273,7 @@ Orchestrators should prefer these commands instead of calling lower-level intern
 - response schema: `#/$defs/response_run_research_improvement_loop`
 - example call:
   - `bin/run-research-improvement-loop --researcher-root /path/to/researcher-harness --request-path /path/to/request.json --output-root /path/to/loop-run`
+  - `bin/run-research-improvement-loop --researcher-root /path/to/researcher-harness --question-path /path/to/question.json --output-root /path/to/loop-run --study-design option-comparison`
 
 `bin/start-next-worker`
 - composite helper

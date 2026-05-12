@@ -7,6 +7,7 @@ from pathlib import Path
 from typing import Any, Callable
 
 from platform_tools.materialize_research_followup_assets import materialize_research_followup_assets
+from platform_tools.materialize_research_request_from_question import materialize_research_request_from_question
 from platform_tools.prepare_research_followups import prepare_research_followups
 from platform_tools.project_research_followup_packets import project_research_followup_packets
 from platform_tools.public_orchestration_api import API_VERSION, envelope
@@ -133,21 +134,35 @@ def run_research_improvement_loop(
     *,
     root: str = ".",
     researcher_root: str,
-    request_path: str,
+    request_path: str | None = None,
+    question_path: str | None = None,
     output_root: str,
     python_executable: str = "python3",
     max_promotions: int = 3,
     minimum_total_score: float | None = None,
+    study_design: str | None = None,
+    artifact_contract: str = "v1",
+    request_id: str | None = None,
+    researcher_output_root: str | None = None,
 ) -> tuple[int, dict[str, Any]]:
     platform_root = Path(root).resolve()
     destination_root = Path(output_root).resolve()
-    request_file = Path(request_path).resolve()
+    request_path_value = (request_path or "").strip()
+    question_path_value = (question_path or "").strip()
+    request_file = Path(request_path_value).resolve() if request_path_value else destination_root / "execution" / "materialized_research_requests" / "unknown.json"
+    question_file = Path(question_path_value).resolve() if question_path_value else Path(".").resolve()
 
     blockers: list[str] = []
     if not str(researcher_root).strip():
         blockers.append("researcher_root_missing")
-    if not request_file.exists():
+    if request_path_value and question_path_value:
+        blockers.append("request_and_question_path_conflict")
+    if not request_path_value and not question_path_value:
+        blockers.append("request_or_question_path_required")
+    if request_path_value and not request_file.exists():
         blockers.append("request_path_missing")
+    if question_path_value and not question_file.exists():
+        blockers.append("question_path_missing")
     if not str(output_root).strip():
         blockers.append("output_root_missing")
     if max_promotions < 1:
@@ -165,6 +180,42 @@ def run_research_improvement_loop(
 
     source_request_id = request_file.stem
     step_reports: list[dict[str, Any]] = []
+
+    if not blockers and question_path_value:
+        code, request_materialization_report, request_materialization_report_path = _run_step(
+            output_root=destination_root,
+            source_request_id=source_request_id or question_file.stem,
+            step_name="materialize-research-request-from-question",
+            runner=materialize_research_request_from_question,
+            kwargs={
+                "root": platform_root.as_posix(),
+                "question_path": question_file.as_posix(),
+                "output_root": destination_root.as_posix(),
+                "study_design": study_design,
+                "artifact_contract": artifact_contract,
+                "request_id": request_id,
+                "researcher_output_root": researcher_output_root,
+            },
+        )
+        step_reports.append(
+            {
+                "step": "materialize-research-request-from-question",
+                "report_path": request_materialization_report_path,
+                "ok": request_materialization_report.get("ok") is True,
+            }
+        )
+        if code != 0:
+            return _blocked_envelope(
+                platform_root=platform_root,
+                researcher_root=researcher_root,
+                request_path=question_file,
+                output_root=destination_root,
+                blockers=request_materialization_report.get("blockers", []),
+                failed_step="materialize-research-request-from-question",
+                step_reports=step_reports,
+            )
+        request_file = Path(str(request_materialization_report.get("request_path", "")).strip()).resolve()
+        source_request_id = str(request_materialization_report.get("request_id", "")).strip() or request_file.stem
 
     code, research_report, research_report_path = _run_step(
         output_root=destination_root,
@@ -369,11 +420,16 @@ def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--root", default=".")
     parser.add_argument("--researcher-root", required=True)
-    parser.add_argument("--request-path", required=True)
+    parser.add_argument("--request-path", default=None)
+    parser.add_argument("--question-path", default=None)
     parser.add_argument("--output-root", required=True)
     parser.add_argument("--python-executable", default="python3")
     parser.add_argument("--max-promotions", type=int, default=3)
     parser.add_argument("--minimum-total-score", type=float, default=None)
+    parser.add_argument("--study-design", default=None)
+    parser.add_argument("--artifact-contract", default="v1")
+    parser.add_argument("--request-id", default=None)
+    parser.add_argument("--researcher-output-root", default=None)
     args = parser.parse_args()
     code, report = run_research_improvement_loop(**vars(args))
     print(json.dumps(report, indent=2, sort_keys=True))
