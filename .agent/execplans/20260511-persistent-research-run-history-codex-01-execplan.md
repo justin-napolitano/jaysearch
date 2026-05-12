@@ -27,8 +27,8 @@ finalized_by: ""
 finalized_at: ""
 finalized_in_pr: ""
 graph_registration:
-  node_id: "rwg-068"
-  queue_position: 68
+  node_id: "rwg-070"
+  queue_position: 70
   implementation_branch: "impl-execplan/20260511-persistent-research-run-history-codex-01"
   goal_area: "governance"
   conflict_domains:
