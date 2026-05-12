@@ -26,17 +26,6 @@ def _slugify(value: str) -> str:
     return "-".join(part for part in cleaned.split("-") if part)
 
 
-def _coerce_float(value: Any, default: float = 0.0) -> float:
-    try:
-        return float(value)
-    except (TypeError, ValueError):
-        return default
-
-
-def _normalized_disposition(value: Any) -> str:
-    return str(value or "").strip().lower().replace("_", "-")
-
-
 def _candidate_gate(candidate_payload: dict[str, Any], minimum_total_score: float | None) -> dict[str, float]:
     ranking_rubric = candidate_payload.get("ranking_rubric", {})
     promotion_gate = ranking_rubric.get("promotion_gate", {}) if isinstance(ranking_rubric, dict) else {}
@@ -54,79 +43,30 @@ def _candidate_gate(candidate_payload: dict[str, Any], minimum_total_score: floa
     }
 
 
-def _evaluate_candidate(candidate: dict[str, Any], gate: dict[str, float]) -> dict[str, Any]:
+def _is_candidate_promotable(candidate: dict[str, Any], gate: dict[str, float]) -> bool:
+    if str(candidate.get("disposition", "")).strip() != "promote-to-execplan":
+        return False
     scores = candidate.get("scores", {})
     if not isinstance(scores, dict):
-        scores = {}
-    rigor = _coerce_float(scores.get("rigor", 0.0))
-    feasibility = _coerce_float(scores.get("feasibility", 0.0))
-    total_score = _coerce_float(candidate.get("total_score", 0.0))
+        return False
+    try:
+        rigor = float(scores.get("rigor", 0.0))
+        feasibility = float(scores.get("feasibility", 0.0))
+        total_score = float(candidate.get("total_score", 0.0))
+    except (TypeError, ValueError):
+        return False
     evidence_refs = candidate.get("evidence_refs", [])
     proposed_change = str(candidate.get("proposed_change", "")).strip()
     target_repo_hint = str(candidate.get("target_repo_hint", "")).strip()
-    normalized_evidence_refs = (
-        [str(item).strip() for item in evidence_refs if str(item).strip()]
-        if isinstance(evidence_refs, list)
-        else []
+    return (
+        rigor >= gate["minimum_rigor"]
+        and feasibility >= gate["minimum_feasibility"]
+        and total_score >= gate["minimum_total_score"]
+        and isinstance(evidence_refs, list)
+        and bool([str(item).strip() for item in evidence_refs if str(item).strip()])
+        and bool(proposed_change)
+        and bool(target_repo_hint)
     )
-    checks = {
-        "disposition_ok": _normalized_disposition(candidate.get("disposition", "")) == "promote-to-execplan",
-        "rigor_ok": rigor >= gate["minimum_rigor"],
-        "feasibility_ok": feasibility >= gate["minimum_feasibility"],
-        "total_score_ok": total_score >= gate["minimum_total_score"],
-        "evidence_refs_ok": bool(normalized_evidence_refs),
-        "proposed_change_ok": bool(proposed_change),
-        "target_repo_hint_ok": bool(target_repo_hint),
-    }
-    failure_reasons = [key for key, value in checks.items() if not value]
-    return {
-        "normalized_disposition": _normalized_disposition(candidate.get("disposition", "")),
-        "scores": {
-            "rigor": rigor,
-            "feasibility": feasibility,
-            "total_score": total_score,
-        },
-        "checks": checks,
-        "failure_reasons": failure_reasons,
-        "promotable": not failure_reasons,
-        "usable_evidence_refs": normalized_evidence_refs,
-    }
-
-
-def _candidate_selection_status(
-    *,
-    evaluation: dict[str, Any],
-    selected: bool,
-    promotion_cap_reached: bool,
-) -> str:
-    if selected:
-        return "selected_for_followup"
-    if bool(evaluation.get("promotable")) and promotion_cap_reached:
-        return "deferred_promotion_cap"
-    if not bool(evaluation.get("promotable")):
-        return "failed_gate"
-    return "deferred"
-
-
-def _selection_summary(selected: list[dict[str, Any]], deferred: list[dict[str, Any]]) -> dict[str, Any]:
-    status_counts: dict[str, int] = {}
-    failure_reason_counts: dict[str, int] = {}
-    for candidate in [*selected, *deferred]:
-        status = str(candidate.get("selection_status", "")).strip() or "unknown"
-        status_counts[status] = status_counts.get(status, 0) + 1
-        gate_evaluation = candidate.get("gate_evaluation", {})
-        if not isinstance(gate_evaluation, dict):
-            continue
-        for reason in gate_evaluation.get("failure_reasons", []):
-            failure_reason = str(reason).strip()
-            if failure_reason:
-                failure_reason_counts[failure_reason] = failure_reason_counts.get(failure_reason, 0) + 1
-    return {
-        "selected_count": len(selected),
-        "deferred_count": len(deferred),
-        "selection_status_counts": status_counts,
-        "failure_reason_counts": failure_reason_counts,
-    }
 
 
 def _suggested_execplan_seed(candidate: dict[str, Any], *, source_request_id: str, source_question_id: str) -> dict[str, Any] | None:
@@ -235,7 +175,6 @@ def _write_followup_artifact(
         "max_promotions": max_promotions,
         "selected_candidates": selected,
         "deferred_candidates": deferred,
-        "selection_summary": _selection_summary(selected, deferred),
         "follow_up_questions": follow_up_questions,
         "draft_followup_inputs": followup_inputs,
     }
@@ -309,26 +248,15 @@ def prepare_research_followups(
     ranked_candidates = [
         item for item in ranked_candidates if isinstance(item, dict)
     ]
-    ranked_candidates.sort(key=lambda item: (_coerce_float(item.get("total_score", 0.0)), str(item.get("candidate_id", ""))), reverse=True)
+    ranked_candidates.sort(key=lambda item: (float(item.get("total_score", 0.0)), str(item.get("candidate_id", ""))), reverse=True)
 
     selected = []
     deferred = []
     for candidate in ranked_candidates:
-        candidate_record = dict(candidate)
-        evaluation = _evaluate_candidate(candidate_record, gate)
-        candidate_record["gate_evaluation"] = evaluation
-        candidate_record["normalized_disposition"] = evaluation["normalized_disposition"]
-        promotion_cap_reached = len(selected) >= max_promotions
-        is_selected = bool(evaluation.get("promotable")) and not promotion_cap_reached
-        candidate_record["selection_status"] = _candidate_selection_status(
-            evaluation=evaluation,
-            selected=is_selected,
-            promotion_cap_reached=promotion_cap_reached,
-        )
-        if is_selected:
-            selected.append(candidate_record)
+        if _is_candidate_promotable(candidate, gate) and len(selected) < max_promotions:
+            selected.append(candidate)
         else:
-            deferred.append(candidate_record)
+            deferred.append(candidate)
 
     artifact_path = _write_followup_artifact(
         output_root=destination_root,
@@ -361,7 +289,6 @@ def prepare_research_followups(
             "draft_followups_path": artifact_path.as_posix(),
             "selected_candidates": selected,
             "deferred_candidates": deferred,
-            "selection_summary": _selection_summary(selected, deferred),
             "follow_up_questions": follow_up_questions,
             "next_action": "review_draft_followups",
             "blockers": [],
