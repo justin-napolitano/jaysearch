@@ -163,7 +163,10 @@ Preventing low-value or poorly supported work is also a successful output.
 The platform repo should:
 
 - enforce the promotion gate
+- emit machine-readable gate evaluations per candidate
+- distinguish between gate failure, promotion-cap deferral, and final selection
 - preserve candidate scores and evidence references
+- emit machine-readable conflict groups and candidate-level conflict references
 - resolve conflicts explicitly
 - generate draft follow-up material only for eligible candidates
 - avoid silently discarding lower-ranked or conflicting candidates

@@ -383,6 +383,12 @@ This document turns the remaining-work graph into an explicit near-term queue of
    - implementation branch: `impl-execplan/20260512-executable-research-gating-codex-01`
    - gate: `authoritative ExecPlan is canonical; published implementation branch required before execution`
 
+69. `20260512-candidate-conflict-detection-codex-01-execplan`
+   - status: `review_gated`
+   - goal: Detect structured conflicts between ranked research candidates
+   - implementation branch: `impl-execplan/20260512-candidate-conflict-detection-codex-01`
+   - gate: `authoritative ExecPlan is canonical; published implementation branch required before execution`
+
 70. `20260511-persistent-research-run-history-codex-01-execplan`
    - status: `decision_gated`
    - goal: Persist and query research improvement loop run history
@@ -391,7 +397,7 @@ This document turns the remaining-work graph into an explicit near-term queue of
 
 ## Mirror Metadata
 
-- canonical_last_graph_action_id: `rwg-action-20260511-register-rwg-070`
+- canonical_last_graph_action_id: `rwg-action-20260512-001-unblock-rwg-069`
 - canonical_ready_order: ``
 - projection_authority: `projection_only`
 
