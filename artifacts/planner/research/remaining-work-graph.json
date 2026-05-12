@@ -1049,6 +1049,14 @@
       "rationale": "initiative_execplan_authorized derived deterministically from canonical branch and ExecPlan evidence",
       "evidence_ref": "branch:initiative/research-control-plane",
       "queue_reconciled": true
+    },
+    {
+      "action_id": "rwg-action-20260511-register-rwg-070",
+      "action": "block",
+      "node_id": "rwg-070",
+      "rationale": "node registered deterministically from ExecPlan graph_registration metadata",
+      "evidence_ref": ".agent/execplans/20260511-persistent-research-run-history-codex-01-execplan.md",
+      "queue_reconciled": true
     }
   ],
   "graph_id": "remaining-work-graph-20260311",
@@ -3615,6 +3623,51 @@
         "reorder_requires_human": false,
         "reorder_blockers": []
       }
+    },
+    {
+      "node_id": "rwg-070",
+      "title": "Persist and query research improvement loop run history",
+      "status": "decision_gated",
+      "status_reason": "registered from ExecPlan metadata; authoritative ExecPlan required before execution",
+      "gating_class": "decision_gated",
+      "conflict_domains": [
+        "governance",
+        "orchestration",
+        "research-runtime",
+        "capability-contracts"
+      ],
+      "target_execplan_id": "20260511-persistent-research-run-history-codex-01-execplan",
+      "goal_area": "governance",
+      "implementation_branch": "impl-execplan/20260511-persistent-research-run-history-codex-01",
+      "initiative_branch": "initiative/research-control-plane",
+      "parent_initiative_node": "initiative-research-control-plane",
+      "integration_mode": "via_initiative",
+      "expected_artifacts": [
+        ".agent/execplans/20260511-persistent-research-run-history-codex-01-execplan.md",
+        "artifacts/governance/board-action-events.jsonl",
+        "artifacts/planner/research/remaining-work-graph.json",
+        "bin/get-research-run-history",
+        "docs/commands.md",
+        "docs/public-orchestration-api.md",
+        "docs/queued-execplans.md",
+        "spec/public-orchestration-api.schema.yaml",
+        "src/platform_tools/get_research_run_history.py",
+        "src/platform_tools/run_research_improvement_loop.py",
+        "tests/test_get_research_run_history.py",
+        "tests/test_run_research_improvement_loop.py"
+      ],
+      "ordering": {
+        "queue_position": 70,
+        "tie_breaker": "20260511-persistent-research-run-history-codex-01-execplan",
+        "source_action_id": "rwg-action-20260511-register-rwg-070"
+      },
+      "action_state": {
+        "last_action_id": "rwg-action-20260511-register-rwg-070",
+        "last_action": "block",
+        "action_required": false,
+        "reorder_requires_human": false,
+        "reorder_blockers": []
+      }
     }
   ],
   "ordering_policy": {
@@ -3630,7 +3683,7 @@
     "reorder_requires_explicit_action": true
   },
   "queue_projection": {
-    "last_reconciled_action_id": "rwg-action-20260512-001-unblock-rwg-068",
+    "last_reconciled_action_id": "rwg-action-20260511-register-rwg-070",
     "path": "docs/queued-execplans.md",
     "projection_authority": "projection_only",
     "ready_execplan_ids": []
