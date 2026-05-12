@@ -75,6 +75,18 @@ def test_prepare_research_followups_emits_draft_followups(tmp_path: Path) -> Non
                         "evidence_refs": ["https://example.com/source-a"],
                     },
                     {
+                        "candidate_id": "cand-03",
+                        "target": "platform-control-plane",
+                        "target_repo_hint": "codex_platform",
+                        "proposed_change": "Add persistent candidate backlog views.",
+                        "expected_benefit": "Improves portfolio visibility.",
+                        "disposition": "promote_to_execplan",
+                        "total_score": 4.4,
+                        "scores": {"rigor": 4.0, "feasibility": 3.9},
+                        "source_hypothesis_ids": ["hyp-3"],
+                        "evidence_refs": ["https://example.com/source-c"],
+                    },
+                    {
                         "candidate_id": "cand-02",
                         "target": "researcher-harness",
                         "target_repo_hint": "researcher-harness",
@@ -129,12 +141,25 @@ def test_prepare_research_followups_emits_draft_followups(tmp_path: Path) -> Non
     assert report["source_question_origin"] == "user"
     assert len(report["selected_candidates"]) == 1
     assert report["selected_candidates"][0]["candidate_id"] == "cand-01"
-    assert len(report["deferred_candidates"]) == 1
+    assert report["selected_candidates"][0]["selection_status"] == "selected_for_followup"
+    assert report["selected_candidates"][0]["gate_evaluation"]["promotable"] is True
+    assert len(report["deferred_candidates"]) == 2
+    assert report["selection_summary"]["selected_count"] == 1
+    assert report["selection_summary"]["deferred_count"] == 2
+    assert report["selection_summary"]["selection_status_counts"]["deferred_promotion_cap"] == 1
+    assert report["selection_summary"]["selection_status_counts"]["failed_gate"] == 1
     assert report["follow_up_questions"][0]["origin"] == "researcher"
 
     artifact_path = Path(report["draft_followups_path"])
     payload = json.loads(artifact_path.read_text(encoding="utf-8"))
     assert payload["source_request_id"] == "req-1"
+    assert payload["selection_summary"]["selection_status_counts"]["selected_for_followup"] == 1
     assert payload["draft_followup_inputs"][0]["source_candidate_id"] == "cand-01"
     assert payload["draft_followup_inputs"][0]["delivery_mode"] == "governed_execplan"
     assert payload["draft_followup_inputs"][0]["suggested_execplan_seed"]["initiative_branch"] == "initiative/research-control-plane"
+
+    deferred_by_id = {item["candidate_id"]: item for item in payload["deferred_candidates"]}
+    assert deferred_by_id["cand-03"]["selection_status"] == "deferred_promotion_cap"
+    assert deferred_by_id["cand-03"]["gate_evaluation"]["promotable"] is True
+    assert deferred_by_id["cand-02"]["selection_status"] == "failed_gate"
+    assert "disposition_ok" in deferred_by_id["cand-02"]["gate_evaluation"]["failure_reasons"]
