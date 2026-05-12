@@ -1,0 +1,7 @@
+#!/usr/bin/env python3
+
+from platform_tools.get_research_question_backlog import main
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

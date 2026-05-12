@@ -28,6 +28,86 @@ def test_run_research_improvement_loop_blocks_on_missing_request(tmp_path: Path)
     assert "request_path_missing" in report["blockers"]
 
 
+def test_run_research_improvement_loop_materializes_request_from_question(monkeypatch, tmp_path: Path) -> None:
+    question_path = tmp_path / "question.json"
+    _write(
+        question_path,
+        json.dumps(
+            {
+                "question_id": "platform-options",
+                "title": "Platform option decision",
+                "topic": "Choose between Fabric and ADF + Functions.",
+                "question_origin": "user",
+                "study_design_hint": "option-comparison",
+                "options": [
+                    {"option_id": "fabric", "summary": "Fabric", "strengths": ["one"], "risks": ["one"], "score": 3},
+                    {"option_id": "adf-functions", "summary": "ADF + Functions", "strengths": ["two"], "risks": ["two"], "score": 5},
+                ],
+            }
+        ),
+    )
+    output_root = tmp_path / "out"
+    researcher_root = tmp_path / "researcher"
+    researcher_root.mkdir()
+
+    def fake_run_research_capability(**kwargs):
+        assert Path(kwargs["request_path"]).exists()
+        payload = json.loads(Path(kwargs["request_path"]).read_text(encoding="utf-8"))
+        assert payload["question_id"] == "platform-options"
+        return 0, {
+            "api_version": "public-orchestration.v1",
+            "command": "run-research-capability",
+            "status": "ok",
+            "ok": True,
+            "request_id": payload["request_id"],
+            "blockers": [],
+        }
+
+    def fake_prepare_research_followups(**kwargs):
+        draft_path = output_root / "execution" / "draft_followups" / "platform-options-request.json"
+        _write(draft_path, json.dumps({"source_request_id": "platform-options-request"}))
+        return 0, {"api_version": "public-orchestration.v1", "command": "prepare-research-followups", "status": "ok", "ok": True, "draft_followups_path": draft_path.as_posix(), "blockers": []}
+
+    def fake_project_research_followup_packets(**kwargs):
+        packets_path = output_root / "execution" / "repo_followup_packets" / "platform-options-request.json"
+        _write(packets_path, json.dumps({"source_request_id": "platform-options-request"}))
+        return 0, {"api_version": "public-orchestration.v1", "command": "project-research-followup-packets", "status": "ok", "ok": True, "packets_path": packets_path.as_posix(), "blockers": []}
+
+    def fake_materialize_research_followup_assets(**kwargs):
+        manifest_path = output_root / "execution" / "materialized_followup_assets" / "platform-options-request.json"
+        _write(manifest_path, json.dumps({"source_request_id": "platform-options-request"}))
+        return 0, {"api_version": "public-orchestration.v1", "command": "materialize-research-followup-assets", "status": "ok", "ok": True, "manifest_path": manifest_path.as_posix(), "blockers": []}
+
+    def fake_render_platform_execplan_drafts(**kwargs):
+        draft_manifest_path = output_root / "execution" / "draft_execplan_candidates" / "platform-options-request.manifest.json"
+        _write(draft_manifest_path, json.dumps({"source_request_id": "platform-options-request"}))
+        return 0, {"api_version": "public-orchestration.v1", "command": "render-platform-execplan-drafts", "status": "ok", "ok": True, "draft_manifest_path": draft_manifest_path.as_posix(), "blockers": []}
+
+    def fake_render_researcher_followup_handoffs(**kwargs):
+        handoff_manifest_path = output_root / "execution" / "researcher_handoff_requests" / "platform-options-request.manifest.json"
+        _write(handoff_manifest_path, json.dumps({"source_request_id": "platform-options-request"}))
+        return 0, {"api_version": "public-orchestration.v1", "command": "render-researcher-followup-handoffs", "status": "ok", "ok": True, "handoff_manifest_path": handoff_manifest_path.as_posix(), "blockers": []}
+
+    monkeypatch.setattr(loop_mod, "run_research_capability", fake_run_research_capability)
+    monkeypatch.setattr(loop_mod, "prepare_research_followups", fake_prepare_research_followups)
+    monkeypatch.setattr(loop_mod, "project_research_followup_packets", fake_project_research_followup_packets)
+    monkeypatch.setattr(loop_mod, "materialize_research_followup_assets", fake_materialize_research_followup_assets)
+    monkeypatch.setattr(loop_mod, "render_platform_execplan_drafts", fake_render_platform_execplan_drafts)
+    monkeypatch.setattr(loop_mod, "render_researcher_followup_handoffs", fake_render_researcher_followup_handoffs)
+
+    code, report = loop_mod.run_research_improvement_loop(
+        root=tmp_path.as_posix(),
+        researcher_root=researcher_root.as_posix(),
+        question_path=question_path.as_posix(),
+        output_root=output_root.as_posix(),
+    )
+
+    assert code == 0
+    assert report["status"] == "ok"
+    assert report["step_reports"][0]["step"] == "materialize-research-request-from-question"
+    assert Path(report["history_entry_path"]).exists()
+
+
 def test_run_research_improvement_loop_runs_chain(monkeypatch, tmp_path: Path) -> None:
     request_path = tmp_path / "request.json"
     _write(request_path, json.dumps({"request_id": "req-1"}))

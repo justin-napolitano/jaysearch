@@ -395,9 +395,15 @@ This document turns the remaining-work graph into an explicit near-term queue of
    - implementation branch: `impl-execplan/20260511-persistent-research-run-history-codex-01`
    - gate: `authoritative ExecPlan required before execution`
 
+71. `20260512-research-question-intake-codex-01-execplan`
+   - status: `review_gated`
+   - goal: Add governed research question intake and backlog commands
+   - implementation branch: `impl-execplan/20260512-research-question-intake-codex-01`
+   - gate: `authoritative ExecPlan is canonical; published implementation branch required before execution`
+
 ## Mirror Metadata
 
-- canonical_last_graph_action_id: `rwg-action-20260512-001-unblock-rwg-069`
+- canonical_last_graph_action_id: `rwg-action-20260512-001-unblock-rwg-071`
 - canonical_ready_order: ``
 - projection_authority: `projection_only`
 
