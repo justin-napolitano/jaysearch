@@ -312,10 +312,10 @@ This document turns the remaining-work graph into an explicit near-term queue of
    - gate: `authoritative ExecPlan required before execution`
 
 57. `20260507-research-control-plane-codex-01-execplan`
-   - status: `decision_gated`
+   - status: `completed`
    - goal: Formalize cross-repo research orchestration in the platform control plane
    - implementation branch: `impl-execplan/20260507-research-control-plane-codex-01`
-   - gate: `authoritative ExecPlan required before execution`
+   - completion ref: `merged:pr-131`
 
 58. `20260507-researcher-repo-architecture-codex-01-execplan`
    - status: `decision_gated`
@@ -377,9 +377,15 @@ This document turns the remaining-work graph into an explicit near-term queue of
    - implementation branch: `impl-execplan/20260511-candidate-selection-contract-codex-01`
    - gate: `authoritative ExecPlan required before execution`
 
+69. `20260512-candidate-conflict-detection-codex-01-execplan`
+   - status: `review_gated`
+   - goal: Detect structured conflicts between ranked research candidates
+   - implementation branch: `impl-execplan/20260512-candidate-conflict-detection-codex-01`
+   - gate: `authoritative ExecPlan is canonical; published implementation branch required before execution`
+
 ## Mirror Metadata
 
-- canonical_last_graph_action_id: `rwg-action-20260511-register-rwg-067`
+- canonical_last_graph_action_id: `rwg-action-20260512-001-unblock-rwg-069`
 - canonical_ready_order: ``
 - projection_authority: `projection_only`
 

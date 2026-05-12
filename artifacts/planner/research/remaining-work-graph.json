@@ -1025,6 +1025,30 @@
       "rationale": "node registered deterministically from ExecPlan graph_registration metadata",
       "evidence_ref": ".agent/execplans/20260511-candidate-selection-contract-codex-01-execplan.md",
       "queue_reconciled": true
+    },
+    {
+      "action_id": "rwg-action-20260507-001-complete-rwg-057",
+      "action": "complete",
+      "node_id": "rwg-057",
+      "rationale": "20260507-research-control-plane-codex-01-execplan merged to initiative/research-control-plane and is now canonical completed state",
+      "evidence_ref": "merged:pr-131",
+      "queue_reconciled": true
+    },
+    {
+      "action_id": "rwg-action-20260512-register-rwg-069",
+      "action": "block",
+      "node_id": "rwg-069",
+      "rationale": "node registered deterministically from ExecPlan graph_registration metadata",
+      "evidence_ref": ".agent/execplans/20260512-candidate-conflict-detection-codex-01-execplan.md",
+      "queue_reconciled": true
+    },
+    {
+      "action_id": "rwg-action-20260512-001-unblock-rwg-069",
+      "action": "unblock",
+      "node_id": "rwg-069",
+      "rationale": "initiative_execplan_authorized derived deterministically from canonical branch and ExecPlan evidence",
+      "evidence_ref": "branch:initiative/research-control-plane",
+      "queue_reconciled": true
     }
   ],
   "graph_id": "remaining-work-graph-20260311",
@@ -3082,8 +3106,8 @@
     {
       "node_id": "rwg-057",
       "title": "Formalize cross-repo research orchestration in the platform control plane",
-      "status": "decision_gated",
-      "status_reason": "registered from ExecPlan metadata; authoritative ExecPlan required before execution",
+      "status": "completed",
+      "status_reason": "",
       "gating_class": "decision_gated",
       "conflict_domains": [
         "capability-contracts",
@@ -3111,15 +3135,16 @@
       "ordering": {
         "queue_position": 57,
         "tie_breaker": "20260507-research-control-plane-codex-01-execplan",
-        "source_action_id": "rwg-action-20260507-register-rwg-057"
+        "source_action_id": "rwg-action-20260507-001-complete-rwg-057"
       },
       "action_state": {
-        "last_action_id": "rwg-action-20260507-register-rwg-057",
-        "last_action": "block",
+        "last_action_id": "rwg-action-20260507-001-complete-rwg-057",
+        "last_action": "complete",
         "action_required": false,
         "reorder_requires_human": false,
         "reorder_blockers": []
-      }
+      },
+      "completion_ref": "merged:pr-131"
     },
     {
       "node_id": "rwg-058",
@@ -3550,6 +3575,46 @@
         "reorder_requires_human": false,
         "reorder_blockers": []
       }
+    },
+    {
+      "node_id": "rwg-069",
+      "title": "Detect structured conflicts between ranked research candidates",
+      "status": "review_gated",
+      "status_reason": "authoritative plan is canonical; implementation branch publication required before execution",
+      "gating_class": "review_gated",
+      "conflict_domains": [
+        "capability-contracts",
+        "governance",
+        "orchestration",
+        "research-runtime"
+      ],
+      "target_execplan_id": "20260512-candidate-conflict-detection-codex-01-execplan",
+      "goal_area": "governance",
+      "implementation_branch": "impl-execplan/20260512-candidate-conflict-detection-codex-01",
+      "initiative_branch": "initiative/research-control-plane",
+      "parent_initiative_node": "initiative-research-control-plane",
+      "integration_mode": "via_initiative",
+      "expected_artifacts": [
+        ".agent/execplans/20260512-candidate-conflict-detection-codex-01-execplan.md",
+        "artifacts/governance/board-action-events.jsonl",
+        "artifacts/planner/research/remaining-work-graph.json",
+        "docs/queued-execplans.md",
+        "docs/system-architecture/candidate-selection-and-conflict-resolution.md",
+        "src/platform_tools/prepare_research_followups.py",
+        "tests/test_prepare_research_followups.py"
+      ],
+      "ordering": {
+        "queue_position": 69,
+        "tie_breaker": "20260512-candidate-conflict-detection-codex-01-execplan",
+        "source_action_id": "rwg-action-20260512-001-unblock-rwg-069"
+      },
+      "action_state": {
+        "last_action_id": "rwg-action-20260512-001-unblock-rwg-069",
+        "last_action": "unblock",
+        "action_required": false,
+        "reorder_requires_human": false,
+        "reorder_blockers": []
+      }
     }
   ],
   "ordering_policy": {
@@ -3565,7 +3630,7 @@
     "reorder_requires_explicit_action": true
   },
   "queue_projection": {
-    "last_reconciled_action_id": "rwg-action-20260511-register-rwg-067",
+    "last_reconciled_action_id": "rwg-action-20260512-001-unblock-rwg-069",
     "path": "docs/queued-execplans.md",
     "projection_authority": "projection_only",
     "ready_execplan_ids": []

@@ -26,6 +26,17 @@ def _slugify(value: str) -> str:
     return "-".join(part for part in cleaned.split("-") if part)
 
 
+def _coerce_float(value: Any, default: float = 0.0) -> float:
+    try:
+        return float(value)
+    except (TypeError, ValueError):
+        return default
+
+
+def _normalized_disposition(value: Any) -> str:
+    return str(value or "").strip().lower().replace("_", "-")
+
+
 def _candidate_gate(candidate_payload: dict[str, Any], minimum_total_score: float | None) -> dict[str, float]:
     ranking_rubric = candidate_payload.get("ranking_rubric", {})
     promotion_gate = ranking_rubric.get("promotion_gate", {}) if isinstance(ranking_rubric, dict) else {}
@@ -43,30 +54,230 @@ def _candidate_gate(candidate_payload: dict[str, Any], minimum_total_score: floa
     }
 
 
-def _is_candidate_promotable(candidate: dict[str, Any], gate: dict[str, float]) -> bool:
-    if str(candidate.get("disposition", "")).strip() != "promote-to-execplan":
-        return False
+def _evaluate_candidate(candidate: dict[str, Any], gate: dict[str, float]) -> dict[str, Any]:
     scores = candidate.get("scores", {})
     if not isinstance(scores, dict):
-        return False
-    try:
-        rigor = float(scores.get("rigor", 0.0))
-        feasibility = float(scores.get("feasibility", 0.0))
-        total_score = float(candidate.get("total_score", 0.0))
-    except (TypeError, ValueError):
-        return False
+        scores = {}
+    rigor = _coerce_float(scores.get("rigor", 0.0))
+    feasibility = _coerce_float(scores.get("feasibility", 0.0))
+    total_score = _coerce_float(candidate.get("total_score", 0.0))
     evidence_refs = candidate.get("evidence_refs", [])
     proposed_change = str(candidate.get("proposed_change", "")).strip()
     target_repo_hint = str(candidate.get("target_repo_hint", "")).strip()
-    return (
-        rigor >= gate["minimum_rigor"]
-        and feasibility >= gate["minimum_feasibility"]
-        and total_score >= gate["minimum_total_score"]
-        and isinstance(evidence_refs, list)
-        and bool([str(item).strip() for item in evidence_refs if str(item).strip()])
-        and bool(proposed_change)
-        and bool(target_repo_hint)
+    normalized_evidence_refs = (
+        [str(item).strip() for item in evidence_refs if str(item).strip()]
+        if isinstance(evidence_refs, list)
+        else []
     )
+    checks = {
+        "disposition_ok": _normalized_disposition(candidate.get("disposition", "")) == "promote-to-execplan",
+        "rigor_ok": rigor >= gate["minimum_rigor"],
+        "feasibility_ok": feasibility >= gate["minimum_feasibility"],
+        "total_score_ok": total_score >= gate["minimum_total_score"],
+        "evidence_refs_ok": bool(normalized_evidence_refs),
+        "proposed_change_ok": bool(proposed_change),
+        "target_repo_hint_ok": bool(target_repo_hint),
+    }
+    failure_reasons = [key for key, value in checks.items() if not value]
+    return {
+        "normalized_disposition": _normalized_disposition(candidate.get("disposition", "")),
+        "scores": {
+            "rigor": rigor,
+            "feasibility": feasibility,
+            "total_score": total_score,
+        },
+        "checks": checks,
+        "failure_reasons": failure_reasons,
+        "promotable": not failure_reasons,
+        "usable_evidence_refs": normalized_evidence_refs,
+    }
+
+
+def _candidate_selection_status(
+    *,
+    evaluation: dict[str, Any],
+    selected: bool,
+    promotion_cap_reached: bool,
+) -> str:
+    if selected:
+        return "selected_for_followup"
+    if bool(evaluation.get("promotable")) and promotion_cap_reached:
+        return "deferred_promotion_cap"
+    if not bool(evaluation.get("promotable")):
+        return "failed_gate"
+    return "deferred"
+
+
+def _selection_summary(selected: list[dict[str, Any]], deferred: list[dict[str, Any]]) -> dict[str, Any]:
+    status_counts: dict[str, int] = {}
+    failure_reason_counts: dict[str, int] = {}
+    for candidate in [*selected, *deferred]:
+        status = str(candidate.get("selection_status", "")).strip() or "unknown"
+        status_counts[status] = status_counts.get(status, 0) + 1
+        gate_evaluation = candidate.get("gate_evaluation", {})
+        if not isinstance(gate_evaluation, dict):
+            continue
+        for reason in gate_evaluation.get("failure_reasons", []):
+            failure_reason = str(reason).strip()
+            if failure_reason:
+                failure_reason_counts[failure_reason] = failure_reason_counts.get(failure_reason, 0) + 1
+    return {
+        "selected_count": len(selected),
+        "deferred_count": len(deferred),
+        "selection_status_counts": status_counts,
+        "failure_reason_counts": failure_reason_counts,
+    }
+
+
+def _attach_candidate_conflict(
+    candidates_by_id: dict[str, dict[str, Any]],
+    *,
+    candidate_id: str,
+    conflict_ref: dict[str, Any],
+) -> None:
+    candidate = candidates_by_id.get(candidate_id)
+    if not candidate:
+        return
+    conflicts = candidate.setdefault("conflicts", [])
+    if not isinstance(conflicts, list):
+        conflicts = []
+        candidate["conflicts"] = conflicts
+    if conflict_ref not in conflicts:
+        conflicts.append(conflict_ref)
+
+
+def _build_conflicts(selected: list[dict[str, Any]], deferred: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    all_candidates = [*selected, *deferred]
+    candidates_by_id = {
+        str(candidate.get("candidate_id", "")).strip(): candidate
+        for candidate in all_candidates
+        if str(candidate.get("candidate_id", "")).strip()
+    }
+    conflicts: list[dict[str, Any]] = []
+
+    promotable_candidates = [
+        candidate
+        for candidate in all_candidates
+        if bool(candidate.get("gate_evaluation", {}).get("promotable"))
+    ]
+    resource_candidate_ids = [
+        str(candidate.get("candidate_id", "")).strip()
+        for candidate in promotable_candidates
+        if str(candidate.get("selection_status", "")).strip() in {"selected_for_followup", "deferred_promotion_cap"}
+    ]
+    if len(resource_candidate_ids) > 1:
+        selected_ids = [
+            candidate_id
+            for candidate_id in resource_candidate_ids
+            if str(candidates_by_id[candidate_id].get("selection_status", "")).strip() == "selected_for_followup"
+        ]
+        deferred_ids = [
+            candidate_id
+            for candidate_id in resource_candidate_ids
+            if str(candidates_by_id[candidate_id].get("selection_status", "")).strip() == "deferred_promotion_cap"
+        ]
+        conflicts.append(
+            {
+                "conflict_id": f"resource-cap-{'-'.join(sorted(resource_candidate_ids))}",
+                "conflict_type": "resource_conflict",
+                "candidate_ids": sorted(resource_candidate_ids),
+                "selected_candidate_ids": sorted(selected_ids),
+                "deferred_candidate_ids": sorted(deferred_ids),
+                "resolution_status": "selected_by_rank_and_promotion_cap",
+            }
+        )
+
+    design_groups: dict[tuple[str, str], list[str]] = {}
+    for candidate in promotable_candidates:
+        target_repo_hint = str(candidate.get("target_repo_hint", "")).strip()
+        target = str(candidate.get("target", "")).strip()
+        candidate_id = str(candidate.get("candidate_id", "")).strip()
+        if target_repo_hint and target and candidate_id:
+            design_groups.setdefault((target_repo_hint, target), []).append(candidate_id)
+    for (target_repo_hint, target), candidate_ids in sorted(design_groups.items()):
+        if len(candidate_ids) < 2:
+            continue
+        candidate_ids = sorted(candidate_ids)
+        top_candidate = max(
+            candidate_ids,
+            key=lambda candidate_id: (
+                _coerce_float(candidates_by_id[candidate_id].get("total_score", 0.0)),
+                candidate_id,
+            ),
+        )
+        conflicts.append(
+            {
+                "conflict_id": f"design-{_slugify(target_repo_hint)}-{_slugify(target)}",
+                "conflict_type": "design_conflict",
+                "candidate_ids": candidate_ids,
+                "target_repo_hint": target_repo_hint,
+                "target": target,
+                "recommended_winner_candidate_id": top_candidate,
+                "resolution_status": "review_required",
+            }
+        )
+
+    for candidate in all_candidates:
+        candidate_id = str(candidate.get("candidate_id", "")).strip()
+        if not candidate_id:
+            continue
+        conflict_signals = candidate.get("conflict_signals", {})
+        if not isinstance(conflict_signals, dict):
+            continue
+
+        sequencing_after = (
+            [
+                str(item).strip()
+                for item in conflict_signals.get("sequencing_after_candidate_ids", [])
+                if str(item).strip() in candidates_by_id
+            ]
+            if isinstance(conflict_signals.get("sequencing_after_candidate_ids"), list)
+            else []
+        )
+        if sequencing_after:
+            conflicts.append(
+                {
+                    "conflict_id": f"sequencing-{candidate_id}",
+                    "conflict_type": "sequencing_conflict",
+                    "candidate_ids": sorted({candidate_id, *sequencing_after}),
+                    "blocked_candidate_id": candidate_id,
+                    "required_predecessor_candidate_ids": sorted(sequencing_after),
+                    "resolution_status": "sequence_required",
+                }
+            )
+
+        assumption_group = str(conflict_signals.get("assumption_group", "")).strip()
+        if assumption_group:
+            grouped_ids = [candidate_id]
+            grouped_ids.extend(
+                other_id
+                for other_id, other_candidate in candidates_by_id.items()
+                if other_id != candidate_id
+                and isinstance(other_candidate.get("conflict_signals"), dict)
+                and str(other_candidate["conflict_signals"].get("assumption_group", "")).strip() == assumption_group
+            )
+            grouped_ids = sorted(set(grouped_ids))
+            if len(grouped_ids) > 1:
+                conflict = {
+                    "conflict_id": f"assumption-{_slugify(assumption_group)}",
+                    "conflict_type": "assumption_conflict",
+                    "candidate_ids": grouped_ids,
+                    "assumption_group": assumption_group,
+                    "resolution_status": "research_more",
+                }
+                if conflict not in conflicts:
+                    conflicts.append(conflict)
+
+    for conflict in conflicts:
+        conflict_ref = {
+            "conflict_id": conflict["conflict_id"],
+            "conflict_type": conflict["conflict_type"],
+            "resolution_status": conflict["resolution_status"],
+        }
+        for candidate_id in conflict.get("candidate_ids", []):
+            _attach_candidate_conflict(candidates_by_id, candidate_id=candidate_id, conflict_ref=conflict_ref)
+
+    return conflicts
 
 
 def _suggested_execplan_seed(candidate: dict[str, Any], *, source_request_id: str, source_question_id: str) -> dict[str, Any] | None:
@@ -175,6 +386,8 @@ def _write_followup_artifact(
         "max_promotions": max_promotions,
         "selected_candidates": selected,
         "deferred_candidates": deferred,
+        "selection_summary": _selection_summary(selected, deferred),
+        "conflicts": _build_conflicts(selected, deferred),
         "follow_up_questions": follow_up_questions,
         "draft_followup_inputs": followup_inputs,
     }
@@ -248,15 +461,28 @@ def prepare_research_followups(
     ranked_candidates = [
         item for item in ranked_candidates if isinstance(item, dict)
     ]
-    ranked_candidates.sort(key=lambda item: (float(item.get("total_score", 0.0)), str(item.get("candidate_id", ""))), reverse=True)
+    ranked_candidates.sort(key=lambda item: (_coerce_float(item.get("total_score", 0.0)), str(item.get("candidate_id", ""))), reverse=True)
 
     selected = []
     deferred = []
     for candidate in ranked_candidates:
-        if _is_candidate_promotable(candidate, gate) and len(selected) < max_promotions:
-            selected.append(candidate)
+        candidate_record = dict(candidate)
+        evaluation = _evaluate_candidate(candidate_record, gate)
+        candidate_record["gate_evaluation"] = evaluation
+        candidate_record["normalized_disposition"] = evaluation["normalized_disposition"]
+        promotion_cap_reached = len(selected) >= max_promotions
+        is_selected = bool(evaluation.get("promotable")) and not promotion_cap_reached
+        candidate_record["selection_status"] = _candidate_selection_status(
+            evaluation=evaluation,
+            selected=is_selected,
+            promotion_cap_reached=promotion_cap_reached,
+        )
+        if is_selected:
+            selected.append(candidate_record)
         else:
-            deferred.append(candidate)
+            deferred.append(candidate_record)
+
+    conflicts = _build_conflicts(selected, deferred)
 
     artifact_path = _write_followup_artifact(
         output_root=destination_root,
@@ -289,6 +515,8 @@ def prepare_research_followups(
             "draft_followups_path": artifact_path.as_posix(),
             "selected_candidates": selected,
             "deferred_candidates": deferred,
+            "selection_summary": _selection_summary(selected, deferred),
+            "conflicts": conflicts,
             "follow_up_questions": follow_up_questions,
             "next_action": "review_draft_followups",
             "blockers": [],
