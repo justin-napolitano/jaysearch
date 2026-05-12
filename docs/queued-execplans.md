@@ -377,11 +377,23 @@ This document turns the remaining-work graph into an explicit near-term queue of
    - implementation branch: `impl-execplan/20260511-candidate-selection-contract-codex-01`
    - gate: `authoritative ExecPlan required before execution`
 
+68. `20260512-executable-research-gating-codex-01-execplan`
+   - status: `review_gated`
+   - goal: Make research candidate gating executable in the control plane
+   - implementation branch: `impl-execplan/20260512-executable-research-gating-codex-01`
+   - gate: `authoritative ExecPlan is canonical; published implementation branch required before execution`
+
 69. `20260512-candidate-conflict-detection-codex-01-execplan`
    - status: `review_gated`
    - goal: Detect structured conflicts between ranked research candidates
    - implementation branch: `impl-execplan/20260512-candidate-conflict-detection-codex-01`
    - gate: `authoritative ExecPlan is canonical; published implementation branch required before execution`
+
+70. `20260511-persistent-research-run-history-codex-01-execplan`
+   - status: `decision_gated`
+   - goal: Persist and query research improvement loop run history
+   - implementation branch: `impl-execplan/20260511-persistent-research-run-history-codex-01`
+   - gate: `authoritative ExecPlan required before execution`
 
 ## Mirror Metadata
 

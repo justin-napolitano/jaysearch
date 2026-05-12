@@ -1035,6 +1035,30 @@
       "queue_reconciled": true
     },
     {
+      "action_id": "rwg-action-20260512-register-rwg-068",
+      "action": "block",
+      "node_id": "rwg-068",
+      "rationale": "node registered deterministically from ExecPlan graph_registration metadata",
+      "evidence_ref": ".agent/execplans/20260512-executable-research-gating-codex-01-execplan.md",
+      "queue_reconciled": true
+    },
+    {
+      "action_id": "rwg-action-20260512-001-unblock-rwg-068",
+      "action": "unblock",
+      "node_id": "rwg-068",
+      "rationale": "initiative_execplan_authorized derived deterministically from canonical branch and ExecPlan evidence",
+      "evidence_ref": "branch:initiative/research-control-plane",
+      "queue_reconciled": true
+    },
+    {
+      "action_id": "rwg-action-20260511-register-rwg-070",
+      "action": "block",
+      "node_id": "rwg-070",
+      "rationale": "node registered deterministically from ExecPlan graph_registration metadata",
+      "evidence_ref": ".agent/execplans/20260511-persistent-research-run-history-codex-01-execplan.md",
+      "queue_reconciled": true
+    },
+    {
       "action_id": "rwg-action-20260512-register-rwg-069",
       "action": "block",
       "node_id": "rwg-069",
@@ -3577,6 +3601,46 @@
       }
     },
     {
+      "node_id": "rwg-068",
+      "title": "Make research candidate gating executable in the control plane",
+      "status": "review_gated",
+      "status_reason": "authoritative plan is canonical; implementation branch publication required before execution",
+      "gating_class": "review_gated",
+      "conflict_domains": [
+        "capability-contracts",
+        "governance",
+        "orchestration",
+        "research-runtime"
+      ],
+      "target_execplan_id": "20260512-executable-research-gating-codex-01-execplan",
+      "goal_area": "governance",
+      "implementation_branch": "impl-execplan/20260512-executable-research-gating-codex-01",
+      "initiative_branch": "initiative/research-control-plane",
+      "parent_initiative_node": "initiative-research-control-plane",
+      "integration_mode": "via_initiative",
+      "expected_artifacts": [
+        ".agent/execplans/20260512-executable-research-gating-codex-01-execplan.md",
+        "artifacts/governance/board-action-events.jsonl",
+        "artifacts/planner/research/remaining-work-graph.json",
+        "docs/queued-execplans.md",
+        "docs/system-architecture/candidate-selection-and-conflict-resolution.md",
+        "src/platform_tools/prepare_research_followups.py",
+        "tests/test_prepare_research_followups.py"
+      ],
+      "ordering": {
+        "queue_position": 68,
+        "tie_breaker": "20260512-executable-research-gating-codex-01-execplan",
+        "source_action_id": "rwg-action-20260512-001-unblock-rwg-068"
+      },
+      "action_state": {
+        "last_action_id": "rwg-action-20260512-001-unblock-rwg-068",
+        "last_action": "unblock",
+        "action_required": false,
+        "reorder_requires_human": false,
+        "reorder_blockers": []
+      }
+    },
+    {
       "node_id": "rwg-069",
       "title": "Detect structured conflicts between ranked research candidates",
       "status": "review_gated",
@@ -3611,6 +3675,51 @@
       "action_state": {
         "last_action_id": "rwg-action-20260512-001-unblock-rwg-069",
         "last_action": "unblock",
+        "action_required": false,
+        "reorder_requires_human": false,
+        "reorder_blockers": []
+      }
+    },
+    {
+      "node_id": "rwg-070",
+      "title": "Persist and query research improvement loop run history",
+      "status": "decision_gated",
+      "status_reason": "registered from ExecPlan metadata; authoritative ExecPlan required before execution",
+      "gating_class": "decision_gated",
+      "conflict_domains": [
+        "governance",
+        "orchestration",
+        "research-runtime",
+        "capability-contracts"
+      ],
+      "target_execplan_id": "20260511-persistent-research-run-history-codex-01-execplan",
+      "goal_area": "governance",
+      "implementation_branch": "impl-execplan/20260511-persistent-research-run-history-codex-01",
+      "initiative_branch": "initiative/research-control-plane",
+      "parent_initiative_node": "initiative-research-control-plane",
+      "integration_mode": "via_initiative",
+      "expected_artifacts": [
+        ".agent/execplans/20260511-persistent-research-run-history-codex-01-execplan.md",
+        "artifacts/governance/board-action-events.jsonl",
+        "artifacts/planner/research/remaining-work-graph.json",
+        "bin/get-research-run-history",
+        "docs/commands.md",
+        "docs/public-orchestration-api.md",
+        "docs/queued-execplans.md",
+        "spec/public-orchestration-api.schema.yaml",
+        "src/platform_tools/get_research_run_history.py",
+        "src/platform_tools/run_research_improvement_loop.py",
+        "tests/test_get_research_run_history.py",
+        "tests/test_run_research_improvement_loop.py"
+      ],
+      "ordering": {
+        "queue_position": 70,
+        "tie_breaker": "20260511-persistent-research-run-history-codex-01-execplan",
+        "source_action_id": "rwg-action-20260511-register-rwg-070"
+      },
+      "action_state": {
+        "last_action_id": "rwg-action-20260511-register-rwg-070",
+        "last_action": "block",
         "action_required": false,
         "reorder_requires_human": false,
         "reorder_blockers": []
