@@ -6,6 +6,7 @@ from pathlib import Path
 from typing import Any
 
 from platform_tools.branch_policy import get_current_branch
+from platform_tools.grouped_task_bundles import select_active_grouped_bundle
 from platform_tools.plan_utils import parse_plan
 from platform_tools.worker_contracts import contract_scope_findings, load_registry, registry_contracts, worker_id_from_branch
 
@@ -120,6 +121,18 @@ def get_next_worker_slice(
         }
         for contract in contracts
     ]
+    allowed_node_ids = {str(node.get("node_id", "")).strip() for node in nodes if str(node.get("node_id", "")).strip()}
+    candidate_node_ids = {
+        str(contract.get("node_id", "")).strip()
+        for contract in contracts
+        if str(contract.get("status", "")).strip() in RUNNABLE_CONTRACT_STATUSES and str(contract.get("node_id", "")).strip()
+    }
+    active_bundle = select_active_grouped_bundle(
+        root=root_path,
+        initiative_branch=branch,
+        allowed_node_ids=allowed_node_ids,
+        candidate_node_ids=candidate_node_ids,
+    )
     runnable = [
         contract
         for contract in contracts
@@ -128,6 +141,15 @@ def get_next_worker_slice(
         and _execplan_exists(root_path, str(contract.get("execplan_id", "")).strip())
         and not contract_scope_findings(contract)
     ]
+    if active_bundle is not None:
+        bundle_node_ids = set(active_bundle.get("pending_node_ids", []))
+        preferred = [
+            contract
+            for contract in runnable
+            if str(contract.get("node_id", "")).strip() in bundle_node_ids
+        ]
+        if preferred:
+            runnable = preferred
     if len(runnable) != 1:
         blocker = "no_runnable_worker_contract" if not runnable else "runnable_worker_contract_ambiguous"
         report = {
@@ -141,6 +163,16 @@ def get_next_worker_slice(
                 "status": str(initiative_node.get("status", "")).strip(),
             },
             "blockers": [blocker],
+            "active_grouped_bundle": (
+                {
+                    "bundle_id": str(active_bundle.get("bundle_id", "")).strip(),
+                    "dag_id": str(active_bundle.get("dag_id", "")).strip(),
+                    "exec_plan_id": str(active_bundle.get("exec_plan_id", "")).strip(),
+                    "node_ids": list(active_bundle.get("pending_node_ids", [])),
+                }
+                if active_bundle is not None
+                else None
+            ),
             "candidates": candidates,
             "next_actions": [{"action": "resolve_worker_contract_selection", "reason": blocker}],
         }
@@ -149,6 +181,11 @@ def get_next_worker_slice(
     selected = runnable[0]
     implementation_branch = str(selected.get("branch", "")).strip()
     worker_id = str(selected.get("worker_id", "")).strip() or worker_id_from_branch(implementation_branch)
+    selected_bundle_id = str(selected.get("bundle_id", "")).strip()
+    selected_bundle_dag_id = str(selected.get("bundle_dag_id", "")).strip()
+    if active_bundle is not None:
+        selected_bundle_id = selected_bundle_id or str(active_bundle.get("bundle_id", "")).strip()
+        selected_bundle_dag_id = selected_bundle_dag_id or str(active_bundle.get("dag_id", "")).strip()
     report = {
         "command": COMMAND,
         "status": "ok",
@@ -167,7 +204,19 @@ def get_next_worker_slice(
             "implementation_branch": implementation_branch,
             "initiative_branch": str(selected.get("initiative_branch", "")).strip() or branch,
             "worker_id": worker_id,
+            "bundle_id": selected_bundle_id,
+            "bundle_dag_id": selected_bundle_dag_id,
         },
+        "active_grouped_bundle": (
+            {
+                "bundle_id": str(active_bundle.get("bundle_id", "")).strip(),
+                "dag_id": str(active_bundle.get("dag_id", "")).strip(),
+                "exec_plan_id": str(active_bundle.get("exec_plan_id", "")).strip(),
+                "node_ids": list(active_bundle.get("pending_node_ids", [])),
+            }
+            if active_bundle is not None
+            else None
+        ),
         "candidates": candidates,
         "next_actions": [
             {

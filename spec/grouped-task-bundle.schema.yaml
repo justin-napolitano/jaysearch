@@ -13,6 +13,7 @@ bundle:
     - lineage
   optional_fields:
     - exec_plan_id
+    - initiative_branch
     - scope
     - description
     - priority

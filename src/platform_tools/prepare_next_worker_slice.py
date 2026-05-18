@@ -6,6 +6,7 @@ from pathlib import Path
 from typing import Any
 
 from platform_tools.branch_policy import get_current_branch
+from platform_tools.grouped_task_bundles import select_active_grouped_bundle
 from platform_tools.plan_utils import parse_plan
 from platform_tools.worker_contracts import (
     contract_scope_findings,
@@ -143,6 +144,14 @@ def prepare_next_worker_slice(
 
     initiative_node_id = str(initiative_node.get("node_id", "")).strip()
     candidates = _candidate_nodes(nodes, initiative_node_id, current_branch)
+    allowed_node_ids = {str(node.get("node_id", "")).strip() for node in nodes if str(node.get("node_id", "")).strip()}
+    candidate_node_ids = {str(node.get("node_id", "")).strip() for node in candidates}
+    active_bundle = select_active_grouped_bundle(
+        root=root_path,
+        initiative_branch=current_branch,
+        allowed_node_ids=allowed_node_ids,
+        candidate_node_ids=candidate_node_ids,
+    )
     selected_candidates = candidates
     if node_id:
         selected_candidates = [node for node in selected_candidates if str(node.get("node_id", "")).strip() == node_id]
@@ -161,6 +170,18 @@ def prepare_next_worker_slice(
         }
         for node in candidates
     ]
+    if (
+        active_bundle is not None
+        and not node_id
+        and not execplan_id
+        and len(selected_candidates) > 1
+    ):
+        bundle_order = list(active_bundle.get("pending_node_ids", []))
+        ordered = {node_id_value: index for index, node_id_value in enumerate(bundle_order)}
+        selected_candidates = sorted(
+            [node for node in selected_candidates if str(node.get("node_id", "")).strip() in ordered],
+            key=lambda node: ordered[str(node.get("node_id", "")).strip()],
+        )[:1] or selected_candidates
     if len(selected_candidates) != 1:
         blocker = "no_matching_worker_candidate" if not selected_candidates else "worker_candidate_ambiguous"
         return 1, {
@@ -177,6 +198,16 @@ def prepare_next_worker_slice(
                 "node_id": node_id or "",
                 "execplan_id": execplan_id or "",
             },
+            "active_grouped_bundle": (
+                {
+                    "bundle_id": str(active_bundle.get("bundle_id", "")).strip(),
+                    "dag_id": str(active_bundle.get("dag_id", "")).strip(),
+                    "exec_plan_id": str(active_bundle.get("exec_plan_id", "")).strip(),
+                    "node_ids": list(active_bundle.get("pending_node_ids", [])),
+                }
+                if active_bundle is not None
+                else None
+            ),
             "blockers": [blocker],
             "candidates": candidate_projection,
             "next_actions": [{"action": "resolve_worker_candidate_selection", "reason": blocker}],
@@ -261,6 +292,9 @@ def prepare_next_worker_slice(
         "initiative_branch": current_branch,
         "branch": selected_branch,
         "worker_id": selected_worker_id,
+        "bundle_id": str(active_bundle.get("bundle_id", "")).strip() if active_bundle is not None else "",
+        "bundle_dag_id": str(active_bundle.get("dag_id", "")).strip() if active_bundle is not None else "",
+        "bundle_exec_plan_id": str(active_bundle.get("exec_plan_id", "")).strip() if active_bundle is not None else "",
         "queue_position": _queue_position(selected_node),
         "merge_target": current_branch,
         "scope": {
@@ -299,11 +333,23 @@ def prepare_next_worker_slice(
                 "execplan_id": selected_execplan_id,
                 "implementation_branch": selected_branch,
                 "worker_id": selected_worker_id,
-                "contract_id": contract_id,
-            },
-            "blockers": scope_findings,
-            "next_actions": [{"action": "add_worker_contract_scope", "reason": finding} for finding in scope_findings],
-        }
+            "contract_id": contract_id,
+            "bundle_id": str(active_bundle.get("bundle_id", "")).strip() if active_bundle is not None else "",
+            "bundle_dag_id": str(active_bundle.get("dag_id", "")).strip() if active_bundle is not None else "",
+        },
+        "active_grouped_bundle": (
+            {
+                "bundle_id": str(active_bundle.get("bundle_id", "")).strip(),
+                "dag_id": str(active_bundle.get("dag_id", "")).strip(),
+                "exec_plan_id": str(active_bundle.get("exec_plan_id", "")).strip(),
+                "node_ids": list(active_bundle.get("pending_node_ids", [])),
+            }
+            if active_bundle is not None
+            else None
+        ),
+        "blockers": scope_findings,
+        "next_actions": [{"action": "add_worker_contract_scope", "reason": finding} for finding in scope_findings],
+    }
     registry_contract_list = [
         item
         for item in registry_contracts(registry)
@@ -343,9 +389,21 @@ def prepare_next_worker_slice(
             "implementation_branch": selected_branch,
             "worker_id": selected_worker_id,
             "contract_id": contract_id,
+            "bundle_id": str(active_bundle.get("bundle_id", "")).strip() if active_bundle is not None else "",
+            "bundle_dag_id": str(active_bundle.get("dag_id", "")).strip() if active_bundle is not None else "",
         },
         "contract_registry_path": registry_path.as_posix(),
         "graph_path": graph_path.as_posix(),
+        "active_grouped_bundle": (
+            {
+                "bundle_id": str(active_bundle.get("bundle_id", "")).strip(),
+                "dag_id": str(active_bundle.get("dag_id", "")).strip(),
+                "exec_plan_id": str(active_bundle.get("exec_plan_id", "")).strip(),
+                "node_ids": list(active_bundle.get("pending_node_ids", [])),
+            }
+            if active_bundle is not None
+            else None
+        ),
         "candidates": candidate_projection,
         "next_actions": [
             {

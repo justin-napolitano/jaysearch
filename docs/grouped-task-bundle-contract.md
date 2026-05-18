@@ -35,6 +35,7 @@ Required fields:
 Optional but expected fields:
 
 - `exec_plan_id`
+- `initiative_branch`
 - `scope`
 - `description`
 - `priority`
@@ -49,6 +50,7 @@ Optional but expected fields:
   "project_id": "project-control-plane",
   "dag_id": "registry-control-plane-foundation",
   "exec_plan_id": "20260518-registry-control-plane-foundation-bootstrap-codex-01-execplan",
+  "initiative_branch": "initiative/project-control-plane",
   "title": "Foundation Bootstrap",
   "status": "ready",
   "scope": "foundation",

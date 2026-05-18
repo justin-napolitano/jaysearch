@@ -201,3 +201,109 @@ def test_next_worker_slice_blocks_when_contract_execplan_missing(tmp_path: Path)
     assert code == 1
     assert "no_runnable_worker_contract" in report["blockers"]
     assert report["candidates"][0]["execplan_exists"] is False
+
+
+def test_next_worker_slice_prefers_runnable_contract_inside_active_grouped_bundle(tmp_path: Path) -> None:
+    _seed_execplan(tmp_path, execplan_id="plan-1")
+    _seed_execplan(tmp_path, execplan_id="plan-2")
+    _write(
+        tmp_path / "artifacts" / "planner" / "research" / "remaining-work-graph.json",
+        json.dumps(
+            {
+                "nodes": [
+                    {
+                        "node_id": "initiative-example",
+                        "title": "Example",
+                        "status": "in_progress",
+                        "initiative_branch": "initiative/example",
+                        "parent_initiative_node": "initiative-example",
+                    },
+                    {
+                        "node_id": "rwg-1",
+                        "title": "Worker one",
+                        "status": "ready",
+                        "initiative_branch": "initiative/example",
+                        "parent_initiative_node": "initiative-example",
+                    },
+                    {
+                        "node_id": "rwg-2",
+                        "title": "Worker two",
+                        "status": "ready",
+                        "initiative_branch": "initiative/example",
+                        "parent_initiative_node": "initiative-example",
+                    },
+                ]
+            }
+        )
+        + "\n",
+    )
+    _write(
+        tmp_path / "artifacts" / "planner" / "grouped-bundles" / "bundle.json",
+        json.dumps(
+            {
+                "bundle_id": "foundation-bootstrap",
+                "project_id": "project-control-plane",
+                "dag_id": "registry-control-plane-foundation",
+                "initiative_branch": "initiative/example",
+                "title": "Foundation Bootstrap",
+                "status": "ready",
+                "node_ids": ["rwg-2"],
+                "selection_mode": "ordered",
+                "lineage": {
+                    "source_repo": "project-control-plane",
+                    "source_artifact": "bundle.json",
+                    "recorded_at_utc": "2026-05-18T00:00:00Z",
+                },
+            }
+        )
+        + "\n",
+    )
+    _write(
+        tmp_path / "artifacts" / "governance" / "initiative-worker-contracts" / "initiative-example.json",
+        json.dumps(
+            {
+                "initiative_branch": "initiative/example",
+                "contracts": [
+                    {
+                        "contract_id": "contract-1",
+                        "title": "Child one",
+                        "status": "ready",
+                        "node_id": "rwg-1",
+                        "execplan_id": "plan-1",
+                        "initiative_branch": "initiative/example",
+                        "branch": "impl-execplan/child-one",
+                        "worker_id": "child-one",
+                        "queue_position": 1,
+                        "scope": {
+                            "owned_surfaces": ["docs/commands.md"],
+                            "non_goals": ["Do not widen scope"],
+                            "validations": ["uv run pytest -q tests/test_next_worker_slice.py"],
+                        },
+                    },
+                    {
+                        "contract_id": "contract-2",
+                        "title": "Child two",
+                        "status": "ready",
+                        "node_id": "rwg-2",
+                        "execplan_id": "plan-2",
+                        "initiative_branch": "initiative/example",
+                        "branch": "impl-execplan/child-two",
+                        "worker_id": "child-two",
+                        "queue_position": 2,
+                        "scope": {
+                            "owned_surfaces": ["docs/commands.md"],
+                            "non_goals": ["Do not widen scope"],
+                            "validations": ["uv run pytest -q tests/test_next_worker_slice.py"],
+                        },
+                    }
+                ],
+            }
+        )
+        + "\n",
+    )
+
+    code, report = get_next_worker_slice(root=tmp_path.as_posix(), initiative_branch="initiative/example")
+
+    assert code == 0
+    assert report["selected"]["contract_id"] == "contract-2"
+    assert report["selected"]["bundle_id"] == "foundation-bootstrap"
