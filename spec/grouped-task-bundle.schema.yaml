@@ -1,0 +1,54 @@
+version: v1
+last_updated: 2026-05-18
+canonical_root: artifacts/planner/grouped-bundles/
+bundle:
+  required_fields:
+    - bundle_id
+    - project_id
+    - dag_id
+    - title
+    - status
+    - node_ids
+    - selection_mode
+    - lineage
+  optional_fields:
+    - exec_plan_id
+    - scope
+    - description
+    - priority
+    - constraints
+    - validation_refs
+  status_allowed:
+    - draft
+    - ready
+    - in_progress
+    - blocked
+    - done
+  selection_mode_allowed:
+    - ordered
+    - priority_first
+  priority_allowed:
+    - P0
+    - P1
+    - P2
+    - P3
+lineage:
+  required_fields:
+    - source_repo
+    - source_artifact
+    - recorded_at_utc
+node_reference_rules:
+  invariants:
+    - all_node_ids_must_exist_in_canonical_dag
+    - bundle_must_not_replace_canonical_dag
+    - bundle_must_not_introduce_dependencies_absent_from_canonical_dag
+    - grouped_bundle_is_projection_only
+projection_rules:
+  invariants:
+    - grouped_bundles_must_reference_one_source_dag
+    - grouped_bundles_may_reference_one_execplan_projection
+    - bundle_expansion_must_preserve_node_order_when_selection_mode_is_ordered
+    - lineage_from_bundle_to_task_packet_must_be_recorded
+notes:
+  - Grouped task bundles are packaging projections over canonical task graphs.
+  - They exist to orchestrate bounded execution slices without introducing a second canonical graph.
