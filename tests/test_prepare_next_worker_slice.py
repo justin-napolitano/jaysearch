@@ -202,3 +202,53 @@ def test_prepare_next_worker_slice_blocks_when_execplan_missing(tmp_path: Path) 
 
     assert code == 1
     assert "initiative_execplan_missing" in report["blockers"]
+
+
+def test_prepare_next_worker_slice_uses_grouped_bundle_to_resolve_ambiguity(tmp_path: Path) -> None:
+    _seed_graph(tmp_path)
+    _seed_execplan(tmp_path, execplan_id="plan-1")
+    _seed_execplan(tmp_path, execplan_id="plan-2")
+    _write(
+        tmp_path / "artifacts" / "planner" / "grouped-bundles" / "bundle.json",
+        json.dumps(
+            {
+                "bundle_id": "foundation-bootstrap",
+                "project_id": "project-control-plane",
+                "dag_id": "registry-control-plane-foundation",
+                "initiative_branch": "initiative/example",
+                "exec_plan_id": "bootstrap-execplan",
+                "title": "Foundation Bootstrap",
+                "status": "ready",
+                "node_ids": ["rwg-2", "rwg-1"],
+                "selection_mode": "ordered",
+                "lineage": {
+                    "source_repo": "project-control-plane",
+                    "source_artifact": "bundle.json",
+                    "recorded_at_utc": "2026-05-18T00:00:00Z",
+                },
+            }
+        )
+        + "\n",
+    )
+
+    code, report = prepare_next_worker_slice(
+        root=tmp_path.as_posix(),
+        initiative_branch="initiative/example",
+        owned_surfaces=["docs/commands.md"],
+        non_goals=["Do not widen scope"],
+        validations=["uv run pytest -q tests/test_prepare_next_worker_slice.py"],
+    )
+
+    assert code == 0
+    assert report["selected"]["node_id"] == "rwg-2"
+    assert report["selected"]["bundle_id"] == "foundation-bootstrap"
+    registry = json.loads(
+        (
+            tmp_path
+            / "artifacts"
+            / "governance"
+            / "initiative-worker-contracts"
+            / "initiative-example.json"
+        ).read_text(encoding="utf-8")
+    )
+    assert registry["contracts"][0]["bundle_id"] == "foundation-bootstrap"
