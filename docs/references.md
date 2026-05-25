@@ -2,6 +2,8 @@
 
 This design package is informed by the following primary or authoritative sources.
 
+The current research/planning loop bibliography is maintained in `docs/current-research-bibliography.md`.
+
 ## Game Theory and Mechanism Design
 
 1. John F. Nash. “Equilibrium Points in N-Person Games.” *Proceedings of the National Academy of Sciences*, 36(1):48-49, 1950.
@@ -55,16 +57,30 @@ This design package is informed by the following primary or authoritative source
 12. bytedance. “DeerFlow” GitHub repository and README, reviewed 2026-03-23.
     Link: https://github.com/bytedance/deer-flow
 
+## Agent Feedback, Critique, And Software Evaluation
+
+13. Madaan et al. “Self-Refine: Iterative Refinement with Self-Feedback.”
+    Link: https://arxiv.org/abs/2303.17651
+
+14. Shinn et al. “Reflexion: Language Agents with Verbal Reinforcement Learning.”
+    Link: https://arxiv.org/abs/2303.11366
+
+15. Gou et al. “CRITIC: Large Language Models Can Self-Correct with Tool-Interactive Critiquing.”
+    Link: https://arxiv.org/abs/2305.11738
+
+16. Jimenez et al. “SWE-bench: Can Language Models Resolve Real-World GitHub Issues?”
+    Link: https://arxiv.org/abs/2310.06770
+
 ## Standards Bibliography Pack
 
-13. Local standards bibliography directory for execution, observability, and error-contract references.
+17. Local standards bibliography directory for execution, observability, and error-contract references.
     Link: resources/biblio/
 
-14. "Execution And Observability Standards."
+18. "Execution And Observability Standards."
     Link: resources/biblio/execution-and-observability-standards.md
 
-15. "Agent Error Contract Standards."
+19. "Agent Error Contract Standards."
     Link: resources/biblio/agent-error-contract-standards.md
 
-16. "Token Economy And API-First Execution."
+20. "Token Economy And API-First Execution."
     Link: resources/biblio/token-economy-and-api-first-execution.md

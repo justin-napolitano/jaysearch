@@ -1,0 +1,85 @@
+{
+  "graph_id": "patch-producing-implementation-attempt-v1",
+  "graph_type": "implementation_dag",
+  "version": "v1",
+  "purpose": "Add deterministic patch artifact support to implementation attempt generation without applying patches.",
+  "source_artifacts": [
+    "docs/patch-producing-attempts-research-v1.md",
+    ".agent/execplans/20260522-patch-producing-implementation-attempt-v1-codex-01-execplan.md",
+    "spec/contracts/implementation-attempt.schema.yaml"
+  ],
+  "nodes": [
+    {
+      "node_id": "accept-patch-source",
+      "title": "Accept Patch Source",
+      "node_type": "runtime",
+      "status": "planned",
+      "goal": "Add optional patch-source input to attempt generation.",
+      "owned_changes": [
+        "src/platform_tools/generate_implementation_attempt.py"
+      ],
+      "expected_outputs": [
+        "patch source CLI support"
+      ]
+    },
+    {
+      "node_id": "copy-patch-artifact",
+      "title": "Copy Patch Artifact",
+      "node_type": "runtime",
+      "status": "planned",
+      "goal": "Copy supplied patch into the attempt run directory and set patch_ref.",
+      "owned_changes": [
+        "src/platform_tools/generate_implementation_attempt.py"
+      ],
+      "expected_outputs": [
+        "attempt patch artifact"
+      ]
+    },
+    {
+      "node_id": "validate-patch-check",
+      "title": "Validate Patch Check",
+      "node_type": "policy_gate",
+      "status": "planned",
+      "goal": "Run git apply --check and block invalid patches without applying them.",
+      "owned_changes": [
+        "src/platform_tools/generate_implementation_attempt.py"
+      ],
+      "expected_outputs": [
+        "patch validation artifact"
+      ]
+    },
+    {
+      "node_id": "test-patch-attempts",
+      "title": "Test Patch Attempts",
+      "node_type": "validation",
+      "status": "planned",
+      "goal": "Prove valid patches emit patch refs and invalid patches block.",
+      "owned_changes": [
+        "tests/test_generate_implementation_attempt.py"
+      ],
+      "expected_outputs": [
+        "patch-producing attempt tests"
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "edge_id": "e1",
+      "from_node_id": "copy-patch-artifact",
+      "to_node_id": "accept-patch-source",
+      "relation": "depends_on"
+    },
+    {
+      "edge_id": "e2",
+      "from_node_id": "validate-patch-check",
+      "to_node_id": "copy-patch-artifact",
+      "relation": "depends_on"
+    },
+    {
+      "edge_id": "e3",
+      "from_node_id": "test-patch-attempts",
+      "to_node_id": "validate-patch-check",
+      "relation": "depends_on"
+    }
+  ]
+}

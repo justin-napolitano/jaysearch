@@ -1,0 +1,37 @@
+version: v1
+contract_name: execution_unit
+contract_kind: packet
+owner: planner-tool
+description: >
+  A buildable and evaluable unit of work derived from a selected node option.
+  This is the first object that can be handed toward implementation.
+required_fields:
+  - packet_type
+  - packet_version
+  - packet_id
+  - created_at
+  - producer
+  - execution_unit_id
+  - source_problem_node_ref
+  - selected_option_ref
+  - implementation_intent
+  - owned_changes
+  - required_inputs
+  - expected_outputs
+  - acceptance_checks
+  - validation_commands
+  - rollback_plan
+  - non_goals
+  - dependency_refs
+  - evidence_refs
+  - evaluation_method
+  - completion_evidence_requirements
+properties:
+  packet_type:
+    const: execution_unit
+invariants:
+  - execution_units_are_buildable_work_contracts
+  - execution_units_require_owned_changes
+  - execution_units_require_validation_commands
+  - execution_units_require_rollback_plan
+  - selected_scopes_are_not_execution_units

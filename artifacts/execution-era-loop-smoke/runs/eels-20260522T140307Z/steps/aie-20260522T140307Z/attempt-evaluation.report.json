@@ -1,0 +1,16 @@
+{
+  "api_version": "public-orchestration.v1",
+  "command": "evaluate-implementation-attempt",
+  "status": "ok",
+  "ok": true,
+  "run_id": "aie-20260522T140307Z",
+  "execution_unit_path": "/mnt/c/users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap/artifacts/execution-units/runs/meu-20260521T180114Z/execution-unit.packet.json",
+  "attempt_path": "/mnt/c/users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap/artifacts/execution-era-loop-smoke/runs/eels-20260522T140307Z/steps/gia-20260522T140307Z/implementation-attempt-01.packet.json",
+  "attempt_evaluation_path": "artifacts/execution-era-loop-smoke/runs/eels-20260522T140307Z/steps/aie-20260522T140307Z/attempt-evaluation.packet.json",
+  "promotion_status": "promoted",
+  "blockers": [],
+  "warnings": [],
+  "command_evidence_refs": [
+    "artifacts/execution-era-loop-smoke/runs/eels-20260522T140307Z/steps/aie-20260522T140307Z/validation-command-01.result.json"
+  ]
+}

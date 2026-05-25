@@ -1,0 +1,104 @@
+{
+  "graph_id": "patch-aware-attempt-evaluation-v1",
+  "graph_type": "implementation_dag",
+  "version": "v1",
+  "purpose": "Make attempt evaluation aware of patch_ref artifacts and optional git apply --check validation.",
+  "source_artifacts": [
+    "docs/patch-aware-attempt-evaluation-research-v1.md",
+    ".agent/execplans/20260522-patch-aware-attempt-evaluation-v1-codex-01-execplan.md",
+    "spec/contracts/attempt-evaluation.schema.yaml"
+  ],
+  "nodes": [
+    {
+      "node_id": "detect-patch-ref",
+      "title": "Detect Patch Ref",
+      "node_type": "runtime",
+      "status": "planned",
+      "goal": "Read implementation_attempt.patch_ref and decide whether patch validation applies.",
+      "owned_changes": [
+        "src/platform_tools/evaluate_implementation_attempt.py"
+      ],
+      "expected_outputs": [
+        "patch ref detection"
+      ]
+    },
+    {
+      "node_id": "validate-patch-ref-exists",
+      "title": "Validate Patch Ref Exists",
+      "node_type": "policy_gate",
+      "status": "planned",
+      "goal": "Block non-empty patch_ref values that do not resolve to a patch file.",
+      "owned_changes": [
+        "src/platform_tools/evaluate_implementation_attempt.py"
+      ],
+      "expected_outputs": [
+        "missing patch blockers"
+      ]
+    },
+    {
+      "node_id": "run-git-apply-check",
+      "title": "Run Git Apply Check",
+      "node_type": "runtime",
+      "status": "planned",
+      "goal": "Run git apply --check when --validate-patch-ref is requested.",
+      "owned_changes": [
+        "src/platform_tools/evaluate_implementation_attempt.py"
+      ],
+      "expected_outputs": [
+        "patch validation artifact"
+      ]
+    },
+    {
+      "node_id": "attach-patch-evidence",
+      "title": "Attach Patch Evidence",
+      "node_type": "runtime",
+      "status": "planned",
+      "goal": "Include patch validation artifact refs in attempt_evaluation evidence refs.",
+      "owned_changes": [
+        "src/platform_tools/evaluate_implementation_attempt.py"
+      ],
+      "expected_outputs": [
+        "patch evidence refs"
+      ]
+    },
+    {
+      "node_id": "test-patch-aware-evaluation",
+      "title": "Test Patch Aware Evaluation",
+      "node_type": "validation",
+      "status": "planned",
+      "goal": "Prove valid patches pass, invalid patches block, and no-patch attempts remain compatible.",
+      "owned_changes": [
+        "tests/test_evaluate_implementation_attempt.py"
+      ],
+      "expected_outputs": [
+        "patch-aware evaluation tests"
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "edge_id": "e1",
+      "from_node_id": "validate-patch-ref-exists",
+      "to_node_id": "detect-patch-ref",
+      "relation": "depends_on"
+    },
+    {
+      "edge_id": "e2",
+      "from_node_id": "run-git-apply-check",
+      "to_node_id": "validate-patch-ref-exists",
+      "relation": "depends_on"
+    },
+    {
+      "edge_id": "e3",
+      "from_node_id": "attach-patch-evidence",
+      "to_node_id": "run-git-apply-check",
+      "relation": "depends_on"
+    },
+    {
+      "edge_id": "e4",
+      "from_node_id": "test-patch-aware-evaluation",
+      "to_node_id": "attach-patch-evidence",
+      "relation": "depends_on"
+    }
+  ]
+}

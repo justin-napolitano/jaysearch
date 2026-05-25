@@ -1,0 +1,21 @@
+{
+  "command": "plan-quality-score",
+  "run_id": "pqs-20260521T143105Z",
+  "comparison_id": "pqs-20260521T143105Z:cmp",
+  "status": "ok",
+  "selected_solution_scope_ref": "selected-scope:plan-selection-real-artifact-exercise:candidate-top-level-planning-orchestration",
+  "candidate_plan_count": 2,
+  "qualified_plan_count": 2,
+  "disqualified_plan_count": 0,
+  "recommended_plan_ref": "artifacts/planner/examples/plan-selection-exercise/plan-a-structural.json",
+  "comparison_packet_path": "artifacts/orchestration/design-review-runs/pqs-20260521T143105Z/candidate-plan-comparison.packet.json",
+  "ranked_packet_path": "artifacts/orchestration/design-review-runs/pqs-20260521T143105Z/ranked-plan.packet.json",
+  "score_packet_paths": [
+    "artifacts/orchestration/design-review-runs/pqs-20260521T143105Z/plan-quality-score-01.packet.json",
+    "artifacts/orchestration/design-review-runs/pqs-20260521T143105Z/plan-quality-score-02.packet.json"
+  ],
+  "output_root": "artifacts/orchestration/design-review-runs/pqs-20260521T143105Z",
+  "policy_ref": "spec/plan-quality-scoring.yaml",
+  "blockers": [],
+  "ok": true
+}

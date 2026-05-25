@@ -1,0 +1,76 @@
+{
+  "packet_type": "design_review_program_packet",
+  "packet_version": "v1",
+  "packet_id": "design-review-platform-architecture-v1:program",
+  "created_at": "2026-05-21T14:11:13Z",
+  "producer": "orchestrate-design-review",
+  "review_id": "design-review-platform-architecture-v1",
+  "review_request_ref": "artifacts/orchestration/examples/design-review-request.packet.json",
+  "review_nodes": [
+    {
+      "node_id": "review-plan-quality",
+      "review_mode": "planning_quality_review",
+      "target_tool": "plan-quality-score",
+      "operation_name": "compare_plans",
+      "input_packet_refs": [
+        "artifacts/planner/examples/plan-selection-exercise/selected-scope.packet.json",
+        "artifacts/planner/examples/plan-selection-exercise/plan-a-structural.json",
+        "artifacts/planner/examples/plan-selection-exercise/plan-b-structural.json"
+      ],
+      "policy_ref": "spec/plan-quality-scoring.yaml",
+      "reason": "Compare candidate structural plans during design review.",
+      "call_metadata": {
+        "selected_scope_path": "artifacts/planner/examples/plan-selection-exercise/selected-scope.packet.json",
+        "plan_paths": [
+          "artifacts/planner/examples/plan-selection-exercise/plan-a-structural.json",
+          "artifacts/planner/examples/plan-selection-exercise/plan-b-structural.json"
+        ],
+        "plan_quality_policy_path": "spec/plan-quality-scoring.yaml",
+        "evidence_refs": []
+      }
+    },
+    {
+      "node_id": "review-evidence-basis",
+      "review_mode": "evidence_backed_claim_review",
+      "target_tool": "evidence-search-tool",
+      "operation_name": "assemble_evidence_packet",
+      "input_packet_refs": [
+        "artifacts/orchestration/examples/design-review-request.packet.json"
+      ],
+      "policy_ref": "bounded-review-evidence-policy-v1",
+      "reason": "Assemble bounded evidence packet for explicit design-review claims.",
+      "call_metadata": {
+        "request_path": "artifacts/orchestration/examples/design-review-request.packet.json"
+      }
+    },
+    {
+      "node_id": "review-governance-handoff",
+      "review_mode": "governance_handoff_review",
+      "target_tool": "governance-tool",
+      "operation_name": "validate_execution_intake",
+      "input_packet_refs": [
+        "artifacts/orchestration/research-plan-selection-runs/esm-20260520T184914Z/execution-ready-plan.packet.json",
+        "artifacts/orchestration/research-plan-selection-runs/esm-20260520T184914Z/execution-packet-01.packet.json",
+        "artifacts/orchestration/research-plan-selection-runs/esm-20260520T184914Z/execution-packet-02.packet.json",
+        "artifacts/orchestration/research-plan-selection-runs/esm-20260520T184914Z/execution-packet-03.packet.json",
+        "artifacts/orchestration/research-plan-selection-runs/esm-20260520T184914Z/execution-packet-04.packet.json"
+      ],
+      "policy_ref": "governance-intake-policy-v1",
+      "reason": "Verify governance intake compatibility during design review.",
+      "call_metadata": {
+        "execution_ready_plan_path": "artifacts/orchestration/research-plan-selection-runs/esm-20260520T184914Z/execution-ready-plan.packet.json",
+        "execution_packet_paths": [
+          "artifacts/orchestration/research-plan-selection-runs/esm-20260520T184914Z/execution-packet-01.packet.json",
+          "artifacts/orchestration/research-plan-selection-runs/esm-20260520T184914Z/execution-packet-02.packet.json",
+          "artifacts/orchestration/research-plan-selection-runs/esm-20260520T184914Z/execution-packet-03.packet.json",
+          "artifacts/orchestration/research-plan-selection-runs/esm-20260520T184914Z/execution-packet-04.packet.json"
+        ]
+      }
+    }
+  ],
+  "stop_conditions": {
+    "max_tool_calls": 3,
+    "max_blocking_findings": 5,
+    "no_new_material_findings": true
+  }
+}

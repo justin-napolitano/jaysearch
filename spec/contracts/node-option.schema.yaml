@@ -1,0 +1,39 @@
+version: v1
+contract_name: node_option
+contract_kind: packet
+owner: planner-tool
+description: >
+  A candidate way to solve or advance one problem node. Node options are
+  evaluated and selected before an execution unit can be materialized.
+required_fields:
+  - packet_type
+  - packet_version
+  - packet_id
+  - created_at
+  - producer
+  - option_id
+  - source_node_ref
+  - option_family
+  - approach_summary
+  - implementation_intent
+  - expected_changes
+  - non_goals
+  - assumptions
+  - risks
+  - evidence_refs
+  - evaluation_refs
+properties:
+  packet_type:
+    const: node_option
+  implementation_intent:
+    required_fields:
+      - summary
+      - contract_changes
+      - runtime_changes
+      - validation_changes
+      - docs_changes
+      - handoff_requirements
+invariants:
+  - node_options_must_have_implementation_intent
+  - expected_changes_must_be_concrete_enough_for_planning
+  - options_do_not_authorize_execution_without_execution_unit

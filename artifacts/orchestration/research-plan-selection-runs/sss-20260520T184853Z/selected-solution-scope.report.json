@@ -1,0 +1,11 @@
+{
+  "api_version": "public-orchestration.v1",
+  "command": "materialize-selected-solution-scope",
+  "status": "ok",
+  "ok": true,
+  "run_id": "sss-20260520T184853Z",
+  "recommendation_path": "/mnt/c/Users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap/artifacts/planner/examples/plan-selection-exercise/research-recommendation.packet.json",
+  "selected_solution_scope_path": "artifacts/orchestration/research-plan-selection-runs/sss-20260520T184853Z/selected-solution-scope.packet.json",
+  "selected_candidate_id": "candidate-top-level-planning-orchestration",
+  "blockers": []
+}

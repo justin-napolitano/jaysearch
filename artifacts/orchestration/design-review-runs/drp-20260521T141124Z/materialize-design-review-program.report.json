@@ -1,0 +1,11 @@
+{
+  "api_version": "public-orchestration.v1",
+  "command": "orchestrate-design-review",
+  "status": "ok",
+  "ok": true,
+  "review_id": "design-review-platform-architecture-v1",
+  "request_path": "/mnt/c/users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap/artifacts/orchestration/examples/design-review-request.packet.json",
+  "program_path": "artifacts/orchestration/design-review-runs/drp-20260521T141124Z/design-review-program.packet.json",
+  "review_node_count": 3,
+  "blockers": []
+}

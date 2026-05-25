@@ -1,0 +1,72 @@
+{
+  "graph_id": "question-research-handoff-review-v2",
+  "graph_type": "workflow_dag",
+  "version": "v1",
+  "purpose": "Review question-to-evidence-to-research handoff readiness at the artifact level.",
+  "implementation_graph_ref": "artifacts/planner/research/design-review-automation-v1-implementation-graph.json",
+  "nodes": [
+    {
+      "node_id": "load-handoff-contracts",
+      "title": "Load Handoff Contracts",
+      "node_type": "tool_call",
+      "status": "ready",
+      "goal": "Load registry and contract definitions for the upstream handoff.",
+      "owned_changes": ["spec/contracts/packet-schema-registry.yaml", "docs/core-contract-spec-v1.md"],
+      "expected_outputs": ["handoff_contract_inventory"],
+      "validation_targets": ["required handoff contracts present"],
+      "completion_evidence_requirements": ["contract inventory report"]
+    },
+    {
+      "node_id": "inspect-doc-boundaries",
+      "title": "Inspect Doc Boundaries",
+      "node_type": "tool_call",
+      "status": "ready",
+      "goal": "Confirm the upstream docs describe the bounded handoff correctly.",
+      "owned_changes": ["docs/question-tool-v1.md", "docs/evidence-search-tool-v1.md", "docs/research-tool-v1.md"],
+      "expected_outputs": ["doc_boundary_review"],
+      "validation_targets": ["decision contract fields documented", "evidence assembly boundary documented", "research transform boundary documented"],
+      "completion_evidence_requirements": ["doc review report"]
+    },
+    {
+      "node_id": "inspect-packet-examples",
+      "title": "Inspect Packet Examples",
+      "node_type": "tool_call",
+      "status": "ready",
+      "goal": "Check whether example research question, evidence, and research problem packets exist.",
+      "owned_changes": ["artifacts/"],
+      "expected_outputs": ["packet_example_inventory"],
+      "validation_targets": ["research_question_packet example exists", "evidence_packet example exists", "research_problem_packet example exists"],
+      "completion_evidence_requirements": ["artifact inventory report"]
+    },
+    {
+      "node_id": "inspect-transform-surface",
+      "title": "Inspect Transform Surface",
+      "node_type": "tool_call",
+      "status": "ready",
+      "goal": "Check whether the question-to-research-problem transform has any concrete schema, artifact, or implementation surface.",
+      "owned_changes": ["src/", "spec/", "artifacts/"],
+      "expected_outputs": ["transform_surface_inventory"],
+      "validation_targets": ["transform artifact or implementation exists"],
+      "completion_evidence_requirements": ["transform surface report"]
+    },
+    {
+      "node_id": "emit-handoff-review",
+      "title": "Emit Handoff Review",
+      "node_type": "materialization",
+      "status": "ready",
+      "goal": "Emit the bounded upstream handoff review packet with blockers and warnings.",
+      "owned_changes": ["artifacts/orchestration/design-review-runs/"],
+      "expected_outputs": ["question_research_handoff_review_packet"],
+      "validation_targets": ["review packet lists concrete blockers and artifact refs"],
+      "completion_evidence_requirements": ["handoff review packet"]
+    }
+  ],
+  "edges": [
+    {"edge_id": "e1", "from_node_id": "inspect-doc-boundaries", "to_node_id": "load-handoff-contracts", "relation": "depends_on"},
+    {"edge_id": "e2", "from_node_id": "inspect-packet-examples", "to_node_id": "load-handoff-contracts", "relation": "depends_on"},
+    {"edge_id": "e3", "from_node_id": "inspect-transform-surface", "to_node_id": "load-handoff-contracts", "relation": "depends_on"},
+    {"edge_id": "e4", "from_node_id": "emit-handoff-review", "to_node_id": "inspect-doc-boundaries", "relation": "depends_on"},
+    {"edge_id": "e5", "from_node_id": "emit-handoff-review", "to_node_id": "inspect-packet-examples", "relation": "depends_on"},
+    {"edge_id": "e6", "from_node_id": "emit-handoff-review", "to_node_id": "inspect-transform-surface", "relation": "depends_on"}
+  ]
+}

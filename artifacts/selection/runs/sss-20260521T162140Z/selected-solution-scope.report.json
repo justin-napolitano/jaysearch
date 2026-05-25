@@ -1,0 +1,11 @@
+{
+  "api_version": "public-orchestration.v1",
+  "command": "materialize-selected-solution-scope",
+  "status": "ok",
+  "ok": true,
+  "run_id": "sss-20260521T162140Z",
+  "recommendation_path": "/mnt/c/users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap/artifacts/research-recommendations/runs/rrc-20260521T160131Z/research-recommendation.packet.json",
+  "selected_solution_scope_path": "artifacts/selection/runs/sss-20260521T162140Z/selected-solution-scope.packet.json",
+  "selected_candidate_id": "research-problem:platform-template-bootstrap:question-research-handoff-001:hypothesis:baseline_reference:candidate:001",
+  "blockers": []
+}

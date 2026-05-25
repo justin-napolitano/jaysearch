@@ -1,0 +1,249 @@
+{
+  "graph_id": "execution-slice-materialization-v1-20260520",
+  "created_at": "2026-05-20T00:00:00Z",
+  "ordering_policy": {
+    "ready_statuses": [
+      "ready"
+    ],
+    "ready_sort_fields": [
+      "ready_order",
+      "tie_breaker",
+      "node_id"
+    ],
+    "reorder_requires_explicit_action": true,
+    "board_projection_authority": "projection_only"
+  },
+  "queue_projection": {
+    "path": "docs/queued-execplans.md",
+    "projection_authority": "projection_only",
+    "last_reconciled_action_id": "act-esm-001",
+    "ready_execplan_ids": [
+      "20260520-execution-slice-materialization-v1-codex-01"
+    ]
+  },
+  "graph_actions": [
+    {
+      "action_id": "act-esm-001",
+      "action": "promote_ready",
+      "node_id": "esm-rwg-001",
+      "rationale": "Execution-slice materialization v1 design slice is ready for governed review."
+    }
+  ],
+  "nodes": [
+    {
+      "node_id": "initiative-execution-slice-materialization-v1",
+      "title": "Initiative / Execution Slice Materialization V1",
+      "status": "ready",
+      "gating_class": "auto_runnable",
+      "conflict_domains": [
+        "execution-slice-materialization-v1"
+      ],
+      "target_execplan_id": "initiative:execution-slice-materialization-v1",
+      "goal_area": "planning-materialization",
+      "initiative_branch": "initiative/execution-slice-materialization-v1",
+      "parent_initiative_node": "initiative-execution-slice-materialization-v1",
+      "ordering": {
+        "queue_position": 0,
+        "tie_breaker": "initiative:execution-slice-materialization-v1"
+      },
+      "action_state": {
+        "last_action_id": "act-esm-001",
+        "last_action": "promote_ready",
+        "action_required": false,
+        "reorder_requires_human": false,
+        "reorder_blockers": []
+      }
+    },
+    {
+      "node_id": "esm-rwg-001",
+      "title": "Lock execution-slice-materialization boundary",
+      "status": "ready",
+      "status_reason": "Structural plan comparison and execution-ready planning are now distinct, so the downstream bridge can be bounded cleanly.",
+      "gating_class": "auto_runnable",
+      "conflict_domains": [
+        "execution-slice-materialization-v1",
+        "planning-contracts"
+      ],
+      "target_execplan_id": "20260520-execution-slice-materialization-v1-codex-01",
+      "goal_area": "planning-materialization",
+      "implementation_branch": "impl-execplan/20260520-execution-slice-materialization-v1-codex-01",
+      "initiative_branch": "initiative/execution-slice-materialization-v1",
+      "parent_initiative_node": "initiative-execution-slice-materialization-v1",
+      "integration_mode": "via_initiative",
+      "expected_artifacts": [
+        "docs/execution-slice-materialization-v1.md",
+        "artifacts/planner/research/execution-slice-materialization-v1-dag.json"
+      ],
+      "ordering": {
+        "queue_position": 1,
+        "ready_order": 1,
+        "tie_breaker": "20260520-execution-slice-materialization-v1-codex-01",
+        "source_action_id": "act-esm-001"
+      },
+      "action_state": {
+        "last_action_id": "act-esm-001",
+        "last_action": "promote_ready",
+        "action_required": false,
+        "reorder_requires_human": false,
+        "reorder_blockers": []
+      }
+    },
+    {
+      "node_id": "esm-rwg-002",
+      "title": "Define execution-ready handoff contract and packet ownership",
+      "status": "blocked",
+      "status_reason": "Boundary should be reviewed first.",
+      "gating_class": "auto_runnable",
+      "conflict_domains": [
+        "planning-contracts",
+        "execution-ready-handoff"
+      ],
+      "target_execplan_id": "execution-slice-materialization-phase1-contracts",
+      "goal_area": "planning-materialization",
+      "initiative_branch": "initiative/execution-slice-materialization-v1",
+      "parent_initiative_node": "initiative-execution-slice-materialization-v1",
+      "integration_mode": "via_initiative",
+      "expected_artifacts": [
+        "docs/execution-slice-materialization-v1.md",
+        "spec/contracts/packet-schema-registry.yaml",
+        "spec/execution-materialization-policy.yaml",
+        "spec/execution-ready-plan.schema.yaml",
+        "docs/plan-model-v1.md"
+      ],
+      "ordering": {
+        "queue_position": 2,
+        "tie_breaker": "execution-slice-materialization-phase1-contracts"
+      },
+      "action_state": {
+        "last_action_id": "act-esm-001",
+        "last_action": "block",
+        "action_required": true,
+        "reorder_requires_human": false,
+        "reorder_blockers": []
+      }
+    },
+    {
+      "node_id": "esm-rwg-003",
+      "title": "Define deterministic slice grouping and ambiguity warning rules",
+      "status": "blocked",
+      "status_reason": "Requires execution-ready handoff contract and explicit grouping boundaries.",
+      "gating_class": "auto_runnable",
+      "conflict_domains": [
+        "execution-slice-materialization-v1",
+        "slice-grouping"
+      ],
+      "target_execplan_id": "execution-slice-materialization-phase2-grouping",
+      "goal_area": "planning-materialization",
+      "initiative_branch": "initiative/execution-slice-materialization-v1",
+      "parent_initiative_node": "initiative-execution-slice-materialization-v1",
+      "integration_mode": "via_initiative",
+      "expected_artifacts": [
+        "docs/execution-slice-materialization-v1.md",
+        "docs/plan-model-v1.md",
+        "spec/execution-materialization-policy.yaml"
+      ],
+      "ordering": {
+        "queue_position": 3,
+        "tie_breaker": "execution-slice-materialization-phase2-grouping"
+      },
+      "action_state": {
+        "last_action_id": "act-esm-001",
+        "last_action": "block",
+        "action_required": true,
+        "reorder_requires_human": false,
+        "reorder_blockers": []
+      }
+    },
+    {
+      "node_id": "esm-rwg-004",
+      "title": "Emit execution-ready plan metadata and execution packets",
+      "status": "blocked",
+      "status_reason": "Requires grouping rules and governance-facing handoff semantics.",
+      "gating_class": "auto_runnable",
+      "conflict_domains": [
+        "execution-slice-materialization-v1",
+        "execution-packets"
+      ],
+      "target_execplan_id": "execution-slice-materialization-phase3-packets",
+      "goal_area": "planning-materialization",
+      "initiative_branch": "initiative/execution-slice-materialization-v1",
+      "parent_initiative_node": "initiative-execution-slice-materialization-v1",
+      "integration_mode": "via_initiative",
+      "expected_artifacts": [
+        "spec/contracts/packet-schema-registry.yaml",
+        "spec/execution-ready-plan.schema.yaml",
+        "docs/execution-slice-materialization-v1.md",
+        "docs/planner-tool-v1.md"
+      ],
+      "ordering": {
+        "queue_position": 4,
+        "tie_breaker": "execution-slice-materialization-phase3-packets"
+      },
+      "action_state": {
+        "last_action_id": "act-esm-001",
+        "last_action": "block",
+        "action_required": true,
+        "reorder_requires_human": false,
+        "reorder_blockers": []
+      }
+    },
+    {
+      "node_id": "esm-rwg-005",
+      "title": "Preserve separation from governance and code execution",
+      "status": "blocked",
+      "status_reason": "Requires materialization outputs and boundary review first.",
+      "gating_class": "auto_runnable",
+      "conflict_domains": [
+        "execution-slice-materialization-v1",
+        "boundary-separation"
+      ],
+      "target_execplan_id": "execution-slice-materialization-phase3-boundaries",
+      "goal_area": "planning-materialization",
+      "initiative_branch": "initiative/execution-slice-materialization-v1",
+      "parent_initiative_node": "initiative-execution-slice-materialization-v1",
+      "integration_mode": "via_initiative",
+      "expected_artifacts": [
+        "docs/execution-slice-materialization-v1.md",
+        "docs/system-flow-mermaid.md"
+      ],
+      "ordering": {
+        "queue_position": 5,
+        "tie_breaker": "execution-slice-materialization-phase3-boundaries"
+      },
+      "action_state": {
+        "last_action_id": "act-esm-001",
+        "last_action": "block",
+        "action_required": true,
+        "reorder_requires_human": false,
+        "reorder_blockers": []
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "esm-rwg-002",
+      "to": "esm-rwg-001",
+      "relation": "depends_on"
+    },
+    {
+      "from": "esm-rwg-003",
+      "to": "esm-rwg-002",
+      "relation": "depends_on"
+    },
+    {
+      "from": "esm-rwg-004",
+      "to": "esm-rwg-002",
+      "relation": "depends_on"
+    },
+    {
+      "from": "esm-rwg-004",
+      "to": "esm-rwg-003",
+      "relation": "depends_on"
+    },
+    {
+      "from": "esm-rwg-005",
+      "to": "esm-rwg-004",
+      "relation": "depends_on"
+    }
+  ]
+}

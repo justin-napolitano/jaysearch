@@ -1,0 +1,78 @@
+version: v1
+updated_at: "2026-05-20T00:00:00Z"
+decision_policy:
+  type: gated_lexicographic
+  description: >
+    Candidate plans must pass hard validity gates before quality ranking.
+    Valid plans are then compared lexicographically across primary and
+    secondary quality dimensions.
+hard_gates:
+  - gate_id: acyclic_execution_graph
+    description: Execution-order dependencies must remain acyclic.
+  - gate_id: selected_solution_scope_present
+    description: Planner input must reference canonical selected solution scope.
+  - gate_id: runnable_contract_complete
+    description: Executable nodes must declare required inputs, outputs, validation targets, and blocking dependencies.
+  - gate_id: node_and_edge_identity_complete
+    description: Nodes and edges must have stable machine-readable identity and valid endpoints.
+  - gate_id: validation_targets_present
+    description: Executable work must declare measurable validation targets.
+  - gate_id: scope_ownership_declared
+    description: Build slices must declare owned changes or conflict domains.
+primary_metrics:
+  - metric_id: BDS
+    name: Boundedness Score
+    weight: 0.24
+    optimize: maximize
+  - metric_id: DES
+    name: Dependency Efficiency Score
+    weight: 0.20
+    optimize: maximize
+  - metric_id: VCS
+    name: Validation Completeness Score
+    weight: 0.22
+    optimize: maximize
+secondary_metrics:
+  - metric_id: PSS
+    name: Parallelism Safety Score
+    weight: 0.10
+    optimize: maximize
+  - metric_id: SIS
+    name: Scope Isolation Score
+    weight: 0.10
+    optimize: maximize
+  - metric_id: RCS
+    name: Recovery Containment Score
+    weight: 0.06
+    optimize: maximize
+  - metric_id: EAS
+    name: Evidence And Assumption Score
+    weight: 0.04
+    optimize: maximize
+  - metric_id: CPS
+    name: Critical Path Score
+    weight: 0.04
+    optimize: maximize
+anti_cheat_rules:
+  - rule_id: no_fake_parallelism
+    description: Do not reward removal of necessary dependencies merely to increase concurrency.
+  - rule_id: no_micro_node_spam
+    description: Do not reward splitting work into tiny nodes unless execution and review quality improve.
+  - rule_id: no_fake_validation
+    description: Validation targets must correspond to real executable checks or measurable acceptance tests.
+  - rule_id: no_scope_fragmentation
+    description: Do not reward over-fragmenting ownership when it increases integration cost or merge conflict risk.
+comparison_tiebreak_order:
+  - hard_gate_margin
+  - BDS
+  - VCS
+  - DES
+  - PSS
+  - SIS
+  - RCS
+  - EAS
+  - CPS
+notes:
+  - This policy is intended for comparing alternative valid plans for the same selected solution scope.
+  - Raw weighted sums should not override hard-gate failures.
+  - Weights are policy choices and should be revisited after observing real planning outcomes.

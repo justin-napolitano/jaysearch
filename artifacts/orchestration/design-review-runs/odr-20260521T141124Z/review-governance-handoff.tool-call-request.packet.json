@@ -1,0 +1,21 @@
+{
+  "packet_type": "tool_call_request_packet",
+  "packet_version": "v1",
+  "packet_id": "odr-20260521T141124Z:odr-20260521T141124Z:review-governance-handoff:request",
+  "created_at": "2026-05-21T14:11:24Z",
+  "producer": "orchestrate-design-review",
+  "call_id": "odr-20260521T141124Z:review-governance-handoff",
+  "run_id": "odr-20260521T141124Z",
+  "requester": "design-iteration-tool",
+  "target_tool": "governance-tool",
+  "operation_name": "validate_execution_intake",
+  "input_packet_refs": [
+    "artifacts/orchestration/research-plan-selection-runs/esm-20260520T184914Z/execution-ready-plan.packet.json",
+    "artifacts/orchestration/research-plan-selection-runs/esm-20260520T184914Z/execution-packet-01.packet.json",
+    "artifacts/orchestration/research-plan-selection-runs/esm-20260520T184914Z/execution-packet-02.packet.json",
+    "artifacts/orchestration/research-plan-selection-runs/esm-20260520T184914Z/execution-packet-03.packet.json",
+    "artifacts/orchestration/research-plan-selection-runs/esm-20260520T184914Z/execution-packet-04.packet.json"
+  ],
+  "policy_ref": "governance-intake-policy-v1",
+  "reason": "Verify governance intake compatibility during design review."
+}

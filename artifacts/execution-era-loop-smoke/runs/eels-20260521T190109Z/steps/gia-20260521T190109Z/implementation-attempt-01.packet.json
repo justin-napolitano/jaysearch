@@ -1,0 +1,36 @@
+{
+  "packet_type": "implementation_attempt",
+  "packet_version": "v1",
+  "packet_id": "attempt:execution-unit-research-problem-platform-template-bootstrap-evaluation-strength-:001:packet",
+  "created_at": "2026-05-21T19:01:09Z",
+  "producer": "generate-implementation-attempt",
+  "attempt_id": "attempt:execution-unit-research-problem-platform-template-bootstrap-evaluation-strength-:001",
+  "source_execution_unit_ref": "/mnt/c/users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap/artifacts/execution-units/runs/meu-20260521T180114Z/execution-unit.packet.json",
+  "attempt_family": "baseline_reference",
+  "implementation_summary": "Non-mutating implementation attempt scaffold generated from execution unit execution-unit:research-problem-platform-template-bootstrap-evaluation-strength-contract-001:research-problem-platform-template-bootstrap-evaluation-strength-contract-001-hy.",
+  "changed_artifact_refs": [
+    "spec/contracts/packet-schema-registry.yaml",
+    "docs/core-contract-spec-v1.md",
+    "src/platform_tools/materialize_research_evaluations.py",
+    "src/platform_tools/materialize_research_recommendation.py",
+    "src/platform_tools/materialize_selected_solution_scope.py",
+    "tests/test_materialize_research_evaluations.py",
+    "tests/test_materialize_research_recommendation.py",
+    "tests/test_materialize_selected_solution_scope.py",
+    "docs/research-candidate-evaluation-v1.md",
+    "docs/research-recommendation-v1.md"
+  ],
+  "patch_ref": "",
+  "validation_command_refs": [
+    "uv run pytest tests/test_materialize_research_evaluations.py tests/test_materialize_research_recommendation.py tests/test_materialize_selected_solution_scope.py"
+  ],
+  "assumptions": [
+    "selected scope must expose evaluation strength for planner intake"
+  ],
+  "risks": [
+    "planner DAG generation",
+    "code generation"
+  ],
+  "status": "draft",
+  "created_by": "generate-implementation-attempt"
+}

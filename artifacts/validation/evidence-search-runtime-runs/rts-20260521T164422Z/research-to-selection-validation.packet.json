@@ -1,0 +1,233 @@
+{
+  "packet_type": "research_to_selection_validation_report",
+  "packet_version": "v1",
+  "packet_id": "rts-20260521T164422Z:research-to-selection-validation",
+  "created_at": "2026-05-21T16:44:23Z",
+  "producer": "validate-research-to-selection-flow",
+  "run_id": "rts-20260521T164422Z",
+  "status": "ok",
+  "validated_scope": "research_to_selection_only",
+  "explicitly_not_validated": [
+    "live external source retrieval",
+    "execution-backed candidate evaluation",
+    "planner DAG generation",
+    "code generation",
+    "governance execution intake"
+  ],
+  "research_basis": [
+    {
+      "source_id": "src-critic-2023",
+      "url": "https://arxiv.org/abs/2305.11738",
+      "use": "validates through tool-grounded critique and local artifacts"
+    },
+    {
+      "source_id": "src-swe-bench-2023",
+      "url": "https://arxiv.org/abs/2310.06770",
+      "use": "keeps software validation task-grounded rather than plausibility-only"
+    },
+    {
+      "source_id": "src-prov-overview",
+      "url": "https://www.w3.org/TR/prov-overview/",
+      "use": "preserves provenance through packet refs and handoff artifacts"
+    },
+    {
+      "source_id": "src-self-refine-2023",
+      "url": "https://arxiv.org/abs/2303.17651",
+      "use": "supports bounded iterative feedback when explicit feedback is recorded"
+    }
+  ],
+  "artifact_refs": {
+    "research_problem_path": "artifacts/validation/evidence-search-runtime-runs/rts-20260521T164422Z/steps/qrpt-20260521T164422Z/research-problem.packet.json",
+    "transform_packet_path": "artifacts/validation/evidence-search-runtime-runs/rts-20260521T164422Z/steps/qrpt-20260521T164422Z/question-to-research-problem-transform.packet.json",
+    "hypothesis_packet_paths": [
+      "artifacts/validation/evidence-search-runtime-runs/rts-20260521T164422Z/steps/rhb-20260521T164422Z/research-hypothesis-01.packet.json",
+      "artifacts/validation/evidence-search-runtime-runs/rts-20260521T164422Z/steps/rhb-20260521T164422Z/research-hypothesis-02.packet.json",
+      "artifacts/validation/evidence-search-runtime-runs/rts-20260521T164422Z/steps/rhb-20260521T164422Z/research-hypothesis-03.packet.json",
+      "artifacts/validation/evidence-search-runtime-runs/rts-20260521T164422Z/steps/rhb-20260521T164422Z/research-hypothesis-04.packet.json"
+    ],
+    "candidate_search_tree_path": "artifacts/validation/evidence-search-runtime-runs/rts-20260521T164422Z/steps/rct-20260521T164422Z/candidate-search-tree.packet.json",
+    "candidate_packet_paths": [
+      "artifacts/validation/evidence-search-runtime-runs/rts-20260521T164422Z/steps/rct-20260521T164422Z/research-candidate-01.packet.json",
+      "artifacts/validation/evidence-search-runtime-runs/rts-20260521T164422Z/steps/rct-20260521T164422Z/research-candidate-02.packet.json",
+      "artifacts/validation/evidence-search-runtime-runs/rts-20260521T164422Z/steps/rct-20260521T164422Z/research-candidate-03.packet.json",
+      "artifacts/validation/evidence-search-runtime-runs/rts-20260521T164422Z/steps/rct-20260521T164422Z/research-candidate-04.packet.json"
+    ],
+    "evaluation_packet_paths": [
+      "artifacts/validation/evidence-search-runtime-runs/rts-20260521T164422Z/steps/rev-20260521T164422Z/research-evaluation-01.packet.json",
+      "artifacts/validation/evidence-search-runtime-runs/rts-20260521T164422Z/steps/rev-20260521T164422Z/research-evaluation-02.packet.json",
+      "artifacts/validation/evidence-search-runtime-runs/rts-20260521T164422Z/steps/rev-20260521T164422Z/research-evaluation-03.packet.json",
+      "artifacts/validation/evidence-search-runtime-runs/rts-20260521T164422Z/steps/rev-20260521T164422Z/research-evaluation-04.packet.json"
+    ],
+    "evaluation_summary_packet_path": "artifacts/validation/evidence-search-runtime-runs/rts-20260521T164422Z/steps/rev-20260521T164422Z/candidate-evaluation-summary.packet.json",
+    "recommendation_packet_path": "artifacts/validation/evidence-search-runtime-runs/rts-20260521T164422Z/steps/rrc-20260521T164423Z/research-recommendation.packet.json",
+    "selected_solution_scope_path": "artifacts/validation/evidence-search-runtime-runs/rts-20260521T164422Z/steps/sss-20260521T164423Z/selected-solution-scope.packet.json"
+  },
+  "step_reports": [
+    {
+      "step": "materialize_research_problem",
+      "status": "ok",
+      "ok": true,
+      "report": {
+        "api_version": "public-orchestration.v1",
+        "command": "question-to-research-problem-transform",
+        "status": "ok",
+        "ok": true,
+        "run_id": "qrpt-20260521T164422Z",
+        "research_question_path": "/mnt/c/users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap/artifacts/planner/examples/evaluation-strength-and-evidence-search/evidence-search-runtime-question.packet.json",
+        "evidence_packet_path": "/mnt/c/users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap/artifacts/planner/examples/evaluation-strength-and-evidence-search/evidence-search-runtime-evidence.packet.json",
+        "research_problem_path": "artifacts/validation/evidence-search-runtime-runs/rts-20260521T164422Z/steps/qrpt-20260521T164422Z/research-problem.packet.json",
+        "transform_packet_path": "artifacts/validation/evidence-search-runtime-runs/rts-20260521T164422Z/steps/qrpt-20260521T164422Z/question-to-research-problem-transform.packet.json",
+        "blockers": []
+      }
+    },
+    {
+      "step": "materialize_research_hypotheses",
+      "status": "ok",
+      "ok": true,
+      "report": {
+        "api_version": "public-orchestration.v1",
+        "command": "materialize-research-hypotheses",
+        "status": "ok",
+        "ok": true,
+        "run_id": "rhb-20260521T164422Z",
+        "research_problem_path": "/mnt/c/users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap/artifacts/validation/evidence-search-runtime-runs/rts-20260521T164422Z/steps/qrpt-20260521T164422Z/research-problem.packet.json",
+        "hypothesis_packet_paths": [
+          "artifacts/validation/evidence-search-runtime-runs/rts-20260521T164422Z/steps/rhb-20260521T164422Z/research-hypothesis-01.packet.json",
+          "artifacts/validation/evidence-search-runtime-runs/rts-20260521T164422Z/steps/rhb-20260521T164422Z/research-hypothesis-02.packet.json",
+          "artifacts/validation/evidence-search-runtime-runs/rts-20260521T164422Z/steps/rhb-20260521T164422Z/research-hypothesis-03.packet.json",
+          "artifacts/validation/evidence-search-runtime-runs/rts-20260521T164422Z/steps/rhb-20260521T164422Z/research-hypothesis-04.packet.json"
+        ],
+        "hypothesis_count": 4,
+        "families": [
+          "baseline_reference",
+          "reuse_direct",
+          "reuse_hybrid",
+          "novel_synthesized"
+        ],
+        "blockers": []
+      }
+    },
+    {
+      "step": "materialize_research_candidate_tree",
+      "status": "ok",
+      "ok": true,
+      "report": {
+        "api_version": "public-orchestration.v1",
+        "command": "materialize-research-candidate-tree",
+        "status": "ok",
+        "ok": true,
+        "run_id": "rct-20260521T164422Z",
+        "research_problem_path": "/mnt/c/users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap/artifacts/validation/evidence-search-runtime-runs/rts-20260521T164422Z/steps/qrpt-20260521T164422Z/research-problem.packet.json",
+        "hypothesis_paths": [
+          "/mnt/c/users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap/artifacts/validation/evidence-search-runtime-runs/rts-20260521T164422Z/steps/rhb-20260521T164422Z/research-hypothesis-01.packet.json",
+          "/mnt/c/users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap/artifacts/validation/evidence-search-runtime-runs/rts-20260521T164422Z/steps/rhb-20260521T164422Z/research-hypothesis-02.packet.json",
+          "/mnt/c/users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap/artifacts/validation/evidence-search-runtime-runs/rts-20260521T164422Z/steps/rhb-20260521T164422Z/research-hypothesis-03.packet.json",
+          "/mnt/c/users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap/artifacts/validation/evidence-search-runtime-runs/rts-20260521T164422Z/steps/rhb-20260521T164422Z/research-hypothesis-04.packet.json"
+        ],
+        "candidate_search_tree_path": "artifacts/validation/evidence-search-runtime-runs/rts-20260521T164422Z/steps/rct-20260521T164422Z/candidate-search-tree.packet.json",
+        "candidate_packet_paths": [
+          "artifacts/validation/evidence-search-runtime-runs/rts-20260521T164422Z/steps/rct-20260521T164422Z/research-candidate-01.packet.json",
+          "artifacts/validation/evidence-search-runtime-runs/rts-20260521T164422Z/steps/rct-20260521T164422Z/research-candidate-02.packet.json",
+          "artifacts/validation/evidence-search-runtime-runs/rts-20260521T164422Z/steps/rct-20260521T164422Z/research-candidate-03.packet.json",
+          "artifacts/validation/evidence-search-runtime-runs/rts-20260521T164422Z/steps/rct-20260521T164422Z/research-candidate-04.packet.json"
+        ],
+        "expansion_decision_packet_paths": [
+          "artifacts/validation/evidence-search-runtime-runs/rts-20260521T164422Z/steps/rct-20260521T164422Z/candidate-expansion-decision-01.packet.json",
+          "artifacts/validation/evidence-search-runtime-runs/rts-20260521T164422Z/steps/rct-20260521T164422Z/candidate-expansion-decision-02.packet.json",
+          "artifacts/validation/evidence-search-runtime-runs/rts-20260521T164422Z/steps/rct-20260521T164422Z/candidate-expansion-decision-03.packet.json",
+          "artifacts/validation/evidence-search-runtime-runs/rts-20260521T164422Z/steps/rct-20260521T164422Z/candidate-expansion-decision-04.packet.json"
+        ],
+        "candidate_count": 4,
+        "blockers": []
+      }
+    },
+    {
+      "step": "materialize_research_evaluations",
+      "status": "ok",
+      "ok": true,
+      "report": {
+        "api_version": "public-orchestration.v1",
+        "command": "materialize-research-evaluations",
+        "status": "ok",
+        "ok": true,
+        "run_id": "rev-20260521T164422Z",
+        "candidate_search_tree_path": "/mnt/c/users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap/artifacts/validation/evidence-search-runtime-runs/rts-20260521T164422Z/steps/rct-20260521T164422Z/candidate-search-tree.packet.json",
+        "candidate_paths": [
+          "/mnt/c/users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap/artifacts/validation/evidence-search-runtime-runs/rts-20260521T164422Z/steps/rct-20260521T164422Z/research-candidate-01.packet.json",
+          "/mnt/c/users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap/artifacts/validation/evidence-search-runtime-runs/rts-20260521T164422Z/steps/rct-20260521T164422Z/research-candidate-02.packet.json",
+          "/mnt/c/users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap/artifacts/validation/evidence-search-runtime-runs/rts-20260521T164422Z/steps/rct-20260521T164422Z/research-candidate-03.packet.json",
+          "/mnt/c/users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap/artifacts/validation/evidence-search-runtime-runs/rts-20260521T164422Z/steps/rct-20260521T164422Z/research-candidate-04.packet.json"
+        ],
+        "evaluation_packet_paths": [
+          "artifacts/validation/evidence-search-runtime-runs/rts-20260521T164422Z/steps/rev-20260521T164422Z/research-evaluation-01.packet.json",
+          "artifacts/validation/evidence-search-runtime-runs/rts-20260521T164422Z/steps/rev-20260521T164422Z/research-evaluation-02.packet.json",
+          "artifacts/validation/evidence-search-runtime-runs/rts-20260521T164422Z/steps/rev-20260521T164422Z/research-evaluation-03.packet.json",
+          "artifacts/validation/evidence-search-runtime-runs/rts-20260521T164422Z/steps/rev-20260521T164422Z/research-evaluation-04.packet.json"
+        ],
+        "evaluation_summary_packet_path": "artifacts/validation/evidence-search-runtime-runs/rts-20260521T164422Z/steps/rev-20260521T164422Z/candidate-evaluation-summary.packet.json",
+        "promoted_candidate_ids": [
+          "research-problem:platform-template-bootstrap:evidence-search-runtime-001:hypothesis:baseline_reference:candidate:001",
+          "research-problem:platform-template-bootstrap:evidence-search-runtime-001:hypothesis:reuse_direct:candidate:001",
+          "research-problem:platform-template-bootstrap:evidence-search-runtime-001:hypothesis:reuse_hybrid:candidate:001",
+          "research-problem:platform-template-bootstrap:evidence-search-runtime-001:hypothesis:novel_synthesized:candidate:001"
+        ],
+        "blocked_candidate_ids": [],
+        "blockers": []
+      }
+    },
+    {
+      "step": "materialize_research_recommendation",
+      "status": "ok",
+      "ok": true,
+      "report": {
+        "api_version": "public-orchestration.v1",
+        "command": "materialize-research-recommendation",
+        "status": "ok",
+        "ok": true,
+        "run_id": "rrc-20260521T164423Z",
+        "candidate_search_tree_path": "/mnt/c/users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap/artifacts/validation/evidence-search-runtime-runs/rts-20260521T164422Z/steps/rct-20260521T164422Z/candidate-search-tree.packet.json",
+        "candidate_paths": [
+          "/mnt/c/users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap/artifacts/validation/evidence-search-runtime-runs/rts-20260521T164422Z/steps/rct-20260521T164422Z/research-candidate-01.packet.json",
+          "/mnt/c/users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap/artifacts/validation/evidence-search-runtime-runs/rts-20260521T164422Z/steps/rct-20260521T164422Z/research-candidate-02.packet.json",
+          "/mnt/c/users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap/artifacts/validation/evidence-search-runtime-runs/rts-20260521T164422Z/steps/rct-20260521T164422Z/research-candidate-03.packet.json",
+          "/mnt/c/users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap/artifacts/validation/evidence-search-runtime-runs/rts-20260521T164422Z/steps/rct-20260521T164422Z/research-candidate-04.packet.json"
+        ],
+        "evaluation_paths": [
+          "/mnt/c/users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap/artifacts/validation/evidence-search-runtime-runs/rts-20260521T164422Z/steps/rev-20260521T164422Z/research-evaluation-01.packet.json",
+          "/mnt/c/users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap/artifacts/validation/evidence-search-runtime-runs/rts-20260521T164422Z/steps/rev-20260521T164422Z/research-evaluation-02.packet.json",
+          "/mnt/c/users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap/artifacts/validation/evidence-search-runtime-runs/rts-20260521T164422Z/steps/rev-20260521T164422Z/research-evaluation-03.packet.json",
+          "/mnt/c/users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap/artifacts/validation/evidence-search-runtime-runs/rts-20260521T164422Z/steps/rev-20260521T164422Z/research-evaluation-04.packet.json"
+        ],
+        "evaluation_summary_path": "/mnt/c/users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap/artifacts/validation/evidence-search-runtime-runs/rts-20260521T164422Z/steps/rev-20260521T164422Z/candidate-evaluation-summary.packet.json",
+        "recommendation_packet_path": "artifacts/validation/evidence-search-runtime-runs/rts-20260521T164422Z/steps/rrc-20260521T164423Z/research-recommendation.packet.json",
+        "recommended_candidate_id": "research-problem:platform-template-bootstrap:evidence-search-runtime-001:hypothesis:baseline_reference:candidate:001",
+        "blockers": []
+      }
+    },
+    {
+      "step": "materialize_selected_solution_scope",
+      "status": "ok",
+      "ok": true,
+      "report": {
+        "api_version": "public-orchestration.v1",
+        "command": "materialize-selected-solution-scope",
+        "status": "ok",
+        "ok": true,
+        "run_id": "sss-20260521T164423Z",
+        "recommendation_path": "/mnt/c/users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap/artifacts/validation/evidence-search-runtime-runs/rts-20260521T164422Z/steps/rrc-20260521T164423Z/research-recommendation.packet.json",
+        "selected_solution_scope_path": "artifacts/validation/evidence-search-runtime-runs/rts-20260521T164422Z/steps/sss-20260521T164423Z/selected-solution-scope.packet.json",
+        "selected_candidate_id": "research-problem:platform-template-bootstrap:evidence-search-runtime-001:hypothesis:baseline_reference:candidate:001",
+        "blockers": []
+      }
+    }
+  ],
+  "validation_checks": [
+    "all steps ok",
+    "expected output refs present",
+    "packet types match contracts",
+    "selected candidate matches recommendation",
+    "selected candidate has evaluation packet",
+    "selected scope records selection policy"
+  ],
+  "blockers": []
+}

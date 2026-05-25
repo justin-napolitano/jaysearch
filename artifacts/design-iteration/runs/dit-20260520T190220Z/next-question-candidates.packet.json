@@ -1,0 +1,22 @@
+{
+  "packet_type": "next_question_candidate_packet_bundle",
+  "packet_version": "v1",
+  "run_id": "dit-20260520T190220Z",
+  "candidate_count": 1,
+  "candidates": [
+    {
+      "packet_type": "next_question_candidate_packet",
+      "packet_version": "v1",
+      "question_candidate_id": "nqc-001",
+      "source_gap_id": "gap-001",
+      "title": "Resolve gap-001",
+      "question": "What is the minimal contract or workflow change needed to satisfy invariant 'design iteration is not general execution orchestrator'?",
+      "decision_target": "shared-contract-and-workflow-design",
+      "downstream_value": "unblock_implementation",
+      "why_now": "Design review automation documentation drifts into making design iteration the general execution runner.",
+      "artifact_refs": [
+        "docs/design-review-automation-v1.md"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,41 @@
+{
+  "packet_type": "execution_packet",
+  "packet_version": "v1",
+  "packet_id": "exec:n3",
+  "created_at": "2026-05-20T18:49:14Z",
+  "producer": "execution-slice-materialization",
+  "execution_id": "exec:n3",
+  "node_id": "n3",
+  "work_item_id": "n3",
+  "graph_id": "plan-selection-exercise-a-graph",
+  "task_summary": "Materialize execution-ready plan",
+  "required_inputs": [
+    "output:n2"
+  ],
+  "expected_outputs": [
+    "execution_ready_plan_packet",
+    "execution_packet[]"
+  ],
+  "validation_targets": [
+    "execution slices emitted deterministically",
+    "execution-ready packet matches contract"
+  ],
+  "blocking_dependencies": [
+    "exec:n2"
+  ],
+  "declared_ready_inputs": [
+    "output:n2"
+  ],
+  "conflict_domains": [
+    "planner-materialization"
+  ],
+  "required_approvals": [],
+  "completion_evidence_requirements": [
+    "passing materialization tests"
+  ],
+  "runnable_preconditions": [
+    "selected_scope:selected-scope:plan-selection-real-artifact-exercise:candidate-top-level-planning-orchestration",
+    "dependency_complete:n2"
+  ],
+  "source_structural_plan_ref": "artifacts/planner/examples/plan-selection-exercise/plan-a-structural.json"
+}

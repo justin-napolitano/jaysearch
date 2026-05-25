@@ -1,0 +1,12 @@
+{
+  "api_version": "public-orchestration.v1",
+  "command": "emit-solution-artifact",
+  "status": "ok",
+  "ok": true,
+  "run_id": "saf-20260521T190109Z",
+  "execution_unit_path": "/mnt/c/users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap/artifacts/execution-units/runs/meu-20260521T180114Z/execution-unit.packet.json",
+  "attempt_path": "/mnt/c/users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap/artifacts/execution-era-loop-smoke/runs/eels-20260521T190109Z/steps/gia-20260521T190109Z/implementation-attempt-01.packet.json",
+  "evaluation_path": "/mnt/c/users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap/artifacts/execution-era-loop-smoke/runs/eels-20260521T190109Z/steps/aie-20260521T190109Z/attempt-evaluation.packet.json",
+  "solution_artifact_path": "artifacts/execution-era-loop-smoke/runs/eels-20260521T190109Z/steps/saf-20260521T190109Z/solution-artifact.packet.json",
+  "blockers": []
+}

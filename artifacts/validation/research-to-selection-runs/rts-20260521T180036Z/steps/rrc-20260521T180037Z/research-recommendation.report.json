@@ -1,0 +1,24 @@
+{
+  "api_version": "public-orchestration.v1",
+  "command": "materialize-research-recommendation",
+  "status": "ok",
+  "ok": true,
+  "run_id": "rrc-20260521T180037Z",
+  "candidate_search_tree_path": "/mnt/c/users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap/artifacts/validation/research-to-selection-runs/rts-20260521T180036Z/steps/rct-20260521T180036Z/candidate-search-tree.packet.json",
+  "candidate_paths": [
+    "/mnt/c/users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap/artifacts/validation/research-to-selection-runs/rts-20260521T180036Z/steps/rct-20260521T180036Z/research-candidate-01.packet.json",
+    "/mnt/c/users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap/artifacts/validation/research-to-selection-runs/rts-20260521T180036Z/steps/rct-20260521T180036Z/research-candidate-02.packet.json",
+    "/mnt/c/users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap/artifacts/validation/research-to-selection-runs/rts-20260521T180036Z/steps/rct-20260521T180036Z/research-candidate-03.packet.json",
+    "/mnt/c/users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap/artifacts/validation/research-to-selection-runs/rts-20260521T180036Z/steps/rct-20260521T180036Z/research-candidate-04.packet.json"
+  ],
+  "evaluation_paths": [
+    "/mnt/c/users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap/artifacts/validation/research-to-selection-runs/rts-20260521T180036Z/steps/rev-20260521T180036Z/research-evaluation-01.packet.json",
+    "/mnt/c/users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap/artifacts/validation/research-to-selection-runs/rts-20260521T180036Z/steps/rev-20260521T180036Z/research-evaluation-02.packet.json",
+    "/mnt/c/users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap/artifacts/validation/research-to-selection-runs/rts-20260521T180036Z/steps/rev-20260521T180036Z/research-evaluation-03.packet.json",
+    "/mnt/c/users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap/artifacts/validation/research-to-selection-runs/rts-20260521T180036Z/steps/rev-20260521T180036Z/research-evaluation-04.packet.json"
+  ],
+  "evaluation_summary_path": "/mnt/c/users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap/artifacts/validation/research-to-selection-runs/rts-20260521T180036Z/steps/rev-20260521T180036Z/candidate-evaluation-summary.packet.json",
+  "recommendation_packet_path": "artifacts/validation/research-to-selection-runs/rts-20260521T180036Z/steps/rrc-20260521T180037Z/research-recommendation.packet.json",
+  "recommended_candidate_id": "research-problem:platform-template-bootstrap:evaluation-strength-contract-001:hypothesis:baseline_reference:candidate:001",
+  "blockers": []
+}

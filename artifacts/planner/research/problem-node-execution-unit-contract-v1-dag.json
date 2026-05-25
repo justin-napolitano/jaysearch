@@ -1,0 +1,139 @@
+{
+  "graph_id": "problem-node-execution-unit-contract-v1",
+  "graph_type": "implementation_dag",
+  "version": "v1",
+  "purpose": "Implement first-class problem_node, node_option, and execution_unit contract schemas and registry entries.",
+  "implementation_graph_ref": "artifacts/planner/research/design-review-automation-v1-implementation-graph.json",
+  "nodes": [
+    {
+      "node_id": "define-problem-node-schema",
+      "title": "Define Problem Node Schema",
+      "node_type": "contract",
+      "status": "ready",
+      "goal": "Create schema for manageable project problem nodes with readiness state and missing-field tracking.",
+      "owned_changes": [
+        "spec/contracts/problem-node.schema.yaml"
+      ],
+      "expected_outputs": [
+        "problem_node schema"
+      ],
+      "validation_targets": [
+        "required fields encoded",
+        "readiness states encoded"
+      ],
+      "completion_evidence_requirements": [
+        "contract test passes"
+      ]
+    },
+    {
+      "node_id": "define-node-option-schema",
+      "title": "Define Node Option Schema",
+      "node_type": "contract",
+      "status": "ready",
+      "goal": "Create schema for node options with implementation intent and expected changes.",
+      "owned_changes": [
+        "spec/contracts/node-option.schema.yaml"
+      ],
+      "expected_outputs": [
+        "node_option schema"
+      ],
+      "validation_targets": [
+        "implementation_intent required",
+        "expected changes required"
+      ],
+      "completion_evidence_requirements": [
+        "contract test passes"
+      ]
+    },
+    {
+      "node_id": "define-execution-unit-schema",
+      "title": "Define Execution Unit Schema",
+      "node_type": "contract",
+      "status": "ready",
+      "goal": "Create schema for buildable execution units with owned changes, validation commands, and rollback plan.",
+      "owned_changes": [
+        "spec/contracts/execution-unit.schema.yaml"
+      ],
+      "expected_outputs": [
+        "execution_unit schema"
+      ],
+      "validation_targets": [
+        "owned changes required",
+        "validation commands required",
+        "rollback plan required"
+      ],
+      "completion_evidence_requirements": [
+        "contract test passes"
+      ]
+    },
+    {
+      "node_id": "register-contracts",
+      "title": "Register Contracts",
+      "node_type": "contract",
+      "status": "ready",
+      "goal": "Add problem_node, node_option, and execution_unit to the packet schema registry and core contract docs.",
+      "owned_changes": [
+        "spec/contracts/packet-schema-registry.yaml",
+        "docs/core-contract-spec-v1.md"
+      ],
+      "expected_outputs": [
+        "registry entries",
+        "core contract documentation"
+      ],
+      "validation_targets": [
+        "registry entries include owners",
+        "registry entries include required fields"
+      ],
+      "completion_evidence_requirements": [
+        "design-iteration passes"
+      ]
+    },
+    {
+      "node_id": "add-contract-tests",
+      "title": "Add Contract Tests",
+      "node_type": "validation",
+      "status": "ready",
+      "goal": "Add tests for valid and invalid fixtures for all three new contracts.",
+      "owned_changes": [
+        "tests/test_problem_node_execution_unit_contracts.py"
+      ],
+      "expected_outputs": [
+        "contract tests"
+      ],
+      "validation_targets": [
+        "valid fixtures pass",
+        "invalid fixtures fail",
+        "selected-scope-shaped object does not validate as execution_unit"
+      ],
+      "completion_evidence_requirements": [
+        "pytest output"
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "edge_id": "e1",
+      "from_node_id": "register-contracts",
+      "to_node_id": "define-problem-node-schema",
+      "relation": "depends_on"
+    },
+    {
+      "edge_id": "e2",
+      "from_node_id": "register-contracts",
+      "to_node_id": "define-node-option-schema",
+      "relation": "depends_on"
+    },
+    {
+      "edge_id": "e3",
+      "from_node_id": "register-contracts",
+      "to_node_id": "define-execution-unit-schema",
+      "relation": "depends_on"
+    },
+    {
+      "edge_id": "e4",
+      "from_node_id": "add-contract-tests",
+      "to_node_id": "register-contracts",
+      "relation": "depends_on"
+    }
+  ]
+}

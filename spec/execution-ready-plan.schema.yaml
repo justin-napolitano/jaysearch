@@ -1,0 +1,53 @@
+version: v1
+updated_at: 2026-05-20
+title: Execution Ready Plan Schema
+type: object
+required:
+  - packet_type
+  - packet_version
+  - packet_id
+  - created_at
+  - producer
+  - plan_id
+  - selected_solution_scope_ref
+  - source_structural_plan_ref
+  - plan_readiness
+  - execution_slices
+  - materialization_policy_ref
+  - materialization_warnings
+properties:
+  packet_type:
+    const: execution_ready_plan_packet
+  packet_version:
+    type: string
+  packet_id:
+    type: string
+  created_at:
+    type: string
+  producer:
+    type: string
+  plan_id:
+    type: string
+  selected_solution_scope_ref:
+    type: string
+  source_structural_plan_ref:
+    type: string
+  plan_readiness:
+    const: execution_ready
+  execution_slices:
+    type: array
+    items:
+      type: object
+  materialization_policy_ref:
+    type: string
+  materialization_warnings:
+    type: array
+    items:
+      type: string
+  evidence_refs:
+    type: array
+    items:
+      type: string
+notes:
+  - execution-ready plans are produced only after structural plan selection
+  - governance should consume execution-ready plans and execution packets, not raw structural plans

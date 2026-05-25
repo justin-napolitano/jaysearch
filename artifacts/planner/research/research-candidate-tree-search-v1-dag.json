@@ -1,0 +1,112 @@
+{
+  "graph_id": "research-candidate-tree-search-v1",
+  "graph_type": "workflow_dag",
+  "version": "v1",
+  "purpose": "Generate a bounded candidate search tree from research hypotheses before empirical evaluation.",
+  "implementation_graph_ref": "artifacts/planner/research/design-review-automation-v1-implementation-graph.json",
+  "nodes": [
+    {
+      "node_id": "load-research-problem-and-hypotheses",
+      "title": "Load Research Problem And Hypotheses",
+      "node_type": "tool_call",
+      "status": "ready",
+      "goal": "Load the research problem and hypothesis packets that seed candidate search.",
+      "owned_changes": [
+        "artifacts/planner/examples/question-research-handoff/research-problem.packet.json",
+        "artifacts/research-hypotheses/"
+      ],
+      "expected_outputs": [
+        "candidate_search_seed"
+      ],
+      "validation_targets": [
+        "problem and hypotheses are contract-valid"
+      ],
+      "completion_evidence_requirements": [
+        "seed validation report"
+      ]
+    },
+    {
+      "node_id": "build-search-tree-root",
+      "title": "Build Search Tree Root",
+      "node_type": "materialization",
+      "status": "ready",
+      "goal": "Create the root and hypothesis-level search nodes.",
+      "owned_changes": [
+        "candidate_search_tree_packet"
+      ],
+      "expected_outputs": [
+        "root_node",
+        "hypothesis_nodes"
+      ],
+      "validation_targets": [
+        "one hypothesis node per source hypothesis"
+      ],
+      "completion_evidence_requirements": [
+        "partial search tree"
+      ]
+    },
+    {
+      "node_id": "expand-candidate-nodes",
+      "title": "Expand Candidate Nodes",
+      "node_type": "materialization",
+      "status": "ready",
+      "goal": "Create bounded candidate nodes below each viable hypothesis.",
+      "owned_changes": [
+        "research_candidate_packet[]",
+        "candidate_expansion_decision_packet[]"
+      ],
+      "expected_outputs": [
+        "research_candidate_packet[]",
+        "candidate_expansion_decision_packet[]"
+      ],
+      "validation_targets": [
+        "candidate count stays within policy",
+        "each candidate traces to a source hypothesis"
+      ],
+      "completion_evidence_requirements": [
+        "candidate packets",
+        "expansion decision packets"
+      ]
+    },
+    {
+      "node_id": "emit-candidate-search-tree",
+      "title": "Emit Candidate Search Tree",
+      "node_type": "materialization",
+      "status": "ready",
+      "goal": "Emit the final candidate search tree packet.",
+      "owned_changes": [
+        "candidate_search_tree_packet"
+      ],
+      "expected_outputs": [
+        "candidate_search_tree_packet"
+      ],
+      "validation_targets": [
+        "tree references all emitted candidates",
+        "tree is acyclic"
+      ],
+      "completion_evidence_requirements": [
+        "candidate search tree packet"
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "edge_id": "e1",
+      "from_node_id": "build-search-tree-root",
+      "to_node_id": "load-research-problem-and-hypotheses",
+      "relation": "depends_on"
+    },
+    {
+      "edge_id": "e2",
+      "from_node_id": "expand-candidate-nodes",
+      "to_node_id": "build-search-tree-root",
+      "relation": "depends_on"
+    },
+    {
+      "edge_id": "e3",
+      "from_node_id": "emit-candidate-search-tree",
+      "to_node_id": "expand-candidate-nodes",
+      "relation": "depends_on"
+    }
+  ]
+}

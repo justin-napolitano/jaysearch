@@ -1,0 +1,42 @@
+{
+  "packet_type": "design_gap_packet_bundle",
+  "packet_version": "v1",
+  "run_id": "dit-20260521T143026Z",
+  "gap_count": 2,
+  "gaps": [
+    {
+      "packet_type": "design_gap_packet",
+      "packet_version": "v1",
+      "gap_id": "gap-001",
+      "validator_family": "dag_consistency_checks",
+      "violated_invariant": "implementation_dependency_graph_must_be_acyclic",
+      "severity": "critical",
+      "blocking": true,
+      "summary": "The linked implementation graph contains a dependency cycle.",
+      "finding_refs": [
+        "dit-20260521T143026Z:implementation_dependency_cycle:1804740"
+      ],
+      "artifact_refs": [
+        "artifacts/planner/research/design-review-automation-v1-implementation-graph.json"
+      ]
+    },
+    {
+      "packet_type": "design_gap_packet",
+      "packet_version": "v1",
+      "gap_id": "gap-002",
+      "validator_family": "dag_consistency_checks",
+      "violated_invariant": "implementation_nodes_must_be_buildable_and_machine_readable",
+      "severity": "high",
+      "blocking": true,
+      "summary": "Implementation node 'idra-002' is invalid: missing non-empty changes list.",
+      "finding_refs": [
+        "dit-20260521T143026Z:implementation_node_shape_invalid:4001043",
+        "dit-20260521T143026Z:implementation_node_shape_invalid:649985",
+        "dit-20260521T143026Z:implementation_node_shape_invalid:9453679"
+      ],
+      "artifact_refs": [
+        "artifacts/planner/research/design-review-automation-v1-implementation-graph.json"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,71 @@
+{
+  "packet_type": "design_review_program_packet",
+  "packet_version": "v1",
+  "packet_id": "design-review-question-evidence-research-handoff-v1:program",
+  "created_at": "2026-05-21T14:55:53Z",
+  "producer": "orchestrate-design-review",
+  "review_id": "design-review-question-evidence-research-handoff-v1",
+  "review_request_ref": "artifacts/orchestration/examples/question-evidence-research-handoff-review-request.packet.json",
+  "review_nodes": [
+    {
+      "node_id": "review-evidence-basis",
+      "review_mode": "evidence_backed_claim_review",
+      "target_tool": "evidence-search-tool",
+      "operation_name": "assemble_evidence_packet",
+      "input_packet_refs": [
+        "artifacts/orchestration/examples/question-evidence-research-handoff-review-request.packet.json"
+      ],
+      "policy_ref": "bounded-review-evidence-policy-v1",
+      "reason": "Assemble bounded evidence packet for explicit design-review claims.",
+      "call_metadata": {
+        "request_path": "artifacts/orchestration/examples/question-evidence-research-handoff-review-request.packet.json"
+      }
+    },
+    {
+      "node_id": "review-self-loop",
+      "review_mode": "self_loop_review",
+      "target_tool": "design-iteration-tool",
+      "operation_name": "run_design_iteration",
+      "input_packet_refs": [
+        "artifacts/planner/research/design-review-automation-v1-dag.json",
+        "spec/contracts/packet-schema-registry.yaml",
+        "spec/contracts/design-iteration-checks.yaml"
+      ],
+      "policy_ref": "bounded-self-loop-review-policy-v1",
+      "reason": "Review the design-review automation loop artifacts with the design-iteration tool itself.",
+      "call_metadata": {
+        "design_iteration_root": "/mnt/c/users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap",
+        "dag_path": "artifacts/planner/research/design-review-automation-v1-dag.json",
+        "registry_path": "spec/contracts/packet-schema-registry.yaml",
+        "checkset_path": "spec/contracts/design-iteration-checks.yaml",
+        "plan_quality_scoring_path": "spec/plan-quality-scoring.yaml"
+      }
+    },
+    {
+      "node_id": "review-question-research-handoff",
+      "review_mode": "question_research_handoff_review",
+      "target_tool": "design-iteration-tool",
+      "operation_name": "review_question_research_handoff",
+      "input_packet_refs": [
+        "docs/question-tool-v1.md",
+        "docs/evidence-search-tool-v1.md",
+        "docs/research-tool-v1.md",
+        "spec/contracts/packet-schema-registry.yaml"
+      ],
+      "policy_ref": "bounded-question-research-handoff-review-policy-v1",
+      "reason": "Review whether the question-to-evidence-to-research handoff is sufficiently specified to build against.",
+      "call_metadata": {
+        "registry_path": "spec/contracts/packet-schema-registry.yaml",
+        "question_doc_path": "docs/question-tool-v1.md",
+        "evidence_doc_path": "docs/evidence-search-tool-v1.md",
+        "research_doc_path": "docs/research-tool-v1.md",
+        "review_surface_root": "/mnt/c/users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap"
+      }
+    }
+  ],
+  "stop_conditions": {
+    "max_tool_calls": 3,
+    "max_blocking_findings": 5,
+    "no_new_material_findings": true
+  }
+}

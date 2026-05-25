@@ -1,0 +1,139 @@
+{
+  "packet_type": "execution_ready_plan_packet",
+  "packet_version": "v1",
+  "packet_id": "plan-selection-exercise-a:execution-ready",
+  "created_at": "2026-05-20T18:49:14Z",
+  "producer": "execution-slice-materialization",
+  "plan_id": "plan-selection-exercise-a",
+  "selected_solution_scope_ref": "selected-scope:plan-selection-real-artifact-exercise:candidate-top-level-planning-orchestration",
+  "source_structural_plan_ref": "artifacts/planner/examples/plan-selection-exercise/plan-a-structural.json",
+  "plan_readiness": "execution_ready",
+  "execution_slices": [
+    {
+      "execution_id": "exec:n1",
+      "source_plan_id": "plan-selection-exercise-a",
+      "source_node_refs": [
+        "n1"
+      ],
+      "required_inputs": [
+        "scope:selected-scope:plan-selection-real-artifact-exercise:candidate-top-level-planning-orchestration"
+      ],
+      "expected_outputs": [
+        "normalized orchestration input contract"
+      ],
+      "validation_targets": [
+        "unit tests for orchestration argument handling"
+      ],
+      "blocking_dependencies": [],
+      "conflict_domains": [
+        "orchestration"
+      ],
+      "required_approvals": [],
+      "runnable_preconditions": [
+        "selected_scope:selected-scope:plan-selection-real-artifact-exercise:candidate-top-level-planning-orchestration"
+      ],
+      "completion_evidence_requirements": [
+        "passing orchestration input tests"
+      ]
+    },
+    {
+      "execution_id": "exec:n2",
+      "source_plan_id": "plan-selection-exercise-a",
+      "source_node_refs": [
+        "n2"
+      ],
+      "required_inputs": [
+        "output:n1"
+      ],
+      "expected_outputs": [
+        "ranked plan packet",
+        "comparison report"
+      ],
+      "validation_targets": [
+        "ranked plan packet emitted",
+        "hard-gate failures disqualify invalid plans"
+      ],
+      "blocking_dependencies": [
+        "exec:n1"
+      ],
+      "conflict_domains": [
+        "plan-quality"
+      ],
+      "required_approvals": [],
+      "runnable_preconditions": [
+        "selected_scope:selected-scope:plan-selection-real-artifact-exercise:candidate-top-level-planning-orchestration",
+        "dependency_complete:n1"
+      ],
+      "completion_evidence_requirements": [
+        "passing plan-quality tests"
+      ]
+    },
+    {
+      "execution_id": "exec:n3",
+      "source_plan_id": "plan-selection-exercise-a",
+      "source_node_refs": [
+        "n3"
+      ],
+      "required_inputs": [
+        "output:n2"
+      ],
+      "expected_outputs": [
+        "execution_ready_plan_packet",
+        "execution_packet[]"
+      ],
+      "validation_targets": [
+        "execution slices emitted deterministically",
+        "execution-ready packet matches contract"
+      ],
+      "blocking_dependencies": [
+        "exec:n2"
+      ],
+      "conflict_domains": [
+        "planner-materialization"
+      ],
+      "required_approvals": [],
+      "runnable_preconditions": [
+        "selected_scope:selected-scope:plan-selection-real-artifact-exercise:candidate-top-level-planning-orchestration",
+        "dependency_complete:n2"
+      ],
+      "completion_evidence_requirements": [
+        "passing materialization tests"
+      ]
+    },
+    {
+      "execution_id": "exec:n4",
+      "source_plan_id": "plan-selection-exercise-a",
+      "source_node_refs": [
+        "n4"
+      ],
+      "required_inputs": [
+        "output:n3"
+      ],
+      "expected_outputs": [
+        "governance_decision_packet",
+        "governance intake report"
+      ],
+      "validation_targets": [
+        "valid handoffs approve",
+        "incomplete handoffs block with explicit blockers"
+      ],
+      "blocking_dependencies": [
+        "exec:n3"
+      ],
+      "conflict_domains": [
+        "governance-intake"
+      ],
+      "required_approvals": [],
+      "runnable_preconditions": [
+        "selected_scope:selected-scope:plan-selection-real-artifact-exercise:candidate-top-level-planning-orchestration",
+        "dependency_complete:n3"
+      ],
+      "completion_evidence_requirements": [
+        "passing governance-intake tests"
+      ]
+    }
+  ],
+  "materialization_policy_ref": "spec/execution-materialization-policy.yaml",
+  "materialization_warnings": [],
+  "evidence_refs": []
+}

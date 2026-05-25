@@ -1,0 +1,27 @@
+{
+  "packet_type": "question_to_research_problem_transform",
+  "packet_version": "v1",
+  "packet_id": "research-problem:platform-template-bootstrap:evaluation-strength-contract-001:transform",
+  "created_at": "2026-05-21T16:44:23Z",
+  "producer": "question-to-research-problem-transform",
+  "research_question_ref": "/mnt/c/users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap/artifacts/planner/examples/evaluation-strength-and-evidence-search/evaluation-strength-question.packet.json",
+  "evidence_packet_ref": "/mnt/c/users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap/artifacts/planner/examples/evaluation-strength-and-evidence-search/evaluation-strength-evidence.packet.json",
+  "research_problem_ref": "artifacts/validation/evaluation-strength-runs/rts-20260521T164423Z/steps/qrpt-20260521T164423Z/research-problem.packet.json",
+  "traceability": {
+    "question_id": "evaluation-strength-contract-001",
+    "project_id": "platform-template-bootstrap",
+    "decision_target": "whether to add evaluation_strength and evaluation_method semantics to research_evaluation_packet and downstream recommendation gates",
+    "evaluation_targets": [
+      "contract completeness",
+      "truthful confidence labeling",
+      "recommendation gate compatibility",
+      "selection gate compatibility"
+    ],
+    "mapped_evaluation_criteria": [
+      "contract completeness",
+      "truthful confidence labeling",
+      "recommendation gate compatibility",
+      "selection gate compatibility"
+    ]
+  }
+}

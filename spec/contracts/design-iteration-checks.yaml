@@ -1,0 +1,203 @@
+version: 1
+checkset_id: design-iteration-checks-v1
+updated_at: "2026-05-20T00:00:00Z"
+finding_output_contract:
+  required_fields:
+    - finding_id
+    - validator_family
+    - check_id
+    - severity
+    - blocking
+    - finding_type
+    - artifact_refs
+    - violated_invariant
+    - summary
+severity_levels:
+  - critical
+  - high
+  - medium
+  - low
+blocking_rule:
+  description: >
+    A finding is blocking only if it can create duplicate authority, incompatible
+    interpretation of shared packets, execution flow breakage, governance
+    inability to evaluate runnable state, or silent versioning drift.
+validator_families:
+  - family: contract_consistency_checks
+    checks:
+      - check_id: contract_owner_defined
+        finding_type: missing_contract_owner
+        severity: critical
+        blocking: true
+        violated_invariant: every_shared_contract_has_one_canonical_owner
+      - check_id: contract_version_defined
+        finding_type: missing_contract_version
+        severity: critical
+        blocking: true
+        violated_invariant: every_shared_contract_has_one_declared_version
+      - check_id: contract_required_fields_defined
+        finding_type: missing_required_fields_definition
+        severity: high
+        blocking: true
+        violated_invariant: every_shared_contract_lists_required_fields
+      - check_id: optional_field_required_downstream
+        finding_type: optional_field_causes_drift
+        severity: critical
+        blocking: true
+        violated_invariant: downstream_required_fields_must_not_be_optional_upstream
+      - check_id: duplicate_contract_authority
+        finding_type: duplicate_authority
+        severity: critical
+        blocking: true
+        violated_invariant: shared_concepts_have_single_authority
+      - check_id: missing_transform_contract
+        finding_type: missing_transform_contract
+        severity: critical
+        blocking: true
+        violated_invariant: operationally_linked_packet_families_need_canonical_transform
+      - check_id: versioning_policy_missing
+        finding_type: versioning_policy_missing
+        severity: high
+        blocking: true
+        violated_invariant: packet_families_must_declare_compatibility_policy
+      - check_id: registry_entry_missing
+        finding_type: missing_registry_entry
+        severity: critical
+        blocking: true
+        violated_invariant: shared_contracts_must_be_in_registry
+  - family: dag_consistency_checks
+    checks:
+      - check_id: dag_node_type_valid
+        finding_type: invalid_node_type
+        severity: high
+        blocking: true
+        violated_invariant: dag_nodes_use_allowed_types
+      - check_id: dag_edge_relation_valid
+        finding_type: invalid_edge_relation
+        severity: high
+        blocking: true
+        violated_invariant: dag_edges_use_allowed_relations
+      - check_id: dag_dependency_cycle
+        finding_type: dependency_cycle
+        severity: critical
+        blocking: true
+        violated_invariant: dependency_graph_must_be_acyclic
+      - check_id: dag_unsatisfied_input_contract
+        finding_type: unsatisfied_input_contract
+        severity: critical
+        blocking: true
+        violated_invariant: node_inputs_must_be_satisfiable
+      - check_id: workflow_to_implementation_link_missing
+        finding_type: missing_workflow_graph_link
+        severity: high
+        blocking: true
+        violated_invariant: workflow_and_implementation_graph_link_must_be_canonical
+      - check_id: linked_implementation_graph_missing
+        finding_type: missing_linked_implementation_graph
+        severity: critical
+        blocking: true
+        violated_invariant: workflow_linked_implementation_graph_must_exist
+      - check_id: implementation_node_shape_invalid
+        finding_type: invalid_implementation_node_shape
+        severity: high
+        blocking: true
+        violated_invariant: implementation_nodes_must_be_buildable_and_machine_readable
+      - check_id: implementation_dependency_missing_node
+        finding_type: invalid_implementation_dependency_reference
+        severity: critical
+        blocking: true
+        violated_invariant: implementation_dependencies_must_reference_existing_nodes
+      - check_id: implementation_edge_relation_invalid
+        finding_type: invalid_implementation_edge_relation
+        severity: high
+        blocking: true
+        violated_invariant: implementation_edges_use_allowed_relations
+      - check_id: implementation_dependency_cycle
+        finding_type: implementation_dependency_cycle
+        severity: critical
+        blocking: true
+        violated_invariant: implementation_dependency_graph_must_be_acyclic
+      - check_id: planning_graph_shape_invalid
+        finding_type: invalid_planning_graph_shape
+        severity: high
+        blocking: true
+        violated_invariant: planning_graphs_must_expose_machine_readable_nodes_and_edges
+      - check_id: planning_dependency_missing_node
+        finding_type: invalid_planning_dependency_reference
+        severity: critical
+        blocking: true
+        violated_invariant: planning_graph_dependencies_must_reference_existing_nodes
+      - check_id: planning_edge_relation_invalid
+        finding_type: invalid_planning_edge_relation
+        severity: high
+        blocking: true
+        violated_invariant: planning_graph_edges_use_allowed_relations
+      - check_id: planning_dependency_cycle
+        finding_type: planning_dependency_cycle
+        severity: critical
+        blocking: true
+        violated_invariant: planning_dependency_graph_must_be_acyclic
+      - check_id: governance_gate_without_runnable_contract
+        finding_type: missing_runnable_contract_fields
+        severity: critical
+        blocking: true
+        violated_invariant: governance_needs_explicit_runnable_contract
+      - check_id: graph_level_misuse
+        finding_type: graph_level_misuse
+        severity: high
+        blocking: false
+        violated_invariant: dags_are_for_execution_not_universal_storage
+  - family: boundary_leakage_checks
+    checks:
+      - check_id: research_absorbs_evidence_search
+        finding_type: boundary_leakage_research_evidence
+        severity: high
+        blocking: false
+        violated_invariant: evidence_retrieval_belongs_to_evidence_search_tool
+      - check_id: research_absorbs_memory_authority
+        finding_type: boundary_leakage_research_memory
+        severity: medium
+        blocking: false
+        violated_invariant: memory_authority_belongs_to_memory_tool
+      - check_id: governance_reconstructs_plan_structure
+        finding_type: boundary_leakage_governance_planner
+        severity: critical
+        blocking: true
+        violated_invariant: governance_must_not_reconstruct_missing_planner_semantics
+      - check_id: runner_owns_domain_logic
+        finding_type: boundary_leakage_runner_domain_logic
+        severity: critical
+        blocking: true
+        violated_invariant: runner_must_not_own_domain_logic
+      - check_id: design_iteration_owns_execution_orchestration
+        finding_type: boundary_leakage_design_runner
+        severity: critical
+        blocking: true
+        violated_invariant: design_iteration_is_not_general_execution_orchestrator
+      - check_id: question_tool_replaces_design_iteration
+        finding_type: boundary_leakage_question_design
+        severity: medium
+        blocking: false
+        violated_invariant: question_tool_should_not_own_design_critique
+minimum_v1_check_ids:
+  - contract_owner_defined
+  - contract_version_defined
+  - optional_field_required_downstream
+  - duplicate_contract_authority
+  - missing_transform_contract
+  - registry_entry_missing
+  - dag_dependency_cycle
+  - dag_unsatisfied_input_contract
+  - linked_implementation_graph_missing
+  - implementation_node_shape_invalid
+  - implementation_dependency_missing_node
+  - implementation_edge_relation_invalid
+  - implementation_dependency_cycle
+  - planning_graph_shape_invalid
+  - planning_dependency_missing_node
+  - planning_edge_relation_invalid
+  - planning_dependency_cycle
+  - governance_gate_without_runnable_contract
+  - governance_reconstructs_plan_structure
+  - runner_owns_domain_logic
+  - design_iteration_owns_execution_orchestration

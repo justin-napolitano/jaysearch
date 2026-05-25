@@ -1,0 +1,25 @@
+{
+  "packet_type": "question_to_research_problem_transform",
+  "packet_version": "v1",
+  "packet_id": "research-problem:platform-template-bootstrap:question-research-handoff-001:transform",
+  "created_at": "2026-05-21T15:02:40Z",
+  "producer": "question-to-research-problem-transform",
+  "research_question_ref": "/mnt/c/users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap/artifacts/planner/examples/question-research-handoff/research-question.packet.json",
+  "evidence_packet_ref": "/mnt/c/users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap/artifacts/planner/examples/question-research-handoff/evidence.packet.json",
+  "research_problem_ref": "artifacts/orchestration/question-research-handoff-runs/qrpt-20260521T150240Z/research-problem.packet.json",
+  "traceability": {
+    "question_id": "question-research-handoff-001",
+    "project_id": "platform-template-bootstrap",
+    "decision_target": "whether to build a shared question_to_research_problem_transform surface",
+    "evaluation_targets": [
+      "contract completeness",
+      "traceability",
+      "downstream research readiness"
+    ],
+    "mapped_evaluation_criteria": [
+      "contract completeness",
+      "traceability",
+      "downstream research readiness"
+    ]
+  }
+}

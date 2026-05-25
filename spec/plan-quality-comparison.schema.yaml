@@ -1,0 +1,128 @@
+version: v1
+updated_at: 2026-05-20
+title: Plan Quality Comparison Schema
+type: object
+packet_families:
+  candidate_plan_comparison_packet:
+    type: object
+    required:
+      - packet_type
+      - packet_version
+      - comparison_id
+      - selected_solution_scope_ref
+      - candidate_plan_refs
+      - plan_quality_policy_ref
+    properties:
+      packet_type:
+        const: candidate_plan_comparison_packet
+      packet_version:
+        type: string
+      comparison_id:
+        type: string
+      selected_solution_scope_ref:
+        type: string
+      candidate_plan_refs:
+        type: array
+        items:
+          type: string
+      plan_quality_policy_ref:
+        type: string
+      evidence_packet_refs:
+        type: array
+        items:
+          type: string
+      prior_execution_evidence_refs:
+        type: array
+        items:
+          type: string
+      comparison_notes:
+        type: array
+        items:
+          type: string
+  plan_quality_score_packet:
+    type: object
+    required:
+      - packet_type
+      - packet_version
+      - comparison_id
+      - candidate_plan_ref
+      - hard_gate_results
+      - qualified_for_ranking
+      - primary_metric_scores
+      - secondary_metric_scores
+      - aggregate_score
+    properties:
+      packet_type:
+        const: plan_quality_score_packet
+      packet_version:
+        type: string
+      comparison_id:
+        type: string
+      candidate_plan_ref:
+        type: string
+      hard_gate_results:
+        type: array
+        items:
+          type: object
+      qualified_for_ranking:
+        type: boolean
+      primary_metric_scores:
+        type: object
+      secondary_metric_scores:
+        type: object
+      aggregate_score:
+        type: number
+      evidence_adjustments:
+        type: array
+        items:
+          type: object
+      anti_cheat_flags:
+        type: array
+        items:
+          type: string
+      explanation:
+        type: array
+        items:
+          type: string
+  ranked_plan_packet:
+    type: object
+    required:
+      - packet_type
+      - packet_version
+      - comparison_id
+      - selected_solution_scope_ref
+      - ranked_plan_refs
+      - recommended_plan_ref
+      - recommendation_reason
+    properties:
+      packet_type:
+        const: ranked_plan_packet
+      packet_version:
+        type: string
+      comparison_id:
+        type: string
+      selected_solution_scope_ref:
+        type: string
+      ranked_plan_refs:
+        type: array
+        items:
+          type: string
+      recommended_plan_ref:
+        type: string
+      recommendation_reason:
+        type: string
+      tradeoff_summary:
+        type: array
+        items:
+          type: string
+      disqualified_plan_refs:
+        type: array
+        items:
+          type: string
+      evidence_packet_refs:
+        type: array
+        items:
+          type: string
+notes:
+  - comparison packets operate on candidate structural plans before execution-slice materialization
+  - chosen plans must later be promoted into execution_ready form before governance and governed execution

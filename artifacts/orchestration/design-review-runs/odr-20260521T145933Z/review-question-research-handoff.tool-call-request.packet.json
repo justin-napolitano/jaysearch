@@ -1,0 +1,20 @@
+{
+  "packet_type": "tool_call_request_packet",
+  "packet_version": "v1",
+  "packet_id": "odr-20260521T145933Z:odr-20260521T145933Z:review-question-research-handoff:request",
+  "created_at": "2026-05-21T14:59:34Z",
+  "producer": "orchestrate-design-review",
+  "call_id": "odr-20260521T145933Z:review-question-research-handoff",
+  "run_id": "odr-20260521T145933Z",
+  "requester": "design-iteration-tool",
+  "target_tool": "design-iteration-tool",
+  "operation_name": "review_question_research_handoff",
+  "input_packet_refs": [
+    "docs/question-tool-v1.md",
+    "docs/evidence-search-tool-v1.md",
+    "docs/research-tool-v1.md",
+    "spec/contracts/packet-schema-registry.yaml"
+  ],
+  "policy_ref": "bounded-question-research-handoff-review-policy-v1",
+  "reason": "Review whether the question-to-evidence-to-research handoff is sufficiently specified to build against."
+}

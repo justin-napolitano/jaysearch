@@ -1,0 +1,132 @@
+{
+  "api_version": "public-orchestration.v1",
+  "command": "orchestrate-design-review",
+  "status": "ok",
+  "ok": true,
+  "run_id": "odr-20260521T143121Z",
+  "program_path": "/mnt/c/users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap/artifacts/orchestration/design-review-runs/drp-20260521T143121Z/design-review-program.packet.json",
+  "request_packet_paths": [
+    "artifacts/orchestration/design-review-runs/odr-20260521T143121Z/review-plan-quality.tool-call-request.packet.json",
+    "artifacts/orchestration/design-review-runs/odr-20260521T143121Z/review-evidence-basis.tool-call-request.packet.json",
+    "artifacts/orchestration/design-review-runs/odr-20260521T143121Z/review-governance-handoff.tool-call-request.packet.json",
+    "artifacts/orchestration/design-review-runs/odr-20260521T143121Z/review-self-loop.tool-call-request.packet.json"
+  ],
+  "result_packet_paths": [
+    "artifacts/orchestration/design-review-runs/odr-20260521T143121Z/review-plan-quality.tool-call-result.packet.json",
+    "artifacts/orchestration/design-review-runs/odr-20260521T143121Z/review-evidence-basis.tool-call-result.packet.json",
+    "artifacts/orchestration/design-review-runs/odr-20260521T143121Z/review-governance-handoff.tool-call-result.packet.json",
+    "artifacts/orchestration/design-review-runs/odr-20260521T143121Z/review-self-loop.tool-call-result.packet.json"
+  ],
+  "step_reports": [
+    {
+      "node_id": "review-plan-quality",
+      "target_tool": "plan-quality-score",
+      "operation_name": "compare_plans",
+      "status": "ok",
+      "ok": true,
+      "request_packet_path": "artifacts/orchestration/design-review-runs/odr-20260521T143121Z/review-plan-quality.tool-call-request.packet.json",
+      "result_packet_path": "artifacts/orchestration/design-review-runs/odr-20260521T143121Z/review-plan-quality.tool-call-result.packet.json",
+      "report": {
+        "command": "plan-quality-score",
+        "run_id": "pqs-20260521T143122Z",
+        "comparison_id": "pqs-20260521T143122Z:cmp",
+        "status": "ok",
+        "selected_solution_scope_ref": "selected-scope:plan-selection-real-artifact-exercise:candidate-top-level-planning-orchestration",
+        "candidate_plan_count": 2,
+        "qualified_plan_count": 2,
+        "disqualified_plan_count": 0,
+        "recommended_plan_ref": "artifacts/planner/examples/plan-selection-exercise/plan-a-structural.json",
+        "comparison_packet_path": "artifacts/orchestration/design-review-runs/pqs-20260521T143122Z/candidate-plan-comparison.packet.json",
+        "ranked_packet_path": "artifacts/orchestration/design-review-runs/pqs-20260521T143122Z/ranked-plan.packet.json",
+        "score_packet_paths": [
+          "artifacts/orchestration/design-review-runs/pqs-20260521T143122Z/plan-quality-score-01.packet.json",
+          "artifacts/orchestration/design-review-runs/pqs-20260521T143122Z/plan-quality-score-02.packet.json"
+        ],
+        "output_root": "artifacts/orchestration/design-review-runs/pqs-20260521T143122Z",
+        "policy_ref": "spec/plan-quality-scoring.yaml",
+        "blockers": [],
+        "ok": true
+      }
+    },
+    {
+      "node_id": "review-evidence-basis",
+      "target_tool": "evidence-search-tool",
+      "operation_name": "assemble_evidence_packet",
+      "status": "ok",
+      "ok": true,
+      "request_packet_path": "artifacts/orchestration/design-review-runs/odr-20260521T143121Z/review-evidence-basis.tool-call-request.packet.json",
+      "result_packet_path": "artifacts/orchestration/design-review-runs/odr-20260521T143121Z/review-evidence-basis.tool-call-result.packet.json",
+      "report": {
+        "api_version": "public-orchestration.v1",
+        "command": "review-evidence-adapter",
+        "status": "ok",
+        "ok": true,
+        "run_id": "rea-20260521T143122Z",
+        "request_path": "/mnt/c/users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap/artifacts/orchestration/examples/design-review-request.packet.json",
+        "evidence_packet_path": "artifacts/orchestration/design-review-runs/rea-20260521T143122Z/evidence.packet.json",
+        "source_count": 3,
+        "claim_count": 3,
+        "blockers": []
+      }
+    },
+    {
+      "node_id": "review-governance-handoff",
+      "target_tool": "governance-tool",
+      "operation_name": "validate_execution_intake",
+      "status": "ok",
+      "ok": true,
+      "request_packet_path": "artifacts/orchestration/design-review-runs/odr-20260521T143121Z/review-governance-handoff.tool-call-request.packet.json",
+      "result_packet_path": "artifacts/orchestration/design-review-runs/odr-20260521T143121Z/review-governance-handoff.tool-call-result.packet.json",
+      "report": {
+        "api_version": "public-orchestration.v1",
+        "command": "governance-execution-intake",
+        "status": "ok",
+        "ok": true,
+        "run_id": "gei-20260521T143122Z",
+        "execution_ready_plan_path": "/mnt/c/users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap/artifacts/orchestration/research-plan-selection-runs/esm-20260520T184914Z/execution-ready-plan.packet.json",
+        "execution_packet_paths": [
+          "/mnt/c/users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap/artifacts/orchestration/research-plan-selection-runs/esm-20260520T184914Z/execution-packet-01.packet.json",
+          "/mnt/c/users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap/artifacts/orchestration/research-plan-selection-runs/esm-20260520T184914Z/execution-packet-02.packet.json",
+          "/mnt/c/users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap/artifacts/orchestration/research-plan-selection-runs/esm-20260520T184914Z/execution-packet-03.packet.json",
+          "/mnt/c/users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap/artifacts/orchestration/research-plan-selection-runs/esm-20260520T184914Z/execution-packet-04.packet.json"
+        ],
+        "decision_packet_path": "artifacts/orchestration/design-review-runs/gei-20260521T143122Z/governance-decision.packet.json",
+        "blockers": [],
+        "warnings": []
+      }
+    },
+    {
+      "node_id": "review-self-loop",
+      "target_tool": "design-iteration-tool",
+      "operation_name": "run_design_iteration",
+      "status": "ok",
+      "ok": true,
+      "request_packet_path": "artifacts/orchestration/design-review-runs/odr-20260521T143121Z/review-self-loop.tool-call-request.packet.json",
+      "result_packet_path": "artifacts/orchestration/design-review-runs/odr-20260521T143121Z/review-self-loop.tool-call-result.packet.json",
+      "report": {
+        "api_version": "public-orchestration.v1",
+        "command": "design-iteration",
+        "status": "ok",
+        "ok": true,
+        "run_id": "dit-20260521T143122Z",
+        "root": "/mnt/c/users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap",
+        "registry_path": "/mnt/c/users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap/spec/contracts/packet-schema-registry.yaml",
+        "checkset_path": "/mnt/c/users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap/spec/contracts/design-iteration-checks.yaml",
+        "dag_path": "/mnt/c/users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap/artifacts/planner/research/design-review-automation-v1-dag.json",
+        "output_root": "/mnt/c/users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap/artifacts/orchestration/design-review-runs/dit-20260521T143122Z",
+        "plan_quality_scoring_path": "/mnt/c/users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap/spec/plan-quality-scoring.yaml",
+        "findings_packet_path": "/mnt/c/users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap/artifacts/orchestration/design-review-runs/dit-20260521T143122Z/design-findings.packet.json",
+        "gaps_packet_path": "/mnt/c/users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap/artifacts/orchestration/design-review-runs/dit-20260521T143122Z/design-gaps.packet.json",
+        "question_candidates_path": "/mnt/c/users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap/artifacts/orchestration/design-review-runs/dit-20260521T143122Z/next-question-candidates.packet.json",
+        "findings_log_path": "/mnt/c/users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap/artifacts/orchestration/design-review-runs/dit-20260521T143122Z/findings.jsonl",
+        "finding_count": 0,
+        "blocking_finding_count": 0,
+        "gap_count": 0,
+        "question_candidate_count": 0,
+        "inspected_planning_graph_count": 9,
+        "blockers": []
+      }
+    }
+  ],
+  "blockers": []
+}

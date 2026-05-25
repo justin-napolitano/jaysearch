@@ -1,0 +1,137 @@
+{
+  "graph_id": "execution-era-loop-v1",
+  "graph_type": "workflow_dag",
+  "version": "v1",
+  "purpose": "Generate, evaluate, select, and attach implementation attempts for one execution unit.",
+  "implementation_graph_ref": "artifacts/planner/research/design-review-automation-v1-implementation-graph.json",
+  "nodes": [
+    {
+      "node_id": "load-execution-unit",
+      "title": "Load Execution Unit",
+      "node_type": "tool_call",
+      "status": "ready",
+      "goal": "Load the buildable execution unit and validate owned changes, acceptance checks, and validation commands.",
+      "owned_changes": [
+        "execution_unit"
+      ],
+      "expected_outputs": [
+        "execution_unit_inventory"
+      ],
+      "validation_targets": [
+        "execution unit has implementation intent",
+        "execution unit has owned changes",
+        "execution unit has validation commands"
+      ],
+      "completion_evidence_requirements": [
+        "execution unit inventory"
+      ]
+    },
+    {
+      "node_id": "generate-implementation-attempts",
+      "title": "Generate Implementation Attempts",
+      "node_type": "tool_call",
+      "status": "ready",
+      "goal": "Generate candidate implementation attempts inside the execution unit boundary.",
+      "owned_changes": [
+        "implementation_attempt[]"
+      ],
+      "expected_outputs": [
+        "implementation_attempt[]"
+      ],
+      "validation_targets": [
+        "attempts reference execution unit",
+        "attempts stay within owned changes"
+      ],
+      "completion_evidence_requirements": [
+        "attempt packets"
+      ]
+    },
+    {
+      "node_id": "evaluate-attempts",
+      "title": "Evaluate Attempts",
+      "node_type": "tool_call",
+      "status": "ready",
+      "goal": "Run validation and critique for each implementation attempt.",
+      "owned_changes": [
+        "attempt_evaluation[]"
+      ],
+      "expected_outputs": [
+        "attempt_evaluation[]"
+      ],
+      "validation_targets": [
+        "required validation commands run or blockers recorded",
+        "review findings recorded"
+      ],
+      "completion_evidence_requirements": [
+        "attempt evaluation packets"
+      ]
+    },
+    {
+      "node_id": "select-best-attempt",
+      "title": "Select Best Attempt",
+      "node_type": "policy_gate",
+      "status": "ready",
+      "goal": "Select the highest-quality valid attempt.",
+      "owned_changes": [
+        "selected_attempt_ref"
+      ],
+      "expected_outputs": [
+        "selected implementation attempt"
+      ],
+      "validation_targets": [
+        "selected attempt has no blocking findings",
+        "selected attempt has evaluation"
+      ],
+      "completion_evidence_requirements": [
+        "selection decision"
+      ]
+    },
+    {
+      "node_id": "emit-solution-artifact",
+      "title": "Emit Solution Artifact",
+      "node_type": "materialization",
+      "status": "ready",
+      "goal": "Emit solution artifact that completes or advances the execution unit.",
+      "owned_changes": [
+        "solution_artifact"
+      ],
+      "expected_outputs": [
+        "solution_artifact"
+      ],
+      "validation_targets": [
+        "solution references selected attempt",
+        "solution references evaluation",
+        "solution includes completion evidence"
+      ],
+      "completion_evidence_requirements": [
+        "solution artifact packet"
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "edge_id": "e1",
+      "from_node_id": "generate-implementation-attempts",
+      "to_node_id": "load-execution-unit",
+      "relation": "depends_on"
+    },
+    {
+      "edge_id": "e2",
+      "from_node_id": "evaluate-attempts",
+      "to_node_id": "generate-implementation-attempts",
+      "relation": "depends_on"
+    },
+    {
+      "edge_id": "e3",
+      "from_node_id": "select-best-attempt",
+      "to_node_id": "evaluate-attempts",
+      "relation": "depends_on"
+    },
+    {
+      "edge_id": "e4",
+      "from_node_id": "emit-solution-artifact",
+      "to_node_id": "select-best-attempt",
+      "relation": "depends_on"
+    }
+  ]
+}

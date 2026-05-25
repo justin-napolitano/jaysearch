@@ -1,0 +1,19 @@
+{
+  "packet_type": "ranked_plan_packet",
+  "packet_version": "v1",
+  "comparison_id": "pqs-20260520T184358Z:cmp",
+  "selected_solution_scope_ref": "selected-scope-plan-selection-exercise",
+  "ranked_plan_refs": [
+    "artifacts/planner/examples/plan-selection-exercise/plan-a-structural.json",
+    "artifacts/planner/examples/plan-selection-exercise/plan-b-structural.json"
+  ],
+  "recommended_plan_ref": "artifacts/planner/examples/plan-selection-exercise/plan-a-structural.json",
+  "recommendation_reason": "highest aggregate score among plans passing hard gates",
+  "tradeoff_summary": [
+    "hard-gate failures disqualify plans before ranking",
+    "aggregate score is policy-weighted and evidence-aware",
+    "anti-cheat flags are advisory and should be reviewed explicitly"
+  ],
+  "disqualified_plan_refs": [],
+  "evidence_packet_refs": []
+}

@@ -1,0 +1,31 @@
+{
+  "packet_type": "evidence_packet",
+  "packet_version": "v1",
+  "packet_id": "evidence:evidence-search-runtime-001",
+  "created_at": "2026-05-21T00:00:00Z",
+  "producer": "agent/codex",
+  "problem_id": "evidence-search-runtime-001",
+  "source_refs": [
+    "https://arxiv.org/abs/2005.11401",
+    "https://arxiv.org/abs/2305.11738",
+    "https://www.w3.org/TR/prov-overview/",
+    "https://arxiv.org/abs/2310.06770"
+  ],
+  "claim_refs": [
+    "retrieval improves knowledge-intensive generation by grounding generation in external sources",
+    "tool-grounded critique is stronger than unsupported introspection",
+    "source and artifact provenance should remain explicit",
+    "software evaluation should be task-grounded and evidence-backed"
+  ],
+  "method_refs": [
+    "retrieval-augmented generation",
+    "tool-assisted critique",
+    "provenance modeling",
+    "task-grounded evaluation"
+  ],
+  "benchmark_refs": [
+    "bounded evidence search",
+    "research-to-selection validation report"
+  ],
+  "evidence_summary": "Evidence-search v1 should use bounded query generation, source normalization, source ranking, and rejection traceability before emitting evidence packets."
+}

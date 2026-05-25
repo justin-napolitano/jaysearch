@@ -1,0 +1,29 @@
+{
+  "api_version": "public-orchestration.v1",
+  "command": "materialize-execution-unit",
+  "status": "ok",
+  "ok": true,
+  "run_id": "meu-20260521T180114Z",
+  "selected_scope_path": "/mnt/c/users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap/artifacts/validation/research-to-selection-runs/rts-20260521T180036Z/steps/sss-20260521T180037Z/selected-solution-scope.packet.json",
+  "target_state": "implementation_ready",
+  "emitted_packet_refs": {
+    "problem_node_path": "artifacts/execution-units/runs/meu-20260521T180114Z/problem-node.packet.json",
+    "node_option_path": "artifacts/execution-units/runs/meu-20260521T180114Z/node-option.packet.json",
+    "execution_unit_path": "artifacts/execution-units/runs/meu-20260521T180114Z/execution-unit.packet.json"
+  },
+  "readiness_report": {
+    "api_version": "public-orchestration.v1",
+    "command": "validate-node-readiness",
+    "status": "ok",
+    "ok": true,
+    "node_path": "/mnt/c/users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap/artifacts/execution-units/runs/meu-20260521T180114Z/execution-unit.packet.json",
+    "policy_path": "/mnt/c/users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap/spec/node-readiness-policy.yaml",
+    "packet_type": "execution_unit",
+    "readiness_state": "",
+    "target_state": "implementation_ready",
+    "ready": true,
+    "missing_fields": [],
+    "blockers": []
+  },
+  "blockers": []
+}

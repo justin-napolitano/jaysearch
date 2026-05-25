@@ -1,0 +1,20 @@
+{
+  "command": "execution-slice-materialization",
+  "run_id": "esm-20260520T184914Z",
+  "status": "ok",
+  "blockers": [],
+  "ok": true,
+  "selected_scope_ref": "selected-scope:plan-selection-real-artifact-exercise:candidate-top-level-planning-orchestration",
+  "chosen_structural_plan_ref": "artifacts/planner/examples/plan-selection-exercise/plan-a-structural.json",
+  "execution_ready_plan_path": "artifacts/orchestration/research-plan-selection-runs/esm-20260520T184914Z/execution-ready-plan.packet.json",
+  "execution_packet_paths": [
+    "artifacts/orchestration/research-plan-selection-runs/esm-20260520T184914Z/execution-packet-01.packet.json",
+    "artifacts/orchestration/research-plan-selection-runs/esm-20260520T184914Z/execution-packet-02.packet.json",
+    "artifacts/orchestration/research-plan-selection-runs/esm-20260520T184914Z/execution-packet-03.packet.json",
+    "artifacts/orchestration/research-plan-selection-runs/esm-20260520T184914Z/execution-packet-04.packet.json"
+  ],
+  "execution_slice_count": 4,
+  "materialization_warning_count": 0,
+  "materialization_warnings": [],
+  "output_root": "artifacts/orchestration/research-plan-selection-runs/esm-20260520T184914Z"
+}

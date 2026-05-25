@@ -1,0 +1,32 @@
+version: v1
+contract_name: applied_solution
+contract_kind: packet
+owner: implementation-orchestrator
+description: >
+  Evidence-backed record that a promoted solution_artifact was applied in an
+  isolated target and passed post-apply validation.
+required_fields:
+  - packet_type
+  - packet_version
+  - packet_id
+  - created_at
+  - producer
+  - applied_solution_id
+  - source_solution_artifact_ref
+  - source_execution_unit_ref
+  - selected_attempt_ref
+  - evaluation_ref
+  - patch_ref
+  - apply_target_ref
+  - apply_result_ref
+  - validation_result_refs
+  - applied_artifact_refs
+  - status
+  - blockers
+properties:
+  packet_type:
+    const: applied_solution
+invariants:
+  - applied_solutions_require_promoted_solution_artifact
+  - applied_solutions_require_isolated_apply_by_default
+  - applied_solutions_require_post_apply_validation_evidence

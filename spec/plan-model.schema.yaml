@@ -1,0 +1,174 @@
+version: v1
+updated_at: 2026-05-20
+title: Plan Model Schema
+type: object
+required:
+  - plan_id
+  - selected_solution_scope_ref
+  - graph_id
+  - plan_type
+  - status
+  - nodes
+  - edges
+properties:
+  plan_id:
+    type: string
+  selected_solution_scope_ref:
+    type: string
+  graph_id:
+    type: string
+  plan_type:
+    enum: ["implementation_plan", "workflow_plan"]
+  status:
+    enum: ["draft", "ready", "active", "blocked", "completed", "archived"]
+  purpose:
+    type: string
+  assumptions:
+    type: array
+    items:
+      type: string
+  risks:
+    type: array
+    items:
+      type: string
+  quality_policy_ref:
+    type: string
+  plan_readiness:
+    enum: ["candidate", "execution_ready"]
+  nodes:
+    type: array
+    items:
+      type: object
+      required:
+        - node_id
+        - title
+        - node_type
+        - status
+        - goal
+        - owned_changes
+        - conflict_domains
+        - expected_outputs
+        - validation_targets
+        - completion_evidence_requirements
+      properties:
+        node_id:
+          type: string
+        title:
+          type: string
+        node_type:
+          enum: ["task", "artifact", "validation", "handoff", "decision", "question"]
+        status:
+          enum: ["draft", "ready", "blocked", "in_progress", "in_review", "validated", "done"]
+        goal:
+          type: string
+        summary:
+          type: string
+        owned_changes:
+          type: array
+          items:
+            type: string
+        conflict_domains:
+          type: array
+          items:
+            type: string
+        expected_outputs:
+          type: array
+          items:
+            type: string
+        validation_targets:
+          type: array
+          items:
+            type: string
+        completion_evidence_requirements:
+          type: array
+          items:
+            type: string
+        assumptions:
+          type: array
+          items:
+            type: string
+        artifact_refs:
+          type: array
+          items:
+            type: string
+  edges:
+    type: array
+    items:
+      type: object
+      required:
+        - edge_id
+        - from_node_id
+        - to_node_id
+        - relation
+      properties:
+        edge_id:
+          type: string
+        from_node_id:
+          type: string
+        to_node_id:
+          type: string
+        relation:
+          enum: ["depends_on", "gated_by", "conflicts_with", "informed_by"]
+        rationale:
+          type: string
+  execution_slices:
+    type: array
+    items:
+      type: object
+      required:
+        - execution_id
+        - source_plan_id
+        - source_node_refs
+        - required_inputs
+        - expected_outputs
+        - validation_targets
+        - blocking_dependencies
+        - conflict_domains
+      properties:
+        execution_id:
+          type: string
+        source_plan_id:
+          type: string
+        source_node_refs:
+          type: array
+          items:
+            type: string
+        required_inputs:
+          type: array
+          items:
+            type: string
+        expected_outputs:
+          type: array
+          items:
+            type: string
+        validation_targets:
+          type: array
+          items:
+            type: string
+        blocking_dependencies:
+          type: array
+          items:
+            type: string
+        conflict_domains:
+          type: array
+          items:
+            type: string
+        runnable_preconditions:
+          type: array
+          items:
+            type: string
+        completion_evidence_requirements:
+          type: array
+          items:
+            type: string
+invariants:
+  - one_plan_targets_one_selected_solution_scope
+  - plan_dependencies_are_machine_readable
+  - nodes_must_be_bounded_and_validatable
+  - execution_slices_must_be_governable_without_hidden_prose
+  - only_valid_plans_compete_on_quality
+  - execution_ready_plans_must_be_materialized_before_governance
+notes:
+  - candidate plans may omit execution_slices during comparison
+  - execution_ready plans must include execution_slices before governance and governed execution
+  - execution_slices are produced by downstream execution-slice materialization, not required for early structural plan comparison

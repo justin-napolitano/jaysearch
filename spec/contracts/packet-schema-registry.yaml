@@ -1,0 +1,1076 @@
+version: 1
+registry_id: core-contract-registry-v1
+updated_at: "2026-05-20T00:00:00Z"
+description: >
+  Canonical shared contract registry for cross-tool packet, DAG, run, policy,
+  and transform contracts. This is the single authority for contract family
+  ownership and compatibility policy.
+contract_families:
+  - contract_name: packet_base
+    contract_kind: packet
+    owner: shared-contract-layer
+    current_version: v1
+    compatibility_policy: additive_minor_breaking_major
+    status: active
+    required_fields:
+      - packet_type
+      - packet_version
+      - packet_id
+      - created_at
+      - producer
+    upstream_producers:
+      - shared-contract-layer
+    downstream_consumers:
+      - question-tool
+      - evidence-search-tool
+      - memory-tool
+      - research-tool
+      - planner-tool
+      - governance-tool
+      - orchestration-runner
+      - design-iteration-tool
+  - contract_name: message_envelope
+    contract_kind: run
+    owner: orchestration-runner
+    current_version: v1
+    compatibility_policy: additive_minor_breaking_major
+    status: active
+    required_fields:
+      - message_id
+      - message_type
+      - run_id
+      - node_id
+      - source
+      - target
+      - payload_ref
+      - created_at
+      - correlation_id
+    upstream_producers:
+      - orchestration-runner
+    downstream_consumers:
+      - question-tool
+      - evidence-search-tool
+      - memory-tool
+      - research-tool
+      - planner-tool
+      - governance-tool
+      - design-iteration-tool
+  - contract_name: workflow_request_packet
+    contract_kind: run
+    owner: orchestration-runner
+    current_version: v1
+    compatibility_policy: additive_minor_breaking_major
+    status: active
+    required_fields:
+      - workflow_request_id
+      - workflow_type
+      - initial_packet_ref
+      - requested_outputs
+      - policy_ref
+    upstream_producers:
+      - orchestration-runner
+      - design-iteration-tool
+    downstream_consumers:
+      - orchestration-runner
+  - contract_name: run_status_packet
+    contract_kind: run
+    owner: orchestration-runner
+    current_version: v1
+    compatibility_policy: additive_minor_breaking_major
+    status: active
+    required_fields:
+      - run_id
+      - workflow_type
+      - status
+      - current_step
+      - completed_steps
+      - failed_steps
+      - artifact_refs
+      - last_event_ref
+    upstream_producers:
+      - orchestration-runner
+    downstream_consumers:
+      - design-iteration-tool
+      - governance-tool
+  - contract_name: failure_packet
+    contract_kind: run
+    owner: orchestration-runner
+    current_version: v1
+    compatibility_policy: additive_minor_breaking_major
+    status: active
+    required_fields:
+      - failure_id
+      - run_id
+      - node_id
+      - failure_class
+      - failure_reason
+      - retryable
+      - artifact_refs
+      - recorded_at
+    upstream_producers:
+      - orchestration-runner
+      - governance-tool
+      - planner-tool
+      - research-tool
+      - design-iteration-tool
+    downstream_consumers:
+      - orchestration-runner
+      - design-iteration-tool
+  - contract_name: design_review_request_packet
+    contract_kind: packet
+    owner: design-iteration-tool
+    current_version: v1
+    compatibility_policy: additive_minor_breaking_major
+    status: active
+    required_fields:
+      - packet_type
+      - packet_version
+      - packet_id
+      - created_at
+      - producer
+      - review_id
+      - system_scope
+      - artifact_refs
+      - requested_review_modes
+      - requested_outputs
+    upstream_producers:
+      - design-iteration-tool
+      - human-gate
+      - orchestration-runner
+    downstream_consumers:
+      - design-iteration-tool
+      - orchestration-runner
+  - contract_name: design_review_program_packet
+    contract_kind: packet
+    owner: design-iteration-tool
+    current_version: v1
+    compatibility_policy: additive_minor_breaking_major
+    status: active
+    required_fields:
+      - packet_type
+      - packet_version
+      - packet_id
+      - created_at
+      - producer
+      - review_id
+      - review_request_ref
+      - review_nodes
+      - stop_conditions
+    upstream_producers:
+      - design-iteration-tool
+    downstream_consumers:
+      - orchestration-runner
+      - design-iteration-tool
+  - contract_name: tool_call_request_packet
+    contract_kind: packet
+    owner: orchestration-runner
+    current_version: v1
+    compatibility_policy: additive_minor_breaking_major
+    status: active
+    required_fields:
+      - packet_type
+      - packet_version
+      - packet_id
+      - created_at
+      - producer
+      - call_id
+      - run_id
+      - requester
+      - target_tool
+      - operation_name
+      - input_packet_refs
+      - policy_ref
+    upstream_producers:
+      - orchestration-runner
+      - design-iteration-tool
+    downstream_consumers:
+      - orchestration-runner
+      - evidence-search-tool
+      - memory-tool
+      - plan-quality-score
+      - governance-tool
+      - planner-tool
+      - research-tool
+  - contract_name: tool_call_result_packet
+    contract_kind: packet
+    owner: orchestration-runner
+    current_version: v1
+    compatibility_policy: additive_minor_breaking_major
+    status: active
+    required_fields:
+      - packet_type
+      - packet_version
+      - packet_id
+      - created_at
+      - producer
+      - call_id
+      - run_id
+      - target_tool
+      - operation_name
+      - outcome
+      - output_packet_refs
+      - event_refs
+    upstream_producers:
+      - orchestration-runner
+    downstream_consumers:
+      - design-iteration-tool
+      - orchestration-runner
+  - contract_name: research_question_packet
+    contract_kind: packet
+    owner: question-tool
+    current_version: v1
+    compatibility_policy: additive_minor_breaking_major
+    status: active
+    required_fields:
+      - packet_type
+      - packet_version
+      - packet_id
+      - created_at
+      - producer
+      - question_id
+      - project_id
+      - question_text
+      - question_type
+      - goal
+      - constraints
+      - evaluation_targets
+      - artifact_targets
+      - decision_target
+      - decision_consequence
+      - blocked_work_if_unanswered
+    upstream_producers:
+      - question-tool
+      - design-iteration-tool
+    downstream_consumers:
+      - evidence-search-tool
+      - research-tool
+  - contract_name: evidence_packet
+    contract_kind: packet
+    owner: evidence-search-tool
+    current_version: v1
+    compatibility_policy: additive_minor_breaking_major
+    status: active
+    required_fields:
+      - packet_type
+      - packet_version
+      - packet_id
+      - created_at
+      - producer
+      - problem_id
+      - source_refs
+      - claim_refs
+      - method_refs
+      - benchmark_refs
+      - evidence_summary
+    upstream_producers:
+      - evidence-search-tool
+    downstream_consumers:
+      - research-tool
+      - design-iteration-tool
+  - contract_name: research_problem_packet
+    contract_kind: packet
+    owner: research-tool
+    current_version: v1
+    compatibility_policy: additive_minor_breaking_major
+    status: active
+    required_fields:
+      - packet_type
+      - packet_version
+      - packet_id
+      - created_at
+      - producer
+      - problem_id
+      - goal
+      - title
+      - problem_statement
+      - constraints
+      - repo_context
+      - artifact_targets
+      - evaluation_criteria
+      - search_budget
+      - output_requirements
+    upstream_producers:
+      - research-tool
+      - shared-contract-layer
+    downstream_consumers:
+      - research-tool
+  - contract_name: research_hypothesis_packet
+    contract_kind: packet
+    owner: research-tool
+    current_version: v1
+    compatibility_policy: additive_minor_breaking_major
+    status: active
+    required_fields:
+      - packet_type
+      - packet_version
+      - packet_id
+      - created_at
+      - producer
+      - hypothesis_id
+      - problem_id
+      - hypothesis_family
+      - hypothesis_statement
+      - approach_outline
+      - evaluation_focus
+      - evidence_refs
+      - branch_rank
+      - prune_conditions
+    upstream_producers:
+      - research-tool
+    downstream_consumers:
+      - research-tool
+  - contract_name: candidate_search_tree_packet
+    contract_kind: packet
+    owner: research-tool
+    current_version: v1
+    compatibility_policy: additive_minor_breaking_major
+    status: active
+    required_fields:
+      - packet_type
+      - packet_version
+      - packet_id
+      - created_at
+      - producer
+      - problem_id
+      - root_node_id
+      - tree_nodes
+      - tree_edges
+      - search_policy
+      - candidate_packet_refs
+    upstream_producers:
+      - research-tool
+    downstream_consumers:
+      - research-tool
+      - design-iteration-tool
+  - contract_name: research_candidate_packet
+    contract_kind: packet
+    owner: research-tool
+    current_version: v1
+    compatibility_policy: additive_minor_breaking_major
+    status: active
+    required_fields:
+      - packet_type
+      - packet_version
+      - packet_id
+      - created_at
+      - producer
+      - candidate_id
+      - problem_id
+      - source_hypothesis_id
+      - candidate_family
+      - approach_summary
+      - implementation_intent
+      - contract_changes
+      - runtime_changes
+      - validation_changes
+      - docs_changes
+      - expected_changes
+      - non_goals
+      - handoff_requirements
+      - planner_entry_notes
+      - assumptions
+      - proposed_changes
+      - artifact_refs
+      - source_type
+      - evidence_refs
+      - feasibility_priors
+    upstream_producers:
+      - research-tool
+    downstream_consumers:
+      - research-tool
+      - planner-tool
+      - design-iteration-tool
+  - contract_name: candidate_expansion_decision_packet
+    contract_kind: packet
+    owner: research-tool
+    current_version: v1
+    compatibility_policy: additive_minor_breaking_major
+    status: active
+    required_fields:
+      - packet_type
+      - packet_version
+      - packet_id
+      - created_at
+      - producer
+      - decision_id
+      - problem_id
+      - source_node_id
+      - decision
+      - reason
+      - evidence_refs
+      - resulting_node_refs
+    upstream_producers:
+      - research-tool
+    downstream_consumers:
+      - research-tool
+      - design-iteration-tool
+  - contract_name: question_to_research_problem_transform
+    contract_kind: transform
+    owner: shared-contract-layer
+    current_version: v1
+    compatibility_policy: additive_minor_breaking_major
+    status: active
+    required_fields:
+      - transform_id
+      - source_question_ref
+      - evidence_ref
+      - output_problem_ref
+      - transform_rules_ref
+    upstream_producers:
+      - question-tool
+      - evidence-search-tool
+      - memory-tool
+    downstream_consumers:
+      - research-tool
+  - contract_name: research_recommendation_packet
+    contract_kind: packet
+    owner: research-tool
+    current_version: v1
+    compatibility_policy: additive_minor_breaking_major
+    status: active
+    required_fields:
+      - packet_type
+      - packet_version
+      - packet_id
+      - created_at
+      - producer
+      - problem_id
+      - candidate_search_tree_ref
+      - evaluation_summary_ref
+      - evaluation_refs
+      - ranked_candidates
+      - recommended_candidate_id
+      - recommendation_reason
+      - winner_evidence_refs
+      - rejected_candidate_summaries
+      - artifact_refs
+      - evidence_refs
+      - open_questions
+    upstream_producers:
+      - research-tool
+    downstream_consumers:
+      - design-iteration-tool
+      - shared-contract-layer
+  - contract_name: ranked_candidate_packet
+    contract_kind: packet
+    owner: research-tool
+    current_version: v1
+    compatibility_policy: additive_minor_breaking_major
+    status: active
+    required_fields:
+      - packet_type
+      - packet_version
+      - packet_id
+      - created_at
+      - producer
+      - candidate_id
+      - problem_id
+      - rank
+      - total_score
+      - score_breakdown
+      - strengths
+      - weaknesses
+      - promotion_status
+      - evaluation_ref
+      - evidence_refs
+      - source_hypothesis_id
+      - implementation_intent
+      - contract_changes
+      - runtime_changes
+      - validation_changes
+      - docs_changes
+      - expected_changes
+      - non_goals
+      - handoff_requirements
+      - planner_entry_notes
+    upstream_producers:
+      - research-tool
+    downstream_consumers:
+      - research-tool
+      - design-iteration-tool
+  - contract_name: selected_solution_scope
+    contract_kind: packet
+    owner: shared-contract-layer
+    current_version: v1
+    compatibility_policy: additive_minor_breaking_major
+    status: active
+    required_fields:
+      - packet_type
+      - packet_version
+      - packet_id
+      - created_at
+      - producer
+      - selection_id
+      - problem_id
+      - selected_candidate_id
+      - selection_reason
+      - selection_policy
+      - selected_solution_summary
+      - in_scope
+      - out_of_scope
+      - scope_in
+      - scope_out
+      - assumptions
+      - risks
+      - acceptance_checks
+      - acceptance_targets
+      - implementation_intent
+      - expected_changes
+      - contract_changes
+      - runtime_changes
+      - validation_changes
+      - docs_changes
+      - handoff_requirements
+      - artifact_refs
+      - evidence_refs
+    upstream_producers:
+      - orchestration-runner
+      - governance-tool
+      - human-gate
+    downstream_consumers:
+      - planner-tool
+      - governance-tool
+  - contract_name: problem_node
+    contract_kind: packet
+    owner: planner-tool
+    current_version: v1
+    compatibility_policy: additive_minor_breaking_major
+    status: active
+    schema_ref: spec/contracts/problem-node.schema.yaml
+    required_fields:
+      - packet_type
+      - packet_version
+      - packet_id
+      - created_at
+      - producer
+      - node_id
+      - node_version
+      - project_id
+      - title
+      - node_type
+      - goal
+      - problem_statement
+      - inputs
+      - expected_outputs
+      - constraints
+      - dependencies
+      - evidence_refs
+      - option_refs
+      - selected_option_ref
+      - readiness_state
+      - missing_fields
+      - evaluation_criteria
+      - feedback_refs
+    upstream_producers:
+      - planner-tool
+      - orchestration-runner
+    downstream_consumers:
+      - planner-tool
+      - governance-tool
+      - design-iteration-tool
+  - contract_name: node_option
+    contract_kind: packet
+    owner: planner-tool
+    current_version: v1
+    compatibility_policy: additive_minor_breaking_major
+    status: active
+    schema_ref: spec/contracts/node-option.schema.yaml
+    required_fields:
+      - packet_type
+      - packet_version
+      - packet_id
+      - created_at
+      - producer
+      - option_id
+      - source_node_ref
+      - option_family
+      - approach_summary
+      - implementation_intent
+      - expected_changes
+      - non_goals
+      - assumptions
+      - risks
+      - evidence_refs
+      - evaluation_refs
+    upstream_producers:
+      - planner-tool
+      - research-tool
+    downstream_consumers:
+      - planner-tool
+      - governance-tool
+      - design-iteration-tool
+  - contract_name: execution_unit
+    contract_kind: packet
+    owner: planner-tool
+    current_version: v1
+    compatibility_policy: additive_minor_breaking_major
+    status: active
+    schema_ref: spec/contracts/execution-unit.schema.yaml
+    required_fields:
+      - packet_type
+      - packet_version
+      - packet_id
+      - created_at
+      - producer
+      - execution_unit_id
+      - source_problem_node_ref
+      - selected_option_ref
+      - implementation_intent
+      - owned_changes
+      - required_inputs
+      - expected_outputs
+      - acceptance_checks
+      - validation_commands
+      - rollback_plan
+      - non_goals
+      - dependency_refs
+      - evidence_refs
+      - evaluation_method
+      - completion_evidence_requirements
+    upstream_producers:
+      - planner-tool
+    downstream_consumers:
+      - governance-tool
+      - implementation-orchestrator
+      - design-iteration-tool
+  - contract_name: implementation_attempt
+    contract_kind: packet
+    owner: implementation-orchestrator
+    current_version: v1
+    compatibility_policy: additive_minor_breaking_major
+    status: active
+    schema_ref: spec/contracts/implementation-attempt.schema.yaml
+    required_fields:
+      - packet_type
+      - packet_version
+      - packet_id
+      - created_at
+      - producer
+      - attempt_id
+      - source_execution_unit_ref
+      - attempt_family
+      - implementation_summary
+      - changed_artifact_refs
+      - patch_ref
+      - validation_command_refs
+      - assumptions
+      - risks
+      - status
+      - created_by
+    upstream_producers:
+      - implementation-orchestrator
+    downstream_consumers:
+      - governance-tool
+      - design-iteration-tool
+  - contract_name: attempt_evaluation
+    contract_kind: packet
+    owner: governance-tool
+    current_version: v1
+    compatibility_policy: additive_minor_breaking_major
+    status: active
+    schema_ref: spec/contracts/attempt-evaluation.schema.yaml
+    required_fields:
+      - packet_type
+      - packet_version
+      - packet_id
+      - created_at
+      - producer
+      - evaluation_id
+      - source_attempt_ref
+      - source_execution_unit_ref
+      - evaluation_method
+      - validation_results
+      - test_results
+      - review_findings
+      - score_breakdown
+      - promotion_status
+      - blockers
+      - evidence_refs
+    upstream_producers:
+      - governance-tool
+      - implementation-orchestrator
+    downstream_consumers:
+      - implementation-orchestrator
+      - design-iteration-tool
+  - contract_name: attempt_selection
+    contract_kind: packet
+    owner: implementation-orchestrator
+    current_version: v1
+    compatibility_policy: additive_minor_breaking_major
+    status: active
+    schema_ref: spec/contracts/attempt-selection.schema.yaml
+    required_fields:
+      - packet_type
+      - packet_version
+      - packet_id
+      - created_at
+      - producer
+      - selection_id
+      - source_execution_unit_ref
+      - selected_attempt_ref
+      - selected_evaluation_ref
+      - rejected_attempt_refs
+      - rejected_evaluation_refs
+      - candidate_score_breakdown
+      - selection_policy_ref
+      - evidence_refs
+      - blockers
+    upstream_producers:
+      - implementation-orchestrator
+    downstream_consumers:
+      - implementation-orchestrator
+      - governance-tool
+      - design-iteration-tool
+  - contract_name: solution_artifact
+    contract_kind: packet
+    owner: implementation-orchestrator
+    current_version: v1
+    compatibility_policy: additive_minor_breaking_major
+    status: active
+    schema_ref: spec/contracts/solution-artifact.schema.yaml
+    required_fields:
+      - packet_type
+      - packet_version
+      - packet_id
+      - created_at
+      - producer
+      - solution_artifact_id
+      - source_execution_unit_ref
+      - selected_attempt_ref
+      - evaluation_ref
+      - artifact_refs
+      - patch_ref
+      - completion_evidence_refs
+      - validation_summary
+      - known_limitations
+      - follow_up_problem_node_refs
+    upstream_producers:
+      - implementation-orchestrator
+    downstream_consumers:
+      - planner-tool
+      - governance-tool
+      - design-iteration-tool
+  - contract_name: applied_solution
+    contract_kind: packet
+    owner: implementation-orchestrator
+    current_version: v1
+    compatibility_policy: additive_minor_breaking_major
+    status: active
+    schema_ref: spec/contracts/applied-solution.schema.yaml
+    required_fields:
+      - packet_type
+      - packet_version
+      - packet_id
+      - created_at
+      - producer
+      - applied_solution_id
+      - source_solution_artifact_ref
+      - source_execution_unit_ref
+      - selected_attempt_ref
+      - evaluation_ref
+      - patch_ref
+      - apply_target_ref
+      - apply_result_ref
+      - validation_result_refs
+      - applied_artifact_refs
+      - status
+      - blockers
+    upstream_producers:
+      - implementation-orchestrator
+    downstream_consumers:
+      - planner-tool
+      - governance-tool
+      - design-iteration-tool
+  - contract_name: candidate_evaluation_summary_packet
+    contract_kind: packet
+    owner: research-tool
+    current_version: v1
+    compatibility_policy: additive_minor_breaking_major
+    status: active
+    required_fields:
+      - packet_type
+      - packet_version
+      - packet_id
+      - created_at
+      - producer
+      - problem_id
+      - candidate_search_tree_ref
+      - evaluation_packet_refs
+      - promoted_candidate_ids
+      - blocked_candidate_ids
+      - evaluation_policy
+    upstream_producers:
+      - research-tool
+    downstream_consumers:
+      - research-tool
+      - design-iteration-tool
+      - design-iteration-tool
+  - contract_name: planning_request_packet
+    contract_kind: packet
+    owner: planner-tool
+    current_version: v1
+    compatibility_policy: additive_minor_breaking_major
+    status: active
+    required_fields:
+      - packet_type
+      - packet_version
+      - packet_id
+      - created_at
+      - producer
+      - problem_id
+      - selected_solution_scope_ref
+      - requested_planning_depth
+      - requested_outputs
+    upstream_producers:
+      - orchestration-runner
+      - planner-tool
+    downstream_consumers:
+      - planner-tool
+  - contract_name: candidate_plan_comparison_packet
+    contract_kind: packet
+    owner: plan-quality-score
+    current_version: v1
+    compatibility_policy: additive_minor_breaking_major
+    status: active
+    required_fields:
+      - packet_type
+      - packet_version
+      - comparison_id
+      - selected_solution_scope_ref
+      - candidate_plan_refs
+      - plan_quality_policy_ref
+    upstream_producers:
+      - planner-tool
+      - orchestration-runner
+    downstream_consumers:
+      - plan-quality-score
+      - design-iteration-tool
+  - contract_name: plan_quality_score_packet
+    contract_kind: packet
+    owner: plan-quality-score
+    current_version: v1
+    compatibility_policy: additive_minor_breaking_major
+    status: active
+    required_fields:
+      - packet_type
+      - packet_version
+      - comparison_id
+      - candidate_plan_ref
+      - hard_gate_results
+      - qualified_for_ranking
+      - primary_metric_scores
+      - secondary_metric_scores
+      - aggregate_score
+    upstream_producers:
+      - plan-quality-score
+    downstream_consumers:
+      - orchestration-runner
+      - design-iteration-tool
+  - contract_name: ranked_plan_packet
+    contract_kind: packet
+    owner: plan-quality-score
+    current_version: v1
+    compatibility_policy: additive_minor_breaking_major
+    status: active
+    required_fields:
+      - packet_type
+      - packet_version
+      - comparison_id
+      - selected_solution_scope_ref
+      - ranked_plan_refs
+      - recommended_plan_ref
+      - recommendation_reason
+    upstream_producers:
+      - plan-quality-score
+    downstream_consumers:
+      - orchestration-runner
+      - planner-tool
+      - design-iteration-tool
+  - contract_name: implementation_graph_packet
+    contract_kind: dag
+    owner: planner-tool
+    current_version: v1
+    compatibility_policy: additive_minor_breaking_major
+    status: active
+    required_fields:
+      - packet_type
+      - packet_version
+      - packet_id
+      - created_at
+      - producer
+      - graph_id
+      - graph_kind
+      - nodes
+      - edges
+      - execution_goals
+    upstream_producers:
+      - planner-tool
+    downstream_consumers:
+      - orchestration-runner
+      - design-iteration-tool
+      - plan-quality-score
+  - contract_name: execution_materialization_policy
+    contract_kind: policy
+    owner: planner-tool
+    current_version: v1
+    compatibility_policy: additive_minor_breaking_major
+    status: active
+    required_fields:
+      - policy_id
+      - purpose
+      - grouping_rules
+      - warning_rules
+      - hard_fail_rules
+      - outputs
+    upstream_producers:
+      - planner-tool
+      - shared-contract-layer
+    downstream_consumers:
+      - planner-tool
+      - design-iteration-tool
+  - contract_name: execution_ready_plan_packet
+    contract_kind: packet
+    owner: planner-tool
+    current_version: v1
+    compatibility_policy: additive_minor_breaking_major
+    status: active
+    required_fields:
+      - packet_type
+      - packet_version
+      - packet_id
+      - created_at
+      - producer
+      - plan_id
+      - selected_solution_scope_ref
+      - source_structural_plan_ref
+      - plan_readiness
+      - execution_slices
+      - materialization_policy_ref
+      - materialization_warnings
+    upstream_producers:
+      - planner-tool
+    downstream_consumers:
+      - governance-tool
+      - orchestration-runner
+      - design-iteration-tool
+  - contract_name: execution_packet
+    contract_kind: packet
+    owner: planner-tool
+    current_version: v1
+    compatibility_policy: additive_minor_breaking_major
+    status: active
+    required_fields:
+      - packet_type
+      - packet_version
+      - packet_id
+      - created_at
+      - producer
+      - execution_id
+      - node_id
+      - required_inputs
+      - expected_outputs
+      - validation_targets
+      - blocking_dependencies
+    upstream_producers:
+      - planner-tool
+    downstream_consumers:
+      - governance-tool
+      - orchestration-runner
+  - contract_name: planner_to_governance_runnable_contract
+    contract_kind: transform
+    owner: shared-contract-layer
+    current_version: v1
+    compatibility_policy: additive_minor_breaking_major
+    status: active
+    required_fields:
+      - transform_id
+      - execution_packet_ref
+      - required_inputs
+      - expected_outputs
+      - validation_targets
+      - blocking_dependencies
+      - runnable_preconditions
+      - completion_evidence_requirements
+    upstream_producers:
+      - planner-tool
+    downstream_consumers:
+      - governance-tool
+      - design-iteration-tool
+  - contract_name: governance_decision_packet
+    contract_kind: packet
+    owner: governance-tool
+    current_version: v1
+    compatibility_policy: additive_minor_breaking_major
+    status: active
+    required_fields:
+      - packet_type
+      - packet_version
+      - packet_id
+      - created_at
+      - producer
+      - decision_id
+      - subject_ref
+      - decision_type
+      - decision_status
+      - rationale
+      - blocker_refs
+    upstream_producers:
+      - governance-tool
+    downstream_consumers:
+      - orchestration-runner
+      - design-iteration-tool
+  - contract_name: dag_node
+    contract_kind: dag
+    owner: orchestration-runner
+    current_version: v1
+    compatibility_policy: additive_minor_breaking_major
+    status: active
+    required_fields:
+      - node_id
+      - node_type
+      - title
+      - input_packet_refs
+      - output_packet_refs
+      - blocking_dependencies
+      - status
+    upstream_producers:
+      - orchestration-runner
+      - planner-tool
+    downstream_consumers:
+      - orchestration-runner
+      - design-iteration-tool
+  - contract_name: dag_edge
+    contract_kind: dag
+    owner: orchestration-runner
+    current_version: v1
+    compatibility_policy: additive_minor_breaking_major
+    status: active
+    required_fields:
+      - edge_id
+      - from_node_id
+      - to_node_id
+      - relation
+    upstream_producers:
+      - orchestration-runner
+      - planner-tool
+    downstream_consumers:
+      - orchestration-runner
+      - design-iteration-tool
+  - contract_name: workflow_dag_to_implementation_dag_link_contract
+    contract_kind: transform
+    owner: shared-contract-layer
+    current_version: v1
+    compatibility_policy: additive_minor_breaking_major
+    status: active
+    required_fields:
+      - link_id
+      - workflow_graph_ref
+      - implementation_graph_ref
+      - link_reason
+      - established_by
+    upstream_producers:
+      - planner-tool
+      - orchestration-runner
+    downstream_consumers:
+      - orchestration-runner
+      - design-iteration-tool

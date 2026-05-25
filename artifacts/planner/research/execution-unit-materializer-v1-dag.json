@@ -1,0 +1,80 @@
+{
+  "graph_id": "execution-unit-materializer-v1",
+  "graph_type": "implementation_dag",
+  "version": "v1",
+  "purpose": "Materialize selected_solution_scope packets into problem_node, node_option, and execution_unit packets when readiness gates pass.",
+  "nodes": [
+    {
+      "node_id": "define-materialization-boundary",
+      "title": "Define Materialization Boundary",
+      "node_type": "policy",
+      "status": "ready",
+      "owned_changes": [
+        "docs/node-based-project-plan-v1.md",
+        "docs/execution-era-loop-v1.md"
+      ],
+      "expected_outputs": [
+        "documented materialization boundary"
+      ]
+    },
+    {
+      "node_id": "implement-materializer",
+      "title": "Implement Execution Unit Materializer",
+      "node_type": "runtime",
+      "status": "ready",
+      "owned_changes": [
+        "src/platform_tools/materialize_execution_unit.py",
+        "bin/materialize-execution-unit"
+      ],
+      "expected_outputs": [
+        "materializer CLI",
+        "materialization report"
+      ]
+    },
+    {
+      "node_id": "validate-readiness-before-ok",
+      "title": "Validate Readiness Before OK",
+      "node_type": "validation",
+      "status": "ready",
+      "owned_changes": [
+        "src/platform_tools/materialize_execution_unit.py"
+      ],
+      "expected_outputs": [
+        "blocked report when execution unit is incomplete"
+      ]
+    },
+    {
+      "node_id": "add-materializer-tests",
+      "title": "Add Materializer Tests",
+      "node_type": "validation",
+      "status": "ready",
+      "owned_changes": [
+        "tests/test_materialize_execution_unit.py"
+      ],
+      "expected_outputs": [
+        "generic selected scopes block",
+        "explicit scopes emit execution units"
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "edge_id": "e1",
+      "from_node_id": "implement-materializer",
+      "to_node_id": "define-materialization-boundary",
+      "relation": "depends_on"
+    },
+    {
+      "edge_id": "e2",
+      "from_node_id": "validate-readiness-before-ok",
+      "to_node_id": "implement-materializer",
+      "relation": "depends_on"
+    },
+    {
+      "edge_id": "e3",
+      "from_node_id": "add-materializer-tests",
+      "to_node_id": "validate-readiness-before-ok",
+      "relation": "depends_on"
+    }
+  ]
+}

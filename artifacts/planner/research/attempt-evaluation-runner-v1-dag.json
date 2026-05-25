@@ -1,0 +1,87 @@
+{
+  "graph_id": "attempt-evaluation-runner-v1",
+  "graph_type": "implementation_dag",
+  "version": "v1",
+  "purpose": "Evaluate implementation_attempt packets against execution_unit boundaries and validation evidence.",
+  "source_artifacts": [
+    "docs/execution-era-runtime-research-v1.md",
+    ".agent/execplans/20260521-attempt-evaluation-runner-v1-codex-01-execplan.md",
+    "spec/contracts/attempt-evaluation.schema.yaml"
+  ],
+  "nodes": [
+    {
+      "node_id": "load-attempt-and-execution-unit",
+      "title": "Load Attempt And Execution Unit",
+      "node_type": "runtime",
+      "status": "planned",
+      "goal": "Load one implementation_attempt and its source execution_unit.",
+      "owned_changes": [
+        "src/platform_tools/evaluate_implementation_attempt.py"
+      ],
+      "expected_outputs": [
+        "validated input packet pair"
+      ]
+    },
+    {
+      "node_id": "check-owned-change-boundary",
+      "title": "Check Owned Change Boundary",
+      "node_type": "policy_gate",
+      "status": "planned",
+      "goal": "Block attempts that reference changed artifacts outside the execution unit owned changes.",
+      "owned_changes": [
+        "src/platform_tools/evaluate_implementation_attempt.py"
+      ],
+      "expected_outputs": [
+        "boundary blockers or approval"
+      ]
+    },
+    {
+      "node_id": "emit-attempt-evaluation",
+      "title": "Emit Attempt Evaluation",
+      "node_type": "runtime",
+      "status": "planned",
+      "goal": "Emit attempt_evaluation packet from validation evidence, review findings, and blockers.",
+      "owned_changes": [
+        "src/platform_tools/evaluate_implementation_attempt.py",
+        "bin/evaluate-implementation-attempt"
+      ],
+      "expected_outputs": [
+        "attempt_evaluation packet",
+        "attempt evaluation report"
+      ]
+    },
+    {
+      "node_id": "test-attempt-evaluation",
+      "title": "Test Attempt Evaluation",
+      "node_type": "validation",
+      "status": "planned",
+      "goal": "Prove valid attempts can be promoted and boundary violations block.",
+      "owned_changes": [
+        "tests/test_evaluate_implementation_attempt.py"
+      ],
+      "expected_outputs": [
+        "attempt evaluation tests"
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "edge_id": "e1",
+      "from_node_id": "check-owned-change-boundary",
+      "to_node_id": "load-attempt-and-execution-unit",
+      "relation": "depends_on"
+    },
+    {
+      "edge_id": "e2",
+      "from_node_id": "emit-attempt-evaluation",
+      "to_node_id": "check-owned-change-boundary",
+      "relation": "depends_on"
+    },
+    {
+      "edge_id": "e3",
+      "from_node_id": "test-attempt-evaluation",
+      "to_node_id": "emit-attempt-evaluation",
+      "relation": "depends_on"
+    }
+  ]
+}

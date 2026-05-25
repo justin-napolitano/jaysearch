@@ -1,0 +1,87 @@
+{
+  "graph_id": "solution-artifact-emitter-v1",
+  "graph_type": "implementation_dag",
+  "version": "v1",
+  "purpose": "Emit solution_artifact packets only for promoted, nonblocking attempt evaluations.",
+  "source_artifacts": [
+    "docs/execution-era-runtime-research-v1.md",
+    ".agent/execplans/20260521-solution-artifact-emitter-v1-codex-01-execplan.md",
+    "spec/contracts/solution-artifact.schema.yaml"
+  ],
+  "nodes": [
+    {
+      "node_id": "load-selection-inputs",
+      "title": "Load Selection Inputs",
+      "node_type": "runtime",
+      "status": "planned",
+      "goal": "Load execution_unit, selected implementation_attempt, and attempt_evaluation packets.",
+      "owned_changes": [
+        "src/platform_tools/emit_solution_artifact.py"
+      ],
+      "expected_outputs": [
+        "validated selection input packet set"
+      ]
+    },
+    {
+      "node_id": "enforce-promoted-evaluation",
+      "title": "Enforce Promoted Evaluation",
+      "node_type": "policy_gate",
+      "status": "planned",
+      "goal": "Block solution emission unless evaluation is promoted and has no blockers.",
+      "owned_changes": [
+        "src/platform_tools/emit_solution_artifact.py"
+      ],
+      "expected_outputs": [
+        "selection blockers or approval"
+      ]
+    },
+    {
+      "node_id": "emit-solution-artifact",
+      "title": "Emit Solution Artifact",
+      "node_type": "runtime",
+      "status": "planned",
+      "goal": "Emit solution_artifact with selected attempt, evaluation, patch, artifacts, and completion evidence refs.",
+      "owned_changes": [
+        "src/platform_tools/emit_solution_artifact.py",
+        "bin/emit-solution-artifact"
+      ],
+      "expected_outputs": [
+        "solution_artifact packet",
+        "solution artifact report"
+      ]
+    },
+    {
+      "node_id": "test-solution-emitter",
+      "title": "Test Solution Emitter",
+      "node_type": "validation",
+      "status": "planned",
+      "goal": "Prove blocked evaluations do not emit solutions and promoted evaluations do.",
+      "owned_changes": [
+        "tests/test_emit_solution_artifact.py"
+      ],
+      "expected_outputs": [
+        "solution artifact emitter tests"
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "edge_id": "e1",
+      "from_node_id": "enforce-promoted-evaluation",
+      "to_node_id": "load-selection-inputs",
+      "relation": "depends_on"
+    },
+    {
+      "edge_id": "e2",
+      "from_node_id": "emit-solution-artifact",
+      "to_node_id": "enforce-promoted-evaluation",
+      "relation": "depends_on"
+    },
+    {
+      "edge_id": "e3",
+      "from_node_id": "test-solution-emitter",
+      "to_node_id": "emit-solution-artifact",
+      "relation": "depends_on"
+    }
+  ]
+}

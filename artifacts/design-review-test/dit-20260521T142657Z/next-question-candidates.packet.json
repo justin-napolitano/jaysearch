@@ -1,0 +1,22 @@
+{
+  "packet_type": "next_question_candidate_packet_bundle",
+  "packet_version": "v1",
+  "run_id": "dit-20260521T142657Z",
+  "candidate_count": 1,
+  "candidates": [
+    {
+      "packet_type": "next_question_candidate_packet",
+      "packet_version": "v1",
+      "question_candidate_id": "nqc-001",
+      "source_gap_id": "gap-001",
+      "title": "Resolve gap-001",
+      "question": "What is the minimal contract or workflow change needed to satisfy invariant 'implementation nodes must be buildable and machine readable'?",
+      "decision_target": "shared-contract-and-workflow-design",
+      "downstream_value": "unblock_implementation",
+      "why_now": "Implementation node 'idra-001' is invalid: missing non-empty changes list.",
+      "artifact_refs": [
+        "artifacts/planner/research/design-review-automation-v1-implementation-graph.json"
+      ]
+    }
+  ]
+}

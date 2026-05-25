@@ -1,0 +1,58 @@
+{
+  "packet_type": "design_gap_packet_bundle",
+  "packet_version": "v1",
+  "run_id": "dit-20260520T165201Z",
+  "gap_count": 2,
+  "gaps": [
+    {
+      "packet_type": "design_gap_packet",
+      "packet_version": "v1",
+      "gap_id": "gap-001",
+      "validator_family": "contract_consistency_checks",
+      "violated_invariant": "every_shared_contract_lists_required_fields",
+      "severity": "high",
+      "blocking": true,
+      "summary": "Contract 'research_question_packet' does not declare required_fields in the machine-readable registry.",
+      "finding_refs": [
+        "dit-20260520T165201Z:contract_required_fields_defined:1848673",
+        "dit-20260520T165201Z:contract_required_fields_defined:1882860",
+        "dit-20260520T165201Z:contract_required_fields_defined:1910891",
+        "dit-20260520T165201Z:contract_required_fields_defined:2160722",
+        "dit-20260520T165201Z:contract_required_fields_defined:2278817",
+        "dit-20260520T165201Z:contract_required_fields_defined:2286851",
+        "dit-20260520T165201Z:contract_required_fields_defined:2540186",
+        "dit-20260520T165201Z:contract_required_fields_defined:282403",
+        "dit-20260520T165201Z:contract_required_fields_defined:3973952",
+        "dit-20260520T165201Z:contract_required_fields_defined:5846178",
+        "dit-20260520T165201Z:contract_required_fields_defined:6240570",
+        "dit-20260520T165201Z:contract_required_fields_defined:6818928",
+        "dit-20260520T165201Z:contract_required_fields_defined:6950317",
+        "dit-20260520T165201Z:contract_required_fields_defined:7817822",
+        "dit-20260520T165201Z:contract_required_fields_defined:8717805",
+        "dit-20260520T165201Z:contract_required_fields_defined:9284726",
+        "dit-20260520T165201Z:contract_required_fields_defined:9580644",
+        "dit-20260520T165201Z:contract_required_fields_defined:9602618",
+        "dit-20260520T165201Z:contract_required_fields_defined:9702995"
+      ],
+      "artifact_refs": [
+        "spec/contracts/packet-schema-registry.yaml"
+      ]
+    },
+    {
+      "packet_type": "design_gap_packet",
+      "packet_version": "v1",
+      "gap_id": "gap-002",
+      "validator_family": "dag_consistency_checks",
+      "violated_invariant": "workflow_and_implementation_graph_link_must_be_canonical",
+      "severity": "high",
+      "blocking": true,
+      "summary": "Workflow DAG does not declare a canonical implementation graph link.",
+      "finding_refs": [
+        "dit-20260520T165201Z:workflow_to_implementation_link_missing:6857903"
+      ],
+      "artifact_refs": [
+        "artifacts/planner/research/design-iteration-tool-dag-v1.json"
+      ]
+    }
+  ]
+}

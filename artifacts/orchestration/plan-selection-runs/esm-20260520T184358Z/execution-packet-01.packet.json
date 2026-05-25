@@ -1,0 +1,36 @@
+{
+  "packet_type": "execution_packet",
+  "packet_version": "v1",
+  "packet_id": "exec:n1",
+  "created_at": "2026-05-20T18:43:58Z",
+  "producer": "execution-slice-materialization",
+  "execution_id": "exec:n1",
+  "node_id": "n1",
+  "work_item_id": "n1",
+  "graph_id": "plan-selection-exercise-a-graph",
+  "task_summary": "Normalize orchestration inputs",
+  "required_inputs": [
+    "scope:selected-scope-plan-selection-exercise"
+  ],
+  "expected_outputs": [
+    "normalized orchestration input contract"
+  ],
+  "validation_targets": [
+    "unit tests for orchestration argument handling"
+  ],
+  "blocking_dependencies": [],
+  "declared_ready_inputs": [
+    "scope:selected-scope-plan-selection-exercise"
+  ],
+  "conflict_domains": [
+    "orchestration"
+  ],
+  "required_approvals": [],
+  "completion_evidence_requirements": [
+    "passing orchestration input tests"
+  ],
+  "runnable_preconditions": [
+    "selected_scope:selected-scope-plan-selection-exercise"
+  ],
+  "source_structural_plan_ref": "artifacts/planner/examples/plan-selection-exercise/plan-a-structural.json"
+}

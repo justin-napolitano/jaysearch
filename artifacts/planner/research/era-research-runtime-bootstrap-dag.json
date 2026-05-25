@@ -1,0 +1,438 @@
+{
+  "graph_id": "era-research-runtime-bootstrap-20260520",
+  "created_at": "2026-05-20T00:00:00Z",
+  "ordering_policy": {
+    "ready_statuses": [
+      "ready"
+    ],
+    "ready_sort_fields": [
+      "ready_order",
+      "tie_breaker",
+      "node_id"
+    ],
+    "reorder_requires_explicit_action": true,
+    "board_projection_authority": "projection_only"
+  },
+  "queue_projection": {
+    "path": "docs/queued-execplans.md",
+    "projection_authority": "projection_only",
+    "last_reconciled_action_id": "act-era-001",
+    "ready_execplan_ids": [
+      "20260520-era-research-runtime-repo-bootstrap"
+    ]
+  },
+  "graph_actions": [
+    {
+      "action_id": "act-era-001",
+      "action": "promote_ready",
+      "node_id": "era-rwg-001",
+      "rationale": "Bootstrap planning slice is ready for governed review."
+    }
+  ],
+  "nodes": [
+    {
+      "node_id": "initiative-era-research-runtime-bootstrap",
+      "title": "Initiative / ERA research runtime bootstrap",
+      "status": "ready",
+      "gating_class": "auto_runnable",
+      "conflict_domains": [
+        "era-runtime-bootstrap"
+      ],
+      "target_execplan_id": "initiative:era-research-runtime-bootstrap",
+      "goal_area": "reference",
+      "initiative_branch": "initiative/era-research-runtime-bootstrap",
+      "parent_initiative_node": "initiative-era-research-runtime-bootstrap",
+      "ordering": {
+        "queue_position": 0,
+        "tie_breaker": "initiative:era-research-runtime-bootstrap"
+      },
+      "action_state": {
+        "last_action_id": "act-era-001",
+        "last_action": "promote_ready",
+        "action_required": false,
+        "reorder_requires_human": false,
+        "reorder_blockers": []
+      }
+    },
+    {
+      "node_id": "era-rwg-001",
+      "title": "Lock repo boundary and core contracts",
+      "status": "ready",
+      "status_reason": "Architecture plan and initial DAG are prepared for review.",
+      "gating_class": "auto_runnable",
+      "conflict_domains": [
+        "era-runtime-bootstrap",
+        "research-contracts"
+      ],
+      "target_execplan_id": "20260520-era-research-runtime-repo-bootstrap",
+      "goal_area": "research-governance",
+      "implementation_branch": "impl-execplan/20260520-era-research-runtime-repo-bootstrap",
+      "initiative_branch": "initiative/era-research-runtime-bootstrap",
+      "parent_initiative_node": "initiative-era-research-runtime-bootstrap",
+      "integration_mode": "via_initiative",
+      "expected_artifacts": [
+        "docs/era-governed-research-repo-plan.md",
+        "artifacts/planner/research/era-research-runtime-bootstrap-dag.json"
+      ],
+      "ordering": {
+        "queue_position": 1,
+        "ready_order": 1,
+        "tie_breaker": "20260520-era-research-runtime-repo-bootstrap",
+        "source_action_id": "act-era-001"
+      },
+      "action_state": {
+        "last_action_id": "act-era-001",
+        "last_action": "promote_ready",
+        "action_required": false,
+        "reorder_requires_human": false,
+        "reorder_blockers": []
+      }
+    },
+    {
+      "node_id": "era-rwg-002",
+      "title": "Bootstrap new repo scaffold and schema set",
+      "status": "blocked",
+      "status_reason": "Repo boundary and contracts should be reviewed first.",
+      "gating_class": "auto_runnable",
+      "conflict_domains": [
+        "era-runtime-bootstrap",
+        "repo-scaffold"
+      ],
+      "target_execplan_id": "era-phase1-repo-scaffold",
+      "goal_area": "repo-bootstrap",
+      "initiative_branch": "initiative/era-research-runtime-bootstrap",
+      "parent_initiative_node": "initiative-era-research-runtime-bootstrap",
+      "integration_mode": "via_initiative",
+      "expected_artifacts": [
+        "spec/research-problem.schema.yaml",
+        "spec/research-run.schema.yaml",
+        "spec/selected-solution-scope.schema.yaml"
+      ],
+      "ordering": {
+        "queue_position": 2,
+        "tie_breaker": "era-phase1-repo-scaffold"
+      },
+      "action_state": {
+        "last_action_id": "act-era-001",
+        "last_action": "block",
+        "action_required": true,
+        "reorder_requires_human": false,
+        "reorder_blockers": []
+      }
+    },
+    {
+      "node_id": "era-rwg-003",
+      "title": "Implement problem-intake and business-case contract",
+      "status": "blocked",
+      "status_reason": "Depends on repo scaffold and schema foundation.",
+      "gating_class": "auto_runnable",
+      "conflict_domains": [
+        "research-contracts",
+        "business-case-model"
+      ],
+      "target_execplan_id": "era-phase1-problem-intake",
+      "goal_area": "research-governance",
+      "initiative_branch": "initiative/era-research-runtime-bootstrap",
+      "parent_initiative_node": "initiative-era-research-runtime-bootstrap",
+      "integration_mode": "via_initiative",
+      "expected_artifacts": [
+        "src/era_runtime/problem_intake.py",
+        "examples/research-problems/"
+      ],
+      "ordering": {
+        "queue_position": 3,
+        "tie_breaker": "era-phase1-problem-intake"
+      },
+      "action_state": {
+        "last_action_id": "act-era-001",
+        "last_action": "block",
+        "action_required": true,
+        "reorder_requires_human": false,
+        "reorder_blockers": []
+      }
+    },
+    {
+      "node_id": "era-rwg-004",
+      "title": "Build minimal candidate generation and search loop",
+      "status": "blocked",
+      "status_reason": "Requires problem-intake contract and bounded pilot problem.",
+      "gating_class": "auto_runnable",
+      "conflict_domains": [
+        "search-runtime",
+        "candidate-generation"
+      ],
+      "target_execplan_id": "era-phase2-search-loop",
+      "goal_area": "research-runtime",
+      "initiative_branch": "initiative/era-research-runtime-bootstrap",
+      "parent_initiative_node": "initiative-era-research-runtime-bootstrap",
+      "integration_mode": "via_initiative",
+      "expected_artifacts": [
+        "src/era_runtime/search/",
+        "src/era_runtime/synthesis/"
+      ],
+      "ordering": {
+        "queue_position": 4,
+        "tie_breaker": "era-phase2-search-loop"
+      },
+      "action_state": {
+        "last_action_id": "act-era-001",
+        "last_action": "block",
+        "action_required": true,
+        "reorder_requires_human": false,
+        "reorder_blockers": []
+      }
+    },
+    {
+      "node_id": "era-rwg-005",
+      "title": "Implement evaluation harness and experiment recording",
+      "status": "blocked",
+      "status_reason": "Search output must exist before empirical evaluation can be stabilized.",
+      "gating_class": "auto_runnable",
+      "conflict_domains": [
+        "evaluation-harness",
+        "experiment-logging"
+      ],
+      "target_execplan_id": "era-phase2-evaluation-harness",
+      "goal_area": "research-runtime",
+      "initiative_branch": "initiative/era-research-runtime-bootstrap",
+      "parent_initiative_node": "initiative-era-research-runtime-bootstrap",
+      "integration_mode": "via_initiative",
+      "expected_artifacts": [
+        "src/era_runtime/evaluation/",
+        "spec/evaluation-result.schema.yaml"
+      ],
+      "ordering": {
+        "queue_position": 5,
+        "tie_breaker": "era-phase2-evaluation-harness"
+      },
+      "action_state": {
+        "last_action_id": "act-era-001",
+        "last_action": "block",
+        "action_required": true,
+        "reorder_requires_human": false,
+        "reorder_blockers": []
+      }
+    },
+    {
+      "node_id": "era-rwg-006",
+      "title": "Add ranking, evidence packaging, and recommended-candidate output",
+      "status": "blocked",
+      "status_reason": "Requires empirical evaluation outputs to score.",
+      "gating_class": "auto_runnable",
+      "conflict_domains": [
+        "ranking-model",
+        "evidence-packaging"
+      ],
+      "target_execplan_id": "era-phase2-ranking-and-packaging",
+      "goal_area": "research-runtime",
+      "initiative_branch": "initiative/era-research-runtime-bootstrap",
+      "parent_initiative_node": "initiative-era-research-runtime-bootstrap",
+      "integration_mode": "via_initiative",
+      "expected_artifacts": [
+        "src/era_runtime/ranking/",
+        "src/era_runtime/packaging/"
+      ],
+      "ordering": {
+        "queue_position": 6,
+        "tie_breaker": "era-phase2-ranking-and-packaging"
+      },
+      "action_state": {
+        "last_action_id": "act-era-001",
+        "last_action": "block",
+        "action_required": true,
+        "reorder_requires_human": false,
+        "reorder_blockers": []
+      }
+    },
+    {
+      "node_id": "era-rwg-007",
+      "title": "Integrate governance promotion adapter and selected-solution scope output",
+      "status": "blocked",
+      "status_reason": "Governance handoff depends on ranked evidence-backed candidates.",
+      "gating_class": "review_gated",
+      "conflict_domains": [
+        "research-governance",
+        "promotion-gate"
+      ],
+      "target_execplan_id": "era-phase3-governance-integration",
+      "goal_area": "research-governance",
+      "initiative_branch": "initiative/era-research-runtime-bootstrap",
+      "parent_initiative_node": "initiative-era-research-runtime-bootstrap",
+      "integration_mode": "via_initiative",
+      "expected_artifacts": [
+        "selected-solution-scope contract",
+        "governance adapter"
+      ],
+      "ordering": {
+        "queue_position": 7,
+        "tie_breaker": "era-phase3-governance-integration"
+      },
+      "action_state": {
+        "last_action_id": "act-era-001",
+        "last_action": "block",
+        "action_required": true,
+        "reorder_requires_human": false,
+        "reorder_blockers": []
+      }
+    },
+    {
+      "node_id": "era-rwg-008",
+      "title": "Materialize planner handoff package and implementation DAG generation",
+      "status": "blocked",
+      "status_reason": "Planner must consume selected scope, not raw research runs.",
+      "gating_class": "decision_gated",
+      "conflict_domains": [
+        "planner-handoff",
+        "dag-generation"
+      ],
+      "target_execplan_id": "era-phase4-planner-handoff",
+      "goal_area": "planning",
+      "initiative_branch": "initiative/era-research-runtime-bootstrap",
+      "parent_initiative_node": "initiative-era-research-runtime-bootstrap",
+      "integration_mode": "via_initiative",
+      "expected_artifacts": [
+        "planner handoff package",
+        "implementation DAG"
+      ],
+      "ordering": {
+        "queue_position": 8,
+        "tie_breaker": "era-phase4-planner-handoff"
+      },
+      "action_state": {
+        "last_action_id": "act-era-001",
+        "last_action": "block",
+        "action_required": true,
+        "reorder_requires_human": true,
+        "reorder_blockers": [
+          "selected-solution approval required"
+        ]
+      }
+    },
+    {
+      "node_id": "era-rwg-009",
+      "title": "Run first end-to-end pilot against a bounded architectural decision",
+      "status": "blocked",
+      "status_reason": "Pilot should wait until research, governance, and planner handoff are wired.",
+      "gating_class": "review_gated",
+      "conflict_domains": [
+        "pilot-run",
+        "evaluation-harness"
+      ],
+      "target_execplan_id": "era-phase4-pilot-run",
+      "goal_area": "research-runtime",
+      "initiative_branch": "initiative/era-research-runtime-bootstrap",
+      "parent_initiative_node": "initiative-era-research-runtime-bootstrap",
+      "integration_mode": "via_initiative",
+      "expected_artifacts": [
+        "pilot research run",
+        "selected solution scope",
+        "planner DAG package"
+      ],
+      "ordering": {
+        "queue_position": 9,
+        "tie_breaker": "era-phase4-pilot-run"
+      },
+      "action_state": {
+        "last_action_id": "act-era-001",
+        "last_action": "block",
+        "action_required": true,
+        "reorder_requires_human": false,
+        "reorder_blockers": []
+      }
+    },
+    {
+      "node_id": "era-rwg-010",
+      "title": "Harden replayability, cost controls, and run comparison reports",
+      "status": "blocked",
+      "status_reason": "Hardening should follow one proven end-to-end loop.",
+      "gating_class": "auto_runnable",
+      "conflict_domains": [
+        "runtime-hardening",
+        "cost-controls"
+      ],
+      "target_execplan_id": "era-phase5-hardening",
+      "goal_area": "research-runtime",
+      "initiative_branch": "initiative/era-research-runtime-bootstrap",
+      "parent_initiative_node": "initiative-era-research-runtime-bootstrap",
+      "integration_mode": "via_initiative",
+      "expected_artifacts": [
+        "run replay support",
+        "comparison reports",
+        "budget guardrails"
+      ],
+      "ordering": {
+        "queue_position": 10,
+        "tie_breaker": "era-phase5-hardening"
+      },
+      "action_state": {
+        "last_action_id": "act-era-001",
+        "last_action": "block",
+        "action_required": true,
+        "reorder_requires_human": false,
+        "reorder_blockers": []
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "era-rwg-002",
+      "to": "era-rwg-001",
+      "relation": "depends_on"
+    },
+    {
+      "from": "era-rwg-003",
+      "to": "era-rwg-002",
+      "relation": "depends_on"
+    },
+    {
+      "from": "era-rwg-004",
+      "to": "era-rwg-003",
+      "relation": "depends_on"
+    },
+    {
+      "from": "era-rwg-005",
+      "to": "era-rwg-004",
+      "relation": "depends_on"
+    },
+    {
+      "from": "era-rwg-006",
+      "to": "era-rwg-005",
+      "relation": "depends_on"
+    },
+    {
+      "from": "era-rwg-007",
+      "to": "era-rwg-006",
+      "relation": "depends_on"
+    },
+    {
+      "from": "era-rwg-008",
+      "to": "era-rwg-007",
+      "relation": "depends_on"
+    },
+    {
+      "from": "era-rwg-009",
+      "to": "era-rwg-008",
+      "relation": "depends_on"
+    },
+    {
+      "from": "era-rwg-010",
+      "to": "era-rwg-009",
+      "relation": "depends_on"
+    },
+    {
+      "from": "era-rwg-007",
+      "to": "era-rwg-001",
+      "relation": "informed_by"
+    },
+    {
+      "from": "era-rwg-008",
+      "to": "era-rwg-001",
+      "relation": "informed_by"
+    },
+    {
+      "from": "era-rwg-008",
+      "to": "era-rwg-007",
+      "relation": "gated_by"
+    }
+  ]
+}

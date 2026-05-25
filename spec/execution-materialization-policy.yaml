@@ -1,0 +1,39 @@
+version: v1
+updated_at: 2026-05-20
+title: Execution Materialization Policy
+policy_id: execution-materialization-policy-v1
+purpose: >
+  Define deterministic rules for converting a chosen structural implementation
+  plan into an execution-ready plan and governed runnable execution packets.
+inputs:
+  required:
+    - selected_solution_scope_ref
+    - chosen_structural_plan_ref
+  optional:
+    - ranked_plan_packet_ref
+    - evidence_packet_refs
+    - reuse_context_refs
+grouping_rules:
+  - group only nodes whose combined execution does not blur ownership or validation semantics
+  - preserve explicit dependency direction from the structural plan
+  - do not merge nodes if doing so hides a required governance boundary
+  - do not split nodes unless the structural plan explicitly permits finer runnable boundaries
+warning_rules:
+  - emit warning when slice grouping requires hidden prose interpretation
+  - emit warning when completion evidence cannot be attached cleanly to a slice
+  - emit warning when dependency semantics become ambiguous after grouping
+hard_fail_rules:
+  - fail if chosen structural plan is not machine-readable
+  - fail if required validation targets are missing
+  - fail if runnable preconditions cannot be determined explicitly
+  - fail if materialization would require altering selected solution scope
+approval_rules:
+  default_required_approvals: []
+  domain_required_approvals: {}
+outputs:
+  - execution_ready_plan_packet
+  - execution_packet[]
+notes:
+  - this policy governs materialization only
+  - it must not choose plans, approve execution, or mutate planner selection authority
+  - required approvals must be emitted explicitly on execution slices and execution packets, even when no approvals are required

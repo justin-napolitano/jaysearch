@@ -1,0 +1,138 @@
+{
+  "packet_type": "selected_solution_scope",
+  "packet_version": "v1",
+  "packet_id": "selected-scope:research-problem:platform-template-bootstrap:evaluation-strength-contract-001:research-problem:platform-template-bootstrap:evaluation-strength-contract-001:hypothesis:baseline_reference:candidate:001",
+  "created_at": "2026-05-21T18:00:37Z",
+  "producer": "materialize-selected-solution-scope",
+  "selection_id": "selection:research-problem:platform-template-bootstrap:evaluation-strength-contract-001:research-problem:platform-template-bootstrap:evaluation-strength-contract-001:hypothesis:baseline_reference:candidate:001",
+  "problem_id": "research-problem:platform-template-bootstrap:evaluation-strength-contract-001",
+  "selected_candidate_id": "research-problem:platform-template-bootstrap:evaluation-strength-contract-001:hypothesis:baseline_reference:candidate:001",
+  "selection_reason": "Top promoted candidate after evaluation-backed ranking by promotion status and total evaluation score.",
+  "selection_policy": {
+    "policy_id": "evaluation_backed_recommendation_gate_v1",
+    "source_recommendation_ref": "/mnt/c/users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap/artifacts/validation/research-to-selection-runs/rts-20260521T180036Z/steps/rrc-20260521T180037Z/research-recommendation.packet.json",
+    "required_inputs": [
+      "evaluation_summary_ref",
+      "evaluation_refs",
+      "ranked_candidates",
+      "promoted selected candidate",
+      "selected candidate evaluation_ref"
+    ]
+  },
+  "selected_solution_summary": "Top promoted candidate after evaluation-backed ranking by promotion status and total evaluation score.",
+  "implementation_intent": {
+    "summary": "Implementation-specific candidate intent for research-problem:platform-template-bootstrap:evaluation-strength-contract-001.",
+    "contract_changes": [
+      "spec/contracts/packet-schema-registry.yaml",
+      "docs/core-contract-spec-v1.md",
+      "add evaluation_strength to research_evaluation_packet",
+      "add evaluation_basis details to distinguish evaluation support level",
+      "define static_contract, artifact_backed, and execution_backed evaluation levels"
+    ],
+    "runtime_changes": [
+      "src/platform_tools/materialize_research_evaluations.py",
+      "src/platform_tools/materialize_research_recommendation.py",
+      "src/platform_tools/materialize_selected_solution_scope.py",
+      "propagate evaluation_strength into recommendation ranking",
+      "propagate evaluation_strength into selection policy gates"
+    ],
+    "validation_changes": [
+      "tests/test_materialize_research_evaluations.py",
+      "tests/test_materialize_research_recommendation.py",
+      "tests/test_materialize_selected_solution_scope.py",
+      "uv run pytest tests/test_materialize_research_evaluations.py tests/test_materialize_research_recommendation.py tests/test_materialize_selected_solution_scope.py",
+      "add tests proving static-only evidence cannot be represented as execution-backed"
+    ],
+    "docs_changes": [
+      "docs/research-candidate-evaluation-v1.md",
+      "docs/research-recommendation-v1.md",
+      "document evaluation strength semantics and gate propagation"
+    ],
+    "handoff_requirements": [
+      "selected scope must expose evaluation strength for planner intake"
+    ]
+  },
+  "expected_changes": [
+    "spec/contracts/packet-schema-registry.yaml",
+    "docs/core-contract-spec-v1.md",
+    "add evaluation_strength to research_evaluation_packet",
+    "add evaluation_basis details to distinguish evaluation support level",
+    "define static_contract, artifact_backed, and execution_backed evaluation levels",
+    "src/platform_tools/materialize_research_evaluations.py",
+    "src/platform_tools/materialize_research_recommendation.py",
+    "src/platform_tools/materialize_selected_solution_scope.py",
+    "propagate evaluation_strength into recommendation ranking",
+    "propagate evaluation_strength into selection policy gates",
+    "tests/test_materialize_research_evaluations.py",
+    "tests/test_materialize_research_recommendation.py",
+    "tests/test_materialize_selected_solution_scope.py",
+    "uv run pytest tests/test_materialize_research_evaluations.py tests/test_materialize_research_recommendation.py tests/test_materialize_selected_solution_scope.py",
+    "add tests proving static-only evidence cannot be represented as execution-backed",
+    "docs/research-candidate-evaluation-v1.md",
+    "docs/research-recommendation-v1.md",
+    "document evaluation strength semantics and gate propagation"
+  ],
+  "contract_changes": [
+    "spec/contracts/packet-schema-registry.yaml",
+    "docs/core-contract-spec-v1.md",
+    "add evaluation_strength to research_evaluation_packet",
+    "add evaluation_basis details to distinguish evaluation support level",
+    "define static_contract, artifact_backed, and execution_backed evaluation levels"
+  ],
+  "runtime_changes": [
+    "src/platform_tools/materialize_research_evaluations.py",
+    "src/platform_tools/materialize_research_recommendation.py",
+    "src/platform_tools/materialize_selected_solution_scope.py",
+    "propagate evaluation_strength into recommendation ranking",
+    "propagate evaluation_strength into selection policy gates"
+  ],
+  "validation_changes": [
+    "tests/test_materialize_research_evaluations.py",
+    "tests/test_materialize_research_recommendation.py",
+    "tests/test_materialize_selected_solution_scope.py",
+    "uv run pytest tests/test_materialize_research_evaluations.py tests/test_materialize_research_recommendation.py tests/test_materialize_selected_solution_scope.py",
+    "add tests proving static-only evidence cannot be represented as execution-backed"
+  ],
+  "docs_changes": [
+    "docs/research-candidate-evaluation-v1.md",
+    "docs/research-recommendation-v1.md",
+    "document evaluation strength semantics and gate propagation"
+  ],
+  "handoff_requirements": [
+    "selected scope must expose evaluation strength for planner intake"
+  ],
+  "in_scope": [
+    "validated research-to-selection flow"
+  ],
+  "out_of_scope": [
+    "planner DAG generation",
+    "code generation"
+  ],
+  "scope_in": [
+    "validated research-to-selection flow"
+  ],
+  "scope_out": [
+    "planner DAG generation",
+    "code generation"
+  ],
+  "assumptions": [
+    "local-first",
+    "typed packets",
+    "backward-compatible where possible",
+    "must not require planner artifacts before planner exists"
+  ],
+  "risks": [
+    "candidate_has_no_materialized_artifacts"
+  ],
+  "acceptance_checks": [
+    "research-to-selection validation report is ok"
+  ],
+  "acceptance_targets": [
+    "research-to-selection validation report is ok"
+  ],
+  "artifact_refs": [],
+  "evidence_refs": [
+    "/mnt/c/users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap/artifacts/planner/examples/evaluation-strength-and-evidence-search/evaluation-strength-evidence.packet.json"
+  ],
+  "open_questions": []
+}

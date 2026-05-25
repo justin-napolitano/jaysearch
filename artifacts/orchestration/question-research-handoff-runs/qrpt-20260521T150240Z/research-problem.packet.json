@@ -1,0 +1,64 @@
+{
+  "packet_type": "research_problem_packet",
+  "packet_version": "v1",
+  "packet_id": "research-problem:platform-template-bootstrap:question-research-handoff-001:packet",
+  "created_at": "2026-05-21T15:02:40Z",
+  "producer": "question-to-research-problem-transform",
+  "problem_id": "research-problem:platform-template-bootstrap:question-research-handoff-001",
+  "title": "Research problem for question-research-handoff-001",
+  "goal": "Produce a canonical research problem packet for the research tool.",
+  "problem_statement": "How should the platform transform a bounded research question plus evidence into canonical research-tool input?",
+  "constraints": [
+    "local-first",
+    "typed packets",
+    "bounded transform"
+  ],
+  "repo_context": {
+    "project_id": "platform-template-bootstrap",
+    "decision_target": "whether to build a shared question_to_research_problem_transform surface",
+    "decision_consequence": "changes whether the upstream question/evidence/research handoff can be automated safely",
+    "blocked_work_if_unanswered": "cannot confidently wire the upstream question-tool into evidence-search and research orchestration"
+  },
+  "artifact_targets": [
+    "research_problem_packet",
+    "question_to_research_problem_transform"
+  ],
+  "evaluation_criteria": [
+    "contract completeness",
+    "traceability",
+    "downstream research readiness"
+  ],
+  "search_budget": {
+    "max_sources": 5,
+    "max_candidates": 3
+  },
+  "output_requirements": [
+    "research_candidate_packet[]",
+    "research_evaluation_packet[]",
+    "research_recommendation_packet"
+  ],
+  "evidence_packet_ref": "/mnt/c/users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap/artifacts/planner/examples/question-research-handoff/evidence.packet.json",
+  "reference_implementations": [
+    "https://arxiv.org/abs/2303.17651",
+    "https://arxiv.org/abs/2303.11366",
+    "https://arxiv.org/abs/2305.11738"
+  ],
+  "baseline_artifact_refs": [
+    "question-to-evidence-to-research contract review"
+  ],
+  "allowed_tools": [
+    "evidence-search-tool",
+    "memory-tool",
+    "research-tool"
+  ],
+  "runtime_environment": "repo-local",
+  "language": "python",
+  "research_context": {
+    "method_refs": [
+      "iterative self-feedback",
+      "verbal reinforcement",
+      "tool-assisted critique"
+    ],
+    "evidence_summary": "Bounded evidence packet for the upstream question-to-evidence-to-research handoff."
+  }
+}

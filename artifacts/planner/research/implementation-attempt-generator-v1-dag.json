@@ -1,0 +1,68 @@
+{
+  "graph_id": "implementation-attempt-generator-v1",
+  "graph_type": "implementation_dag",
+  "version": "v1",
+  "purpose": "Generate non-mutating implementation_attempt packets from execution_unit packets.",
+  "source_artifacts": [
+    "docs/execution-era-runtime-research-v1.md",
+    ".agent/execplans/20260521-implementation-attempt-generator-v1-codex-01-execplan.md",
+    "spec/contracts/implementation-attempt.schema.yaml"
+  ],
+  "nodes": [
+    {
+      "node_id": "read-execution-unit",
+      "title": "Read Execution Unit",
+      "node_type": "runtime",
+      "status": "planned",
+      "goal": "Load and validate one execution_unit packet before attempt generation.",
+      "owned_changes": [
+        "src/platform_tools/generate_implementation_attempt.py"
+      ],
+      "expected_outputs": [
+        "validated execution_unit input"
+      ]
+    },
+    {
+      "node_id": "emit-attempt-packet",
+      "title": "Emit Attempt Packet",
+      "node_type": "runtime",
+      "status": "planned",
+      "goal": "Emit bounded implementation_attempt packets without mutating source files.",
+      "owned_changes": [
+        "src/platform_tools/generate_implementation_attempt.py",
+        "bin/generate-implementation-attempt"
+      ],
+      "expected_outputs": [
+        "implementation_attempt packet",
+        "attempt generation report"
+      ]
+    },
+    {
+      "node_id": "test-attempt-generator",
+      "title": "Test Attempt Generator",
+      "node_type": "validation",
+      "status": "planned",
+      "goal": "Prove attempt packets preserve execution-unit refs, owned changes, and validation command refs.",
+      "owned_changes": [
+        "tests/test_generate_implementation_attempt.py"
+      ],
+      "expected_outputs": [
+        "attempt generator tests"
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "edge_id": "e1",
+      "from_node_id": "emit-attempt-packet",
+      "to_node_id": "read-execution-unit",
+      "relation": "depends_on"
+    },
+    {
+      "edge_id": "e2",
+      "from_node_id": "test-attempt-generator",
+      "to_node_id": "emit-attempt-packet",
+      "relation": "depends_on"
+    }
+  ]
+}

@@ -1,0 +1,49 @@
+version: v1
+policy_id: node-readiness-policy-v1
+description: >
+  Readiness gates for problem nodes, node options, selected scopes, and
+  execution units. These gates decide what tool may legally act next.
+states:
+  research_ready:
+    required_fields:
+      - goal
+      - problem_statement
+      - constraints
+      - evaluation_criteria
+  option_generation_ready:
+    required_fields:
+      - goal
+      - problem_statement
+      - constraints
+      - evaluation_criteria
+    alternative_required:
+      - field: evidence_refs
+        missing_field_marker: evidence_refs
+      - field: option_generation_policy
+        missing_field_marker: option_generation_policy
+  selection_ready:
+    required_fields:
+      - option_refs
+      - evaluation_criteria
+      - evidence_refs
+  planning_ready:
+    required_fields:
+      - implementation_intent
+      - expected_changes
+      - non_goals
+  implementation_ready:
+    required_packet_type: execution_unit
+    required_fields:
+      - execution_unit_id
+      - implementation_intent
+      - owned_changes
+      - validation_commands
+      - rollback_plan
+      - completion_evidence_requirements
+  evaluation_ready:
+    alternative_required:
+      - field: solution_artifact_ref
+        alternate_field: produced_artifact_refs
+    required_fields:
+      - validation_output_refs
+      - completion_evidence_refs

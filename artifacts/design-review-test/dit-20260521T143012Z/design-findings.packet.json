@@ -1,0 +1,108 @@
+{
+  "packet_type": "design_findings_packet",
+  "packet_version": "v1",
+  "run_id": "dit-20260521T143012Z",
+  "generated_at": "2026-05-21T14:30:12Z",
+  "finding_count": 4,
+  "blocking_finding_count": 4,
+  "findings": [
+    {
+      "finding_id": "dit-20260521T143012Z:implementation_dependency_cycle:6294372",
+      "validator_family": "dag_consistency_checks",
+      "check_id": "implementation_dependency_cycle",
+      "severity": "critical",
+      "blocking": true,
+      "finding_type": "implementation_dependency_cycle",
+      "artifact_refs": [
+        "artifacts/planner/research/design-review-automation-v1-implementation-graph.json"
+      ],
+      "violated_invariant": "implementation_dependency_graph_must_be_acyclic",
+      "summary": "The linked implementation graph contains a dependency cycle.",
+      "evidence_refs": [],
+      "related_contract_refs": [],
+      "related_node_refs": [
+        "idra-001",
+        "idra-002",
+        "idra-003"
+      ],
+      "suggested_fix": "Remove cyclic implementation dependencies so the plan remains buildable."
+    },
+    {
+      "finding_id": "dit-20260521T143012Z:implementation_node_shape_invalid:1199233",
+      "validator_family": "dag_consistency_checks",
+      "check_id": "implementation_node_shape_invalid",
+      "severity": "high",
+      "blocking": true,
+      "finding_type": "invalid_implementation_node_shape",
+      "artifact_refs": [
+        "artifacts/planner/research/design-review-automation-v1-implementation-graph.json"
+      ],
+      "violated_invariant": "implementation_nodes_must_be_buildable_and_machine_readable",
+      "summary": "Implementation node 'idra-003' is invalid: missing non-empty changes list.",
+      "evidence_refs": [],
+      "related_contract_refs": [],
+      "related_node_refs": [
+        "idra-003"
+      ],
+      "suggested_fix": "Emit bounded implementation nodes with explicit type, title, status, dependencies, and owned changes."
+    },
+    {
+      "finding_id": "dit-20260521T143012Z:implementation_node_shape_invalid:5362624",
+      "validator_family": "dag_consistency_checks",
+      "check_id": "implementation_node_shape_invalid",
+      "severity": "high",
+      "blocking": true,
+      "finding_type": "invalid_implementation_node_shape",
+      "artifact_refs": [
+        "artifacts/planner/research/design-review-automation-v1-implementation-graph.json"
+      ],
+      "violated_invariant": "implementation_nodes_must_be_buildable_and_machine_readable",
+      "summary": "Implementation node 'idra-001' is invalid: missing non-empty changes list.",
+      "evidence_refs": [],
+      "related_contract_refs": [],
+      "related_node_refs": [
+        "idra-001"
+      ],
+      "suggested_fix": "Emit bounded implementation nodes with explicit type, title, status, dependencies, and owned changes."
+    },
+    {
+      "finding_id": "dit-20260521T143012Z:implementation_node_shape_invalid:6307143",
+      "validator_family": "dag_consistency_checks",
+      "check_id": "implementation_node_shape_invalid",
+      "severity": "high",
+      "blocking": true,
+      "finding_type": "invalid_implementation_node_shape",
+      "artifact_refs": [
+        "artifacts/planner/research/design-review-automation-v1-implementation-graph.json"
+      ],
+      "violated_invariant": "implementation_nodes_must_be_buildable_and_machine_readable",
+      "summary": "Implementation node 'idra-002' is invalid: missing non-empty changes list.",
+      "evidence_refs": [],
+      "related_contract_refs": [],
+      "related_node_refs": [
+        "idra-002"
+      ],
+      "suggested_fix": "Emit bounded implementation nodes with explicit type, title, status, dependencies, and owned changes."
+    }
+  ],
+  "artifact_refs": [
+    "spec/contracts/packet-schema-registry.yaml",
+    "spec/contracts/design-iteration-checks.yaml",
+    "artifacts/planner/research/design-review-automation-v1-dag.json",
+    "spec/plan-quality-scoring.yaml",
+    "artifacts/planner/graphs/pg-ps-20260310165535-runtime-smoke.json",
+    "artifacts/planner/graphs/pg-ps-20260310173928-smoke-test.json",
+    "artifacts/planner/graphs/pg-ps-20260310174548-smoke-test.json",
+    "artifacts/planner/graphs/pg-ps-20260310174635-smoke-test.json",
+    "artifacts/planner/research/design-iteration-tool-dag-v1.json",
+    "artifacts/planner/research/era-research-runtime-bootstrap-dag.json",
+    "artifacts/planner/research/execution-slice-materialization-v1-dag.json",
+    "artifacts/planner/research/plan-quality-score-v1-dag.json",
+    "artifacts/planner/research/remaining-work-graph.json"
+  ],
+  "evidence_refs": [
+    "https://arxiv.org/abs/2303.17651",
+    "https://arxiv.org/abs/2303.11366",
+    "https://arxiv.org/abs/2305.11738"
+  ]
+}

@@ -1,0 +1,195 @@
+{
+  "graph_id": "research-to-selection-validation-v1",
+  "graph_type": "workflow_dag",
+  "version": "v1",
+  "purpose": "Validate the implemented research-to-selection chain before planner and code-generation buildout.",
+  "implementation_graph_ref": "artifacts/planner/research/design-review-automation-v1-implementation-graph.json",
+  "nodes": [
+    {
+      "node_id": "materialize-research-problem",
+      "title": "Materialize Research Problem",
+      "node_type": "tool_call",
+      "status": "ready",
+      "goal": "Transform research question and optional evidence into research_problem_packet.",
+      "owned_changes": [
+        "research_problem_packet",
+        "question_to_research_problem_transform"
+      ],
+      "expected_outputs": [
+        "research_problem_path",
+        "transform_packet_path"
+      ],
+      "validation_targets": [
+        "question packet valid",
+        "problem packet emitted"
+      ],
+      "completion_evidence_requirements": [
+        "step report"
+      ]
+    },
+    {
+      "node_id": "materialize-hypotheses",
+      "title": "Materialize Hypotheses",
+      "node_type": "tool_call",
+      "status": "ready",
+      "goal": "Create diverse research_hypothesis_packet outputs.",
+      "owned_changes": [
+        "research_hypothesis_packet[]"
+      ],
+      "expected_outputs": [
+        "hypothesis_packet_paths"
+      ],
+      "validation_targets": [
+        "at least two hypothesis families",
+        "hypotheses trace to problem"
+      ],
+      "completion_evidence_requirements": [
+        "step report"
+      ]
+    },
+    {
+      "node_id": "materialize-candidate-tree",
+      "title": "Materialize Candidate Tree",
+      "node_type": "tool_call",
+      "status": "ready",
+      "goal": "Create candidate search tree and research candidate packets.",
+      "owned_changes": [
+        "candidate_search_tree_packet",
+        "research_candidate_packet[]"
+      ],
+      "expected_outputs": [
+        "candidate_search_tree_path",
+        "candidate_packet_paths"
+      ],
+      "validation_targets": [
+        "candidate tree emitted",
+        "candidate packets trace to hypotheses"
+      ],
+      "completion_evidence_requirements": [
+        "step report"
+      ]
+    },
+    {
+      "node_id": "materialize-evaluations",
+      "title": "Materialize Evaluations",
+      "node_type": "tool_call",
+      "status": "ready",
+      "goal": "Evaluate candidate packets and emit evaluation summary.",
+      "owned_changes": [
+        "research_evaluation_packet[]",
+        "candidate_evaluation_summary_packet"
+      ],
+      "expected_outputs": [
+        "evaluation_packet_paths",
+        "evaluation_summary_packet_path"
+      ],
+      "validation_targets": [
+        "every candidate has evaluation",
+        "summary packet exists"
+      ],
+      "completion_evidence_requirements": [
+        "step report"
+      ]
+    },
+    {
+      "node_id": "materialize-recommendation",
+      "title": "Materialize Recommendation",
+      "node_type": "tool_call",
+      "status": "ready",
+      "goal": "Rank evaluated candidates and emit research recommendation.",
+      "owned_changes": [
+        "research_recommendation_packet"
+      ],
+      "expected_outputs": [
+        "recommendation_packet_path"
+      ],
+      "validation_targets": [
+        "recommendation references evaluations",
+        "ranked candidates exist"
+      ],
+      "completion_evidence_requirements": [
+        "step report"
+      ]
+    },
+    {
+      "node_id": "materialize-selected-scope",
+      "title": "Materialize Selected Scope",
+      "node_type": "tool_call",
+      "status": "ready",
+      "goal": "Apply selection gate and emit selected_solution_scope.",
+      "owned_changes": [
+        "selected_solution_scope"
+      ],
+      "expected_outputs": [
+        "selected_solution_scope_path"
+      ],
+      "validation_targets": [
+        "selected candidate is promoted",
+        "selected candidate has evaluation ref",
+        "selection policy recorded"
+      ],
+      "completion_evidence_requirements": [
+        "step report"
+      ]
+    },
+    {
+      "node_id": "emit-validation-report",
+      "title": "Emit Validation Report",
+      "node_type": "materialization",
+      "status": "ready",
+      "goal": "Emit the bounded validation report and explicit unvalidated scopes.",
+      "owned_changes": [
+        "research_to_selection_validation_report"
+      ],
+      "expected_outputs": [
+        "research_to_selection_validation_report"
+      ],
+      "validation_targets": [
+        "all expected packet refs exist",
+        "packet types match contracts",
+        "planner/code scopes marked not validated"
+      ],
+      "completion_evidence_requirements": [
+        "validation report"
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "edge_id": "e1",
+      "from_node_id": "materialize-hypotheses",
+      "to_node_id": "materialize-research-problem",
+      "relation": "depends_on"
+    },
+    {
+      "edge_id": "e2",
+      "from_node_id": "materialize-candidate-tree",
+      "to_node_id": "materialize-hypotheses",
+      "relation": "depends_on"
+    },
+    {
+      "edge_id": "e3",
+      "from_node_id": "materialize-evaluations",
+      "to_node_id": "materialize-candidate-tree",
+      "relation": "depends_on"
+    },
+    {
+      "edge_id": "e4",
+      "from_node_id": "materialize-recommendation",
+      "to_node_id": "materialize-evaluations",
+      "relation": "depends_on"
+    },
+    {
+      "edge_id": "e5",
+      "from_node_id": "materialize-selected-scope",
+      "to_node_id": "materialize-recommendation",
+      "relation": "depends_on"
+    },
+    {
+      "edge_id": "e6",
+      "from_node_id": "emit-validation-report",
+      "to_node_id": "materialize-selected-scope",
+      "relation": "depends_on"
+    }
+  ]
+}

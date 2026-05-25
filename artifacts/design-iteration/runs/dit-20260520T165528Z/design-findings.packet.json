@@ -1,0 +1,19 @@
+{
+  "packet_type": "design_findings_packet",
+  "packet_version": "v1",
+  "run_id": "dit-20260520T165528Z",
+  "generated_at": "2026-05-20T16:55:28Z",
+  "finding_count": 0,
+  "blocking_finding_count": 0,
+  "findings": [],
+  "artifact_refs": [
+    "spec/contracts/packet-schema-registry.yaml",
+    "spec/contracts/design-iteration-checks.yaml",
+    "artifacts/planner/research/design-iteration-tool-dag-v1.json"
+  ],
+  "evidence_refs": [
+    "https://arxiv.org/abs/2303.17651",
+    "https://arxiv.org/abs/2303.11366",
+    "https://arxiv.org/abs/2305.11738"
+  ]
+}

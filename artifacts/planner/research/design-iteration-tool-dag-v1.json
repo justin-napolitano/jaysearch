@@ -1,0 +1,375 @@
+{
+  "graph_id": "design-iteration-tool-dag-v1",
+  "created_at": "2026-05-20T00:00:00Z",
+  "graph_kind": "workflow_dag",
+  "implementation_graph_ref": "artifacts/planner/research/design-iteration-tool-implementation-graph-v1.json",
+  "purpose": "Design iteration over contracts, DAGs, and tool boundaries",
+  "nodes": [
+    {
+      "node_id": "dit-001",
+      "node_type": "tool_invocation",
+      "title": "Ingest design context",
+      "tool_name": "design-iteration-tool",
+      "operation_name": "ingest_design_context",
+      "input_packet_refs": [
+        "design_context_packet"
+      ],
+      "output_packet_refs": [
+        "normalized_design_context"
+      ],
+      "blocking_dependencies": [],
+      "status": "ready",
+      "retry_policy": {
+        "max_retries": 1
+      },
+      "timeout_policy": {
+        "timeout_seconds": 30
+      },
+      "artifact_refs": [
+        "docs/core-contract-spec-v1.md",
+        "docs/design-iteration-tool-v1.md",
+        "docs/design-iteration-tool-dag-and-paths.md",
+        "docs/system-flow-mermaid.md",
+        "docs/separation-plan-v1.md"
+      ]
+    },
+    {
+      "node_id": "dit-002",
+      "node_type": "artifact_check",
+      "title": "Load contract artifacts",
+      "input_packet_refs": [
+        "normalized_design_context"
+      ],
+      "output_packet_refs": [
+        "contract_artifact_set"
+      ],
+      "blocking_dependencies": [
+        "dit-001"
+      ],
+      "status": "pending",
+      "retry_policy": {
+        "max_retries": 1
+      },
+      "timeout_policy": {
+        "timeout_seconds": 30
+      },
+      "artifact_refs": [
+        "docs/core-contract-spec-v1.md",
+        "spec/contracts/packet-schema-registry.yaml"
+      ]
+    },
+    {
+      "node_id": "dit-003",
+      "node_type": "tool_invocation",
+      "title": "Retrieve relevant research evidence",
+      "tool_name": "evidence-search-tool",
+      "operation_name": "assemble_evidence_packet",
+      "input_packet_refs": [
+        "normalized_design_context"
+      ],
+      "output_packet_refs": [
+        "design_iteration_evidence_packet"
+      ],
+      "blocking_dependencies": [
+        "dit-001"
+      ],
+      "status": "pending",
+      "retry_policy": {
+        "max_retries": 1
+      },
+      "timeout_policy": {
+        "timeout_seconds": 60
+      },
+      "artifact_refs": [
+        "https://arxiv.org/abs/2303.17651",
+        "https://arxiv.org/abs/2303.11366",
+        "https://arxiv.org/abs/2305.11738"
+      ]
+    },
+    {
+      "node_id": "dit-004",
+      "node_type": "artifact_check",
+      "title": "Load DAG artifacts",
+      "input_packet_refs": [
+        "normalized_design_context"
+      ],
+      "output_packet_refs": [
+        "dag_artifact_set"
+      ],
+      "blocking_dependencies": [
+        "dit-001"
+      ],
+      "status": "pending",
+      "retry_policy": {
+        "max_retries": 1
+      },
+      "timeout_policy": {
+        "timeout_seconds": 30
+      },
+      "artifact_refs": [
+        "docs/cross-tool-contracts-and-dag-model.md",
+        "docs/system-flow-mermaid.md",
+        "artifacts/planner/research/design-iteration-tool-dag-v1.json"
+      ]
+    },
+    {
+      "node_id": "dit-005",
+      "node_type": "tool_invocation",
+      "title": "Run contract consistency checks",
+      "tool_name": "design-iteration-tool",
+      "operation_name": "run_contract_consistency_checks",
+      "input_packet_refs": [
+        "contract_artifact_set",
+        "design_iteration_evidence_packet"
+      ],
+      "output_packet_refs": [
+        "contract_finding_candidates"
+      ],
+      "blocking_dependencies": [
+        "dit-002",
+        "dit-003"
+      ],
+      "status": "pending",
+      "retry_policy": {
+        "max_retries": 1
+      },
+      "timeout_policy": {
+        "timeout_seconds": 60
+      },
+      "artifact_refs": [
+        "spec/contracts/design-iteration-checks.yaml"
+      ]
+    },
+    {
+      "node_id": "dit-006",
+      "node_type": "tool_invocation",
+      "title": "Run DAG consistency checks",
+      "tool_name": "design-iteration-tool",
+      "operation_name": "run_dag_consistency_checks",
+      "input_packet_refs": [
+        "dag_artifact_set"
+      ],
+      "output_packet_refs": [
+        "dag_finding_candidates"
+      ],
+      "blocking_dependencies": [
+        "dit-004"
+      ],
+      "status": "pending",
+      "retry_policy": {
+        "max_retries": 1
+      },
+      "timeout_policy": {
+        "timeout_seconds": 60
+      },
+      "artifact_refs": [
+        "spec/contracts/design-iteration-checks.yaml"
+      ]
+    },
+    {
+      "node_id": "dit-007",
+      "node_type": "tool_invocation",
+      "title": "Compare tool boundaries against contracts",
+      "tool_name": "design-iteration-tool",
+      "operation_name": "compare_tool_boundaries_against_contracts",
+      "input_packet_refs": [
+        "contract_finding_candidates",
+        "dag_finding_candidates"
+      ],
+      "output_packet_refs": [
+        "boundary_finding_candidates"
+      ],
+      "blocking_dependencies": [
+        "dit-005",
+        "dit-006"
+      ],
+      "status": "pending",
+      "retry_policy": {
+        "max_retries": 1
+      },
+      "timeout_policy": {
+        "timeout_seconds": 60
+      },
+      "artifact_refs": [
+        "docs/research-tool-v1.md",
+        "docs/planner-tool-v1.md",
+        "docs/governance-tool-v1.md",
+        "docs/orchestration-runner-v1.md"
+      ]
+    },
+    {
+      "node_id": "dit-008",
+      "node_type": "tool_invocation",
+      "title": "Rank real findings",
+      "tool_name": "design-iteration-tool",
+      "operation_name": "rank_real_findings",
+      "input_packet_refs": [
+        "contract_finding_candidates",
+        "dag_finding_candidates",
+        "boundary_finding_candidates"
+      ],
+      "output_packet_refs": [
+        "design_findings_packet"
+      ],
+      "blocking_dependencies": [
+        "dit-007"
+      ],
+      "status": "pending",
+      "retry_policy": {
+        "max_retries": 1
+      },
+      "timeout_policy": {
+        "timeout_seconds": 30
+      },
+      "artifact_refs": [
+        "docs/design-iteration-validator-spec-v1.md"
+      ]
+    },
+    {
+      "node_id": "dit-009",
+      "node_type": "tool_invocation",
+      "title": "Group findings into gaps",
+      "tool_name": "design-iteration-tool",
+      "operation_name": "group_findings_into_gaps",
+      "input_packet_refs": [
+        "design_findings_packet"
+      ],
+      "output_packet_refs": [
+        "design_gap_packets"
+      ],
+      "blocking_dependencies": [
+        "dit-008"
+      ],
+      "status": "pending",
+      "retry_policy": {
+        "max_retries": 1
+      },
+      "timeout_policy": {
+        "timeout_seconds": 30
+      },
+      "artifact_refs": []
+    },
+    {
+      "node_id": "dit-010",
+      "node_type": "tool_invocation",
+      "title": "Emit next question candidates",
+      "tool_name": "design-iteration-tool",
+      "operation_name": "emit_next_question_candidates",
+      "input_packet_refs": [
+        "design_gap_packets"
+      ],
+      "output_packet_refs": [
+        "next_question_candidate_packets"
+      ],
+      "blocking_dependencies": [
+        "dit-009"
+      ],
+      "status": "pending",
+      "retry_policy": {
+        "max_retries": 1
+      },
+      "timeout_policy": {
+        "timeout_seconds": 30
+      },
+      "artifact_refs": []
+    },
+    {
+      "node_id": "dit-011",
+      "node_type": "human_gate",
+      "title": "Human gate review findings",
+      "input_packet_refs": [
+        "design_findings_packet",
+        "design_gap_packets",
+        "next_question_candidate_packets"
+      ],
+      "output_packet_refs": [
+        "approved_iteration_outputs"
+      ],
+      "blocking_dependencies": [
+        "dit-010"
+      ],
+      "status": "review_gated",
+      "retry_policy": {
+        "max_retries": 0
+      },
+      "timeout_policy": {
+        "timeout_seconds": 0
+      },
+      "artifact_refs": []
+    }
+  ],
+  "edges": [
+    {
+      "edge_id": "e-001",
+      "from_node_id": "dit-001",
+      "to_node_id": "dit-002",
+      "relation": "depends_on"
+    },
+    {
+      "edge_id": "e-002",
+      "from_node_id": "dit-001",
+      "to_node_id": "dit-003",
+      "relation": "depends_on"
+    },
+    {
+      "edge_id": "e-003",
+      "from_node_id": "dit-001",
+      "to_node_id": "dit-004",
+      "relation": "depends_on"
+    },
+    {
+      "edge_id": "e-004",
+      "from_node_id": "dit-002",
+      "to_node_id": "dit-005",
+      "relation": "depends_on"
+    },
+    {
+      "edge_id": "e-005",
+      "from_node_id": "dit-003",
+      "to_node_id": "dit-005",
+      "relation": "depends_on"
+    },
+    {
+      "edge_id": "e-006",
+      "from_node_id": "dit-004",
+      "to_node_id": "dit-006",
+      "relation": "depends_on"
+    },
+    {
+      "edge_id": "e-007",
+      "from_node_id": "dit-005",
+      "to_node_id": "dit-007",
+      "relation": "depends_on"
+    },
+    {
+      "edge_id": "e-008",
+      "from_node_id": "dit-006",
+      "to_node_id": "dit-007",
+      "relation": "depends_on"
+    },
+    {
+      "edge_id": "e-009",
+      "from_node_id": "dit-007",
+      "to_node_id": "dit-008",
+      "relation": "depends_on"
+    },
+    {
+      "edge_id": "e-010",
+      "from_node_id": "dit-008",
+      "to_node_id": "dit-009",
+      "relation": "depends_on"
+    },
+    {
+      "edge_id": "e-011",
+      "from_node_id": "dit-009",
+      "to_node_id": "dit-010",
+      "relation": "depends_on"
+    },
+    {
+      "edge_id": "e-012",
+      "from_node_id": "dit-010",
+      "to_node_id": "dit-011",
+      "relation": "gated_by"
+    }
+  ]
+}

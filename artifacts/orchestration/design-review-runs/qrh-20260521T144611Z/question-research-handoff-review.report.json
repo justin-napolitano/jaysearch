@@ -1,0 +1,10 @@
+{
+  "api_version": "public-orchestration.v1",
+  "command": "orchestrate-design-review",
+  "status": "ok",
+  "ok": true,
+  "run_id": "qrh-20260521T144611Z",
+  "report_packet_path": "artifacts/orchestration/design-review-runs/qrh-20260521T144611Z/question-research-handoff-review.packet.json",
+  "blockers": [],
+  "warnings": []
+}

@@ -1,0 +1,72 @@
+{
+  "api_version": "public-orchestration.v1",
+  "command": "run-execution-era-loop-smoke",
+  "status": "ok",
+  "ok": true,
+  "run_id": "eels-20260522T140307Z",
+  "execution_unit_path": "/mnt/c/users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap/artifacts/execution-units/runs/meu-20260521T180114Z/execution-unit.packet.json",
+  "attempt_packet_path": "artifacts/execution-era-loop-smoke/runs/eels-20260522T140307Z/steps/gia-20260522T140307Z/implementation-attempt-01.packet.json",
+  "attempt_evaluation_path": "artifacts/execution-era-loop-smoke/runs/eels-20260522T140307Z/steps/aie-20260522T140307Z/attempt-evaluation.packet.json",
+  "solution_artifact_path": "artifacts/execution-era-loop-smoke/runs/eels-20260522T140307Z/steps/saf-20260522T140310Z/solution-artifact.packet.json",
+  "smoke_packet_path": "artifacts/execution-era-loop-smoke/runs/eels-20260522T140307Z/execution-era-loop-smoke.packet.json",
+  "validation_mode": "command_execution",
+  "step_reports": [
+    {
+      "step": "generate_implementation_attempt",
+      "status": "ok",
+      "ok": true,
+      "report": {
+        "api_version": "public-orchestration.v1",
+        "command": "generate-implementation-attempt",
+        "status": "ok",
+        "ok": true,
+        "run_id": "gia-20260522T140307Z",
+        "execution_unit_path": "/mnt/c/users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap/artifacts/execution-units/runs/meu-20260521T180114Z/execution-unit.packet.json",
+        "attempt_packet_paths": [
+          "artifacts/execution-era-loop-smoke/runs/eels-20260522T140307Z/steps/gia-20260522T140307Z/implementation-attempt-01.packet.json"
+        ],
+        "attempt_count": 1,
+        "blockers": []
+      }
+    },
+    {
+      "step": "evaluate_implementation_attempt",
+      "status": "ok",
+      "ok": true,
+      "report": {
+        "api_version": "public-orchestration.v1",
+        "command": "evaluate-implementation-attempt",
+        "status": "ok",
+        "ok": true,
+        "run_id": "aie-20260522T140307Z",
+        "execution_unit_path": "/mnt/c/users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap/artifacts/execution-units/runs/meu-20260521T180114Z/execution-unit.packet.json",
+        "attempt_path": "/mnt/c/users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap/artifacts/execution-era-loop-smoke/runs/eels-20260522T140307Z/steps/gia-20260522T140307Z/implementation-attempt-01.packet.json",
+        "attempt_evaluation_path": "artifacts/execution-era-loop-smoke/runs/eels-20260522T140307Z/steps/aie-20260522T140307Z/attempt-evaluation.packet.json",
+        "promotion_status": "promoted",
+        "blockers": [],
+        "warnings": [],
+        "command_evidence_refs": [
+          "artifacts/execution-era-loop-smoke/runs/eels-20260522T140307Z/steps/aie-20260522T140307Z/validation-command-01.result.json"
+        ]
+      }
+    },
+    {
+      "step": "emit_solution_artifact",
+      "status": "ok",
+      "ok": true,
+      "report": {
+        "api_version": "public-orchestration.v1",
+        "command": "emit-solution-artifact",
+        "status": "ok",
+        "ok": true,
+        "run_id": "saf-20260522T140310Z",
+        "execution_unit_path": "/mnt/c/users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap/artifacts/execution-units/runs/meu-20260521T180114Z/execution-unit.packet.json",
+        "attempt_path": "/mnt/c/users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap/artifacts/execution-era-loop-smoke/runs/eels-20260522T140307Z/steps/gia-20260522T140307Z/implementation-attempt-01.packet.json",
+        "evaluation_path": "/mnt/c/users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap/artifacts/execution-era-loop-smoke/runs/eels-20260522T140307Z/steps/aie-20260522T140307Z/attempt-evaluation.packet.json",
+        "solution_artifact_path": "artifacts/execution-era-loop-smoke/runs/eels-20260522T140307Z/steps/saf-20260522T140310Z/solution-artifact.packet.json",
+        "blockers": []
+      }
+    }
+  ],
+  "blockers": []
+}

@@ -11,6 +11,7 @@ The planner game produces bounded, auditable intent and contract state.
 The implementation game consumes:
 
 - canonical graph state
+- execution units
 - approved or draft contract projections
 - validation requirements
 - explicit constraints and decisions
@@ -35,9 +36,12 @@ The authoritative move-transition rules also live in `spec/game-transitions.yaml
 Legal implementation moves include:
 
 - select
+- generate_attempt
+- evaluate_attempt
 - implement
 - verify
 - review
+- select_solution_artifact
 - recover
 - escalate
 - finalize
@@ -45,9 +49,12 @@ Legal implementation moves include:
 Move intent:
 
 - `select` chooses ready graph nodes or contract tasks
+- `generate_attempt` creates one candidate implementation for an execution unit
+- `evaluate_attempt` evaluates one candidate implementation against tests, review, and contract criteria
 - `implement` makes scoped changes linked back to canonical provenance
 - `verify` runs required validation commands
 - `review` performs hostile inspection against the implementation result
+- `select_solution_artifact` chooses the best valid implementation attempt and records the solution artifact
 - `recover` handles partial failure or rerun state explicitly
 - `escalate` requests human attention when policy or safety boundaries are hit
 - `finalize` prepares human-governed closure but does not bypass it
@@ -59,6 +66,8 @@ Illegal implementation moves include:
 - implementing from vague or blocked state
 - mutating code outside the agreed scope without explicit contract update
 - claiming success without validation evidence
+- overwriting an execution unit with implementation output instead of attaching a solution artifact
+- hiding rejected implementation attempts
 - bypassing hostile review where required
 - letting implementation commits drift from session, graph, or contract provenance
 
@@ -86,12 +95,14 @@ Implementation requires explicit board states that can represent:
 
 Implementation should preserve adversarial review as a first-class step:
 
-1. select ready work
-2. implement
-3. verify
-4. hostile review
-5. recover or refine if needed
-6. prepare for human finalization
+1. select ready execution unit
+2. generate implementation attempts
+3. verify attempts
+4. evaluate attempts
+5. hostile review selected attempt
+6. select solution artifact
+7. recover or refine if needed
+8. prepare for human finalization
 
 This keeps the implementation tool aligned with the planner’s anti-workslop goals.
 
@@ -102,6 +113,8 @@ The shared board should therefore support at least these implementation-relevant
 - `validated`
 - `recovery_required`
 - `done`
+
+Execution-level generate/evaluate/select semantics are defined in `docs/execution-era-loop-v1.md`.
 
 ## Shared Scoring Signals
 

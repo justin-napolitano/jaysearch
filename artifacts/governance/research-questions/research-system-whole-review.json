@@ -1,0 +1,115 @@
+{
+  "question_id": "research-system-whole-review",
+  "title": "Harsh whole-system review of the governed research stack",
+  "topic": "Evaluate the current research control plane, researcher harness, governance model, and supervised improvement loop as a real system rather than a promising prototype.",
+  "question": "What is structurally weak, operationally brittle, overdesigned, missing, or misleading in the governed research system as currently built, and what must be stabilized before further expansion?",
+  "question_origin": "user",
+  "status": "queued",
+  "priority": "high",
+  "requested_by": "jay.napolitano@adventhealth.com",
+  "decision_deadline": "",
+  "success_condition": "Produce a harsh system-level assessment, rank the most important stabilization actions, identify what should not be built next, and state whether the system should stabilize, refactor, or expand.",
+  "study_design_hint": "option-comparison",
+  "artifact_contract_hint": "",
+  "self_review_focus": "Do not reward artifact volume, naming neatness, or governance complexity. Prefer identifying weak assumptions, manual choke points, low-signal machinery, and places where the system appears more mature than it is.",
+  "target_repos": [
+    "codex_platform",
+    "researcher-harness"
+  ],
+  "target_systems": [
+    "research-control-plane",
+    "researcher-runtime",
+    "governed-orchestration"
+  ],
+  "constraints": [
+    "Assume the current architecture may be wrong in important ways.",
+    "Prefer stabilization and simplification candidates over expansion work.",
+    "Identify places where the operator is still compensating manually.",
+    "Penalize solutions that add complexity without improving decision quality.",
+    "Treat governance overhead as a cost, not an automatic virtue.",
+    "Distinguish between what is operational today and what is only scaffolded."
+  ],
+  "domain_plugins": [
+    "governed-research-ops"
+  ],
+  "improvement_targets": [
+    "platform-control-plane",
+    "researcher-harness",
+    "shared-contracts"
+  ],
+  "hypotheses": [
+    {
+      "hypothesis_id": "hyp-001",
+      "statement": "The system is strong on control surfaces and artifact generation but still weak on actual research quality control, portfolio decision-making, and operator simplicity.",
+      "expected_outcome": "The top-ranked follow-ups will favor stabilization, simplification, and stronger evaluation loops over new feature surfaces.",
+      "falsifiable_condition": "The strongest evidence shows the system is already operationally mature and the best next work is expansion rather than stabilization.",
+      "evidence_required": [
+        "platform contracts and commands",
+        "researcher request and response contracts",
+        "governance artifacts and run history",
+        "smoke-run evidence",
+        "operator workflow friction"
+      ]
+    },
+    {
+      "hypothesis_id": "hyp-002",
+      "statement": "Some current machinery creates the appearance of rigor without yet delivering enough decision-quality improvement to justify its maintenance cost.",
+      "expected_outcome": "The review will identify at least one area to simplify, collapse, or defer.",
+      "falsifiable_condition": "Every major mechanism is shown to materially improve reliability, promotion quality, or operator leverage."
+    }
+  ],
+  "required_sources": [
+    {
+      "title": "Local platform control-plane contracts and public orchestration docs",
+      "url": "local-repo://codex_platform",
+      "note": "Primary implementation and governance source."
+    },
+    {
+      "title": "Local researcher-harness contracts and runtime docs",
+      "url": "local-repo://researcher-harness",
+      "note": "Primary researcher execution source."
+    }
+  ],
+  "options": [
+    {
+      "option_id": "stabilize-first",
+      "summary": "Pause major expansion and focus on strengthening the current loop, evaluation, and operator workflow.",
+      "strengths": [
+        "reduces drift",
+        "improves trustworthiness",
+        "makes later expansion cheaper"
+      ],
+      "risks": [
+        "slows visible feature growth"
+      ],
+      "score": 5
+    },
+    {
+      "option_id": "expand-carefully",
+      "summary": "Continue adding capabilities while fixing only the highest-friction weaknesses.",
+      "strengths": [
+        "keeps momentum",
+        "may expose real needs faster"
+      ],
+      "risks": [
+        "can bury structural weaknesses under more surface area"
+      ],
+      "score": 3
+    },
+    {
+      "option_id": "refactor-core-model",
+      "summary": "Rework major control-plane or researcher assumptions before continuing.",
+      "strengths": [
+        "can remove foundational design debt"
+      ],
+      "risks": [
+        "higher disruption",
+        "harder to bound"
+      ],
+      "score": 4
+    }
+  ],
+  "created_at": "2026-05-12T16:55:50Z",
+  "updated_at": "2026-05-12T16:55:50Z",
+  "source_path": "/mnt/c/Users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap/.agent/research-question-seeds/research-system-whole-review.json"
+}

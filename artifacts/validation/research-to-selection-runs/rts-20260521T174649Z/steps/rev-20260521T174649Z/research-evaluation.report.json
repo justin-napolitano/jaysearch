@@ -1,0 +1,29 @@
+{
+  "api_version": "public-orchestration.v1",
+  "command": "materialize-research-evaluations",
+  "status": "ok",
+  "ok": true,
+  "run_id": "rev-20260521T174649Z",
+  "candidate_search_tree_path": "/mnt/c/users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap/artifacts/validation/research-to-selection-runs/rts-20260521T174649Z/steps/rct-20260521T174649Z/candidate-search-tree.packet.json",
+  "candidate_paths": [
+    "/mnt/c/users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap/artifacts/validation/research-to-selection-runs/rts-20260521T174649Z/steps/rct-20260521T174649Z/research-candidate-01.packet.json",
+    "/mnt/c/users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap/artifacts/validation/research-to-selection-runs/rts-20260521T174649Z/steps/rct-20260521T174649Z/research-candidate-02.packet.json",
+    "/mnt/c/users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap/artifacts/validation/research-to-selection-runs/rts-20260521T174649Z/steps/rct-20260521T174649Z/research-candidate-03.packet.json",
+    "/mnt/c/users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap/artifacts/validation/research-to-selection-runs/rts-20260521T174649Z/steps/rct-20260521T174649Z/research-candidate-04.packet.json"
+  ],
+  "evaluation_packet_paths": [
+    "artifacts/validation/research-to-selection-runs/rts-20260521T174649Z/steps/rev-20260521T174649Z/research-evaluation-01.packet.json",
+    "artifacts/validation/research-to-selection-runs/rts-20260521T174649Z/steps/rev-20260521T174649Z/research-evaluation-02.packet.json",
+    "artifacts/validation/research-to-selection-runs/rts-20260521T174649Z/steps/rev-20260521T174649Z/research-evaluation-03.packet.json",
+    "artifacts/validation/research-to-selection-runs/rts-20260521T174649Z/steps/rev-20260521T174649Z/research-evaluation-04.packet.json"
+  ],
+  "evaluation_summary_packet_path": "artifacts/validation/research-to-selection-runs/rts-20260521T174649Z/steps/rev-20260521T174649Z/candidate-evaluation-summary.packet.json",
+  "promoted_candidate_ids": [
+    "research-problem:platform-template-bootstrap:evaluation-strength-contract-001:hypothesis:baseline_reference:candidate:001",
+    "research-problem:platform-template-bootstrap:evaluation-strength-contract-001:hypothesis:reuse_direct:candidate:001",
+    "research-problem:platform-template-bootstrap:evaluation-strength-contract-001:hypothesis:reuse_hybrid:candidate:001",
+    "research-problem:platform-template-bootstrap:evaluation-strength-contract-001:hypothesis:novel_synthesized:candidate:001"
+  ],
+  "blocked_candidate_ids": [],
+  "blockers": []
+}

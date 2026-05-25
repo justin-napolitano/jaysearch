@@ -1,0 +1,30 @@
+version: v1
+contract_name: solution_artifact
+contract_kind: packet
+owner: implementation-orchestrator
+description: >
+  Selected implementation result attached back to an execution_unit after
+  attempt evaluation and selection.
+required_fields:
+  - packet_type
+  - packet_version
+  - packet_id
+  - created_at
+  - producer
+  - solution_artifact_id
+  - source_execution_unit_ref
+  - selected_attempt_ref
+  - evaluation_ref
+  - artifact_refs
+  - patch_ref
+  - completion_evidence_refs
+  - validation_summary
+  - known_limitations
+  - follow_up_problem_node_refs
+properties:
+  packet_type:
+    const: solution_artifact
+invariants:
+  - solution_artifacts_select_one_evaluated_attempt
+  - solution_artifacts_complete_or_advance_execution_units
+  - solution_artifacts_must_not_erase_rejected_attempts

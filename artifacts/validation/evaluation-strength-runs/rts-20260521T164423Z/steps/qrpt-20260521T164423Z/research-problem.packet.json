@@ -1,0 +1,69 @@
+{
+  "packet_type": "research_problem_packet",
+  "packet_version": "v1",
+  "packet_id": "research-problem:platform-template-bootstrap:evaluation-strength-contract-001:packet",
+  "created_at": "2026-05-21T16:44:23Z",
+  "producer": "question-to-research-problem-transform",
+  "problem_id": "research-problem:platform-template-bootstrap:evaluation-strength-contract-001",
+  "title": "Research problem for evaluation-strength-contract-001",
+  "goal": "Define the minimum evaluation-strength contract fields and gate behavior needed before planner and code scopes rely on candidate evaluations.",
+  "problem_statement": "How should evaluation packets represent static-only versus execution-backed confidence without overclaiming readiness?",
+  "constraints": [
+    "local-first",
+    "typed packets",
+    "backward-compatible where possible",
+    "must not require planner artifacts before planner exists"
+  ],
+  "repo_context": {
+    "project_id": "platform-template-bootstrap",
+    "decision_target": "whether to add evaluation_strength and evaluation_method semantics to research_evaluation_packet and downstream recommendation gates",
+    "decision_consequence": "changes whether static candidate evaluation can be distinguished from execution-backed validation before planner entry",
+    "blocked_work_if_unanswered": "planner and code-generation scopes may overtrust static evaluations and drift into unsupported quality claims"
+  },
+  "artifact_targets": [
+    "research_evaluation_packet",
+    "candidate_evaluation_summary_packet",
+    "research_recommendation_packet",
+    "selected_solution_scope"
+  ],
+  "evaluation_criteria": [
+    "contract completeness",
+    "truthful confidence labeling",
+    "recommendation gate compatibility",
+    "selection gate compatibility"
+  ],
+  "search_budget": {
+    "max_sources": 5,
+    "max_candidates": 3
+  },
+  "output_requirements": [
+    "research_candidate_packet[]",
+    "research_evaluation_packet[]",
+    "research_recommendation_packet"
+  ],
+  "evidence_packet_ref": "/mnt/c/users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap/artifacts/planner/examples/evaluation-strength-and-evidence-search/evaluation-strength-evidence.packet.json",
+  "reference_implementations": [
+    "https://arxiv.org/abs/2310.06770",
+    "https://arxiv.org/abs/2305.11738",
+    "https://www.w3.org/TR/prov-overview/"
+  ],
+  "baseline_artifact_refs": [
+    "research-to-selection validation report",
+    "SWE-bench style task-grounded evaluation"
+  ],
+  "allowed_tools": [
+    "evidence-search-tool",
+    "memory-tool",
+    "research-tool"
+  ],
+  "runtime_environment": "repo-local",
+  "language": "python",
+  "research_context": {
+    "method_refs": [
+      "task-grounded software evaluation",
+      "tool-assisted critique",
+      "provenance modeling"
+    ],
+    "evidence_summary": "Evaluation strength should explicitly label static, artifact-backed, and execution-backed evidence so downstream gates do not overclaim solution quality."
+  }
+}

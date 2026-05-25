@@ -1,0 +1,30 @@
+{
+  "packet_type": "design_review_program_packet",
+  "packet_version": "v1",
+  "packet_id": "design-review-platform-architecture-v1:program",
+  "created_at": "2026-05-21T14:10:34Z",
+  "producer": "orchestrate-design-review",
+  "review_id": "design-review-platform-architecture-v1",
+  "review_request_ref": "artifacts/orchestration/examples/design-review-request.packet.json",
+  "review_nodes": [
+    {
+      "node_id": "review-evidence-basis",
+      "review_mode": "evidence_backed_claim_review",
+      "target_tool": "evidence-search-tool",
+      "operation_name": "assemble_evidence_packet",
+      "input_packet_refs": [
+        "artifacts/orchestration/examples/design-review-request.packet.json"
+      ],
+      "policy_ref": "bounded-review-evidence-policy-v1",
+      "reason": "Assemble bounded evidence packet for explicit design-review claims.",
+      "call_metadata": {
+        "request_path": "artifacts/orchestration/examples/design-review-request.packet.json"
+      }
+    }
+  ],
+  "stop_conditions": {
+    "max_tool_calls": 1,
+    "max_blocking_findings": 5,
+    "no_new_material_findings": true
+  }
+}

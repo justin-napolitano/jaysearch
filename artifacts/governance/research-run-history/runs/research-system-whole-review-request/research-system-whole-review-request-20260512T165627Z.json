@@ -1,0 +1,52 @@
+{
+  "run_id": "research-system-whole-review-request-20260512T165627Z",
+  "recorded_at": "2026-05-12T16:56:27Z",
+  "request_id": "research-system-whole-review-request",
+  "request_path": "/tmp/research-system-whole-review/execution/materialized_research_requests/research-system-whole-review-request.json",
+  "researcher_root": "/mnt/c/Users/jna31a/advent-repos/jna31a_ait/researcher-harness",
+  "output_root": "/tmp/research-system-whole-review",
+  "status": "ok",
+  "step_reports": [
+    {
+      "step": "materialize-research-request-from-question",
+      "report_path": "/tmp/research-system-whole-review/execution/loop_step_reports/unknown.materialize-research-request-from-question.json",
+      "ok": true
+    },
+    {
+      "step": "run-research-capability",
+      "report_path": "/tmp/research-system-whole-review/execution/loop_step_reports/research-system-whole-review-request.run-research-capability.json",
+      "ok": true
+    },
+    {
+      "step": "prepare-research-followups",
+      "report_path": "/tmp/research-system-whole-review/execution/loop_step_reports/research-system-whole-review-request.prepare-research-followups.json",
+      "ok": true
+    },
+    {
+      "step": "project-research-followup-packets",
+      "report_path": "/tmp/research-system-whole-review/execution/loop_step_reports/research-system-whole-review-request.project-research-followup-packets.json",
+      "ok": true
+    },
+    {
+      "step": "materialize-research-followup-assets",
+      "report_path": "/tmp/research-system-whole-review/execution/loop_step_reports/research-system-whole-review-request.materialize-research-followup-assets.json",
+      "ok": true
+    },
+    {
+      "step": "render-platform-execplan-drafts",
+      "report_path": "/tmp/research-system-whole-review/execution/loop_step_reports/research-system-whole-review-request.render-platform-execplan-drafts.json",
+      "ok": true
+    },
+    {
+      "step": "render-researcher-followup-handoffs",
+      "report_path": "/tmp/research-system-whole-review/execution/loop_step_reports/research-system-whole-review-request.render-researcher-followup-handoffs.json",
+      "ok": true
+    }
+  ],
+  "draft_followups_path": "/tmp/research-system-whole-review/execution/draft_followups/research-system-whole-review-request.json",
+  "packets_path": "/tmp/research-system-whole-review/execution/repo_followup_packets/research-system-whole-review-request.json",
+  "materialized_manifest_path": "/tmp/research-system-whole-review/execution/materialized_followup_assets/research-system-whole-review-request.json",
+  "draft_manifest_path": "/tmp/research-system-whole-review/execution/draft_execplan_candidates/research-system-whole-review-request.manifest.json",
+  "handoff_manifest_path": "/tmp/research-system-whole-review/execution/researcher_handoff_requests/research-system-whole-review-request.manifest.json",
+  "loop_manifest_path": "/tmp/research-system-whole-review/execution/research_improvement_loops/research-system-whole-review-request.json"
+}

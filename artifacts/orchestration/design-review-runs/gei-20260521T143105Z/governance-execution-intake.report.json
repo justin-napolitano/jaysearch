@@ -1,0 +1,17 @@
+{
+  "api_version": "public-orchestration.v1",
+  "command": "governance-execution-intake",
+  "status": "ok",
+  "ok": true,
+  "run_id": "gei-20260521T143105Z",
+  "execution_ready_plan_path": "/mnt/c/users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap/artifacts/orchestration/research-plan-selection-runs/esm-20260520T184914Z/execution-ready-plan.packet.json",
+  "execution_packet_paths": [
+    "/mnt/c/users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap/artifacts/orchestration/research-plan-selection-runs/esm-20260520T184914Z/execution-packet-01.packet.json",
+    "/mnt/c/users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap/artifacts/orchestration/research-plan-selection-runs/esm-20260520T184914Z/execution-packet-02.packet.json",
+    "/mnt/c/users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap/artifacts/orchestration/research-plan-selection-runs/esm-20260520T184914Z/execution-packet-03.packet.json",
+    "/mnt/c/users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap/artifacts/orchestration/research-plan-selection-runs/esm-20260520T184914Z/execution-packet-04.packet.json"
+  ],
+  "decision_packet_path": "artifacts/orchestration/design-review-runs/gei-20260521T143105Z/governance-decision.packet.json",
+  "blockers": [],
+  "warnings": []
+}
