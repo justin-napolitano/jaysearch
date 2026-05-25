@@ -1,0 +1,35 @@
+{
+  "packet_type": "research_question_packet",
+  "packet_version": "v1",
+  "packet_id": "research-question:evaluation-strength-contract:001",
+  "created_at": "2026-05-21T00:00:00Z",
+  "producer": "agent/codex",
+  "question_id": "evaluation-strength-contract-001",
+  "project_id": "platform-template-bootstrap",
+  "question_text": "How should evaluation packets represent static-only versus execution-backed confidence without overclaiming readiness?",
+  "question_type": "contract_design",
+  "goal": "Define the minimum evaluation-strength contract fields and gate behavior needed before planner and code scopes rely on candidate evaluations.",
+  "decision_target": "whether to add evaluation_strength and evaluation_method semantics to research_evaluation_packet and downstream recommendation gates",
+  "decision_consequence": "changes whether static candidate evaluation can be distinguished from execution-backed validation before planner entry",
+  "blocked_work_if_unanswered": "planner and code-generation scopes may overtrust static evaluations and drift into unsupported quality claims",
+  "constraints": [
+    "local-first",
+    "typed packets",
+    "backward-compatible where possible",
+    "must not require planner artifacts before planner exists"
+  ],
+  "evaluation_targets": [
+    "contract completeness",
+    "truthful confidence labeling",
+    "recommendation gate compatibility",
+    "selection gate compatibility"
+  ],
+  "artifact_targets": [
+    "research_evaluation_packet",
+    "candidate_evaluation_summary_packet",
+    "research_recommendation_packet",
+    "selected_solution_scope"
+  ],
+  "why_now": "The current validation run is operational but still uses static candidate evaluation.",
+  "expected_downstream_change": "Recommendations and selected scopes can distinguish static-only evidence from execution-backed evidence."
+}

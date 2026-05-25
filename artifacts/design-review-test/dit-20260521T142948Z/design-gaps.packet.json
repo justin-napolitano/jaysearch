@@ -1,0 +1,26 @@
+{
+  "packet_type": "design_gap_packet_bundle",
+  "packet_version": "v1",
+  "run_id": "dit-20260521T142948Z",
+  "gap_count": 1,
+  "gaps": [
+    {
+      "packet_type": "design_gap_packet",
+      "packet_version": "v1",
+      "gap_id": "gap-001",
+      "validator_family": "dag_consistency_checks",
+      "violated_invariant": "implementation_nodes_must_be_buildable_and_machine_readable",
+      "severity": "high",
+      "blocking": true,
+      "summary": "Implementation node 'idra-001' is invalid: missing non-empty changes list.",
+      "finding_refs": [
+        "dit-20260521T142948Z:implementation_node_shape_invalid:1184433",
+        "dit-20260521T142948Z:implementation_node_shape_invalid:3291368",
+        "dit-20260521T142948Z:implementation_node_shape_invalid:7044940"
+      ],
+      "artifact_refs": [
+        "artifacts/planner/research/design-review-automation-v1-implementation-graph.json"
+      ]
+    }
+  ]
+}

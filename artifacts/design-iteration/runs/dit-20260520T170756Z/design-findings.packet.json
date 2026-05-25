@@ -1,0 +1,2509 @@
+{
+  "packet_type": "design_findings_packet",
+  "packet_version": "v1",
+  "run_id": "dit-20260520T170756Z",
+  "generated_at": "2026-05-20T17:07:56Z",
+  "finding_count": 124,
+  "blocking_finding_count": 124,
+  "findings": [
+    {
+      "finding_id": "dit-20260520T170756Z:planning_edge_relation_invalid:1173278",
+      "validator_family": "dag_consistency_checks",
+      "check_id": "planning_edge_relation_invalid",
+      "severity": "high",
+      "blocking": true,
+      "finding_type": "invalid_planning_edge_relation",
+      "artifact_refs": [
+        "artifacts/planner/research/game-graph.json"
+      ],
+      "violated_invariant": "planning_graph_edges_use_allowed_relations",
+      "summary": "Planning graph 'artifacts/planner/research/game-graph.json' uses unsupported edge relation 'documented_in'.",
+      "evidence_refs": [],
+      "related_contract_refs": [],
+      "related_node_refs": [
+        "artifact-games-readme",
+        "game-platform"
+      ],
+      "suggested_fix": "Use one of the allowed planning graph relations."
+    },
+    {
+      "finding_id": "dit-20260520T170756Z:planning_edge_relation_invalid:1173278",
+      "validator_family": "dag_consistency_checks",
+      "check_id": "planning_edge_relation_invalid",
+      "severity": "high",
+      "blocking": true,
+      "finding_type": "invalid_planning_edge_relation",
+      "artifact_refs": [
+        "artifacts/planner/research/game-graph.json"
+      ],
+      "violated_invariant": "planning_graph_edges_use_allowed_relations",
+      "summary": "Planning graph 'artifacts/planner/research/game-graph.json' uses unsupported edge relation 'documented_in'.",
+      "evidence_refs": [],
+      "related_contract_refs": [],
+      "related_node_refs": [
+        "artifact-game-inheritance",
+        "game-platform"
+      ],
+      "suggested_fix": "Use one of the allowed planning graph relations."
+    },
+    {
+      "finding_id": "dit-20260520T170756Z:planning_edge_relation_invalid:1173278",
+      "validator_family": "dag_consistency_checks",
+      "check_id": "planning_edge_relation_invalid",
+      "severity": "high",
+      "blocking": true,
+      "finding_type": "invalid_planning_edge_relation",
+      "artifact_refs": [
+        "artifacts/planner/research/game-graph.json"
+      ],
+      "violated_invariant": "planning_graph_edges_use_allowed_relations",
+      "summary": "Planning graph 'artifacts/planner/research/game-graph.json' uses unsupported edge relation 'documented_in'.",
+      "evidence_refs": [],
+      "related_contract_refs": [],
+      "related_node_refs": [
+        "artifact-platform-game-doc",
+        "game-platform"
+      ],
+      "suggested_fix": "Use one of the allowed planning graph relations."
+    },
+    {
+      "finding_id": "dit-20260520T170756Z:planning_edge_relation_invalid:1173278",
+      "validator_family": "dag_consistency_checks",
+      "check_id": "planning_edge_relation_invalid",
+      "severity": "high",
+      "blocking": true,
+      "finding_type": "invalid_planning_edge_relation",
+      "artifact_refs": [
+        "artifacts/planner/research/game-graph.json"
+      ],
+      "violated_invariant": "planning_graph_edges_use_allowed_relations",
+      "summary": "Planning graph 'artifacts/planner/research/game-graph.json' uses unsupported edge relation 'documented_in'.",
+      "evidence_refs": [],
+      "related_contract_refs": [],
+      "related_node_refs": [
+        "artifact-execplan-game-doc",
+        "game-execplan"
+      ],
+      "suggested_fix": "Use one of the allowed planning graph relations."
+    },
+    {
+      "finding_id": "dit-20260520T170756Z:planning_edge_relation_invalid:1173278",
+      "validator_family": "dag_consistency_checks",
+      "check_id": "planning_edge_relation_invalid",
+      "severity": "high",
+      "blocking": true,
+      "finding_type": "invalid_planning_edge_relation",
+      "artifact_refs": [
+        "artifacts/planner/research/game-graph.json"
+      ],
+      "violated_invariant": "planning_graph_edges_use_allowed_relations",
+      "summary": "Planning graph 'artifacts/planner/research/game-graph.json' uses unsupported edge relation 'documented_in'.",
+      "evidence_refs": [],
+      "related_contract_refs": [],
+      "related_node_refs": [
+        "artifact-planning-game-doc",
+        "game-planning"
+      ],
+      "suggested_fix": "Use one of the allowed planning graph relations."
+    },
+    {
+      "finding_id": "dit-20260520T170756Z:planning_edge_relation_invalid:1173278",
+      "validator_family": "dag_consistency_checks",
+      "check_id": "planning_edge_relation_invalid",
+      "severity": "high",
+      "blocking": true,
+      "finding_type": "invalid_planning_edge_relation",
+      "artifact_refs": [
+        "artifacts/planner/research/game-graph.json"
+      ],
+      "violated_invariant": "planning_graph_edges_use_allowed_relations",
+      "summary": "Planning graph 'artifacts/planner/research/game-graph.json' uses unsupported edge relation 'documented_in'.",
+      "evidence_refs": [],
+      "related_contract_refs": [],
+      "related_node_refs": [
+        "artifact-implementation-game-doc",
+        "game-implementation"
+      ],
+      "suggested_fix": "Use one of the allowed planning graph relations."
+    },
+    {
+      "finding_id": "dit-20260520T170756Z:planning_edge_relation_invalid:1173278",
+      "validator_family": "dag_consistency_checks",
+      "check_id": "planning_edge_relation_invalid",
+      "severity": "high",
+      "blocking": true,
+      "finding_type": "invalid_planning_edge_relation",
+      "artifact_refs": [
+        "artifacts/planner/research/game-graph.json"
+      ],
+      "violated_invariant": "planning_graph_edges_use_allowed_relations",
+      "summary": "Planning graph 'artifacts/planner/research/game-graph.json' uses unsupported edge relation 'documented_in'.",
+      "evidence_refs": [],
+      "related_contract_refs": [],
+      "related_node_refs": [
+        "artifact-policy-compliance-game-doc",
+        "game-policy-compliance"
+      ],
+      "suggested_fix": "Use one of the allowed planning graph relations."
+    },
+    {
+      "finding_id": "dit-20260520T170756Z:planning_edge_relation_invalid:1173278",
+      "validator_family": "dag_consistency_checks",
+      "check_id": "planning_edge_relation_invalid",
+      "severity": "high",
+      "blocking": true,
+      "finding_type": "invalid_planning_edge_relation",
+      "artifact_refs": [
+        "artifacts/planner/research/game-graph.json"
+      ],
+      "violated_invariant": "planning_graph_edges_use_allowed_relations",
+      "summary": "Planning graph 'artifacts/planner/research/game-graph.json' uses unsupported edge relation 'documented_in'.",
+      "evidence_refs": [],
+      "related_contract_refs": [],
+      "related_node_refs": [
+        "artifact-commit-structure-game-doc",
+        "game-commit-structure"
+      ],
+      "suggested_fix": "Use one of the allowed planning graph relations."
+    },
+    {
+      "finding_id": "dit-20260520T170756Z:planning_edge_relation_invalid:1173278",
+      "validator_family": "dag_consistency_checks",
+      "check_id": "planning_edge_relation_invalid",
+      "severity": "high",
+      "blocking": true,
+      "finding_type": "invalid_planning_edge_relation",
+      "artifact_refs": [
+        "artifacts/planner/research/game-graph.json"
+      ],
+      "violated_invariant": "planning_graph_edges_use_allowed_relations",
+      "summary": "Planning graph 'artifacts/planner/research/game-graph.json' uses unsupported edge relation 'documented_in'.",
+      "evidence_refs": [],
+      "related_contract_refs": [],
+      "related_node_refs": [
+        "artifact-planning-proof-game",
+        "game-planning-proof"
+      ],
+      "suggested_fix": "Use one of the allowed planning graph relations."
+    },
+    {
+      "finding_id": "dit-20260520T170756Z:planning_edge_relation_invalid:1173278",
+      "validator_family": "dag_consistency_checks",
+      "check_id": "planning_edge_relation_invalid",
+      "severity": "high",
+      "blocking": true,
+      "finding_type": "invalid_planning_edge_relation",
+      "artifact_refs": [
+        "artifacts/planner/research/game-graph.json"
+      ],
+      "violated_invariant": "planning_graph_edges_use_allowed_relations",
+      "summary": "Planning graph 'artifacts/planner/research/game-graph.json' uses unsupported edge relation 'documented_in'.",
+      "evidence_refs": [],
+      "related_contract_refs": [],
+      "related_node_refs": [
+        "artifact-implementation-proof-game",
+        "game-implementation-proof"
+      ],
+      "suggested_fix": "Use one of the allowed planning graph relations."
+    },
+    {
+      "finding_id": "dit-20260520T170756Z:planning_edge_relation_invalid:2317112",
+      "validator_family": "dag_consistency_checks",
+      "check_id": "planning_edge_relation_invalid",
+      "severity": "high",
+      "blocking": true,
+      "finding_type": "invalid_planning_edge_relation",
+      "artifact_refs": [
+        "artifacts/planner/research/game-graph.json"
+      ],
+      "violated_invariant": "planning_graph_edges_use_allowed_relations",
+      "summary": "Planning graph 'artifacts/planner/research/game-graph.json' uses unsupported edge relation 'links_to'.",
+      "evidence_refs": [],
+      "related_contract_refs": [],
+      "related_node_refs": [
+        "artifact-rule-graph",
+        "game-platform"
+      ],
+      "suggested_fix": "Use one of the allowed planning graph relations."
+    },
+    {
+      "finding_id": "dit-20260520T170756Z:planning_edge_relation_invalid:2317112",
+      "validator_family": "dag_consistency_checks",
+      "check_id": "planning_edge_relation_invalid",
+      "severity": "high",
+      "blocking": true,
+      "finding_type": "invalid_planning_edge_relation",
+      "artifact_refs": [
+        "artifacts/planner/research/game-graph.json"
+      ],
+      "violated_invariant": "planning_graph_edges_use_allowed_relations",
+      "summary": "Planning graph 'artifacts/planner/research/game-graph.json' uses unsupported edge relation 'links_to'.",
+      "evidence_refs": [],
+      "related_contract_refs": [],
+      "related_node_refs": [
+        "artifact-bibliography-graph",
+        "game-platform"
+      ],
+      "suggested_fix": "Use one of the allowed planning graph relations."
+    },
+    {
+      "finding_id": "dit-20260520T170756Z:planning_edge_relation_invalid:2317112",
+      "validator_family": "dag_consistency_checks",
+      "check_id": "planning_edge_relation_invalid",
+      "severity": "high",
+      "blocking": true,
+      "finding_type": "invalid_planning_edge_relation",
+      "artifact_refs": [
+        "artifacts/planner/research/game-graph.json"
+      ],
+      "violated_invariant": "planning_graph_edges_use_allowed_relations",
+      "summary": "Planning graph 'artifacts/planner/research/game-graph.json' uses unsupported edge relation 'links_to'.",
+      "evidence_refs": [],
+      "related_contract_refs": [],
+      "related_node_refs": [
+        "artifact-claim-registry",
+        "game-platform"
+      ],
+      "suggested_fix": "Use one of the allowed planning graph relations."
+    },
+    {
+      "finding_id": "dit-20260520T170756Z:planning_edge_relation_invalid:3203436",
+      "validator_family": "dag_consistency_checks",
+      "check_id": "planning_edge_relation_invalid",
+      "severity": "high",
+      "blocking": true,
+      "finding_type": "invalid_planning_edge_relation",
+      "artifact_refs": [
+        "artifacts/planner/research/rule-graph.json"
+      ],
+      "violated_invariant": "planning_graph_edges_use_allowed_relations",
+      "summary": "Planning graph 'artifacts/planner/research/rule-graph.json' uses unsupported edge relation 'enforced_by'.",
+      "evidence_refs": [],
+      "related_contract_refs": [],
+      "related_node_refs": [
+        "rule-smoke-test-required",
+        "validator-smoke-test"
+      ],
+      "suggested_fix": "Use one of the allowed planning graph relations."
+    },
+    {
+      "finding_id": "dit-20260520T170756Z:planning_edge_relation_invalid:3203436",
+      "validator_family": "dag_consistency_checks",
+      "check_id": "planning_edge_relation_invalid",
+      "severity": "high",
+      "blocking": true,
+      "finding_type": "invalid_planning_edge_relation",
+      "artifact_refs": [
+        "artifacts/planner/research/rule-graph.json"
+      ],
+      "violated_invariant": "planning_graph_edges_use_allowed_relations",
+      "summary": "Planning graph 'artifacts/planner/research/rule-graph.json' uses unsupported edge relation 'enforced_by'.",
+      "evidence_refs": [],
+      "related_contract_refs": [],
+      "related_node_refs": [
+        "rule-clean-merge-state",
+        "validator-policy-compliance-check"
+      ],
+      "suggested_fix": "Use one of the allowed planning graph relations."
+    },
+    {
+      "finding_id": "dit-20260520T170756Z:planning_edge_relation_invalid:3203436",
+      "validator_family": "dag_consistency_checks",
+      "check_id": "planning_edge_relation_invalid",
+      "severity": "high",
+      "blocking": true,
+      "finding_type": "invalid_planning_edge_relation",
+      "artifact_refs": [
+        "artifacts/planner/research/rule-graph.json"
+      ],
+      "violated_invariant": "planning_graph_edges_use_allowed_relations",
+      "summary": "Planning graph 'artifacts/planner/research/rule-graph.json' uses unsupported edge relation 'enforced_by'.",
+      "evidence_refs": [],
+      "related_contract_refs": [],
+      "related_node_refs": [
+        "rule-human-sized-commits",
+        "validator-policy-compliance-check"
+      ],
+      "suggested_fix": "Use one of the allowed planning graph relations."
+    },
+    {
+      "finding_id": "dit-20260520T170756Z:planning_edge_relation_invalid:3203436",
+      "validator_family": "dag_consistency_checks",
+      "check_id": "planning_edge_relation_invalid",
+      "severity": "high",
+      "blocking": true,
+      "finding_type": "invalid_planning_edge_relation",
+      "artifact_refs": [
+        "artifacts/planner/research/rule-graph.json"
+      ],
+      "violated_invariant": "planning_graph_edges_use_allowed_relations",
+      "summary": "Planning graph 'artifacts/planner/research/rule-graph.json' uses unsupported edge relation 'enforced_by'.",
+      "evidence_refs": [],
+      "related_contract_refs": [],
+      "related_node_refs": [
+        "rule-procedural-commit-order",
+        "validator-policy-compliance-check"
+      ],
+      "suggested_fix": "Use one of the allowed planning graph relations."
+    },
+    {
+      "finding_id": "dit-20260520T170756Z:planning_edge_relation_invalid:3203436",
+      "validator_family": "dag_consistency_checks",
+      "check_id": "planning_edge_relation_invalid",
+      "severity": "high",
+      "blocking": true,
+      "finding_type": "invalid_planning_edge_relation",
+      "artifact_refs": [
+        "artifacts/planner/research/rule-graph.json"
+      ],
+      "violated_invariant": "planning_graph_edges_use_allowed_relations",
+      "summary": "Planning graph 'artifacts/planner/research/rule-graph.json' uses unsupported edge relation 'enforced_by'.",
+      "evidence_refs": [],
+      "related_contract_refs": [],
+      "related_node_refs": [
+        "rule-latest-main-branching",
+        "validator-policy-compliance-check"
+      ],
+      "suggested_fix": "Use one of the allowed planning graph relations."
+    },
+    {
+      "finding_id": "dit-20260520T170756Z:planning_edge_relation_invalid:3203436",
+      "validator_family": "dag_consistency_checks",
+      "check_id": "planning_edge_relation_invalid",
+      "severity": "high",
+      "blocking": true,
+      "finding_type": "invalid_planning_edge_relation",
+      "artifact_refs": [
+        "artifacts/planner/research/rule-graph.json"
+      ],
+      "violated_invariant": "planning_graph_edges_use_allowed_relations",
+      "summary": "Planning graph 'artifacts/planner/research/rule-graph.json' uses unsupported edge relation 'enforced_by'.",
+      "evidence_refs": [],
+      "related_contract_refs": [],
+      "related_node_refs": [
+        "rule-execplan-validation",
+        "validator-execplan-validate"
+      ],
+      "suggested_fix": "Use one of the allowed planning graph relations."
+    },
+    {
+      "finding_id": "dit-20260520T170756Z:planning_edge_relation_invalid:3203436",
+      "validator_family": "dag_consistency_checks",
+      "check_id": "planning_edge_relation_invalid",
+      "severity": "high",
+      "blocking": true,
+      "finding_type": "invalid_planning_edge_relation",
+      "artifact_refs": [
+        "artifacts/planner/research/rule-graph.json"
+      ],
+      "violated_invariant": "planning_graph_edges_use_allowed_relations",
+      "summary": "Planning graph 'artifacts/planner/research/rule-graph.json' uses unsupported edge relation 'enforced_by'.",
+      "evidence_refs": [],
+      "related_contract_refs": [],
+      "related_node_refs": [
+        "rule-governance-required-check-contract",
+        "validator-governance-check"
+      ],
+      "suggested_fix": "Use one of the allowed planning graph relations."
+    },
+    {
+      "finding_id": "dit-20260520T170756Z:planning_edge_relation_invalid:3203436",
+      "validator_family": "dag_consistency_checks",
+      "check_id": "planning_edge_relation_invalid",
+      "severity": "high",
+      "blocking": true,
+      "finding_type": "invalid_planning_edge_relation",
+      "artifact_refs": [
+        "artifacts/planner/research/rule-graph.json"
+      ],
+      "violated_invariant": "planning_graph_edges_use_allowed_relations",
+      "summary": "Planning graph 'artifacts/planner/research/rule-graph.json' uses unsupported edge relation 'enforced_by'.",
+      "evidence_refs": [],
+      "related_contract_refs": [],
+      "related_node_refs": [
+        "rule-queue-projection-authority",
+        "validator-remaining-work-graph-check"
+      ],
+      "suggested_fix": "Use one of the allowed planning graph relations."
+    },
+    {
+      "finding_id": "dit-20260520T170756Z:planning_edge_relation_invalid:3203436",
+      "validator_family": "dag_consistency_checks",
+      "check_id": "planning_edge_relation_invalid",
+      "severity": "high",
+      "blocking": true,
+      "finding_type": "invalid_planning_edge_relation",
+      "artifact_refs": [
+        "artifacts/planner/research/rule-graph.json"
+      ],
+      "violated_invariant": "planning_graph_edges_use_allowed_relations",
+      "summary": "Planning graph 'artifacts/planner/research/rule-graph.json' uses unsupported edge relation 'enforced_by'.",
+      "evidence_refs": [],
+      "related_contract_refs": [],
+      "related_node_refs": [
+        "rule-draft-self-review-before-pr",
+        "validator-policy-compliance-check"
+      ],
+      "suggested_fix": "Use one of the allowed planning graph relations."
+    },
+    {
+      "finding_id": "dit-20260520T170756Z:planning_edge_relation_invalid:3203436",
+      "validator_family": "dag_consistency_checks",
+      "check_id": "planning_edge_relation_invalid",
+      "severity": "high",
+      "blocking": true,
+      "finding_type": "invalid_planning_edge_relation",
+      "artifact_refs": [
+        "artifacts/planner/research/rule-graph.json"
+      ],
+      "violated_invariant": "planning_graph_edges_use_allowed_relations",
+      "summary": "Planning graph 'artifacts/planner/research/rule-graph.json' uses unsupported edge relation 'enforced_by'.",
+      "evidence_refs": [],
+      "related_contract_refs": [],
+      "related_node_refs": [
+        "rule-additive-pr-template",
+        "validator-policy-compliance-check"
+      ],
+      "suggested_fix": "Use one of the allowed planning graph relations."
+    },
+    {
+      "finding_id": "dit-20260520T170756Z:planning_edge_relation_invalid:3203436",
+      "validator_family": "dag_consistency_checks",
+      "check_id": "planning_edge_relation_invalid",
+      "severity": "high",
+      "blocking": true,
+      "finding_type": "invalid_planning_edge_relation",
+      "artifact_refs": [
+        "artifacts/planner/research/rule-graph.json"
+      ],
+      "violated_invariant": "planning_graph_edges_use_allowed_relations",
+      "summary": "Planning graph 'artifacts/planner/research/rule-graph.json' uses unsupported edge relation 'enforced_by'.",
+      "evidence_refs": [],
+      "related_contract_refs": [],
+      "related_node_refs": [
+        "rule-implementation-after-finalized-draft",
+        "validator-human-operations-status"
+      ],
+      "suggested_fix": "Use one of the allowed planning graph relations."
+    },
+    {
+      "finding_id": "dit-20260520T170756Z:planning_edge_relation_invalid:3203436",
+      "validator_family": "dag_consistency_checks",
+      "check_id": "planning_edge_relation_invalid",
+      "severity": "high",
+      "blocking": true,
+      "finding_type": "invalid_planning_edge_relation",
+      "artifact_refs": [
+        "artifacts/planner/research/rule-graph.json"
+      ],
+      "violated_invariant": "planning_graph_edges_use_allowed_relations",
+      "summary": "Planning graph 'artifacts/planner/research/rule-graph.json' uses unsupported edge relation 'enforced_by'.",
+      "evidence_refs": [],
+      "related_contract_refs": [],
+      "related_node_refs": [
+        "rule-initiative-parent-branch-governance",
+        "validator-governance-loader-check"
+      ],
+      "suggested_fix": "Use one of the allowed planning graph relations."
+    },
+    {
+      "finding_id": "dit-20260520T170756Z:planning_edge_relation_invalid:3203436",
+      "validator_family": "dag_consistency_checks",
+      "check_id": "planning_edge_relation_invalid",
+      "severity": "high",
+      "blocking": true,
+      "finding_type": "invalid_planning_edge_relation",
+      "artifact_refs": [
+        "artifacts/planner/research/rule-graph.json"
+      ],
+      "violated_invariant": "planning_graph_edges_use_allowed_relations",
+      "summary": "Planning graph 'artifacts/planner/research/rule-graph.json' uses unsupported edge relation 'enforced_by'.",
+      "evidence_refs": [],
+      "related_contract_refs": [],
+      "related_node_refs": [
+        "rule-initiative-parent-branch-governance",
+        "validator-execplan-validate"
+      ],
+      "suggested_fix": "Use one of the allowed planning graph relations."
+    },
+    {
+      "finding_id": "dit-20260520T170756Z:planning_edge_relation_invalid:4848314",
+      "validator_family": "dag_consistency_checks",
+      "check_id": "planning_edge_relation_invalid",
+      "severity": "high",
+      "blocking": true,
+      "finding_type": "invalid_planning_edge_relation",
+      "artifact_refs": [
+        "artifacts/planner/research/bibliography-graph.json"
+      ],
+      "violated_invariant": "planning_graph_edges_use_allowed_relations",
+      "summary": "Planning graph 'artifacts/planner/research/bibliography-graph.json' uses unsupported edge relation 'cited_in'.",
+      "evidence_refs": [],
+      "related_contract_refs": [],
+      "related_node_refs": [
+        "artifact-planner-game-model",
+        "claim-planning-implementation-game"
+      ],
+      "suggested_fix": "Use one of the allowed planning graph relations."
+    },
+    {
+      "finding_id": "dit-20260520T170756Z:planning_edge_relation_invalid:4848314",
+      "validator_family": "dag_consistency_checks",
+      "check_id": "planning_edge_relation_invalid",
+      "severity": "high",
+      "blocking": true,
+      "finding_type": "invalid_planning_edge_relation",
+      "artifact_refs": [
+        "artifacts/planner/research/bibliography-graph.json"
+      ],
+      "violated_invariant": "planning_graph_edges_use_allowed_relations",
+      "summary": "Planning graph 'artifacts/planner/research/bibliography-graph.json' uses unsupported edge relation 'cited_in'.",
+      "evidence_refs": [],
+      "related_contract_refs": [],
+      "related_node_refs": [
+        "artifact-implementation-game-model",
+        "claim-planning-implementation-game"
+      ],
+      "suggested_fix": "Use one of the allowed planning graph relations."
+    },
+    {
+      "finding_id": "dit-20260520T170756Z:planning_edge_relation_invalid:4848314",
+      "validator_family": "dag_consistency_checks",
+      "check_id": "planning_edge_relation_invalid",
+      "severity": "high",
+      "blocking": true,
+      "finding_type": "invalid_planning_edge_relation",
+      "artifact_refs": [
+        "artifacts/planner/research/bibliography-graph.json"
+      ],
+      "violated_invariant": "planning_graph_edges_use_allowed_relations",
+      "summary": "Planning graph 'artifacts/planner/research/bibliography-graph.json' uses unsupported edge relation 'cited_in'.",
+      "evidence_refs": [],
+      "related_contract_refs": [],
+      "related_node_refs": [
+        "artifact-transition-spec",
+        "claim-canonical-graph"
+      ],
+      "suggested_fix": "Use one of the allowed planning graph relations."
+    },
+    {
+      "finding_id": "dit-20260520T170756Z:planning_edge_relation_invalid:4848314",
+      "validator_family": "dag_consistency_checks",
+      "check_id": "planning_edge_relation_invalid",
+      "severity": "high",
+      "blocking": true,
+      "finding_type": "invalid_planning_edge_relation",
+      "artifact_refs": [
+        "artifacts/planner/research/bibliography-graph.json"
+      ],
+      "violated_invariant": "planning_graph_edges_use_allowed_relations",
+      "summary": "Planning graph 'artifacts/planner/research/bibliography-graph.json' uses unsupported edge relation 'cited_in'.",
+      "evidence_refs": [],
+      "related_contract_refs": [],
+      "related_node_refs": [
+        "artifact-assumptions-doc",
+        "claim-explicit-reconciliation"
+      ],
+      "suggested_fix": "Use one of the allowed planning graph relations."
+    },
+    {
+      "finding_id": "dit-20260520T170756Z:planning_edge_relation_invalid:4848314",
+      "validator_family": "dag_consistency_checks",
+      "check_id": "planning_edge_relation_invalid",
+      "severity": "high",
+      "blocking": true,
+      "finding_type": "invalid_planning_edge_relation",
+      "artifact_refs": [
+        "artifacts/planner/research/bibliography-graph.json"
+      ],
+      "violated_invariant": "planning_graph_edges_use_allowed_relations",
+      "summary": "Planning graph 'artifacts/planner/research/bibliography-graph.json' uses unsupported edge relation 'cited_in'.",
+      "evidence_refs": [],
+      "related_contract_refs": [],
+      "related_node_refs": [
+        "artifact-task-graph-spec",
+        "claim-canonical-graph"
+      ],
+      "suggested_fix": "Use one of the allowed planning graph relations."
+    },
+    {
+      "finding_id": "dit-20260520T170756Z:planning_edge_relation_invalid:4848314",
+      "validator_family": "dag_consistency_checks",
+      "check_id": "planning_edge_relation_invalid",
+      "severity": "high",
+      "blocking": true,
+      "finding_type": "invalid_planning_edge_relation",
+      "artifact_refs": [
+        "artifacts/planner/research/bibliography-graph.json"
+      ],
+      "violated_invariant": "planning_graph_edges_use_allowed_relations",
+      "summary": "Planning graph 'artifacts/planner/research/bibliography-graph.json' uses unsupported edge relation 'cited_in'.",
+      "evidence_refs": [],
+      "related_contract_refs": [],
+      "related_node_refs": [
+        "artifact-codex-orchestrator-contract",
+        "claim-codex-orchestration"
+      ],
+      "suggested_fix": "Use one of the allowed planning graph relations."
+    },
+    {
+      "finding_id": "dit-20260520T170756Z:planning_edge_relation_invalid:4848314",
+      "validator_family": "dag_consistency_checks",
+      "check_id": "planning_edge_relation_invalid",
+      "severity": "high",
+      "blocking": true,
+      "finding_type": "invalid_planning_edge_relation",
+      "artifact_refs": [
+        "artifacts/planner/research/bibliography-graph.json"
+      ],
+      "violated_invariant": "planning_graph_edges_use_allowed_relations",
+      "summary": "Planning graph 'artifacts/planner/research/bibliography-graph.json' uses unsupported edge relation 'cited_in'.",
+      "evidence_refs": [],
+      "related_contract_refs": [],
+      "related_node_refs": [
+        "artifact-codex-orchestrator-execution-loop",
+        "claim-codex-orchestration"
+      ],
+      "suggested_fix": "Use one of the allowed planning graph relations."
+    },
+    {
+      "finding_id": "dit-20260520T170756Z:planning_edge_relation_invalid:4848314",
+      "validator_family": "dag_consistency_checks",
+      "check_id": "planning_edge_relation_invalid",
+      "severity": "high",
+      "blocking": true,
+      "finding_type": "invalid_planning_edge_relation",
+      "artifact_refs": [
+        "artifacts/planner/research/bibliography-graph.json"
+      ],
+      "violated_invariant": "planning_graph_edges_use_allowed_relations",
+      "summary": "Planning graph 'artifacts/planner/research/bibliography-graph.json' uses unsupported edge relation 'cited_in'.",
+      "evidence_refs": [],
+      "related_contract_refs": [],
+      "related_node_refs": [
+        "artifact-merge-readiness-contract",
+        "claim-codex-orchestration"
+      ],
+      "suggested_fix": "Use one of the allowed planning graph relations."
+    },
+    {
+      "finding_id": "dit-20260520T170756Z:planning_edge_relation_invalid:4848314",
+      "validator_family": "dag_consistency_checks",
+      "check_id": "planning_edge_relation_invalid",
+      "severity": "high",
+      "blocking": true,
+      "finding_type": "invalid_planning_edge_relation",
+      "artifact_refs": [
+        "artifacts/planner/research/bibliography-graph.json"
+      ],
+      "violated_invariant": "planning_graph_edges_use_allowed_relations",
+      "summary": "Planning graph 'artifacts/planner/research/bibliography-graph.json' uses unsupported edge relation 'cited_in'.",
+      "evidence_refs": [],
+      "related_contract_refs": [],
+      "related_node_refs": [
+        "artifact-games-readme",
+        "claim-nested-game-system"
+      ],
+      "suggested_fix": "Use one of the allowed planning graph relations."
+    },
+    {
+      "finding_id": "dit-20260520T170756Z:planning_edge_relation_invalid:4848314",
+      "validator_family": "dag_consistency_checks",
+      "check_id": "planning_edge_relation_invalid",
+      "severity": "high",
+      "blocking": true,
+      "finding_type": "invalid_planning_edge_relation",
+      "artifact_refs": [
+        "artifacts/planner/research/bibliography-graph.json"
+      ],
+      "violated_invariant": "planning_graph_edges_use_allowed_relations",
+      "summary": "Planning graph 'artifacts/planner/research/bibliography-graph.json' uses unsupported edge relation 'cited_in'.",
+      "evidence_refs": [],
+      "related_contract_refs": [],
+      "related_node_refs": [
+        "artifact-game-inheritance",
+        "claim-nested-game-system"
+      ],
+      "suggested_fix": "Use one of the allowed planning graph relations."
+    },
+    {
+      "finding_id": "dit-20260520T170756Z:planning_edge_relation_invalid:4848314",
+      "validator_family": "dag_consistency_checks",
+      "check_id": "planning_edge_relation_invalid",
+      "severity": "high",
+      "blocking": true,
+      "finding_type": "invalid_planning_edge_relation",
+      "artifact_refs": [
+        "artifacts/planner/research/bibliography-graph.json"
+      ],
+      "violated_invariant": "planning_graph_edges_use_allowed_relations",
+      "summary": "Planning graph 'artifacts/planner/research/bibliography-graph.json' uses unsupported edge relation 'cited_in'.",
+      "evidence_refs": [],
+      "related_contract_refs": [],
+      "related_node_refs": [
+        "artifact-platform-game-doc",
+        "claim-nested-game-system"
+      ],
+      "suggested_fix": "Use one of the allowed planning graph relations."
+    },
+    {
+      "finding_id": "dit-20260520T170756Z:planning_edge_relation_invalid:4848314",
+      "validator_family": "dag_consistency_checks",
+      "check_id": "planning_edge_relation_invalid",
+      "severity": "high",
+      "blocking": true,
+      "finding_type": "invalid_planning_edge_relation",
+      "artifact_refs": [
+        "artifacts/planner/research/bibliography-graph.json"
+      ],
+      "violated_invariant": "planning_graph_edges_use_allowed_relations",
+      "summary": "Planning graph 'artifacts/planner/research/bibliography-graph.json' uses unsupported edge relation 'cited_in'.",
+      "evidence_refs": [],
+      "related_contract_refs": [],
+      "related_node_refs": [
+        "artifact-execplan-game-doc",
+        "claim-nested-game-system"
+      ],
+      "suggested_fix": "Use one of the allowed planning graph relations."
+    },
+    {
+      "finding_id": "dit-20260520T170756Z:planning_edge_relation_invalid:4848314",
+      "validator_family": "dag_consistency_checks",
+      "check_id": "planning_edge_relation_invalid",
+      "severity": "high",
+      "blocking": true,
+      "finding_type": "invalid_planning_edge_relation",
+      "artifact_refs": [
+        "artifacts/planner/research/bibliography-graph.json"
+      ],
+      "violated_invariant": "planning_graph_edges_use_allowed_relations",
+      "summary": "Planning graph 'artifacts/planner/research/bibliography-graph.json' uses unsupported edge relation 'cited_in'.",
+      "evidence_refs": [],
+      "related_contract_refs": [],
+      "related_node_refs": [
+        "artifact-planning-game-doc",
+        "claim-nested-game-system"
+      ],
+      "suggested_fix": "Use one of the allowed planning graph relations."
+    },
+    {
+      "finding_id": "dit-20260520T170756Z:planning_edge_relation_invalid:4848314",
+      "validator_family": "dag_consistency_checks",
+      "check_id": "planning_edge_relation_invalid",
+      "severity": "high",
+      "blocking": true,
+      "finding_type": "invalid_planning_edge_relation",
+      "artifact_refs": [
+        "artifacts/planner/research/bibliography-graph.json"
+      ],
+      "violated_invariant": "planning_graph_edges_use_allowed_relations",
+      "summary": "Planning graph 'artifacts/planner/research/bibliography-graph.json' uses unsupported edge relation 'cited_in'.",
+      "evidence_refs": [],
+      "related_contract_refs": [],
+      "related_node_refs": [
+        "artifact-implementation-game-doc",
+        "claim-nested-game-system"
+      ],
+      "suggested_fix": "Use one of the allowed planning graph relations."
+    },
+    {
+      "finding_id": "dit-20260520T170756Z:planning_edge_relation_invalid:4848314",
+      "validator_family": "dag_consistency_checks",
+      "check_id": "planning_edge_relation_invalid",
+      "severity": "high",
+      "blocking": true,
+      "finding_type": "invalid_planning_edge_relation",
+      "artifact_refs": [
+        "artifacts/planner/research/bibliography-graph.json"
+      ],
+      "violated_invariant": "planning_graph_edges_use_allowed_relations",
+      "summary": "Planning graph 'artifacts/planner/research/bibliography-graph.json' uses unsupported edge relation 'cited_in'.",
+      "evidence_refs": [],
+      "related_contract_refs": [],
+      "related_node_refs": [
+        "artifact-policy-compliance-game-doc",
+        "claim-nested-game-system"
+      ],
+      "suggested_fix": "Use one of the allowed planning graph relations."
+    },
+    {
+      "finding_id": "dit-20260520T170756Z:planning_edge_relation_invalid:4848314",
+      "validator_family": "dag_consistency_checks",
+      "check_id": "planning_edge_relation_invalid",
+      "severity": "high",
+      "blocking": true,
+      "finding_type": "invalid_planning_edge_relation",
+      "artifact_refs": [
+        "artifacts/planner/research/bibliography-graph.json"
+      ],
+      "violated_invariant": "planning_graph_edges_use_allowed_relations",
+      "summary": "Planning graph 'artifacts/planner/research/bibliography-graph.json' uses unsupported edge relation 'cited_in'.",
+      "evidence_refs": [],
+      "related_contract_refs": [],
+      "related_node_refs": [
+        "artifact-commit-structure-game-doc",
+        "claim-nested-game-system"
+      ],
+      "suggested_fix": "Use one of the allowed planning graph relations."
+    },
+    {
+      "finding_id": "dit-20260520T170756Z:planning_edge_relation_invalid:4848314",
+      "validator_family": "dag_consistency_checks",
+      "check_id": "planning_edge_relation_invalid",
+      "severity": "high",
+      "blocking": true,
+      "finding_type": "invalid_planning_edge_relation",
+      "artifact_refs": [
+        "artifacts/planner/research/bibliography-graph.json"
+      ],
+      "violated_invariant": "planning_graph_edges_use_allowed_relations",
+      "summary": "Planning graph 'artifacts/planner/research/bibliography-graph.json' uses unsupported edge relation 'cited_in'.",
+      "evidence_refs": [],
+      "related_contract_refs": [],
+      "related_node_refs": [
+        "artifact-planning-proof-game",
+        "claim-nested-game-system"
+      ],
+      "suggested_fix": "Use one of the allowed planning graph relations."
+    },
+    {
+      "finding_id": "dit-20260520T170756Z:planning_edge_relation_invalid:4848314",
+      "validator_family": "dag_consistency_checks",
+      "check_id": "planning_edge_relation_invalid",
+      "severity": "high",
+      "blocking": true,
+      "finding_type": "invalid_planning_edge_relation",
+      "artifact_refs": [
+        "artifacts/planner/research/bibliography-graph.json"
+      ],
+      "violated_invariant": "planning_graph_edges_use_allowed_relations",
+      "summary": "Planning graph 'artifacts/planner/research/bibliography-graph.json' uses unsupported edge relation 'cited_in'.",
+      "evidence_refs": [],
+      "related_contract_refs": [],
+      "related_node_refs": [
+        "artifact-implementation-proof-game",
+        "claim-nested-game-system"
+      ],
+      "suggested_fix": "Use one of the allowed planning graph relations."
+    },
+    {
+      "finding_id": "dit-20260520T170756Z:planning_edge_relation_invalid:4848314",
+      "validator_family": "dag_consistency_checks",
+      "check_id": "planning_edge_relation_invalid",
+      "severity": "high",
+      "blocking": true,
+      "finding_type": "invalid_planning_edge_relation",
+      "artifact_refs": [
+        "artifacts/planner/research/bibliography-graph.json"
+      ],
+      "violated_invariant": "planning_graph_edges_use_allowed_relations",
+      "summary": "Planning graph 'artifacts/planner/research/bibliography-graph.json' uses unsupported edge relation 'cited_in'.",
+      "evidence_refs": [],
+      "related_contract_refs": [],
+      "related_node_refs": [
+        "artifact-remaining-work-graph-doc",
+        "claim-remaining-work-graph"
+      ],
+      "suggested_fix": "Use one of the allowed planning graph relations."
+    },
+    {
+      "finding_id": "dit-20260520T170756Z:planning_edge_relation_invalid:4848314",
+      "validator_family": "dag_consistency_checks",
+      "check_id": "planning_edge_relation_invalid",
+      "severity": "high",
+      "blocking": true,
+      "finding_type": "invalid_planning_edge_relation",
+      "artifact_refs": [
+        "artifacts/planner/research/bibliography-graph.json"
+      ],
+      "violated_invariant": "planning_graph_edges_use_allowed_relations",
+      "summary": "Planning graph 'artifacts/planner/research/bibliography-graph.json' uses unsupported edge relation 'cited_in'.",
+      "evidence_refs": [],
+      "related_contract_refs": [],
+      "related_node_refs": [
+        "artifact-parallel-execution-policy",
+        "claim-remaining-work-graph"
+      ],
+      "suggested_fix": "Use one of the allowed planning graph relations."
+    },
+    {
+      "finding_id": "dit-20260520T170756Z:planning_edge_relation_invalid:4848314",
+      "validator_family": "dag_consistency_checks",
+      "check_id": "planning_edge_relation_invalid",
+      "severity": "high",
+      "blocking": true,
+      "finding_type": "invalid_planning_edge_relation",
+      "artifact_refs": [
+        "artifacts/planner/research/bibliography-graph.json"
+      ],
+      "violated_invariant": "planning_graph_edges_use_allowed_relations",
+      "summary": "Planning graph 'artifacts/planner/research/bibliography-graph.json' uses unsupported edge relation 'cited_in'.",
+      "evidence_refs": [],
+      "related_contract_refs": [],
+      "related_node_refs": [
+        "artifact-queued-execplans",
+        "claim-remaining-work-graph"
+      ],
+      "suggested_fix": "Use one of the allowed planning graph relations."
+    },
+    {
+      "finding_id": "dit-20260520T170756Z:planning_edge_relation_invalid:4848314",
+      "validator_family": "dag_consistency_checks",
+      "check_id": "planning_edge_relation_invalid",
+      "severity": "high",
+      "blocking": true,
+      "finding_type": "invalid_planning_edge_relation",
+      "artifact_refs": [
+        "artifacts/planner/research/bibliography-graph.json"
+      ],
+      "violated_invariant": "planning_graph_edges_use_allowed_relations",
+      "summary": "Planning graph 'artifacts/planner/research/bibliography-graph.json' uses unsupported edge relation 'cited_in'.",
+      "evidence_refs": [],
+      "related_contract_refs": [],
+      "related_node_refs": [
+        "artifact-governed-super-agent-harness-research",
+        "claim-deerflow-runtime-profile"
+      ],
+      "suggested_fix": "Use one of the allowed planning graph relations."
+    },
+    {
+      "finding_id": "dit-20260520T170756Z:planning_edge_relation_invalid:4848314",
+      "validator_family": "dag_consistency_checks",
+      "check_id": "planning_edge_relation_invalid",
+      "severity": "high",
+      "blocking": true,
+      "finding_type": "invalid_planning_edge_relation",
+      "artifact_refs": [
+        "artifacts/planner/research/bibliography-graph.json"
+      ],
+      "violated_invariant": "planning_graph_edges_use_allowed_relations",
+      "summary": "Planning graph 'artifacts/planner/research/bibliography-graph.json' uses unsupported edge relation 'cited_in'.",
+      "evidence_refs": [],
+      "related_contract_refs": [],
+      "related_node_refs": [
+        "artifact-governed-super-agent-harness-research",
+        "claim-governed-super-agent-harness-layering"
+      ],
+      "suggested_fix": "Use one of the allowed planning graph relations."
+    },
+    {
+      "finding_id": "dit-20260520T170756Z:planning_edge_relation_invalid:5010848",
+      "validator_family": "dag_consistency_checks",
+      "check_id": "planning_edge_relation_invalid",
+      "severity": "high",
+      "blocking": true,
+      "finding_type": "invalid_planning_edge_relation",
+      "artifact_refs": [
+        "artifacts/planner/research/rule-graph.json"
+      ],
+      "violated_invariant": "planning_graph_edges_use_allowed_relations",
+      "summary": "Planning graph 'artifacts/planner/research/rule-graph.json' uses unsupported edge relation 'applies_to'.",
+      "evidence_refs": [],
+      "related_contract_refs": [],
+      "related_node_refs": [
+        "phase-merge-readiness",
+        "rule-smoke-test-required"
+      ],
+      "suggested_fix": "Use one of the allowed planning graph relations."
+    },
+    {
+      "finding_id": "dit-20260520T170756Z:planning_edge_relation_invalid:5010848",
+      "validator_family": "dag_consistency_checks",
+      "check_id": "planning_edge_relation_invalid",
+      "severity": "high",
+      "blocking": true,
+      "finding_type": "invalid_planning_edge_relation",
+      "artifact_refs": [
+        "artifacts/planner/research/rule-graph.json"
+      ],
+      "violated_invariant": "planning_graph_edges_use_allowed_relations",
+      "summary": "Planning graph 'artifacts/planner/research/rule-graph.json' uses unsupported edge relation 'applies_to'.",
+      "evidence_refs": [],
+      "related_contract_refs": [],
+      "related_node_refs": [
+        "phase-merge-readiness",
+        "rule-clean-merge-state"
+      ],
+      "suggested_fix": "Use one of the allowed planning graph relations."
+    },
+    {
+      "finding_id": "dit-20260520T170756Z:planning_edge_relation_invalid:5010848",
+      "validator_family": "dag_consistency_checks",
+      "check_id": "planning_edge_relation_invalid",
+      "severity": "high",
+      "blocking": true,
+      "finding_type": "invalid_planning_edge_relation",
+      "artifact_refs": [
+        "artifacts/planner/research/rule-graph.json"
+      ],
+      "violated_invariant": "planning_graph_edges_use_allowed_relations",
+      "summary": "Planning graph 'artifacts/planner/research/rule-graph.json' uses unsupported edge relation 'applies_to'.",
+      "evidence_refs": [],
+      "related_contract_refs": [],
+      "related_node_refs": [
+        "phase-merge-readiness",
+        "rule-human-sized-commits"
+      ],
+      "suggested_fix": "Use one of the allowed planning graph relations."
+    },
+    {
+      "finding_id": "dit-20260520T170756Z:planning_edge_relation_invalid:5010848",
+      "validator_family": "dag_consistency_checks",
+      "check_id": "planning_edge_relation_invalid",
+      "severity": "high",
+      "blocking": true,
+      "finding_type": "invalid_planning_edge_relation",
+      "artifact_refs": [
+        "artifacts/planner/research/rule-graph.json"
+      ],
+      "violated_invariant": "planning_graph_edges_use_allowed_relations",
+      "summary": "Planning graph 'artifacts/planner/research/rule-graph.json' uses unsupported edge relation 'applies_to'.",
+      "evidence_refs": [],
+      "related_contract_refs": [],
+      "related_node_refs": [
+        "phase-merge-readiness",
+        "rule-procedural-commit-order"
+      ],
+      "suggested_fix": "Use one of the allowed planning graph relations."
+    },
+    {
+      "finding_id": "dit-20260520T170756Z:planning_edge_relation_invalid:5010848",
+      "validator_family": "dag_consistency_checks",
+      "check_id": "planning_edge_relation_invalid",
+      "severity": "high",
+      "blocking": true,
+      "finding_type": "invalid_planning_edge_relation",
+      "artifact_refs": [
+        "artifacts/planner/research/rule-graph.json"
+      ],
+      "violated_invariant": "planning_graph_edges_use_allowed_relations",
+      "summary": "Planning graph 'artifacts/planner/research/rule-graph.json' uses unsupported edge relation 'applies_to'.",
+      "evidence_refs": [],
+      "related_contract_refs": [],
+      "related_node_refs": [
+        "phase-merge-readiness",
+        "rule-latest-main-branching"
+      ],
+      "suggested_fix": "Use one of the allowed planning graph relations."
+    },
+    {
+      "finding_id": "dit-20260520T170756Z:planning_edge_relation_invalid:5010848",
+      "validator_family": "dag_consistency_checks",
+      "check_id": "planning_edge_relation_invalid",
+      "severity": "high",
+      "blocking": true,
+      "finding_type": "invalid_planning_edge_relation",
+      "artifact_refs": [
+        "artifacts/planner/research/rule-graph.json"
+      ],
+      "violated_invariant": "planning_graph_edges_use_allowed_relations",
+      "summary": "Planning graph 'artifacts/planner/research/rule-graph.json' uses unsupported edge relation 'applies_to'.",
+      "evidence_refs": [],
+      "related_contract_refs": [],
+      "related_node_refs": [
+        "phase-merge-readiness",
+        "rule-execplan-validation"
+      ],
+      "suggested_fix": "Use one of the allowed planning graph relations."
+    },
+    {
+      "finding_id": "dit-20260520T170756Z:planning_edge_relation_invalid:5010848",
+      "validator_family": "dag_consistency_checks",
+      "check_id": "planning_edge_relation_invalid",
+      "severity": "high",
+      "blocking": true,
+      "finding_type": "invalid_planning_edge_relation",
+      "artifact_refs": [
+        "artifacts/planner/research/rule-graph.json"
+      ],
+      "violated_invariant": "planning_graph_edges_use_allowed_relations",
+      "summary": "Planning graph 'artifacts/planner/research/rule-graph.json' uses unsupported edge relation 'applies_to'.",
+      "evidence_refs": [],
+      "related_contract_refs": [],
+      "related_node_refs": [
+        "artifact-governance-spec",
+        "rule-governance-required-check-contract"
+      ],
+      "suggested_fix": "Use one of the allowed planning graph relations."
+    },
+    {
+      "finding_id": "dit-20260520T170756Z:planning_edge_relation_invalid:5010848",
+      "validator_family": "dag_consistency_checks",
+      "check_id": "planning_edge_relation_invalid",
+      "severity": "high",
+      "blocking": true,
+      "finding_type": "invalid_planning_edge_relation",
+      "artifact_refs": [
+        "artifacts/planner/research/rule-graph.json"
+      ],
+      "violated_invariant": "planning_graph_edges_use_allowed_relations",
+      "summary": "Planning graph 'artifacts/planner/research/rule-graph.json' uses unsupported edge relation 'applies_to'.",
+      "evidence_refs": [],
+      "related_contract_refs": [],
+      "related_node_refs": [
+        "artifact-remaining-work-graph",
+        "rule-queue-projection-authority"
+      ],
+      "suggested_fix": "Use one of the allowed planning graph relations."
+    },
+    {
+      "finding_id": "dit-20260520T170756Z:planning_edge_relation_invalid:5010848",
+      "validator_family": "dag_consistency_checks",
+      "check_id": "planning_edge_relation_invalid",
+      "severity": "high",
+      "blocking": true,
+      "finding_type": "invalid_planning_edge_relation",
+      "artifact_refs": [
+        "artifacts/planner/research/rule-graph.json"
+      ],
+      "violated_invariant": "planning_graph_edges_use_allowed_relations",
+      "summary": "Planning graph 'artifacts/planner/research/rule-graph.json' uses unsupported edge relation 'applies_to'.",
+      "evidence_refs": [],
+      "related_contract_refs": [],
+      "related_node_refs": [
+        "artifact-pr-template",
+        "rule-draft-self-review-before-pr"
+      ],
+      "suggested_fix": "Use one of the allowed planning graph relations."
+    },
+    {
+      "finding_id": "dit-20260520T170756Z:planning_edge_relation_invalid:5010848",
+      "validator_family": "dag_consistency_checks",
+      "check_id": "planning_edge_relation_invalid",
+      "severity": "high",
+      "blocking": true,
+      "finding_type": "invalid_planning_edge_relation",
+      "artifact_refs": [
+        "artifacts/planner/research/rule-graph.json"
+      ],
+      "violated_invariant": "planning_graph_edges_use_allowed_relations",
+      "summary": "Planning graph 'artifacts/planner/research/rule-graph.json' uses unsupported edge relation 'applies_to'.",
+      "evidence_refs": [],
+      "related_contract_refs": [],
+      "related_node_refs": [
+        "artifact-pr-template",
+        "rule-additive-pr-template"
+      ],
+      "suggested_fix": "Use one of the allowed planning graph relations."
+    },
+    {
+      "finding_id": "dit-20260520T170756Z:planning_edge_relation_invalid:5010848",
+      "validator_family": "dag_consistency_checks",
+      "check_id": "planning_edge_relation_invalid",
+      "severity": "high",
+      "blocking": true,
+      "finding_type": "invalid_planning_edge_relation",
+      "artifact_refs": [
+        "artifacts/planner/research/rule-graph.json"
+      ],
+      "violated_invariant": "planning_graph_edges_use_allowed_relations",
+      "summary": "Planning graph 'artifacts/planner/research/rule-graph.json' uses unsupported edge relation 'applies_to'.",
+      "evidence_refs": [],
+      "related_contract_refs": [],
+      "related_node_refs": [
+        "artifact-workflow-spec",
+        "rule-initiative-parent-branch-governance"
+      ],
+      "suggested_fix": "Use one of the allowed planning graph relations."
+    },
+    {
+      "finding_id": "dit-20260520T170756Z:planning_edge_relation_invalid:6770445",
+      "validator_family": "dag_consistency_checks",
+      "check_id": "planning_edge_relation_invalid",
+      "severity": "high",
+      "blocking": true,
+      "finding_type": "invalid_planning_edge_relation",
+      "artifact_refs": [
+        "artifacts/planner/research/game-graph.json"
+      ],
+      "violated_invariant": "planning_graph_edges_use_allowed_relations",
+      "summary": "Planning graph 'artifacts/planner/research/game-graph.json' uses unsupported edge relation 'contains'.",
+      "evidence_refs": [],
+      "related_contract_refs": [],
+      "related_node_refs": [
+        "game-execplan",
+        "game-platform"
+      ],
+      "suggested_fix": "Use one of the allowed planning graph relations."
+    },
+    {
+      "finding_id": "dit-20260520T170756Z:planning_edge_relation_invalid:6770445",
+      "validator_family": "dag_consistency_checks",
+      "check_id": "planning_edge_relation_invalid",
+      "severity": "high",
+      "blocking": true,
+      "finding_type": "invalid_planning_edge_relation",
+      "artifact_refs": [
+        "artifacts/planner/research/game-graph.json"
+      ],
+      "violated_invariant": "planning_graph_edges_use_allowed_relations",
+      "summary": "Planning graph 'artifacts/planner/research/game-graph.json' uses unsupported edge relation 'contains'.",
+      "evidence_refs": [],
+      "related_contract_refs": [],
+      "related_node_refs": [
+        "game-execplan",
+        "game-planning"
+      ],
+      "suggested_fix": "Use one of the allowed planning graph relations."
+    },
+    {
+      "finding_id": "dit-20260520T170756Z:planning_edge_relation_invalid:6770445",
+      "validator_family": "dag_consistency_checks",
+      "check_id": "planning_edge_relation_invalid",
+      "severity": "high",
+      "blocking": true,
+      "finding_type": "invalid_planning_edge_relation",
+      "artifact_refs": [
+        "artifacts/planner/research/game-graph.json"
+      ],
+      "violated_invariant": "planning_graph_edges_use_allowed_relations",
+      "summary": "Planning graph 'artifacts/planner/research/game-graph.json' uses unsupported edge relation 'contains'.",
+      "evidence_refs": [],
+      "related_contract_refs": [],
+      "related_node_refs": [
+        "game-execplan",
+        "game-implementation"
+      ],
+      "suggested_fix": "Use one of the allowed planning graph relations."
+    },
+    {
+      "finding_id": "dit-20260520T170756Z:planning_edge_relation_invalid:6770445",
+      "validator_family": "dag_consistency_checks",
+      "check_id": "planning_edge_relation_invalid",
+      "severity": "high",
+      "blocking": true,
+      "finding_type": "invalid_planning_edge_relation",
+      "artifact_refs": [
+        "artifacts/planner/research/game-graph.json"
+      ],
+      "violated_invariant": "planning_graph_edges_use_allowed_relations",
+      "summary": "Planning graph 'artifacts/planner/research/game-graph.json' uses unsupported edge relation 'contains'.",
+      "evidence_refs": [],
+      "related_contract_refs": [],
+      "related_node_refs": [
+        "game-implementation",
+        "game-policy-compliance"
+      ],
+      "suggested_fix": "Use one of the allowed planning graph relations."
+    },
+    {
+      "finding_id": "dit-20260520T170756Z:planning_edge_relation_invalid:6770445",
+      "validator_family": "dag_consistency_checks",
+      "check_id": "planning_edge_relation_invalid",
+      "severity": "high",
+      "blocking": true,
+      "finding_type": "invalid_planning_edge_relation",
+      "artifact_refs": [
+        "artifacts/planner/research/game-graph.json"
+      ],
+      "violated_invariant": "planning_graph_edges_use_allowed_relations",
+      "summary": "Planning graph 'artifacts/planner/research/game-graph.json' uses unsupported edge relation 'contains'.",
+      "evidence_refs": [],
+      "related_contract_refs": [],
+      "related_node_refs": [
+        "game-commit-structure",
+        "game-policy-compliance"
+      ],
+      "suggested_fix": "Use one of the allowed planning graph relations."
+    },
+    {
+      "finding_id": "dit-20260520T170756Z:planning_edge_relation_invalid:7415696",
+      "validator_family": "dag_consistency_checks",
+      "check_id": "planning_edge_relation_invalid",
+      "severity": "high",
+      "blocking": true,
+      "finding_type": "invalid_planning_edge_relation",
+      "artifact_refs": [
+        "artifacts/planner/research/bibliography-graph.json"
+      ],
+      "violated_invariant": "planning_graph_edges_use_allowed_relations",
+      "summary": "Planning graph 'artifacts/planner/research/bibliography-graph.json' uses unsupported edge relation 'implemented_by'.",
+      "evidence_refs": [],
+      "related_contract_refs": [],
+      "related_node_refs": [
+        "concept-provenance",
+        "src-git-trailers"
+      ],
+      "suggested_fix": "Use one of the allowed planning graph relations."
+    },
+    {
+      "finding_id": "dit-20260520T170756Z:planning_edge_relation_invalid:7444684",
+      "validator_family": "dag_consistency_checks",
+      "check_id": "planning_edge_relation_invalid",
+      "severity": "high",
+      "blocking": true,
+      "finding_type": "invalid_planning_edge_relation",
+      "artifact_refs": [
+        "artifacts/planner/research/bibliography-graph.json"
+      ],
+      "violated_invariant": "planning_graph_edges_use_allowed_relations",
+      "summary": "Planning graph 'artifacts/planner/research/bibliography-graph.json' uses unsupported edge relation 'supports'.",
+      "evidence_refs": [],
+      "related_contract_refs": [],
+      "related_node_refs": [
+        "concept-mechanism-design",
+        "src-maskin-2007"
+      ],
+      "suggested_fix": "Use one of the allowed planning graph relations."
+    },
+    {
+      "finding_id": "dit-20260520T170756Z:planning_edge_relation_invalid:7444684",
+      "validator_family": "dag_consistency_checks",
+      "check_id": "planning_edge_relation_invalid",
+      "severity": "high",
+      "blocking": true,
+      "finding_type": "invalid_planning_edge_relation",
+      "artifact_refs": [
+        "artifacts/planner/research/bibliography-graph.json"
+      ],
+      "violated_invariant": "planning_graph_edges_use_allowed_relations",
+      "summary": "Planning graph 'artifacts/planner/research/bibliography-graph.json' uses unsupported edge relation 'supports'.",
+      "evidence_refs": [],
+      "related_contract_refs": [],
+      "related_node_refs": [
+        "concept-mechanism-design",
+        "src-myerson-2007"
+      ],
+      "suggested_fix": "Use one of the allowed planning graph relations."
+    },
+    {
+      "finding_id": "dit-20260520T170756Z:planning_edge_relation_invalid:7444684",
+      "validator_family": "dag_consistency_checks",
+      "check_id": "planning_edge_relation_invalid",
+      "severity": "high",
+      "blocking": true,
+      "finding_type": "invalid_planning_edge_relation",
+      "artifact_refs": [
+        "artifacts/planner/research/bibliography-graph.json"
+      ],
+      "violated_invariant": "planning_graph_edges_use_allowed_relations",
+      "summary": "Planning graph 'artifacts/planner/research/bibliography-graph.json' uses unsupported edge relation 'supports'.",
+      "evidence_refs": [],
+      "related_contract_refs": [],
+      "related_node_refs": [
+        "concept-mechanism-design",
+        "src-nobel-summary-2007"
+      ],
+      "suggested_fix": "Use one of the allowed planning graph relations."
+    },
+    {
+      "finding_id": "dit-20260520T170756Z:planning_edge_relation_invalid:7444684",
+      "validator_family": "dag_consistency_checks",
+      "check_id": "planning_edge_relation_invalid",
+      "severity": "high",
+      "blocking": true,
+      "finding_type": "invalid_planning_edge_relation",
+      "artifact_refs": [
+        "artifacts/planner/research/bibliography-graph.json"
+      ],
+      "violated_invariant": "planning_graph_edges_use_allowed_relations",
+      "summary": "Planning graph 'artifacts/planner/research/bibliography-graph.json' uses unsupported edge relation 'supports'.",
+      "evidence_refs": [],
+      "related_contract_refs": [],
+      "related_node_refs": [
+        "concept-bounded-rationality",
+        "src-simon-1955"
+      ],
+      "suggested_fix": "Use one of the allowed planning graph relations."
+    },
+    {
+      "finding_id": "dit-20260520T170756Z:planning_edge_relation_invalid:7444684",
+      "validator_family": "dag_consistency_checks",
+      "check_id": "planning_edge_relation_invalid",
+      "severity": "high",
+      "blocking": true,
+      "finding_type": "invalid_planning_edge_relation",
+      "artifact_refs": [
+        "artifacts/planner/research/bibliography-graph.json"
+      ],
+      "violated_invariant": "planning_graph_edges_use_allowed_relations",
+      "summary": "Planning graph 'artifacts/planner/research/bibliography-graph.json' uses unsupported edge relation 'supports'.",
+      "evidence_refs": [],
+      "related_contract_refs": [],
+      "related_node_refs": [
+        "concept-provenance",
+        "src-prov-overview"
+      ],
+      "suggested_fix": "Use one of the allowed planning graph relations."
+    },
+    {
+      "finding_id": "dit-20260520T170756Z:planning_edge_relation_invalid:7444684",
+      "validator_family": "dag_consistency_checks",
+      "check_id": "planning_edge_relation_invalid",
+      "severity": "high",
+      "blocking": true,
+      "finding_type": "invalid_planning_edge_relation",
+      "artifact_refs": [
+        "artifacts/planner/research/bibliography-graph.json"
+      ],
+      "violated_invariant": "planning_graph_edges_use_allowed_relations",
+      "summary": "Planning graph 'artifacts/planner/research/bibliography-graph.json' uses unsupported edge relation 'supports'.",
+      "evidence_refs": [],
+      "related_contract_refs": [],
+      "related_node_refs": [
+        "concept-provenance",
+        "src-prov-dm"
+      ],
+      "suggested_fix": "Use one of the allowed planning graph relations."
+    },
+    {
+      "finding_id": "dit-20260520T170756Z:planning_edge_relation_invalid:7444684",
+      "validator_family": "dag_consistency_checks",
+      "check_id": "planning_edge_relation_invalid",
+      "severity": "high",
+      "blocking": true,
+      "finding_type": "invalid_planning_edge_relation",
+      "artifact_refs": [
+        "artifacts/planner/research/bibliography-graph.json"
+      ],
+      "violated_invariant": "planning_graph_edges_use_allowed_relations",
+      "summary": "Planning graph 'artifacts/planner/research/bibliography-graph.json' uses unsupported edge relation 'supports'.",
+      "evidence_refs": [],
+      "related_contract_refs": [],
+      "related_node_refs": [
+        "concept-state-transitions",
+        "src-harel-1987"
+      ],
+      "suggested_fix": "Use one of the allowed planning graph relations."
+    },
+    {
+      "finding_id": "dit-20260520T170756Z:planning_edge_relation_invalid:7444684",
+      "validator_family": "dag_consistency_checks",
+      "check_id": "planning_edge_relation_invalid",
+      "severity": "high",
+      "blocking": true,
+      "finding_type": "invalid_planning_edge_relation",
+      "artifact_refs": [
+        "artifacts/planner/research/bibliography-graph.json"
+      ],
+      "violated_invariant": "planning_graph_edges_use_allowed_relations",
+      "summary": "Planning graph 'artifacts/planner/research/bibliography-graph.json' uses unsupported edge relation 'supports'.",
+      "evidence_refs": [],
+      "related_contract_refs": [],
+      "related_node_refs": [
+        "concept-inspection",
+        "src-fagan-1986"
+      ],
+      "suggested_fix": "Use one of the allowed planning graph relations."
+    },
+    {
+      "finding_id": "dit-20260520T170756Z:planning_edge_relation_invalid:7444684",
+      "validator_family": "dag_consistency_checks",
+      "check_id": "planning_edge_relation_invalid",
+      "severity": "high",
+      "blocking": true,
+      "finding_type": "invalid_planning_edge_relation",
+      "artifact_refs": [
+        "artifacts/planner/research/bibliography-graph.json"
+      ],
+      "violated_invariant": "planning_graph_edges_use_allowed_relations",
+      "summary": "Planning graph 'artifacts/planner/research/bibliography-graph.json' uses unsupported edge relation 'supports'.",
+      "evidence_refs": [],
+      "related_contract_refs": [],
+      "related_node_refs": [
+        "concept-inspection",
+        "src-myers-1978"
+      ],
+      "suggested_fix": "Use one of the allowed planning graph relations."
+    },
+    {
+      "finding_id": "dit-20260520T170756Z:planning_edge_relation_invalid:7444684",
+      "validator_family": "dag_consistency_checks",
+      "check_id": "planning_edge_relation_invalid",
+      "severity": "high",
+      "blocking": true,
+      "finding_type": "invalid_planning_edge_relation",
+      "artifact_refs": [
+        "artifacts/planner/research/bibliography-graph.json"
+      ],
+      "violated_invariant": "planning_graph_edges_use_allowed_relations",
+      "summary": "Planning graph 'artifacts/planner/research/bibliography-graph.json' uses unsupported edge relation 'supports'.",
+      "evidence_refs": [],
+      "related_contract_refs": [],
+      "related_node_refs": [
+        "claim-planning-implementation-game",
+        "concept-mechanism-design"
+      ],
+      "suggested_fix": "Use one of the allowed planning graph relations."
+    },
+    {
+      "finding_id": "dit-20260520T170756Z:planning_edge_relation_invalid:7444684",
+      "validator_family": "dag_consistency_checks",
+      "check_id": "planning_edge_relation_invalid",
+      "severity": "high",
+      "blocking": true,
+      "finding_type": "invalid_planning_edge_relation",
+      "artifact_refs": [
+        "artifacts/planner/research/bibliography-graph.json"
+      ],
+      "violated_invariant": "planning_graph_edges_use_allowed_relations",
+      "summary": "Planning graph 'artifacts/planner/research/bibliography-graph.json' uses unsupported edge relation 'supports'.",
+      "evidence_refs": [],
+      "related_contract_refs": [],
+      "related_node_refs": [
+        "claim-canonical-graph",
+        "concept-provenance"
+      ],
+      "suggested_fix": "Use one of the allowed planning graph relations."
+    },
+    {
+      "finding_id": "dit-20260520T170756Z:planning_edge_relation_invalid:7444684",
+      "validator_family": "dag_consistency_checks",
+      "check_id": "planning_edge_relation_invalid",
+      "severity": "high",
+      "blocking": true,
+      "finding_type": "invalid_planning_edge_relation",
+      "artifact_refs": [
+        "artifacts/planner/research/bibliography-graph.json"
+      ],
+      "violated_invariant": "planning_graph_edges_use_allowed_relations",
+      "summary": "Planning graph 'artifacts/planner/research/bibliography-graph.json' uses unsupported edge relation 'supports'.",
+      "evidence_refs": [],
+      "related_contract_refs": [],
+      "related_node_refs": [
+        "claim-canonical-graph",
+        "concept-state-transitions"
+      ],
+      "suggested_fix": "Use one of the allowed planning graph relations."
+    },
+    {
+      "finding_id": "dit-20260520T170756Z:planning_edge_relation_invalid:7444684",
+      "validator_family": "dag_consistency_checks",
+      "check_id": "planning_edge_relation_invalid",
+      "severity": "high",
+      "blocking": true,
+      "finding_type": "invalid_planning_edge_relation",
+      "artifact_refs": [
+        "artifacts/planner/research/bibliography-graph.json"
+      ],
+      "violated_invariant": "planning_graph_edges_use_allowed_relations",
+      "summary": "Planning graph 'artifacts/planner/research/bibliography-graph.json' uses unsupported edge relation 'supports'.",
+      "evidence_refs": [],
+      "related_contract_refs": [],
+      "related_node_refs": [
+        "claim-explicit-reconciliation",
+        "concept-provenance"
+      ],
+      "suggested_fix": "Use one of the allowed planning graph relations."
+    },
+    {
+      "finding_id": "dit-20260520T170756Z:planning_edge_relation_invalid:7444684",
+      "validator_family": "dag_consistency_checks",
+      "check_id": "planning_edge_relation_invalid",
+      "severity": "high",
+      "blocking": true,
+      "finding_type": "invalid_planning_edge_relation",
+      "artifact_refs": [
+        "artifacts/planner/research/bibliography-graph.json"
+      ],
+      "violated_invariant": "planning_graph_edges_use_allowed_relations",
+      "summary": "Planning graph 'artifacts/planner/research/bibliography-graph.json' uses unsupported edge relation 'supports'.",
+      "evidence_refs": [],
+      "related_contract_refs": [],
+      "related_node_refs": [
+        "claim-codex-orchestration",
+        "concept-mechanism-design"
+      ],
+      "suggested_fix": "Use one of the allowed planning graph relations."
+    },
+    {
+      "finding_id": "dit-20260520T170756Z:planning_edge_relation_invalid:7444684",
+      "validator_family": "dag_consistency_checks",
+      "check_id": "planning_edge_relation_invalid",
+      "severity": "high",
+      "blocking": true,
+      "finding_type": "invalid_planning_edge_relation",
+      "artifact_refs": [
+        "artifacts/planner/research/bibliography-graph.json"
+      ],
+      "violated_invariant": "planning_graph_edges_use_allowed_relations",
+      "summary": "Planning graph 'artifacts/planner/research/bibliography-graph.json' uses unsupported edge relation 'supports'.",
+      "evidence_refs": [],
+      "related_contract_refs": [],
+      "related_node_refs": [
+        "claim-codex-orchestration",
+        "concept-provenance"
+      ],
+      "suggested_fix": "Use one of the allowed planning graph relations."
+    },
+    {
+      "finding_id": "dit-20260520T170756Z:planning_edge_relation_invalid:7444684",
+      "validator_family": "dag_consistency_checks",
+      "check_id": "planning_edge_relation_invalid",
+      "severity": "high",
+      "blocking": true,
+      "finding_type": "invalid_planning_edge_relation",
+      "artifact_refs": [
+        "artifacts/planner/research/bibliography-graph.json"
+      ],
+      "violated_invariant": "planning_graph_edges_use_allowed_relations",
+      "summary": "Planning graph 'artifacts/planner/research/bibliography-graph.json' uses unsupported edge relation 'supports'.",
+      "evidence_refs": [],
+      "related_contract_refs": [],
+      "related_node_refs": [
+        "claim-codex-orchestration",
+        "concept-state-transitions"
+      ],
+      "suggested_fix": "Use one of the allowed planning graph relations."
+    },
+    {
+      "finding_id": "dit-20260520T170756Z:planning_edge_relation_invalid:7444684",
+      "validator_family": "dag_consistency_checks",
+      "check_id": "planning_edge_relation_invalid",
+      "severity": "high",
+      "blocking": true,
+      "finding_type": "invalid_planning_edge_relation",
+      "artifact_refs": [
+        "artifacts/planner/research/bibliography-graph.json"
+      ],
+      "violated_invariant": "planning_graph_edges_use_allowed_relations",
+      "summary": "Planning graph 'artifacts/planner/research/bibliography-graph.json' uses unsupported edge relation 'supports'.",
+      "evidence_refs": [],
+      "related_contract_refs": [],
+      "related_node_refs": [
+        "claim-codex-orchestration",
+        "concept-inspection"
+      ],
+      "suggested_fix": "Use one of the allowed planning graph relations."
+    },
+    {
+      "finding_id": "dit-20260520T170756Z:planning_edge_relation_invalid:7444684",
+      "validator_family": "dag_consistency_checks",
+      "check_id": "planning_edge_relation_invalid",
+      "severity": "high",
+      "blocking": true,
+      "finding_type": "invalid_planning_edge_relation",
+      "artifact_refs": [
+        "artifacts/planner/research/bibliography-graph.json"
+      ],
+      "violated_invariant": "planning_graph_edges_use_allowed_relations",
+      "summary": "Planning graph 'artifacts/planner/research/bibliography-graph.json' uses unsupported edge relation 'supports'.",
+      "evidence_refs": [],
+      "related_contract_refs": [],
+      "related_node_refs": [
+        "claim-nested-game-system",
+        "concept-mechanism-design"
+      ],
+      "suggested_fix": "Use one of the allowed planning graph relations."
+    },
+    {
+      "finding_id": "dit-20260520T170756Z:planning_edge_relation_invalid:7444684",
+      "validator_family": "dag_consistency_checks",
+      "check_id": "planning_edge_relation_invalid",
+      "severity": "high",
+      "blocking": true,
+      "finding_type": "invalid_planning_edge_relation",
+      "artifact_refs": [
+        "artifacts/planner/research/bibliography-graph.json"
+      ],
+      "violated_invariant": "planning_graph_edges_use_allowed_relations",
+      "summary": "Planning graph 'artifacts/planner/research/bibliography-graph.json' uses unsupported edge relation 'supports'.",
+      "evidence_refs": [],
+      "related_contract_refs": [],
+      "related_node_refs": [
+        "claim-nested-game-system",
+        "concept-provenance"
+      ],
+      "suggested_fix": "Use one of the allowed planning graph relations."
+    },
+    {
+      "finding_id": "dit-20260520T170756Z:planning_edge_relation_invalid:7444684",
+      "validator_family": "dag_consistency_checks",
+      "check_id": "planning_edge_relation_invalid",
+      "severity": "high",
+      "blocking": true,
+      "finding_type": "invalid_planning_edge_relation",
+      "artifact_refs": [
+        "artifacts/planner/research/bibliography-graph.json"
+      ],
+      "violated_invariant": "planning_graph_edges_use_allowed_relations",
+      "summary": "Planning graph 'artifacts/planner/research/bibliography-graph.json' uses unsupported edge relation 'supports'.",
+      "evidence_refs": [],
+      "related_contract_refs": [],
+      "related_node_refs": [
+        "claim-nested-game-system",
+        "concept-state-transitions"
+      ],
+      "suggested_fix": "Use one of the allowed planning graph relations."
+    },
+    {
+      "finding_id": "dit-20260520T170756Z:planning_edge_relation_invalid:7444684",
+      "validator_family": "dag_consistency_checks",
+      "check_id": "planning_edge_relation_invalid",
+      "severity": "high",
+      "blocking": true,
+      "finding_type": "invalid_planning_edge_relation",
+      "artifact_refs": [
+        "artifacts/planner/research/bibliography-graph.json"
+      ],
+      "violated_invariant": "planning_graph_edges_use_allowed_relations",
+      "summary": "Planning graph 'artifacts/planner/research/bibliography-graph.json' uses unsupported edge relation 'supports'.",
+      "evidence_refs": [],
+      "related_contract_refs": [],
+      "related_node_refs": [
+        "claim-nested-game-system",
+        "concept-inspection"
+      ],
+      "suggested_fix": "Use one of the allowed planning graph relations."
+    },
+    {
+      "finding_id": "dit-20260520T170756Z:planning_edge_relation_invalid:7444684",
+      "validator_family": "dag_consistency_checks",
+      "check_id": "planning_edge_relation_invalid",
+      "severity": "high",
+      "blocking": true,
+      "finding_type": "invalid_planning_edge_relation",
+      "artifact_refs": [
+        "artifacts/planner/research/bibliography-graph.json"
+      ],
+      "violated_invariant": "planning_graph_edges_use_allowed_relations",
+      "summary": "Planning graph 'artifacts/planner/research/bibliography-graph.json' uses unsupported edge relation 'supports'.",
+      "evidence_refs": [],
+      "related_contract_refs": [],
+      "related_node_refs": [
+        "claim-remaining-work-graph",
+        "concept-mechanism-design"
+      ],
+      "suggested_fix": "Use one of the allowed planning graph relations."
+    },
+    {
+      "finding_id": "dit-20260520T170756Z:planning_edge_relation_invalid:7444684",
+      "validator_family": "dag_consistency_checks",
+      "check_id": "planning_edge_relation_invalid",
+      "severity": "high",
+      "blocking": true,
+      "finding_type": "invalid_planning_edge_relation",
+      "artifact_refs": [
+        "artifacts/planner/research/bibliography-graph.json"
+      ],
+      "violated_invariant": "planning_graph_edges_use_allowed_relations",
+      "summary": "Planning graph 'artifacts/planner/research/bibliography-graph.json' uses unsupported edge relation 'supports'.",
+      "evidence_refs": [],
+      "related_contract_refs": [],
+      "related_node_refs": [
+        "claim-remaining-work-graph",
+        "concept-provenance"
+      ],
+      "suggested_fix": "Use one of the allowed planning graph relations."
+    },
+    {
+      "finding_id": "dit-20260520T170756Z:planning_edge_relation_invalid:7444684",
+      "validator_family": "dag_consistency_checks",
+      "check_id": "planning_edge_relation_invalid",
+      "severity": "high",
+      "blocking": true,
+      "finding_type": "invalid_planning_edge_relation",
+      "artifact_refs": [
+        "artifacts/planner/research/bibliography-graph.json"
+      ],
+      "violated_invariant": "planning_graph_edges_use_allowed_relations",
+      "summary": "Planning graph 'artifacts/planner/research/bibliography-graph.json' uses unsupported edge relation 'supports'.",
+      "evidence_refs": [],
+      "related_contract_refs": [],
+      "related_node_refs": [
+        "claim-remaining-work-graph",
+        "concept-state-transitions"
+      ],
+      "suggested_fix": "Use one of the allowed planning graph relations."
+    },
+    {
+      "finding_id": "dit-20260520T170756Z:planning_edge_relation_invalid:7444684",
+      "validator_family": "dag_consistency_checks",
+      "check_id": "planning_edge_relation_invalid",
+      "severity": "high",
+      "blocking": true,
+      "finding_type": "invalid_planning_edge_relation",
+      "artifact_refs": [
+        "artifacts/planner/research/bibliography-graph.json"
+      ],
+      "violated_invariant": "planning_graph_edges_use_allowed_relations",
+      "summary": "Planning graph 'artifacts/planner/research/bibliography-graph.json' uses unsupported edge relation 'supports'.",
+      "evidence_refs": [],
+      "related_contract_refs": [],
+      "related_node_refs": [
+        "claim-deerflow-runtime-profile",
+        "src-deerflow-readme-20260323"
+      ],
+      "suggested_fix": "Use one of the allowed planning graph relations."
+    },
+    {
+      "finding_id": "dit-20260520T170756Z:planning_edge_relation_invalid:7444684",
+      "validator_family": "dag_consistency_checks",
+      "check_id": "planning_edge_relation_invalid",
+      "severity": "high",
+      "blocking": true,
+      "finding_type": "invalid_planning_edge_relation",
+      "artifact_refs": [
+        "artifacts/planner/research/bibliography-graph.json"
+      ],
+      "violated_invariant": "planning_graph_edges_use_allowed_relations",
+      "summary": "Planning graph 'artifacts/planner/research/bibliography-graph.json' uses unsupported edge relation 'supports'.",
+      "evidence_refs": [],
+      "related_contract_refs": [],
+      "related_node_refs": [
+        "claim-governed-super-agent-harness-layering",
+        "concept-provenance"
+      ],
+      "suggested_fix": "Use one of the allowed planning graph relations."
+    },
+    {
+      "finding_id": "dit-20260520T170756Z:planning_edge_relation_invalid:7444684",
+      "validator_family": "dag_consistency_checks",
+      "check_id": "planning_edge_relation_invalid",
+      "severity": "high",
+      "blocking": true,
+      "finding_type": "invalid_planning_edge_relation",
+      "artifact_refs": [
+        "artifacts/planner/research/bibliography-graph.json"
+      ],
+      "violated_invariant": "planning_graph_edges_use_allowed_relations",
+      "summary": "Planning graph 'artifacts/planner/research/bibliography-graph.json' uses unsupported edge relation 'supports'.",
+      "evidence_refs": [],
+      "related_contract_refs": [],
+      "related_node_refs": [
+        "claim-governed-super-agent-harness-layering",
+        "concept-state-transitions"
+      ],
+      "suggested_fix": "Use one of the allowed planning graph relations."
+    },
+    {
+      "finding_id": "dit-20260520T170756Z:planning_edge_relation_invalid:7537247",
+      "validator_family": "dag_consistency_checks",
+      "check_id": "planning_edge_relation_invalid",
+      "severity": "high",
+      "blocking": true,
+      "finding_type": "invalid_planning_edge_relation",
+      "artifact_refs": [
+        "artifacts/planner/research/rule-graph.json"
+      ],
+      "violated_invariant": "planning_graph_edges_use_allowed_relations",
+      "summary": "Planning graph 'artifacts/planner/research/rule-graph.json' uses unsupported edge relation 'requires'.",
+      "evidence_refs": [],
+      "related_contract_refs": [],
+      "related_node_refs": [
+        "authority-human",
+        "rule-human-finalization"
+      ],
+      "suggested_fix": "Use one of the allowed planning graph relations."
+    },
+    {
+      "finding_id": "dit-20260520T170756Z:planning_edge_relation_invalid:7537247",
+      "validator_family": "dag_consistency_checks",
+      "check_id": "planning_edge_relation_invalid",
+      "severity": "high",
+      "blocking": true,
+      "finding_type": "invalid_planning_edge_relation",
+      "artifact_refs": [
+        "artifacts/planner/research/rule-graph.json"
+      ],
+      "violated_invariant": "planning_graph_edges_use_allowed_relations",
+      "summary": "Planning graph 'artifacts/planner/research/rule-graph.json' uses unsupported edge relation 'requires'.",
+      "evidence_refs": [],
+      "related_contract_refs": [],
+      "related_node_refs": [
+        "authority-human",
+        "rule-implementation-after-finalized-draft"
+      ],
+      "suggested_fix": "Use one of the allowed planning graph relations."
+    },
+    {
+      "finding_id": "dit-20260520T170756Z:planning_edge_relation_invalid:8253607",
+      "validator_family": "dag_consistency_checks",
+      "check_id": "planning_edge_relation_invalid",
+      "severity": "high",
+      "blocking": true,
+      "finding_type": "invalid_planning_edge_relation",
+      "artifact_refs": [
+        "artifacts/planner/research/game-graph.json"
+      ],
+      "violated_invariant": "planning_graph_edges_use_allowed_relations",
+      "summary": "Planning graph 'artifacts/planner/research/game-graph.json' uses unsupported edge relation 'terminates_in'.",
+      "evidence_refs": [],
+      "related_contract_refs": [],
+      "related_node_refs": [
+        "game-planning",
+        "game-planning-proof"
+      ],
+      "suggested_fix": "Use one of the allowed planning graph relations."
+    },
+    {
+      "finding_id": "dit-20260520T170756Z:planning_edge_relation_invalid:8253607",
+      "validator_family": "dag_consistency_checks",
+      "check_id": "planning_edge_relation_invalid",
+      "severity": "high",
+      "blocking": true,
+      "finding_type": "invalid_planning_edge_relation",
+      "artifact_refs": [
+        "artifacts/planner/research/game-graph.json"
+      ],
+      "violated_invariant": "planning_graph_edges_use_allowed_relations",
+      "summary": "Planning graph 'artifacts/planner/research/game-graph.json' uses unsupported edge relation 'terminates_in'.",
+      "evidence_refs": [],
+      "related_contract_refs": [],
+      "related_node_refs": [
+        "game-implementation",
+        "game-implementation-proof"
+      ],
+      "suggested_fix": "Use one of the allowed planning graph relations."
+    },
+    {
+      "finding_id": "dit-20260520T170756Z:planning_edge_relation_invalid:9234739",
+      "validator_family": "dag_consistency_checks",
+      "check_id": "planning_edge_relation_invalid",
+      "severity": "high",
+      "blocking": true,
+      "finding_type": "invalid_planning_edge_relation",
+      "artifact_refs": [
+        "artifacts/planner/research/game-graph.json"
+      ],
+      "violated_invariant": "planning_graph_edges_use_allowed_relations",
+      "summary": "Planning graph 'artifacts/planner/research/game-graph.json' uses unsupported edge relation 'hands_off_to'.",
+      "evidence_refs": [],
+      "related_contract_refs": [],
+      "related_node_refs": [
+        "game-implementation",
+        "game-planning"
+      ],
+      "suggested_fix": "Use one of the allowed planning graph relations."
+    },
+    {
+      "finding_id": "dit-20260520T170756Z:planning_edge_relation_invalid:9758491",
+      "validator_family": "dag_consistency_checks",
+      "check_id": "planning_edge_relation_invalid",
+      "severity": "high",
+      "blocking": true,
+      "finding_type": "invalid_planning_edge_relation",
+      "artifact_refs": [
+        "artifacts/planner/research/bibliography-graph.json"
+      ],
+      "violated_invariant": "planning_graph_edges_use_allowed_relations",
+      "summary": "Planning graph 'artifacts/planner/research/bibliography-graph.json' uses unsupported edge relation 'classified_as'.",
+      "evidence_refs": [],
+      "related_contract_refs": [],
+      "related_node_refs": [
+        "artifact-assumptions-doc",
+        "claim-planning-implementation-game"
+      ],
+      "suggested_fix": "Use one of the allowed planning graph relations."
+    },
+    {
+      "finding_id": "dit-20260520T170756Z:planning_edge_relation_invalid:9758491",
+      "validator_family": "dag_consistency_checks",
+      "check_id": "planning_edge_relation_invalid",
+      "severity": "high",
+      "blocking": true,
+      "finding_type": "invalid_planning_edge_relation",
+      "artifact_refs": [
+        "artifacts/planner/research/bibliography-graph.json"
+      ],
+      "violated_invariant": "planning_graph_edges_use_allowed_relations",
+      "summary": "Planning graph 'artifacts/planner/research/bibliography-graph.json' uses unsupported edge relation 'classified_as'.",
+      "evidence_refs": [],
+      "related_contract_refs": [],
+      "related_node_refs": [
+        "artifact-assumptions-doc",
+        "claim-canonical-graph"
+      ],
+      "suggested_fix": "Use one of the allowed planning graph relations."
+    },
+    {
+      "finding_id": "dit-20260520T170756Z:planning_edge_relation_invalid:9758491",
+      "validator_family": "dag_consistency_checks",
+      "check_id": "planning_edge_relation_invalid",
+      "severity": "high",
+      "blocking": true,
+      "finding_type": "invalid_planning_edge_relation",
+      "artifact_refs": [
+        "artifacts/planner/research/bibliography-graph.json"
+      ],
+      "violated_invariant": "planning_graph_edges_use_allowed_relations",
+      "summary": "Planning graph 'artifacts/planner/research/bibliography-graph.json' uses unsupported edge relation 'classified_as'.",
+      "evidence_refs": [],
+      "related_contract_refs": [],
+      "related_node_refs": [
+        "artifact-assumptions-doc",
+        "claim-explicit-reconciliation"
+      ],
+      "suggested_fix": "Use one of the allowed planning graph relations."
+    },
+    {
+      "finding_id": "dit-20260520T170756Z:planning_edge_relation_invalid:9758491",
+      "validator_family": "dag_consistency_checks",
+      "check_id": "planning_edge_relation_invalid",
+      "severity": "high",
+      "blocking": true,
+      "finding_type": "invalid_planning_edge_relation",
+      "artifact_refs": [
+        "artifacts/planner/research/bibliography-graph.json"
+      ],
+      "violated_invariant": "planning_graph_edges_use_allowed_relations",
+      "summary": "Planning graph 'artifacts/planner/research/bibliography-graph.json' uses unsupported edge relation 'classified_as'.",
+      "evidence_refs": [],
+      "related_contract_refs": [],
+      "related_node_refs": [
+        "artifact-assumptions-doc",
+        "claim-codex-orchestration"
+      ],
+      "suggested_fix": "Use one of the allowed planning graph relations."
+    },
+    {
+      "finding_id": "dit-20260520T170756Z:planning_edge_relation_invalid:9758491",
+      "validator_family": "dag_consistency_checks",
+      "check_id": "planning_edge_relation_invalid",
+      "severity": "high",
+      "blocking": true,
+      "finding_type": "invalid_planning_edge_relation",
+      "artifact_refs": [
+        "artifacts/planner/research/bibliography-graph.json"
+      ],
+      "violated_invariant": "planning_graph_edges_use_allowed_relations",
+      "summary": "Planning graph 'artifacts/planner/research/bibliography-graph.json' uses unsupported edge relation 'classified_as'.",
+      "evidence_refs": [],
+      "related_contract_refs": [],
+      "related_node_refs": [
+        "artifact-assumptions-doc",
+        "claim-nested-game-system"
+      ],
+      "suggested_fix": "Use one of the allowed planning graph relations."
+    },
+    {
+      "finding_id": "dit-20260520T170756Z:planning_edge_relation_invalid:9758491",
+      "validator_family": "dag_consistency_checks",
+      "check_id": "planning_edge_relation_invalid",
+      "severity": "high",
+      "blocking": true,
+      "finding_type": "invalid_planning_edge_relation",
+      "artifact_refs": [
+        "artifacts/planner/research/bibliography-graph.json"
+      ],
+      "violated_invariant": "planning_graph_edges_use_allowed_relations",
+      "summary": "Planning graph 'artifacts/planner/research/bibliography-graph.json' uses unsupported edge relation 'classified_as'.",
+      "evidence_refs": [],
+      "related_contract_refs": [],
+      "related_node_refs": [
+        "artifact-assumptions-doc",
+        "claim-remaining-work-graph"
+      ],
+      "suggested_fix": "Use one of the allowed planning graph relations."
+    },
+    {
+      "finding_id": "dit-20260520T170756Z:planning_edge_relation_invalid:9758491",
+      "validator_family": "dag_consistency_checks",
+      "check_id": "planning_edge_relation_invalid",
+      "severity": "high",
+      "blocking": true,
+      "finding_type": "invalid_planning_edge_relation",
+      "artifact_refs": [
+        "artifacts/planner/research/bibliography-graph.json"
+      ],
+      "violated_invariant": "planning_graph_edges_use_allowed_relations",
+      "summary": "Planning graph 'artifacts/planner/research/bibliography-graph.json' uses unsupported edge relation 'classified_as'.",
+      "evidence_refs": [],
+      "related_contract_refs": [],
+      "related_node_refs": [
+        "artifact-assumptions-doc",
+        "claim-governed-super-agent-harness-layering"
+      ],
+      "suggested_fix": "Use one of the allowed planning graph relations."
+    },
+    {
+      "finding_id": "dit-20260520T170756Z:planning_edge_relation_invalid:97729",
+      "validator_family": "dag_consistency_checks",
+      "check_id": "planning_edge_relation_invalid",
+      "severity": "high",
+      "blocking": true,
+      "finding_type": "invalid_planning_edge_relation",
+      "artifact_refs": [
+        "artifacts/planner/research/rule-graph.json"
+      ],
+      "violated_invariant": "planning_graph_edges_use_allowed_relations",
+      "summary": "Planning graph 'artifacts/planner/research/rule-graph.json' uses unsupported edge relation 'satisfied_by'.",
+      "evidence_refs": [],
+      "related_contract_refs": [],
+      "related_node_refs": [
+        "artifact-agent-game-rules",
+        "rule-smoke-test-required"
+      ],
+      "suggested_fix": "Use one of the allowed planning graph relations."
+    },
+    {
+      "finding_id": "dit-20260520T170756Z:planning_edge_relation_invalid:97729",
+      "validator_family": "dag_consistency_checks",
+      "check_id": "planning_edge_relation_invalid",
+      "severity": "high",
+      "blocking": true,
+      "finding_type": "invalid_planning_edge_relation",
+      "artifact_refs": [
+        "artifacts/planner/research/rule-graph.json"
+      ],
+      "violated_invariant": "planning_graph_edges_use_allowed_relations",
+      "summary": "Planning graph 'artifacts/planner/research/rule-graph.json' uses unsupported edge relation 'satisfied_by'.",
+      "evidence_refs": [],
+      "related_contract_refs": [],
+      "related_node_refs": [
+        "artifact-governance-doc",
+        "rule-smoke-test-required"
+      ],
+      "suggested_fix": "Use one of the allowed planning graph relations."
+    },
+    {
+      "finding_id": "dit-20260520T170756Z:planning_edge_relation_invalid:97729",
+      "validator_family": "dag_consistency_checks",
+      "check_id": "planning_edge_relation_invalid",
+      "severity": "high",
+      "blocking": true,
+      "finding_type": "invalid_planning_edge_relation",
+      "artifact_refs": [
+        "artifacts/planner/research/rule-graph.json"
+      ],
+      "violated_invariant": "planning_graph_edges_use_allowed_relations",
+      "summary": "Planning graph 'artifacts/planner/research/rule-graph.json' uses unsupported edge relation 'satisfied_by'.",
+      "evidence_refs": [],
+      "related_contract_refs": [],
+      "related_node_refs": [
+        "artifact-agent-game-rules",
+        "rule-clean-merge-state"
+      ],
+      "suggested_fix": "Use one of the allowed planning graph relations."
+    },
+    {
+      "finding_id": "dit-20260520T170756Z:planning_edge_relation_invalid:97729",
+      "validator_family": "dag_consistency_checks",
+      "check_id": "planning_edge_relation_invalid",
+      "severity": "high",
+      "blocking": true,
+      "finding_type": "invalid_planning_edge_relation",
+      "artifact_refs": [
+        "artifacts/planner/research/rule-graph.json"
+      ],
+      "violated_invariant": "planning_graph_edges_use_allowed_relations",
+      "summary": "Planning graph 'artifacts/planner/research/rule-graph.json' uses unsupported edge relation 'satisfied_by'.",
+      "evidence_refs": [],
+      "related_contract_refs": [],
+      "related_node_refs": [
+        "artifact-governance-doc",
+        "rule-clean-merge-state"
+      ],
+      "suggested_fix": "Use one of the allowed planning graph relations."
+    },
+    {
+      "finding_id": "dit-20260520T170756Z:planning_edge_relation_invalid:97729",
+      "validator_family": "dag_consistency_checks",
+      "check_id": "planning_edge_relation_invalid",
+      "severity": "high",
+      "blocking": true,
+      "finding_type": "invalid_planning_edge_relation",
+      "artifact_refs": [
+        "artifacts/planner/research/rule-graph.json"
+      ],
+      "violated_invariant": "planning_graph_edges_use_allowed_relations",
+      "summary": "Planning graph 'artifacts/planner/research/rule-graph.json' uses unsupported edge relation 'satisfied_by'.",
+      "evidence_refs": [],
+      "related_contract_refs": [],
+      "related_node_refs": [
+        "artifact-agent-game-rules",
+        "rule-human-sized-commits"
+      ],
+      "suggested_fix": "Use one of the allowed planning graph relations."
+    },
+    {
+      "finding_id": "dit-20260520T170756Z:planning_edge_relation_invalid:97729",
+      "validator_family": "dag_consistency_checks",
+      "check_id": "planning_edge_relation_invalid",
+      "severity": "high",
+      "blocking": true,
+      "finding_type": "invalid_planning_edge_relation",
+      "artifact_refs": [
+        "artifacts/planner/research/rule-graph.json"
+      ],
+      "violated_invariant": "planning_graph_edges_use_allowed_relations",
+      "summary": "Planning graph 'artifacts/planner/research/rule-graph.json' uses unsupported edge relation 'satisfied_by'.",
+      "evidence_refs": [],
+      "related_contract_refs": [],
+      "related_node_refs": [
+        "artifact-governance-doc",
+        "rule-human-sized-commits"
+      ],
+      "suggested_fix": "Use one of the allowed planning graph relations."
+    },
+    {
+      "finding_id": "dit-20260520T170756Z:planning_edge_relation_invalid:97729",
+      "validator_family": "dag_consistency_checks",
+      "check_id": "planning_edge_relation_invalid",
+      "severity": "high",
+      "blocking": true,
+      "finding_type": "invalid_planning_edge_relation",
+      "artifact_refs": [
+        "artifacts/planner/research/rule-graph.json"
+      ],
+      "violated_invariant": "planning_graph_edges_use_allowed_relations",
+      "summary": "Planning graph 'artifacts/planner/research/rule-graph.json' uses unsupported edge relation 'satisfied_by'.",
+      "evidence_refs": [],
+      "related_contract_refs": [],
+      "related_node_refs": [
+        "artifact-agent-game-rules",
+        "rule-procedural-commit-order"
+      ],
+      "suggested_fix": "Use one of the allowed planning graph relations."
+    },
+    {
+      "finding_id": "dit-20260520T170756Z:planning_edge_relation_invalid:97729",
+      "validator_family": "dag_consistency_checks",
+      "check_id": "planning_edge_relation_invalid",
+      "severity": "high",
+      "blocking": true,
+      "finding_type": "invalid_planning_edge_relation",
+      "artifact_refs": [
+        "artifacts/planner/research/rule-graph.json"
+      ],
+      "violated_invariant": "planning_graph_edges_use_allowed_relations",
+      "summary": "Planning graph 'artifacts/planner/research/rule-graph.json' uses unsupported edge relation 'satisfied_by'.",
+      "evidence_refs": [],
+      "related_contract_refs": [],
+      "related_node_refs": [
+        "artifact-governance-doc",
+        "rule-procedural-commit-order"
+      ],
+      "suggested_fix": "Use one of the allowed planning graph relations."
+    },
+    {
+      "finding_id": "dit-20260520T170756Z:planning_edge_relation_invalid:97729",
+      "validator_family": "dag_consistency_checks",
+      "check_id": "planning_edge_relation_invalid",
+      "severity": "high",
+      "blocking": true,
+      "finding_type": "invalid_planning_edge_relation",
+      "artifact_refs": [
+        "artifacts/planner/research/rule-graph.json"
+      ],
+      "violated_invariant": "planning_graph_edges_use_allowed_relations",
+      "summary": "Planning graph 'artifacts/planner/research/rule-graph.json' uses unsupported edge relation 'satisfied_by'.",
+      "evidence_refs": [],
+      "related_contract_refs": [],
+      "related_node_refs": [
+        "artifact-agent-game-rules",
+        "rule-latest-main-branching"
+      ],
+      "suggested_fix": "Use one of the allowed planning graph relations."
+    },
+    {
+      "finding_id": "dit-20260520T170756Z:planning_edge_relation_invalid:97729",
+      "validator_family": "dag_consistency_checks",
+      "check_id": "planning_edge_relation_invalid",
+      "severity": "high",
+      "blocking": true,
+      "finding_type": "invalid_planning_edge_relation",
+      "artifact_refs": [
+        "artifacts/planner/research/rule-graph.json"
+      ],
+      "violated_invariant": "planning_graph_edges_use_allowed_relations",
+      "summary": "Planning graph 'artifacts/planner/research/rule-graph.json' uses unsupported edge relation 'satisfied_by'.",
+      "evidence_refs": [],
+      "related_contract_refs": [],
+      "related_node_refs": [
+        "artifact-governance-doc",
+        "rule-latest-main-branching"
+      ],
+      "suggested_fix": "Use one of the allowed planning graph relations."
+    },
+    {
+      "finding_id": "dit-20260520T170756Z:planning_edge_relation_invalid:97729",
+      "validator_family": "dag_consistency_checks",
+      "check_id": "planning_edge_relation_invalid",
+      "severity": "high",
+      "blocking": true,
+      "finding_type": "invalid_planning_edge_relation",
+      "artifact_refs": [
+        "artifacts/planner/research/rule-graph.json"
+      ],
+      "violated_invariant": "planning_graph_edges_use_allowed_relations",
+      "summary": "Planning graph 'artifacts/planner/research/rule-graph.json' uses unsupported edge relation 'satisfied_by'.",
+      "evidence_refs": [],
+      "related_contract_refs": [],
+      "related_node_refs": [
+        "artifact-governance-spec",
+        "rule-execplan-validation"
+      ],
+      "suggested_fix": "Use one of the allowed planning graph relations."
+    },
+    {
+      "finding_id": "dit-20260520T170756Z:planning_edge_relation_invalid:97729",
+      "validator_family": "dag_consistency_checks",
+      "check_id": "planning_edge_relation_invalid",
+      "severity": "high",
+      "blocking": true,
+      "finding_type": "invalid_planning_edge_relation",
+      "artifact_refs": [
+        "artifacts/planner/research/rule-graph.json"
+      ],
+      "violated_invariant": "planning_graph_edges_use_allowed_relations",
+      "summary": "Planning graph 'artifacts/planner/research/rule-graph.json' uses unsupported edge relation 'satisfied_by'.",
+      "evidence_refs": [],
+      "related_contract_refs": [],
+      "related_node_refs": [
+        "artifact-ruleset-spec",
+        "rule-human-finalization"
+      ],
+      "suggested_fix": "Use one of the allowed planning graph relations."
+    },
+    {
+      "finding_id": "dit-20260520T170756Z:planning_edge_relation_invalid:97729",
+      "validator_family": "dag_consistency_checks",
+      "check_id": "planning_edge_relation_invalid",
+      "severity": "high",
+      "blocking": true,
+      "finding_type": "invalid_planning_edge_relation",
+      "artifact_refs": [
+        "artifacts/planner/research/rule-graph.json"
+      ],
+      "violated_invariant": "planning_graph_edges_use_allowed_relations",
+      "summary": "Planning graph 'artifacts/planner/research/rule-graph.json' uses unsupported edge relation 'satisfied_by'.",
+      "evidence_refs": [],
+      "related_contract_refs": [],
+      "related_node_refs": [
+        "artifact-workflow-spec",
+        "rule-human-finalization"
+      ],
+      "suggested_fix": "Use one of the allowed planning graph relations."
+    },
+    {
+      "finding_id": "dit-20260520T170756Z:planning_edge_relation_invalid:97729",
+      "validator_family": "dag_consistency_checks",
+      "check_id": "planning_edge_relation_invalid",
+      "severity": "high",
+      "blocking": true,
+      "finding_type": "invalid_planning_edge_relation",
+      "artifact_refs": [
+        "artifacts/planner/research/rule-graph.json"
+      ],
+      "violated_invariant": "planning_graph_edges_use_allowed_relations",
+      "summary": "Planning graph 'artifacts/planner/research/rule-graph.json' uses unsupported edge relation 'satisfied_by'.",
+      "evidence_refs": [],
+      "related_contract_refs": [],
+      "related_node_refs": [
+        "artifact-governance-spec",
+        "rule-governance-required-check-contract"
+      ],
+      "suggested_fix": "Use one of the allowed planning graph relations."
+    },
+    {
+      "finding_id": "dit-20260520T170756Z:planning_edge_relation_invalid:97729",
+      "validator_family": "dag_consistency_checks",
+      "check_id": "planning_edge_relation_invalid",
+      "severity": "high",
+      "blocking": true,
+      "finding_type": "invalid_planning_edge_relation",
+      "artifact_refs": [
+        "artifacts/planner/research/rule-graph.json"
+      ],
+      "violated_invariant": "planning_graph_edges_use_allowed_relations",
+      "summary": "Planning graph 'artifacts/planner/research/rule-graph.json' uses unsupported edge relation 'satisfied_by'.",
+      "evidence_refs": [],
+      "related_contract_refs": [],
+      "related_node_refs": [
+        "artifact-workflow-spec",
+        "rule-queue-projection-authority"
+      ],
+      "suggested_fix": "Use one of the allowed planning graph relations."
+    },
+    {
+      "finding_id": "dit-20260520T170756Z:planning_edge_relation_invalid:97729",
+      "validator_family": "dag_consistency_checks",
+      "check_id": "planning_edge_relation_invalid",
+      "severity": "high",
+      "blocking": true,
+      "finding_type": "invalid_planning_edge_relation",
+      "artifact_refs": [
+        "artifacts/planner/research/rule-graph.json"
+      ],
+      "violated_invariant": "planning_graph_edges_use_allowed_relations",
+      "summary": "Planning graph 'artifacts/planner/research/rule-graph.json' uses unsupported edge relation 'satisfied_by'.",
+      "evidence_refs": [],
+      "related_contract_refs": [],
+      "related_node_refs": [
+        "artifact-execplans-doc",
+        "rule-draft-self-review-before-pr"
+      ],
+      "suggested_fix": "Use one of the allowed planning graph relations."
+    },
+    {
+      "finding_id": "dit-20260520T170756Z:planning_edge_relation_invalid:97729",
+      "validator_family": "dag_consistency_checks",
+      "check_id": "planning_edge_relation_invalid",
+      "severity": "high",
+      "blocking": true,
+      "finding_type": "invalid_planning_edge_relation",
+      "artifact_refs": [
+        "artifacts/planner/research/rule-graph.json"
+      ],
+      "violated_invariant": "planning_graph_edges_use_allowed_relations",
+      "summary": "Planning graph 'artifacts/planner/research/rule-graph.json' uses unsupported edge relation 'satisfied_by'.",
+      "evidence_refs": [],
+      "related_contract_refs": [],
+      "related_node_refs": [
+        "artifact-workflow-spec",
+        "rule-additive-pr-template"
+      ],
+      "suggested_fix": "Use one of the allowed planning graph relations."
+    },
+    {
+      "finding_id": "dit-20260520T170756Z:planning_edge_relation_invalid:97729",
+      "validator_family": "dag_consistency_checks",
+      "check_id": "planning_edge_relation_invalid",
+      "severity": "high",
+      "blocking": true,
+      "finding_type": "invalid_planning_edge_relation",
+      "artifact_refs": [
+        "artifacts/planner/research/rule-graph.json"
+      ],
+      "violated_invariant": "planning_graph_edges_use_allowed_relations",
+      "summary": "Planning graph 'artifacts/planner/research/rule-graph.json' uses unsupported edge relation 'satisfied_by'.",
+      "evidence_refs": [],
+      "related_contract_refs": [],
+      "related_node_refs": [
+        "artifact-remaining-work-graph",
+        "rule-implementation-after-finalized-draft"
+      ],
+      "suggested_fix": "Use one of the allowed planning graph relations."
+    },
+    {
+      "finding_id": "dit-20260520T170756Z:planning_edge_relation_invalid:97729",
+      "validator_family": "dag_consistency_checks",
+      "check_id": "planning_edge_relation_invalid",
+      "severity": "high",
+      "blocking": true,
+      "finding_type": "invalid_planning_edge_relation",
+      "artifact_refs": [
+        "artifacts/planner/research/rule-graph.json"
+      ],
+      "violated_invariant": "planning_graph_edges_use_allowed_relations",
+      "summary": "Planning graph 'artifacts/planner/research/rule-graph.json' uses unsupported edge relation 'satisfied_by'.",
+      "evidence_refs": [],
+      "related_contract_refs": [],
+      "related_node_refs": [
+        "artifact-ruleset-spec",
+        "rule-initiative-parent-branch-governance"
+      ],
+      "suggested_fix": "Use one of the allowed planning graph relations."
+    }
+  ],
+  "artifact_refs": [
+    "spec/contracts/packet-schema-registry.yaml",
+    "spec/contracts/design-iteration-checks.yaml",
+    "artifacts/planner/research/design-iteration-tool-dag-v1.json",
+    "artifacts/planner/graphs/pg-ps-20260310165535-runtime-smoke.json",
+    "artifacts/planner/graphs/pg-ps-20260310173928-smoke-test.json",
+    "artifacts/planner/graphs/pg-ps-20260310174548-smoke-test.json",
+    "artifacts/planner/graphs/pg-ps-20260310174635-smoke-test.json",
+    "artifacts/planner/research/bibliography-graph.json",
+    "artifacts/planner/research/era-research-runtime-bootstrap-dag.json",
+    "artifacts/planner/research/game-graph.json",
+    "artifacts/planner/research/remaining-work-graph.json",
+    "artifacts/planner/research/rule-graph.json"
+  ],
+  "evidence_refs": [
+    "https://arxiv.org/abs/2303.17651",
+    "https://arxiv.org/abs/2303.11366",
+    "https://arxiv.org/abs/2305.11738"
+  ]
+}

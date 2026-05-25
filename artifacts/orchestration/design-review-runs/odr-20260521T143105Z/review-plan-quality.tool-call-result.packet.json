@@ -1,0 +1,19 @@
+{
+  "packet_type": "tool_call_result_packet",
+  "packet_version": "v1",
+  "packet_id": "odr-20260521T143105Z:odr-20260521T143105Z:review-plan-quality:result",
+  "created_at": "2026-05-21T14:31:05Z",
+  "producer": "orchestrate-design-review",
+  "call_id": "odr-20260521T143105Z:review-plan-quality",
+  "run_id": "odr-20260521T143105Z",
+  "target_tool": "plan-quality-score",
+  "operation_name": "compare_plans",
+  "outcome": "ok",
+  "output_packet_refs": [
+    "artifacts/orchestration/design-review-runs/pqs-20260521T143105Z/candidate-plan-comparison.packet.json",
+    "artifacts/orchestration/design-review-runs/pqs-20260521T143105Z/plan-quality-score-01.packet.json",
+    "artifacts/orchestration/design-review-runs/pqs-20260521T143105Z/plan-quality-score-02.packet.json"
+  ],
+  "event_refs": [],
+  "warnings": []
+}

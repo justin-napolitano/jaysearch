@@ -1,0 +1,79 @@
+{
+  "review_id": "single-workflow-node-era-prebuild-review-v1",
+  "created_at": "2026-05-21T00:00:00Z",
+  "producer": "agent/codex",
+  "status": "ready_for_contract_execplan",
+  "review_type": "prebuild_research_and_test_plan",
+  "single_workflow": [
+    "selected_solution_scope",
+    "problem_node",
+    "node_option[]",
+    "selected node_option",
+    "execution_unit",
+    "implementation_attempt[]",
+    "attempt_evaluation[]",
+    "selected implementation_attempt",
+    "solution_artifact",
+    "feedback refs"
+  ],
+  "research_basis": [
+    {
+      "source_id": "src-alphaevolve-2025",
+      "url": "https://arxiv.org/abs/2506.13131",
+      "supports": "generate/evaluate/select loop for code candidates"
+    },
+    {
+      "source_id": "src-swe-bench-2023",
+      "url": "https://arxiv.org/abs/2310.06770",
+      "supports": "task-grounded software work with repository and tests"
+    },
+    {
+      "source_id": "src-critic-2023",
+      "url": "https://arxiv.org/abs/2305.11738",
+      "supports": "tool-grounded critique and correction"
+    },
+    {
+      "source_id": "src-reflexion-2023",
+      "url": "https://arxiv.org/abs/2303.11366",
+      "supports": "feedback retention across attempts"
+    },
+    {
+      "source_id": "src-prov-dm",
+      "url": "https://www.w3.org/TR/prov-dm/",
+      "supports": "provenance links among entities, activities, agents, and derivations"
+    }
+  ],
+  "critical_findings": [
+    {
+      "finding_id": "swf-001",
+      "severity": "high",
+      "finding": "Current selected scopes are planning authorities, not implementation-ready work contracts.",
+      "required_response": "Introduce problem_node and execution_unit readiness checks before executor work."
+    },
+    {
+      "finding_id": "swf-002",
+      "severity": "high",
+      "finding": "Implementation attempts must not overwrite execution units.",
+      "required_response": "Represent attempts and selected solution artifacts as separate graph entities."
+    },
+    {
+      "finding_id": "swf-003",
+      "severity": "medium",
+      "finding": "The next build should stop at selected_scope -> problem_node -> node_option -> execution_unit.",
+      "required_response": "Do not build executor attempt generation until execution units can be validated."
+    }
+  ],
+  "prebuild_tests": [
+    "generic selected scopes classify below implementation_ready",
+    "problem nodes expose missing fields",
+    "node options carry implementation intent and expected changes",
+    "execution units require owned changes and validation commands",
+    "solution artifacts attach to execution units rather than replacing them"
+  ],
+  "recommended_next_execplans": [
+    "problem-node-execution-unit-contract-v1",
+    "implementation-intent-candidate-contract-v1",
+    "node-readiness-validator-v1",
+    "execution-unit-materializer-v1"
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "packet_type": "design_gap_packet_bundle",
+  "packet_version": "v1",
+  "run_id": "dit-20260520T190220Z",
+  "gap_count": 1,
+  "gaps": [
+    {
+      "packet_type": "design_gap_packet",
+      "packet_version": "v1",
+      "gap_id": "gap-001",
+      "validator_family": "boundary_leakage_checks",
+      "violated_invariant": "design_iteration_is_not_general_execution_orchestrator",
+      "severity": "critical",
+      "blocking": true,
+      "summary": "Design review automation documentation drifts into making design iteration the general execution runner.",
+      "finding_refs": [
+        "dit-20260520T190220Z:design_iteration_owns_execution_orchestration:8663806"
+      ],
+      "artifact_refs": [
+        "docs/design-review-automation-v1.md"
+      ]
+    }
+  ]
+}

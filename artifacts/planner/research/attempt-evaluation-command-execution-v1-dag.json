@@ -1,0 +1,104 @@
+{
+  "graph_id": "attempt-evaluation-command-execution-v1",
+  "graph_type": "implementation_dag",
+  "version": "v1",
+  "purpose": "Add optional policy-gated validation command execution to attempt evaluation.",
+  "source_artifacts": [
+    "docs/attempt-evaluation-command-execution-research-v1.md",
+    ".agent/execplans/20260521-attempt-evaluation-command-execution-v1-codex-01-execplan.md",
+    "spec/contracts/attempt-evaluation.schema.yaml"
+  ],
+  "nodes": [
+    {
+      "node_id": "define-command-policy",
+      "title": "Define Command Policy",
+      "node_type": "policy",
+      "status": "planned",
+      "goal": "Define allowed validation command prefixes, forbidden shell tokens, timeouts, and output limits.",
+      "owned_changes": [
+        "spec/attempt-evaluation-command-policy.yaml"
+      ],
+      "expected_outputs": [
+        "command execution policy"
+      ]
+    },
+    {
+      "node_id": "add-execution-flag",
+      "title": "Add Execution Flag",
+      "node_type": "runtime",
+      "status": "planned",
+      "goal": "Add opt-in command execution to evaluate-implementation-attempt.",
+      "owned_changes": [
+        "src/platform_tools/evaluate_implementation_attempt.py"
+      ],
+      "expected_outputs": [
+        "disabled-by-default command execution mode"
+      ]
+    },
+    {
+      "node_id": "validate-command-safety",
+      "title": "Validate Command Safety",
+      "node_type": "policy_gate",
+      "status": "planned",
+      "goal": "Reject undeclared commands and commands containing forbidden shell tokens.",
+      "owned_changes": [
+        "src/platform_tools/evaluate_implementation_attempt.py"
+      ],
+      "expected_outputs": [
+        "command blockers"
+      ]
+    },
+    {
+      "node_id": "capture-command-output",
+      "title": "Capture Command Output",
+      "node_type": "runtime",
+      "status": "planned",
+      "goal": "Run allowed declared commands with timeout and write command output artifacts.",
+      "owned_changes": [
+        "src/platform_tools/evaluate_implementation_attempt.py"
+      ],
+      "expected_outputs": [
+        "command output artifact refs"
+      ]
+    },
+    {
+      "node_id": "test-command-execution",
+      "title": "Test Command Execution",
+      "node_type": "validation",
+      "status": "planned",
+      "goal": "Prove passing commands promote, failing commands block, and unsafe commands are rejected.",
+      "owned_changes": [
+        "tests/test_evaluate_implementation_attempt.py"
+      ],
+      "expected_outputs": [
+        "command execution tests"
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "edge_id": "e1",
+      "from_node_id": "add-execution-flag",
+      "to_node_id": "define-command-policy",
+      "relation": "depends_on"
+    },
+    {
+      "edge_id": "e2",
+      "from_node_id": "validate-command-safety",
+      "to_node_id": "add-execution-flag",
+      "relation": "depends_on"
+    },
+    {
+      "edge_id": "e3",
+      "from_node_id": "capture-command-output",
+      "to_node_id": "validate-command-safety",
+      "relation": "depends_on"
+    },
+    {
+      "edge_id": "e4",
+      "from_node_id": "test-command-execution",
+      "to_node_id": "capture-command-output",
+      "relation": "depends_on"
+    }
+  ]
+}

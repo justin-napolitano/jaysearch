@@ -1,0 +1,52 @@
+{
+  "run_id": "researcher-harness-evidence-slice-request-20260512T180911Z",
+  "recorded_at": "2026-05-12T18:09:11Z",
+  "request_id": "researcher-harness-evidence-slice-request",
+  "request_path": "/tmp/researcher-harness-evidence-slice/execution/materialized_research_requests/researcher-harness-evidence-slice-request.json",
+  "researcher_root": "/mnt/c/Users/jna31a/advent-repos/jna31a_ait/researcher-harness",
+  "output_root": "/tmp/researcher-harness-evidence-slice",
+  "status": "ok",
+  "step_reports": [
+    {
+      "step": "materialize-research-request-from-question",
+      "report_path": "/tmp/researcher-harness-evidence-slice/execution/loop_step_reports/unknown.materialize-research-request-from-question.json",
+      "ok": true
+    },
+    {
+      "step": "run-research-capability",
+      "report_path": "/tmp/researcher-harness-evidence-slice/execution/loop_step_reports/researcher-harness-evidence-slice-request.run-research-capability.json",
+      "ok": true
+    },
+    {
+      "step": "prepare-research-followups",
+      "report_path": "/tmp/researcher-harness-evidence-slice/execution/loop_step_reports/researcher-harness-evidence-slice-request.prepare-research-followups.json",
+      "ok": true
+    },
+    {
+      "step": "project-research-followup-packets",
+      "report_path": "/tmp/researcher-harness-evidence-slice/execution/loop_step_reports/researcher-harness-evidence-slice-request.project-research-followup-packets.json",
+      "ok": true
+    },
+    {
+      "step": "materialize-research-followup-assets",
+      "report_path": "/tmp/researcher-harness-evidence-slice/execution/loop_step_reports/researcher-harness-evidence-slice-request.materialize-research-followup-assets.json",
+      "ok": true
+    },
+    {
+      "step": "render-platform-execplan-drafts",
+      "report_path": "/tmp/researcher-harness-evidence-slice/execution/loop_step_reports/researcher-harness-evidence-slice-request.render-platform-execplan-drafts.json",
+      "ok": true
+    },
+    {
+      "step": "render-researcher-followup-handoffs",
+      "report_path": "/tmp/researcher-harness-evidence-slice/execution/loop_step_reports/researcher-harness-evidence-slice-request.render-researcher-followup-handoffs.json",
+      "ok": true
+    }
+  ],
+  "draft_followups_path": "/tmp/researcher-harness-evidence-slice/execution/draft_followups/researcher-harness-evidence-slice-request.json",
+  "packets_path": "/tmp/researcher-harness-evidence-slice/execution/repo_followup_packets/researcher-harness-evidence-slice-request.json",
+  "materialized_manifest_path": "/tmp/researcher-harness-evidence-slice/execution/materialized_followup_assets/researcher-harness-evidence-slice-request.json",
+  "draft_manifest_path": "/tmp/researcher-harness-evidence-slice/execution/draft_execplan_candidates/researcher-harness-evidence-slice-request.manifest.json",
+  "handoff_manifest_path": "/tmp/researcher-harness-evidence-slice/execution/researcher_handoff_requests/researcher-harness-evidence-slice-request.manifest.json",
+  "loop_manifest_path": "/tmp/researcher-harness-evidence-slice/execution/research_improvement_loops/researcher-harness-evidence-slice-request.json"
+}

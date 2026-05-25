@@ -1,0 +1,52 @@
+{
+  "run_id": "researcher-harness-harsh-review-request-20260512T190457Z",
+  "recorded_at": "2026-05-12T19:04:57Z",
+  "request_id": "researcher-harness-harsh-review-request",
+  "request_path": "/tmp/researcher-harness-harsh-review-rerun-3/execution/materialized_research_requests/researcher-harness-harsh-review-request.json",
+  "researcher_root": "/mnt/c/Users/jna31a/advent-repos/jna31a_ait/researcher-harness",
+  "output_root": "/tmp/researcher-harness-harsh-review-rerun-3",
+  "status": "ok",
+  "step_reports": [
+    {
+      "step": "materialize-research-request-from-question",
+      "report_path": "/tmp/researcher-harness-harsh-review-rerun-3/execution/loop_step_reports/unknown.materialize-research-request-from-question.json",
+      "ok": true
+    },
+    {
+      "step": "run-research-capability",
+      "report_path": "/tmp/researcher-harness-harsh-review-rerun-3/execution/loop_step_reports/researcher-harness-harsh-review-request.run-research-capability.json",
+      "ok": true
+    },
+    {
+      "step": "prepare-research-followups",
+      "report_path": "/tmp/researcher-harness-harsh-review-rerun-3/execution/loop_step_reports/researcher-harness-harsh-review-request.prepare-research-followups.json",
+      "ok": true
+    },
+    {
+      "step": "project-research-followup-packets",
+      "report_path": "/tmp/researcher-harness-harsh-review-rerun-3/execution/loop_step_reports/researcher-harness-harsh-review-request.project-research-followup-packets.json",
+      "ok": true
+    },
+    {
+      "step": "materialize-research-followup-assets",
+      "report_path": "/tmp/researcher-harness-harsh-review-rerun-3/execution/loop_step_reports/researcher-harness-harsh-review-request.materialize-research-followup-assets.json",
+      "ok": true
+    },
+    {
+      "step": "render-platform-execplan-drafts",
+      "report_path": "/tmp/researcher-harness-harsh-review-rerun-3/execution/loop_step_reports/researcher-harness-harsh-review-request.render-platform-execplan-drafts.json",
+      "ok": true
+    },
+    {
+      "step": "render-researcher-followup-handoffs",
+      "report_path": "/tmp/researcher-harness-harsh-review-rerun-3/execution/loop_step_reports/researcher-harness-harsh-review-request.render-researcher-followup-handoffs.json",
+      "ok": true
+    }
+  ],
+  "draft_followups_path": "/tmp/researcher-harness-harsh-review-rerun-3/execution/draft_followups/researcher-harness-harsh-review-request.json",
+  "packets_path": "/tmp/researcher-harness-harsh-review-rerun-3/execution/repo_followup_packets/researcher-harness-harsh-review-request.json",
+  "materialized_manifest_path": "/tmp/researcher-harness-harsh-review-rerun-3/execution/materialized_followup_assets/researcher-harness-harsh-review-request.json",
+  "draft_manifest_path": "/tmp/researcher-harness-harsh-review-rerun-3/execution/draft_execplan_candidates/researcher-harness-harsh-review-request.manifest.json",
+  "handoff_manifest_path": "/tmp/researcher-harness-harsh-review-rerun-3/execution/researcher_handoff_requests/researcher-harness-harsh-review-request.manifest.json",
+  "loop_manifest_path": "/tmp/researcher-harness-harsh-review-rerun-3/execution/research_improvement_loops/researcher-harness-harsh-review-request.json"
+}

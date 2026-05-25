@@ -1,0 +1,127 @@
+{
+  "packet_type": "design_review_request_packet",
+  "packet_version": "v1",
+  "packet_id": "design-review-request-platform-architecture-v1",
+  "created_at": "2026-05-21T00:00:00Z",
+  "producer": "agent/codex",
+  "review_id": "design-review-platform-architecture-v1",
+  "system_scope": "platform-template-bootstrap",
+  "artifact_refs": [
+    "docs/core-contract-spec-v1.md",
+    "docs/design-review-automation-v1.md",
+    "docs/system-flow-mermaid.md",
+    "artifacts/planner/research/design-review-automation-v1-dag.json"
+  ],
+  "requested_review_modes": [
+    "evidence_backed_claim_review",
+    "planning_quality_review",
+    "governance_handoff_review",
+    "self_loop_review"
+  ],
+  "requested_outputs": [
+    "design_findings_packet",
+    "design_gap_packet[]",
+    "next_question_candidate_packet[]"
+  ],
+  "review_inputs": {
+    "evidence_problem_id": "design-review-claims",
+    "source_records": [
+      {
+        "source_id": "self-refine-paper",
+        "title": "Self-Refine: Iterative Refinement with Self-Feedback",
+        "authors": [
+          "Madaan et al."
+        ],
+        "published_at": "2023-03-30",
+        "source_type": "paper",
+        "uri": "https://arxiv.org/abs/2303.17651",
+        "abstract": "Iterative self-feedback improves generated outputs.",
+        "artifact_refs": [
+          "https://arxiv.org/abs/2303.17651"
+        ]
+      },
+      {
+        "source_id": "reflexion-paper",
+        "title": "Reflexion: Language Agents with Verbal Reinforcement Learning",
+        "authors": [
+          "Shinn et al."
+        ],
+        "published_at": "2023-03-20",
+        "source_type": "paper",
+        "uri": "https://arxiv.org/abs/2303.11366",
+        "abstract": "Feedback and memory improve agent performance.",
+        "artifact_refs": [
+          "https://arxiv.org/abs/2303.11366"
+        ]
+      },
+      {
+        "source_id": "critic-paper",
+        "title": "CRITIC: Large Language Models Can Self-Correct with Tool-Interactive Critiquing",
+        "authors": [
+          "Gou et al."
+        ],
+        "published_at": "2023-05-19",
+        "source_type": "paper",
+        "uri": "https://arxiv.org/abs/2305.11738",
+        "abstract": "Tool-interactive critique improves over unsupported introspection.",
+        "artifact_refs": [
+          "https://arxiv.org/abs/2305.11738"
+        ]
+      }
+    ],
+    "claim_records": [
+      {
+        "claim_id": "claim-tool-assisted-critique",
+        "source_id": "critic-paper",
+        "claim_text": "Tool-interactive critique should be preferred over unsupported introspection for design review.",
+        "claim_type": "methodological",
+        "evidence_span_refs": [
+          "abstract"
+        ],
+        "metric_refs": []
+      },
+      {
+        "claim_id": "claim-feedback-loop",
+        "source_id": "self-refine-paper",
+        "claim_text": "Iterative feedback loops improve output quality and justify staged review refinement.",
+        "claim_type": "methodological",
+        "evidence_span_refs": [
+          "abstract"
+        ],
+        "metric_refs": []
+      },
+      {
+        "claim_id": "claim-memory-feedback",
+        "source_id": "reflexion-paper",
+        "claim_text": "Feedback plus memory helps preserve useful critique signals over multiple iterations.",
+        "claim_type": "methodological",
+        "evidence_span_refs": [
+          "abstract"
+        ],
+        "metric_refs": []
+      }
+    ],
+    "method_refs": [
+      "iterative self-feedback",
+      "verbal reinforcement",
+      "tool-assisted critique"
+    ],
+    "benchmark_refs": [
+      "design-review automation workflow"
+    ],
+    "evidence_summary_text": "Bounded evidence packet for design-review automation choices.",
+    "selected_scope_path": "artifacts/orchestration/research-plan-selection-runs/sss-20260520T184914Z/selected-solution-scope.packet.json",
+    "plan_paths": [
+      "artifacts/planner/examples/plan-selection-exercise/plan-a-structural.json",
+      "artifacts/planner/examples/plan-selection-exercise/plan-b-structural.json"
+    ],
+    "plan_quality_policy_path": "spec/plan-quality-scoring.yaml",
+    "execution_ready_plan_path": "artifacts/orchestration/research-plan-selection-runs/esm-20260520T184914Z/execution-ready-plan.packet.json",
+    "execution_packet_paths": [
+      "artifacts/orchestration/research-plan-selection-runs/esm-20260520T184914Z/execution-packet-01.packet.json",
+      "artifacts/orchestration/research-plan-selection-runs/esm-20260520T184914Z/execution-packet-02.packet.json",
+      "artifacts/orchestration/research-plan-selection-runs/esm-20260520T184914Z/execution-packet-03.packet.json",
+      "artifacts/orchestration/research-plan-selection-runs/esm-20260520T184914Z/execution-packet-04.packet.json"
+    ]
+  }
+}

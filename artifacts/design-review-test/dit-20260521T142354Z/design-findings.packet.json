@@ -1,0 +1,66 @@
+{
+  "packet_type": "design_findings_packet",
+  "packet_version": "v1",
+  "run_id": "dit-20260521T142354Z",
+  "generated_at": "2026-05-21T14:23:54Z",
+  "finding_count": 2,
+  "blocking_finding_count": 2,
+  "findings": [
+    {
+      "finding_id": "dit-20260521T142354Z:dag_unsatisfied_input_contract:1344892",
+      "validator_family": "dag_consistency_checks",
+      "check_id": "dag_unsatisfied_input_contract",
+      "severity": "critical",
+      "blocking": true,
+      "finding_type": "unsatisfied_input_contract",
+      "artifact_refs": [
+        "artifacts/planner/research/design-iteration-tool-dag-v1.json"
+      ],
+      "violated_invariant": "node_inputs_must_be_satisfiable",
+      "summary": "Node 'dra-001' requires input 'design_review_request_packet' with no producing predecessor.",
+      "evidence_refs": [],
+      "related_contract_refs": [],
+      "related_node_refs": [
+        "dra-001"
+      ],
+      "suggested_fix": "Add or connect a producer for the missing input packet, or register it as an allowed external workflow input."
+    },
+    {
+      "finding_id": "dit-20260521T142354Z:workflow_to_implementation_link_missing:1794805",
+      "validator_family": "dag_consistency_checks",
+      "check_id": "workflow_to_implementation_link_missing",
+      "severity": "high",
+      "blocking": true,
+      "finding_type": "missing_workflow_graph_link",
+      "artifact_refs": [
+        "artifacts/planner/research/design-iteration-tool-dag-v1.json"
+      ],
+      "violated_invariant": "workflow_and_implementation_graph_link_must_be_canonical",
+      "summary": "Workflow DAG does not declare a canonical implementation graph link.",
+      "evidence_refs": [],
+      "related_contract_refs": [],
+      "related_node_refs": [],
+      "suggested_fix": "Add an implementation_graph_ref when the workflow is meant to project into implementation planning."
+    }
+  ],
+  "artifact_refs": [
+    "spec/contracts/packet-schema-registry.yaml",
+    "spec/contracts/design-iteration-checks.yaml",
+    "artifacts/planner/research/design-review-automation-v1-dag.json",
+    "spec/plan-quality-scoring.yaml",
+    "artifacts/planner/graphs/pg-ps-20260310165535-runtime-smoke.json",
+    "artifacts/planner/graphs/pg-ps-20260310173928-smoke-test.json",
+    "artifacts/planner/graphs/pg-ps-20260310174548-smoke-test.json",
+    "artifacts/planner/graphs/pg-ps-20260310174635-smoke-test.json",
+    "artifacts/planner/research/design-iteration-tool-dag-v1.json",
+    "artifacts/planner/research/era-research-runtime-bootstrap-dag.json",
+    "artifacts/planner/research/execution-slice-materialization-v1-dag.json",
+    "artifacts/planner/research/plan-quality-score-v1-dag.json",
+    "artifacts/planner/research/remaining-work-graph.json"
+  ],
+  "evidence_refs": [
+    "https://arxiv.org/abs/2303.17651",
+    "https://arxiv.org/abs/2303.11366",
+    "https://arxiv.org/abs/2305.11738"
+  ]
+}

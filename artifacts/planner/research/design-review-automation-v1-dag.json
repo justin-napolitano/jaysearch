@@ -1,0 +1,168 @@
+{
+  "graph_id": "design-review-automation-v1",
+  "created_at": "2026-05-20T00:00:00Z",
+  "graph_kind": "workflow_dag",
+  "implementation_graph_ref": "artifacts/planner/research/design-review-automation-v1-implementation-graph.json",
+  "purpose": "Automation path for evidence-backed design review through bounded tool calls",
+  "nodes": [
+    {
+      "node_id": "dra-001",
+      "node_type": "tool_invocation",
+      "title": "Accept design review request",
+      "tool_name": "design-iteration-tool",
+      "operation_name": "review_design_state",
+      "input_packet_refs": [
+        "design_review_request_packet"
+      ],
+      "output_packet_refs": [
+        "normalized_design_context"
+      ],
+      "blocking_dependencies": [],
+      "status": "ready",
+      "retry_policy": {
+        "max_retries": 1
+      },
+      "timeout_policy": {
+        "timeout_seconds": 30
+      },
+      "artifact_refs": [
+        "docs/design-review-automation-v1.md",
+        "spec/design-review-program.schema.yaml"
+      ]
+    },
+    {
+      "node_id": "dra-002",
+      "node_type": "tool_invocation",
+      "title": "Emit review program",
+      "tool_name": "design-iteration-tool",
+      "operation_name": "emit_review_program",
+      "input_packet_refs": [
+        "normalized_design_context"
+      ],
+      "output_packet_refs": [
+        "design_review_program_packet"
+      ],
+      "blocking_dependencies": [
+        "dra-001"
+      ],
+      "status": "pending",
+      "retry_policy": {
+        "max_retries": 1
+      },
+      "timeout_policy": {
+        "timeout_seconds": 30
+      },
+      "artifact_refs": [
+        "docs/design-review-automation-v1.md"
+      ]
+    },
+    {
+      "node_id": "dra-003",
+      "node_type": "tool_invocation",
+      "title": "Execute bounded evidence and validation calls",
+      "tool_name": "orchestration-runner",
+      "operation_name": "execute_review_program",
+      "input_packet_refs": [
+        "design_review_program_packet"
+      ],
+      "output_packet_refs": [
+        "tool_call_result_packet[]"
+      ],
+      "blocking_dependencies": [
+        "dra-002"
+      ],
+      "status": "pending",
+      "retry_policy": {
+        "max_retries": 1
+      },
+      "timeout_policy": {
+        "timeout_seconds": 300
+      },
+      "artifact_refs": [
+        "docs/orchestration-runner-v1.md",
+        "docs/design-review-automation-v1.md"
+      ]
+    },
+    {
+      "node_id": "dra-004",
+      "node_type": "tool_invocation",
+      "title": "Synthesize design findings",
+      "tool_name": "design-iteration-tool",
+      "operation_name": "synthesize_findings_from_tool_results",
+      "input_packet_refs": [
+        "normalized_design_context",
+        "tool_call_result_packet[]"
+      ],
+      "output_packet_refs": [
+        "design_findings_packet"
+      ],
+      "blocking_dependencies": [
+        "dra-003"
+      ],
+      "status": "pending",
+      "retry_policy": {
+        "max_retries": 1
+      },
+      "timeout_policy": {
+        "timeout_seconds": 60
+      },
+      "artifact_refs": [
+        "docs/design-iteration-tool-v1.md",
+        "docs/design-review-automation-v1.md"
+      ]
+    },
+    {
+      "node_id": "dra-005",
+      "node_type": "tool_invocation",
+      "title": "Group gaps and emit next questions",
+      "tool_name": "design-iteration-tool",
+      "operation_name": "emit_next_question_candidates",
+      "input_packet_refs": [
+        "design_findings_packet"
+      ],
+      "output_packet_refs": [
+        "design_gap_packet[]",
+        "next_question_candidate_packet[]"
+      ],
+      "blocking_dependencies": [
+        "dra-004"
+      ],
+      "status": "pending",
+      "retry_policy": {
+        "max_retries": 1
+      },
+      "timeout_policy": {
+        "timeout_seconds": 30
+      },
+      "artifact_refs": [
+        "docs/question-tool-v1.md"
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "edge_id": "dra-e-001",
+      "from": "dra-001",
+      "to": "dra-002",
+      "relation": "depends_on"
+    },
+    {
+      "edge_id": "dra-e-002",
+      "from": "dra-002",
+      "to": "dra-003",
+      "relation": "depends_on"
+    },
+    {
+      "edge_id": "dra-e-003",
+      "from": "dra-003",
+      "to": "dra-004",
+      "relation": "depends_on"
+    },
+    {
+      "edge_id": "dra-e-004",
+      "from": "dra-004",
+      "to": "dra-005",
+      "relation": "depends_on"
+    }
+  ]
+}

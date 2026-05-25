@@ -1,0 +1,60 @@
+{
+  "graph_id": "design-iteration-tool-implementation-graph-v1",
+  "created_at": "2026-05-20T00:00:00Z",
+  "graph_kind": "implementation_dag",
+  "purpose": "Initial implementation graph for design-iteration-tool v1",
+  "nodes": [
+    {
+      "node_id": "dit-impl-001",
+      "node_type": "task",
+      "title": "Implement design iteration validator core",
+      "status": "completed",
+      "blocking_dependencies": [],
+      "changes": [
+        "src/platform_tools/design_iteration.py",
+        "tests/test_design_iteration.py",
+        "bin/design-iteration",
+        "pyproject.toml"
+      ]
+    },
+    {
+      "node_id": "dit-impl-002",
+      "node_type": "task",
+      "title": "Stabilize contract registry required fields",
+      "status": "in_progress",
+      "blocking_dependencies": [
+        "dit-impl-001"
+      ],
+      "changes": [
+        "spec/contracts/packet-schema-registry.yaml"
+      ]
+    },
+    {
+      "node_id": "dit-impl-003",
+      "node_type": "task",
+      "title": "Stabilize workflow to implementation graph linkage",
+      "status": "in_progress",
+      "blocking_dependencies": [
+        "dit-impl-001"
+      ],
+      "changes": [
+        "artifacts/planner/research/design-iteration-tool-dag-v1.json",
+        "artifacts/planner/research/design-iteration-tool-implementation-graph-v1.json"
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "edge_id": "dit-impl-e-001",
+      "from_node_id": "dit-impl-001",
+      "to_node_id": "dit-impl-002",
+      "relation": "depends_on"
+    },
+    {
+      "edge_id": "dit-impl-e-002",
+      "from_node_id": "dit-impl-001",
+      "to_node_id": "dit-impl-003",
+      "relation": "depends_on"
+    }
+  ]
+}

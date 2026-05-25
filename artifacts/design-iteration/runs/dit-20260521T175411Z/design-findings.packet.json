@@ -1,0 +1,40 @@
+{
+  "packet_type": "design_findings_packet",
+  "packet_version": "v1",
+  "run_id": "dit-20260521T175411Z",
+  "generated_at": "2026-05-21T17:54:12Z",
+  "finding_count": 0,
+  "blocking_finding_count": 0,
+  "findings": [],
+  "artifact_refs": [
+    "spec/contracts/packet-schema-registry.yaml",
+    "spec/contracts/design-iteration-checks.yaml",
+    "artifacts/planner/research/design-iteration-tool-dag-v1.json",
+    "spec/plan-quality-scoring.yaml",
+    "artifacts/planner/graphs/pg-ps-20260310165535-runtime-smoke.json",
+    "artifacts/planner/graphs/pg-ps-20260310173928-smoke-test.json",
+    "artifacts/planner/graphs/pg-ps-20260310174548-smoke-test.json",
+    "artifacts/planner/graphs/pg-ps-20260310174635-smoke-test.json",
+    "artifacts/planner/research/design-review-automation-v1-dag.json",
+    "artifacts/planner/research/era-research-runtime-bootstrap-dag.json",
+    "artifacts/planner/research/execution-era-loop-v1-dag.json",
+    "artifacts/planner/research/execution-slice-materialization-v1-dag.json",
+    "artifacts/planner/research/node-based-project-plan-v1-dag.json",
+    "artifacts/planner/research/plan-quality-score-v1-dag.json",
+    "artifacts/planner/research/problem-node-execution-unit-contract-v1-dag.json",
+    "artifacts/planner/research/question-research-handoff-review-v2-dag.json",
+    "artifacts/planner/research/recommendation-selection-gate-v1-dag.json",
+    "artifacts/planner/research/remaining-work-graph.json",
+    "artifacts/planner/research/research-candidate-evaluation-v1-dag.json",
+    "artifacts/planner/research/research-candidate-tree-search-v1-dag.json",
+    "artifacts/planner/research/research-hypothesis-branching-v1-dag.json",
+    "artifacts/planner/research/research-recommendation-v1-dag.json",
+    "artifacts/planner/research/research-system-improvement-v1-dag.json",
+    "artifacts/planner/research/research-to-selection-validation-v1-dag.json"
+  ],
+  "evidence_refs": [
+    "https://arxiv.org/abs/2303.17651",
+    "https://arxiv.org/abs/2303.11366",
+    "https://arxiv.org/abs/2305.11738"
+  ]
+}

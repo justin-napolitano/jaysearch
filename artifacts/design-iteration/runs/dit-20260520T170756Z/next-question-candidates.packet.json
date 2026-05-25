@@ -1,0 +1,24 @@
+{
+  "packet_type": "next_question_candidate_packet_bundle",
+  "packet_version": "v1",
+  "run_id": "dit-20260520T170756Z",
+  "candidate_count": 1,
+  "candidates": [
+    {
+      "packet_type": "next_question_candidate_packet",
+      "packet_version": "v1",
+      "question_candidate_id": "nqc-001",
+      "source_gap_id": "gap-001",
+      "title": "Resolve gap-001",
+      "question": "What is the minimal contract or workflow change needed to satisfy invariant 'planning graph edges use allowed relations'?",
+      "decision_target": "shared-contract-and-workflow-design",
+      "downstream_value": "unblock_implementation",
+      "why_now": "Planning graph 'artifacts/planner/research/game-graph.json' uses unsupported edge relation 'documented_in'.",
+      "artifact_refs": [
+        "artifacts/planner/research/bibliography-graph.json",
+        "artifacts/planner/research/game-graph.json",
+        "artifacts/planner/research/rule-graph.json"
+      ]
+    }
+  ]
+}

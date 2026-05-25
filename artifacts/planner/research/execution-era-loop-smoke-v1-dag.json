@@ -1,0 +1,105 @@
+{
+  "graph_id": "execution-era-loop-smoke-v1",
+  "graph_type": "implementation_dag",
+  "version": "v1",
+  "purpose": "Compose attempt generation, attempt evaluation, and solution artifact emission into a bounded execution ERA smoke loop.",
+  "source_artifacts": [
+    "docs/execution-era-runtime-research-v1.md",
+    ".agent/execplans/20260521-execution-era-loop-smoke-v1-codex-01-execplan.md",
+    "docs/project-format-and-state-v1.md"
+  ],
+  "nodes": [
+    {
+      "node_id": "call-attempt-generator",
+      "title": "Call Attempt Generator",
+      "node_type": "runtime",
+      "status": "planned",
+      "goal": "Run the implementation attempt generator for one execution_unit.",
+      "owned_changes": [
+        "src/platform_tools/run_execution_era_loop_smoke.py"
+      ],
+      "expected_outputs": [
+        "implementation_attempt packet refs"
+      ]
+    },
+    {
+      "node_id": "call-attempt-evaluator",
+      "title": "Call Attempt Evaluator",
+      "node_type": "runtime",
+      "status": "planned",
+      "goal": "Run the attempt evaluator for the generated attempt.",
+      "owned_changes": [
+        "src/platform_tools/run_execution_era_loop_smoke.py"
+      ],
+      "expected_outputs": [
+        "attempt_evaluation packet ref"
+      ]
+    },
+    {
+      "node_id": "call-solution-emitter",
+      "title": "Call Solution Emitter",
+      "node_type": "runtime",
+      "status": "planned",
+      "goal": "Emit solution_artifact only after promoted nonblocking evaluation.",
+      "owned_changes": [
+        "src/platform_tools/run_execution_era_loop_smoke.py",
+        "bin/run-execution-era-loop-smoke"
+      ],
+      "expected_outputs": [
+        "solution_artifact packet ref"
+      ]
+    },
+    {
+      "node_id": "emit-smoke-report",
+      "title": "Emit Smoke Report",
+      "node_type": "runtime",
+      "status": "planned",
+      "goal": "Emit a full-loop report with child step reports and packet refs.",
+      "owned_changes": [
+        "src/platform_tools/run_execution_era_loop_smoke.py"
+      ],
+      "expected_outputs": [
+        "execution-era-loop-smoke report"
+      ]
+    },
+    {
+      "node_id": "test-loop-smoke",
+      "title": "Test Loop Smoke",
+      "node_type": "validation",
+      "status": "planned",
+      "goal": "Prove valid fixture execution unit reaches solution artifact and blocked steps stop the loop.",
+      "owned_changes": [
+        "tests/test_run_execution_era_loop_smoke.py"
+      ],
+      "expected_outputs": [
+        "execution ERA loop smoke tests"
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "edge_id": "e1",
+      "from_node_id": "call-attempt-evaluator",
+      "to_node_id": "call-attempt-generator",
+      "relation": "depends_on"
+    },
+    {
+      "edge_id": "e2",
+      "from_node_id": "call-solution-emitter",
+      "to_node_id": "call-attempt-evaluator",
+      "relation": "depends_on"
+    },
+    {
+      "edge_id": "e3",
+      "from_node_id": "emit-smoke-report",
+      "to_node_id": "call-solution-emitter",
+      "relation": "depends_on"
+    },
+    {
+      "edge_id": "e4",
+      "from_node_id": "test-loop-smoke",
+      "to_node_id": "emit-smoke-report",
+      "relation": "depends_on"
+    }
+  ]
+}

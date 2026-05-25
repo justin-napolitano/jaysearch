@@ -1,0 +1,47 @@
+{
+  "packet_type": "design_findings_packet",
+  "packet_version": "v1",
+  "run_id": "dit-20260520T190220Z",
+  "generated_at": "2026-05-20T19:02:20Z",
+  "finding_count": 1,
+  "blocking_finding_count": 1,
+  "findings": [
+    {
+      "finding_id": "dit-20260520T190220Z:design_iteration_owns_execution_orchestration:8663806",
+      "validator_family": "boundary_leakage_checks",
+      "check_id": "design_iteration_owns_execution_orchestration",
+      "severity": "critical",
+      "blocking": true,
+      "finding_type": "boundary_leakage_design_runner",
+      "artifact_refs": [
+        "docs/design-review-automation-v1.md"
+      ],
+      "violated_invariant": "design_iteration_is_not_general_execution_orchestrator",
+      "summary": "Design review automation documentation drifts into making design iteration the general execution runner.",
+      "evidence_refs": [],
+      "related_contract_refs": [],
+      "related_node_refs": [],
+      "suggested_fix": "Keep design iteration responsible for review programs and keep execution of tool calls in the orchestration runner."
+    }
+  ],
+  "artifact_refs": [
+    "spec/contracts/packet-schema-registry.yaml",
+    "spec/contracts/design-iteration-checks.yaml",
+    "artifacts/planner/research/design-iteration-tool-dag-v1.json",
+    "spec/plan-quality-scoring.yaml",
+    "artifacts/planner/graphs/pg-ps-20260310165535-runtime-smoke.json",
+    "artifacts/planner/graphs/pg-ps-20260310173928-smoke-test.json",
+    "artifacts/planner/graphs/pg-ps-20260310174548-smoke-test.json",
+    "artifacts/planner/graphs/pg-ps-20260310174635-smoke-test.json",
+    "artifacts/planner/research/design-review-automation-v1-dag.json",
+    "artifacts/planner/research/era-research-runtime-bootstrap-dag.json",
+    "artifacts/planner/research/execution-slice-materialization-v1-dag.json",
+    "artifacts/planner/research/plan-quality-score-v1-dag.json",
+    "artifacts/planner/research/remaining-work-graph.json"
+  ],
+  "evidence_refs": [
+    "https://arxiv.org/abs/2303.17651",
+    "https://arxiv.org/abs/2303.11366",
+    "https://arxiv.org/abs/2305.11738"
+  ]
+}

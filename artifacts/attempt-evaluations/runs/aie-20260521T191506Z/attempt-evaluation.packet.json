@@ -1,0 +1,46 @@
+{
+  "packet_type": "attempt_evaluation",
+  "packet_version": "v1",
+  "packet_id": "attempt-evaluation:attempt-execution-unit-research-problem-platform-template-bootstrap-evaluation-strength--001:packet",
+  "created_at": "2026-05-21T19:15:08Z",
+  "producer": "evaluate-implementation-attempt",
+  "evaluation_id": "attempt-evaluation:attempt-execution-unit-research-problem-platform-template-bootstrap-evaluation-strength--001",
+  "source_attempt_ref": "/mnt/c/users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap/artifacts/implementation-attempts/runs/gia-20260521T183041Z/implementation-attempt-01.packet.json",
+  "source_execution_unit_ref": "/mnt/c/users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap/artifacts/execution-units/runs/meu-20260521T180114Z/execution-unit.packet.json",
+  "evaluation_method": "validation_ref_and_boundary_check_v1",
+  "validation_results": [
+    {
+      "command": "uv run pytest tests/test_materialize_research_evaluations.py tests/test_materialize_research_recommendation.py tests/test_materialize_selected_solution_scope.py",
+      "status": "passed",
+      "exit_code": 0,
+      "duration_ms": 2445,
+      "stdout_tail": "============================= test session starts ==============================\nplatform linux -- Python 3.14.2, pytest-9.0.2, pluggy-1.6.0\nrootdir: /mnt/c/users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap\nconfigfile: pyproject.toml\ncollected 10 items\n\ntests/test_materialize_research_evaluations.py ..                        [ 20%]\ntests/test_materialize_research_recommendation.py ...                    [ 50%]\ntests/test_materialize_selected_solution_scope.py .....                  [100%]\n\n============================== 10 passed in 0.71s ==============================\n",
+      "stderr_tail": ""
+    },
+    {
+      "command": "uv run pytest tests/test_materialize_research_evaluations.py tests/test_materialize_research_recommendation.py tests/test_materialize_selected_solution_scope.py",
+      "status": "executed",
+      "summary": "Command executed under attempt-evaluation command policy."
+    }
+  ],
+  "test_results": [
+    {
+      "status": "passed",
+      "validation_result_ref": "",
+      "command_evidence_refs": [
+        "artifacts/attempt-evaluations/runs/aie-20260521T191506Z/validation-command-01.result.json"
+      ]
+    }
+  ],
+  "review_findings": [],
+  "score_breakdown": {
+    "source_ref_match": 1.0,
+    "owned_change_boundary": 1.0,
+    "validation_evidence": 1.0
+  },
+  "promotion_status": "promoted",
+  "blockers": [],
+  "evidence_refs": [
+    "artifacts/attempt-evaluations/runs/aie-20260521T191506Z/validation-command-01.result.json"
+  ]
+}

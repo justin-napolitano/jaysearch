@@ -1,0 +1,38 @@
+version: v1
+contract_name: implementation_attempt
+contract_kind: packet
+owner: implementation-orchestrator
+description: >
+  One candidate implementation generated inside an execution_unit boundary.
+required_fields:
+  - packet_type
+  - packet_version
+  - packet_id
+  - created_at
+  - producer
+  - attempt_id
+  - source_execution_unit_ref
+  - attempt_family
+  - implementation_summary
+  - changed_artifact_refs
+  - patch_ref
+  - validation_command_refs
+  - assumptions
+  - risks
+  - status
+  - created_by
+properties:
+  packet_type:
+    const: implementation_attempt
+  status:
+    enum:
+      - draft
+      - built
+      - validation_failed
+      - validated
+      - rejected
+      - selected
+invariants:
+  - attempts_must_reference_one_execution_unit
+  - attempts_must_stay_inside_owned_changes_or_report_violation
+  - failed_attempts_must_remain_traceable

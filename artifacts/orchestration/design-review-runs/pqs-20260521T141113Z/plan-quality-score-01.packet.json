@@ -1,0 +1,59 @@
+{
+  "packet_type": "plan_quality_score_packet",
+  "packet_version": "v1",
+  "comparison_id": "pqs-20260521T141113Z:cmp",
+  "candidate_plan_ref": "artifacts/planner/examples/plan-selection-exercise/plan-b-structural.json",
+  "hard_gate_results": [
+    {
+      "gate_id": "acyclic_execution_graph",
+      "passed": true,
+      "detail": "execution dependencies are acyclic"
+    },
+    {
+      "gate_id": "selected_solution_scope_present",
+      "passed": false,
+      "detail": "plan selected_solution_scope_ref does not match selected scope packet"
+    },
+    {
+      "gate_id": "runnable_contract_complete",
+      "passed": true,
+      "detail": "node-level runnable contract fields are present"
+    },
+    {
+      "gate_id": "node_and_edge_identity_complete",
+      "passed": true,
+      "detail": "nodes and edges have stable machine-readable identity"
+    },
+    {
+      "gate_id": "validation_targets_present",
+      "passed": true,
+      "detail": "validation targets are declared"
+    },
+    {
+      "gate_id": "scope_ownership_declared",
+      "passed": true,
+      "detail": "scope ownership is declared"
+    }
+  ],
+  "qualified_for_ranking": false,
+  "primary_metric_scores": {
+    "BDS": 1.0,
+    "DES": 0.38,
+    "VCS": 1.0
+  },
+  "secondary_metric_scores": {
+    "PSS": 1.0,
+    "SIS": 1.0,
+    "RCS": 1.0,
+    "EAS": 0.6,
+    "CPS": 0.2
+  },
+  "aggregate_score": 0.0,
+  "evidence_adjustments": [],
+  "anti_cheat_flags": [],
+  "explanation": [
+    "plan_readiness=candidate",
+    "node_count=5",
+    "aggregate_score=82.8"
+  ]
+}

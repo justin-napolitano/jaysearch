@@ -1,0 +1,141 @@
+{
+  "graph_id": "research-candidate-evaluation-v1",
+  "graph_type": "workflow_dag",
+  "version": "v1",
+  "purpose": "Evaluate generated research candidates before ranking or recommendation.",
+  "implementation_graph_ref": "artifacts/planner/research/design-review-automation-v1-implementation-graph.json",
+  "nodes": [
+    {
+      "node_id": "load-candidate-search-output",
+      "title": "Load Candidate Search Output",
+      "node_type": "tool_call",
+      "status": "ready",
+      "goal": "Load the candidate search tree and candidate packets.",
+      "owned_changes": [
+        "artifacts/research-candidate-tree/"
+      ],
+      "expected_outputs": [
+        "validated_candidate_search_output"
+      ],
+      "validation_targets": [
+        "candidate search tree exists",
+        "candidate packets exist",
+        "candidate packets trace to hypotheses"
+      ],
+      "completion_evidence_requirements": [
+        "candidate input validation report"
+      ]
+    },
+    {
+      "node_id": "evaluate-contract-and-traceability",
+      "title": "Evaluate Contract And Traceability",
+      "node_type": "tool_call",
+      "status": "ready",
+      "goal": "Evaluate whether each candidate has required fields and source traceability.",
+      "owned_changes": [
+        "research_evaluation_packet[]"
+      ],
+      "expected_outputs": [
+        "contract_traceability_metrics"
+      ],
+      "validation_targets": [
+        "candidate has source_hypothesis_id",
+        "candidate has candidate_family",
+        "candidate has approach_summary"
+      ],
+      "completion_evidence_requirements": [
+        "evaluation metric records"
+      ]
+    },
+    {
+      "node_id": "evaluate-evidence-and-feasibility",
+      "title": "Evaluate Evidence And Feasibility",
+      "node_type": "tool_call",
+      "status": "ready",
+      "goal": "Evaluate evidence support and feasibility priors for each candidate.",
+      "owned_changes": [
+        "research_evaluation_packet[]"
+      ],
+      "expected_outputs": [
+        "evidence_feasibility_metrics"
+      ],
+      "validation_targets": [
+        "candidate evidence refs inspected",
+        "candidate feasibility priors inspected"
+      ],
+      "completion_evidence_requirements": [
+        "evidence and feasibility metric records"
+      ]
+    },
+    {
+      "node_id": "emit-evaluation-packets",
+      "title": "Emit Evaluation Packets",
+      "node_type": "materialization",
+      "status": "ready",
+      "goal": "Emit one evaluation packet per candidate.",
+      "owned_changes": [
+        "research_evaluation_packet[]"
+      ],
+      "expected_outputs": [
+        "research_evaluation_packet[]"
+      ],
+      "validation_targets": [
+        "every candidate has an evaluation packet"
+      ],
+      "completion_evidence_requirements": [
+        "evaluation packet artifacts"
+      ]
+    },
+    {
+      "node_id": "emit-evaluation-summary",
+      "title": "Emit Evaluation Summary",
+      "node_type": "materialization",
+      "status": "ready",
+      "goal": "Emit the candidate evaluation summary packet.",
+      "owned_changes": [
+        "candidate_evaluation_summary_packet"
+      ],
+      "expected_outputs": [
+        "candidate_evaluation_summary_packet"
+      ],
+      "validation_targets": [
+        "promoted and blocked candidates are explicit"
+      ],
+      "completion_evidence_requirements": [
+        "evaluation summary packet"
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "edge_id": "e1",
+      "from_node_id": "evaluate-contract-and-traceability",
+      "to_node_id": "load-candidate-search-output",
+      "relation": "depends_on"
+    },
+    {
+      "edge_id": "e2",
+      "from_node_id": "evaluate-evidence-and-feasibility",
+      "to_node_id": "load-candidate-search-output",
+      "relation": "depends_on"
+    },
+    {
+      "edge_id": "e3",
+      "from_node_id": "emit-evaluation-packets",
+      "to_node_id": "evaluate-contract-and-traceability",
+      "relation": "depends_on"
+    },
+    {
+      "edge_id": "e4",
+      "from_node_id": "emit-evaluation-packets",
+      "to_node_id": "evaluate-evidence-and-feasibility",
+      "relation": "depends_on"
+    },
+    {
+      "edge_id": "e5",
+      "from_node_id": "emit-evaluation-summary",
+      "to_node_id": "emit-evaluation-packets",
+      "relation": "depends_on"
+    }
+  ]
+}

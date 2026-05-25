@@ -1,0 +1,36 @@
+version: v1
+contract_name: attempt_evaluation
+contract_kind: packet
+owner: governance-tool
+description: >
+  Evaluation result for one implementation_attempt against validation,
+  review, acceptance, and evidence requirements.
+required_fields:
+  - packet_type
+  - packet_version
+  - packet_id
+  - created_at
+  - producer
+  - evaluation_id
+  - source_attempt_ref
+  - source_execution_unit_ref
+  - evaluation_method
+  - validation_results
+  - test_results
+  - review_findings
+  - score_breakdown
+  - promotion_status
+  - blockers
+  - evidence_refs
+properties:
+  packet_type:
+    const: attempt_evaluation
+  promotion_status:
+    enum:
+      - promoted
+      - blocked
+      - needs_revision
+invariants:
+  - evaluations_must_reference_one_attempt
+  - selected_attempts_require_nonblocking_evaluation
+  - validation_results_must_preserve_command_outputs_or_refs

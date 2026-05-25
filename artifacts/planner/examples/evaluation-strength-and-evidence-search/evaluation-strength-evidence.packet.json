@@ -1,0 +1,28 @@
+{
+  "packet_type": "evidence_packet",
+  "packet_version": "v1",
+  "packet_id": "evidence:evaluation-strength-contract-001",
+  "created_at": "2026-05-21T00:00:00Z",
+  "producer": "agent/codex",
+  "problem_id": "evaluation-strength-contract-001",
+  "source_refs": [
+    "https://arxiv.org/abs/2310.06770",
+    "https://arxiv.org/abs/2305.11738",
+    "https://www.w3.org/TR/prov-overview/"
+  ],
+  "claim_refs": [
+    "software candidates need task-grounded evaluation rather than plausibility-only scoring",
+    "tool-interactive critique improves correction by using external feedback",
+    "validation records should preserve provenance across generated artifacts and source refs"
+  ],
+  "method_refs": [
+    "task-grounded software evaluation",
+    "tool-assisted critique",
+    "provenance modeling"
+  ],
+  "benchmark_refs": [
+    "research-to-selection validation report",
+    "SWE-bench style task-grounded evaluation"
+  ],
+  "evidence_summary": "Evaluation strength should explicitly label static, artifact-backed, and execution-backed evidence so downstream gates do not overclaim solution quality."
+}

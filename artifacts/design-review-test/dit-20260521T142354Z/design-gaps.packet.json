@@ -1,0 +1,40 @@
+{
+  "packet_type": "design_gap_packet_bundle",
+  "packet_version": "v1",
+  "run_id": "dit-20260521T142354Z",
+  "gap_count": 2,
+  "gaps": [
+    {
+      "packet_type": "design_gap_packet",
+      "packet_version": "v1",
+      "gap_id": "gap-001",
+      "validator_family": "dag_consistency_checks",
+      "violated_invariant": "node_inputs_must_be_satisfiable",
+      "severity": "critical",
+      "blocking": true,
+      "summary": "Node 'dra-001' requires input 'design_review_request_packet' with no producing predecessor.",
+      "finding_refs": [
+        "dit-20260521T142354Z:dag_unsatisfied_input_contract:1344892"
+      ],
+      "artifact_refs": [
+        "artifacts/planner/research/design-iteration-tool-dag-v1.json"
+      ]
+    },
+    {
+      "packet_type": "design_gap_packet",
+      "packet_version": "v1",
+      "gap_id": "gap-002",
+      "validator_family": "dag_consistency_checks",
+      "violated_invariant": "workflow_and_implementation_graph_link_must_be_canonical",
+      "severity": "high",
+      "blocking": true,
+      "summary": "Workflow DAG does not declare a canonical implementation graph link.",
+      "finding_refs": [
+        "dit-20260521T142354Z:workflow_to_implementation_link_missing:1794805"
+      ],
+      "artifact_refs": [
+        "artifacts/planner/research/design-iteration-tool-dag-v1.json"
+      ]
+    }
+  ]
+}

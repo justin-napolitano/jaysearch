@@ -1,0 +1,23 @@
+{
+  "command": "plan-quality-score",
+  "run_id": "pqs-20260520T184853Z",
+  "comparison_id": "pqs-20260520T184853Z:cmp",
+  "status": "blocked",
+  "selected_solution_scope_ref": "selected-scope:plan-selection-real-artifact-exercise:candidate-top-level-planning-orchestration",
+  "candidate_plan_count": 2,
+  "qualified_plan_count": 0,
+  "disqualified_plan_count": 2,
+  "recommended_plan_ref": "",
+  "comparison_packet_path": "artifacts/orchestration/research-plan-selection-runs/pqs-20260520T184853Z/candidate-plan-comparison.packet.json",
+  "ranked_packet_path": "artifacts/orchestration/research-plan-selection-runs/pqs-20260520T184853Z/ranked-plan.packet.json",
+  "score_packet_paths": [
+    "artifacts/orchestration/research-plan-selection-runs/pqs-20260520T184853Z/plan-quality-score-01.packet.json",
+    "artifacts/orchestration/research-plan-selection-runs/pqs-20260520T184853Z/plan-quality-score-02.packet.json"
+  ],
+  "output_root": "artifacts/orchestration/research-plan-selection-runs/pqs-20260520T184853Z",
+  "policy_ref": "spec/plan-quality-scoring.yaml",
+  "blockers": [
+    "no_plans_passed_hard_gates"
+  ],
+  "ok": false
+}

@@ -1,0 +1,36 @@
+{
+  "summary_id": "execplan-enrichment-node-workflow-v1",
+  "created_at": "2026-05-21T00:00:00Z",
+  "producer": "agent/codex",
+  "status": "ready_for_slice_1_implementation",
+  "enriched_execplans": [
+    ".agent/execplans/20260521-problem-node-execution-unit-contract-v1-codex-01-execplan.md",
+    ".agent/execplans/20260521-implementation-intent-candidate-contract-v1-codex-01-execplan.md",
+    ".agent/execplans/20260521-node-readiness-validator-v1-codex-01-execplan.md",
+    ".agent/execplans/20260521-execution-unit-materializer-v1-codex-01-execplan.md"
+  ],
+  "research_basis": [
+    "https://arxiv.org/abs/2506.13131",
+    "https://arxiv.org/abs/2310.06770",
+    "https://arxiv.org/abs/2305.11738",
+    "https://arxiv.org/abs/2303.11366",
+    "https://www.w3.org/TR/prov-dm/"
+  ],
+  "enrichment_added": [
+    "concrete schema field lists",
+    "readiness state requirements",
+    "runtime CLI contracts",
+    "mapping rules from selected scope to problem node, node option, and execution unit",
+    "A/B expected outputs",
+    "valid and invalid fixture requirements",
+    "blocker cases",
+    "source-backed claim boundaries"
+  ],
+  "recommended_next_action": "Implement 20260521-problem-node-execution-unit-contract-v1-codex-01 first.",
+  "do_not_start_yet": [
+    "implementation attempt generation",
+    "attempt evaluation runtime",
+    "solution artifact runtime",
+    "code executor"
+  ]
+}

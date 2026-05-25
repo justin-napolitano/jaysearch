@@ -1,0 +1,232 @@
+{
+  "packet_type": "research_recommendation_packet",
+  "packet_version": "v1",
+  "packet_id": "research-problem:platform-template-bootstrap:question-research-handoff-001:research-recommendation",
+  "created_at": "2026-05-21T16:29:35Z",
+  "producer": "materialize-research-recommendation",
+  "problem_id": "research-problem:platform-template-bootstrap:question-research-handoff-001",
+  "candidate_search_tree_ref": "/mnt/c/users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap/artifacts/validation/research-to-selection-runs/rts-20260521T162935Z/steps/rct-20260521T162935Z/candidate-search-tree.packet.json",
+  "evaluation_summary_ref": "/mnt/c/users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap/artifacts/validation/research-to-selection-runs/rts-20260521T162935Z/steps/rev-20260521T162935Z/candidate-evaluation-summary.packet.json",
+  "evaluation_refs": [
+    "/mnt/c/users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap/artifacts/validation/research-to-selection-runs/rts-20260521T162935Z/steps/rev-20260521T162935Z/research-evaluation-01.packet.json",
+    "/mnt/c/users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap/artifacts/validation/research-to-selection-runs/rts-20260521T162935Z/steps/rev-20260521T162935Z/research-evaluation-02.packet.json",
+    "/mnt/c/users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap/artifacts/validation/research-to-selection-runs/rts-20260521T162935Z/steps/rev-20260521T162935Z/research-evaluation-03.packet.json",
+    "/mnt/c/users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap/artifacts/validation/research-to-selection-runs/rts-20260521T162935Z/steps/rev-20260521T162935Z/research-evaluation-04.packet.json"
+  ],
+  "ranked_candidates": [
+    {
+      "candidate_id": "research-problem:platform-template-bootstrap:question-research-handoff-001:hypothesis:baseline_reference:candidate:001",
+      "problem_id": "research-problem:platform-template-bootstrap:question-research-handoff-001",
+      "rank": 1,
+      "total_score": 0.877,
+      "score_breakdown": {
+        "contract_completeness": {
+          "value": 1.0,
+          "basis": "required field presence"
+        },
+        "traceability": {
+          "value": 1.0,
+          "basis": "source_hypothesis_id presence"
+        },
+        "evidence_support": {
+          "value": 1.0,
+          "basis": "evidence_refs presence"
+        },
+        "feasibility": {
+          "value": 0.95,
+          "basis": "feasibility_priors"
+        },
+        "artifact_readiness": {
+          "value": 0.5,
+          "basis": "artifact refs or proposed changes"
+        },
+        "risk_penalty": {
+          "value": 0.2,
+          "basis": "risk notes and feasibility priors"
+        }
+      },
+      "strengths": [
+        "evaluation_promoted_candidate",
+        "candidate_has_evidence_refs"
+      ],
+      "weaknesses": [
+        "candidate_has_no_materialized_artifacts"
+      ],
+      "promotion_status": "promoted",
+      "evaluation_ref": "artifacts/validation/research-to-selection-runs/rts-20260521T162935Z/steps/rev-20260521T162935Z/research-evaluation-01.packet.json",
+      "evidence_refs": [
+        "/mnt/c/users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap/artifacts/planner/examples/question-research-handoff/evidence.packet.json"
+      ],
+      "source_hypothesis_id": "research-problem:platform-template-bootstrap:question-research-handoff-001:hypothesis:baseline_reference"
+    },
+    {
+      "candidate_id": "research-problem:platform-template-bootstrap:question-research-handoff-001:hypothesis:reuse_direct:candidate:001",
+      "problem_id": "research-problem:platform-template-bootstrap:question-research-handoff-001",
+      "rank": 2,
+      "total_score": 0.805,
+      "score_breakdown": {
+        "contract_completeness": {
+          "value": 1.0,
+          "basis": "required field presence"
+        },
+        "traceability": {
+          "value": 1.0,
+          "basis": "source_hypothesis_id presence"
+        },
+        "evidence_support": {
+          "value": 1.0,
+          "basis": "evidence_refs presence"
+        },
+        "feasibility": {
+          "value": 0.8,
+          "basis": "feasibility_priors"
+        },
+        "artifact_readiness": {
+          "value": 0.5,
+          "basis": "artifact refs or proposed changes"
+        },
+        "risk_penalty": {
+          "value": 0.45,
+          "basis": "risk notes and feasibility priors"
+        }
+      },
+      "strengths": [
+        "evaluation_promoted_candidate",
+        "candidate_has_evidence_refs"
+      ],
+      "weaknesses": [
+        "candidate_has_no_materialized_artifacts"
+      ],
+      "promotion_status": "promoted",
+      "evaluation_ref": "artifacts/validation/research-to-selection-runs/rts-20260521T162935Z/steps/rev-20260521T162935Z/research-evaluation-02.packet.json",
+      "evidence_refs": [
+        "/mnt/c/users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap/artifacts/planner/examples/question-research-handoff/evidence.packet.json"
+      ],
+      "source_hypothesis_id": "research-problem:platform-template-bootstrap:question-research-handoff-001:hypothesis:reuse_direct"
+    },
+    {
+      "candidate_id": "research-problem:platform-template-bootstrap:question-research-handoff-001:hypothesis:reuse_hybrid:candidate:001",
+      "problem_id": "research-problem:platform-template-bootstrap:question-research-handoff-001",
+      "rank": 3,
+      "total_score": 0.782,
+      "score_breakdown": {
+        "contract_completeness": {
+          "value": 1.0,
+          "basis": "required field presence"
+        },
+        "traceability": {
+          "value": 1.0,
+          "basis": "source_hypothesis_id presence"
+        },
+        "evidence_support": {
+          "value": 1.0,
+          "basis": "evidence_refs presence"
+        },
+        "feasibility": {
+          "value": 0.65,
+          "basis": "feasibility_priors"
+        },
+        "artifact_readiness": {
+          "value": 0.5,
+          "basis": "artifact refs or proposed changes"
+        },
+        "risk_penalty": {
+          "value": 0.45,
+          "basis": "risk notes and feasibility priors"
+        }
+      },
+      "strengths": [
+        "evaluation_promoted_candidate",
+        "candidate_has_evidence_refs"
+      ],
+      "weaknesses": [
+        "candidate_has_no_materialized_artifacts"
+      ],
+      "promotion_status": "promoted",
+      "evaluation_ref": "artifacts/validation/research-to-selection-runs/rts-20260521T162935Z/steps/rev-20260521T162935Z/research-evaluation-03.packet.json",
+      "evidence_refs": [
+        "/mnt/c/users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap/artifacts/planner/examples/question-research-handoff/evidence.packet.json"
+      ],
+      "source_hypothesis_id": "research-problem:platform-template-bootstrap:question-research-handoff-001:hypothesis:reuse_hybrid"
+    },
+    {
+      "candidate_id": "research-problem:platform-template-bootstrap:question-research-handoff-001:hypothesis:novel_synthesized:candidate:001",
+      "problem_id": "research-problem:platform-template-bootstrap:question-research-handoff-001",
+      "rank": 4,
+      "total_score": 0.692,
+      "score_breakdown": {
+        "contract_completeness": {
+          "value": 1.0,
+          "basis": "required field presence"
+        },
+        "traceability": {
+          "value": 1.0,
+          "basis": "source_hypothesis_id presence"
+        },
+        "evidence_support": {
+          "value": 1.0,
+          "basis": "evidence_refs presence"
+        },
+        "feasibility": {
+          "value": 0.25,
+          "basis": "feasibility_priors"
+        },
+        "artifact_readiness": {
+          "value": 0.5,
+          "basis": "artifact refs or proposed changes"
+        },
+        "risk_penalty": {
+          "value": 0.6,
+          "basis": "risk notes and feasibility priors"
+        }
+      },
+      "strengths": [
+        "evaluation_promoted_candidate",
+        "candidate_has_evidence_refs"
+      ],
+      "weaknesses": [
+        "candidate_has_no_materialized_artifacts",
+        "candidate_high_risk_priors"
+      ],
+      "promotion_status": "promoted",
+      "evaluation_ref": "artifacts/validation/research-to-selection-runs/rts-20260521T162935Z/steps/rev-20260521T162935Z/research-evaluation-04.packet.json",
+      "evidence_refs": [
+        "/mnt/c/users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap/artifacts/planner/examples/question-research-handoff/evidence.packet.json"
+      ],
+      "source_hypothesis_id": "research-problem:platform-template-bootstrap:question-research-handoff-001:hypothesis:novel_synthesized"
+    }
+  ],
+  "recommended_candidate_id": "research-problem:platform-template-bootstrap:question-research-handoff-001:hypothesis:baseline_reference:candidate:001",
+  "recommendation_reason": "Top promoted candidate after evaluation-backed ranking by promotion status and total evaluation score.",
+  "winner_evidence_refs": [
+    "/mnt/c/users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap/artifacts/planner/examples/question-research-handoff/evidence.packet.json"
+  ],
+  "rejected_candidate_summaries": [
+    {
+      "candidate_id": "research-problem:platform-template-bootstrap:question-research-handoff-001:hypothesis:reuse_direct:candidate:001",
+      "rank": 2,
+      "total_score": 0.805,
+      "promotion_status": "promoted",
+      "reason": "ranked_below_recommended_candidate"
+    },
+    {
+      "candidate_id": "research-problem:platform-template-bootstrap:question-research-handoff-001:hypothesis:reuse_hybrid:candidate:001",
+      "rank": 3,
+      "total_score": 0.782,
+      "promotion_status": "promoted",
+      "reason": "ranked_below_recommended_candidate"
+    },
+    {
+      "candidate_id": "research-problem:platform-template-bootstrap:question-research-handoff-001:hypothesis:novel_synthesized:candidate:001",
+      "rank": 4,
+      "total_score": 0.692,
+      "promotion_status": "promoted",
+      "reason": "ranked_below_recommended_candidate"
+    }
+  ],
+  "open_questions": [],
+  "artifact_refs": [],
+  "evidence_refs": [
+    "/mnt/c/users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap/artifacts/planner/examples/question-research-handoff/evidence.packet.json"
+  ]
+}

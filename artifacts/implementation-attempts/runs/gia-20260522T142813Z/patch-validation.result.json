@@ -1,0 +1,9 @@
+{
+  "command": "git apply --check artifacts/implementation-attempts/runs/gia-20260522T142813Z/implementation-attempt-01.patch",
+  "status": "failed",
+  "exit_code": 1,
+  "duration_ms": 29,
+  "stdout_tail": "",
+  "stderr_tail": "error: patch failed: README.md:1\nerror: README.md: patch does not apply\n",
+  "patch_ref": "artifacts/implementation-attempts/runs/gia-20260522T142813Z/implementation-attempt-01.patch"
+}

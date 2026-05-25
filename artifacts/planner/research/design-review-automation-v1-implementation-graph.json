@@ -1,0 +1,74 @@
+{
+  "graph_id": "design-review-automation-v1-implementation",
+  "created_at": "2026-05-21T00:00:00Z",
+  "graph_kind": "implementation_graph",
+  "purpose": "Implementation graph for the bounded design-review automation runner",
+  "nodes": [
+    {
+      "node_id": "idra-001",
+      "node_type": "task",
+      "title": "Materialize review program",
+      "status": "ready",
+      "changes": [
+        "src/platform_tools/orchestrate_design_review.py"
+      ],
+      "required_inputs": [
+        "design_review_request_packet"
+      ],
+      "expected_outputs": [
+        "design_review_program_packet"
+      ],
+      "validation_targets": [
+        "review-program packet emitted"
+      ],
+      "blocking_dependencies": []
+    },
+    {
+      "node_id": "idra-002",
+      "node_type": "task",
+      "title": "Execute bounded tool calls",
+      "status": "ready",
+      "changes": [
+        "src/platform_tools/orchestrate_design_review.py",
+        "src/platform_tools/review_evidence_adapter.py"
+      ],
+      "required_inputs": [
+        "design_review_program_packet"
+      ],
+      "expected_outputs": [
+        "tool_call_result_packet[]"
+      ],
+      "validation_targets": [
+        "bounded tool-call result packets emitted"
+      ],
+      "blocking_dependencies": [
+        "idra-001"
+      ]
+    },
+    {
+      "node_id": "idra-003",
+      "node_type": "task",
+      "title": "Synthesize findings and next questions",
+      "status": "ready",
+      "changes": [
+        "src/platform_tools/orchestrate_design_review.py",
+        "src/platform_tools/design_iteration.py"
+      ],
+      "required_inputs": [
+        "tool_call_result_packet[]"
+      ],
+      "expected_outputs": [
+        "design_findings_packet",
+        "design_gap_packet[]",
+        "next_question_candidate_packet[]"
+      ],
+      "validation_targets": [
+        "design-review outputs emitted"
+      ],
+      "blocking_dependencies": [
+        "idra-002"
+      ]
+    }
+  ],
+  "edges": []
+}

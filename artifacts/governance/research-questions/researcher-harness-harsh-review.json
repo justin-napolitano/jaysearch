@@ -1,0 +1,106 @@
+{
+  "question_id": "researcher-harness-harsh-review",
+  "title": "Harsh review of researcher-harness research quality",
+  "topic": "Evaluate whether researcher-harness is actually performing evidence-backed research or mostly transforming structured prompts into plausible ranked outputs.",
+  "question": "What is weak, shallow, misleading, or insufficiently evidenced in researcher-harness as currently built, and what is the smallest bounded slice that would materially improve research quality rather than just artifact production?",
+  "question_origin": "user",
+  "status": "queued",
+  "priority": "high",
+  "requested_by": "jay.napolitano@adventhealth.com",
+  "decision_deadline": "",
+  "success_condition": "Produce a harsh assessment of researcher-harness research quality, identify the top bounded stabilization candidate, and justify it with evidence from the current runtime and output behavior.",
+  "study_design_hint": "option-comparison",
+  "artifact_contract_hint": "",
+  "self_review_focus": "Do not reward coherent formatting, candidate ranking neatness, or good contract shape if the underlying evidence extraction and critique process is weak. Penalize shallow synthesis, unsupported ranking, and generic proposals.",
+  "target_repos": [
+    "researcher-harness"
+  ],
+  "target_systems": [
+    "researcher-runtime",
+    "research-quality"
+  ],
+  "constraints": [
+    "Assume the runtime may currently be producing output that looks more rigorous than it really is.",
+    "Focus on evidence extraction, critique depth, source use, and recommendation quality.",
+    "Prefer bounded improvements over broad redesign unless the current model is fundamentally unsound.",
+    "Treat artifact production without decision-quality gain as a failure mode."
+  ],
+  "domain_plugins": [
+    "governed-research-ops"
+  ],
+  "improvement_targets": [
+    "researcher-harness"
+  ],
+  "hypotheses": [
+    {
+      "hypothesis_id": "hyp-001",
+      "statement": "The harness currently ranks and promotes candidates more from request metadata and option structure than from independently extracted evidence.",
+      "expected_outcome": "The review will identify stronger evidence-extraction and critique mechanisms as the highest-value improvement area.",
+      "falsifiable_condition": "The runtime already demonstrates robust evidence-backed reasoning independent of input option framing.",
+      "evidence_required": [
+        "current harness request and response contracts",
+        "runtime implementation behavior",
+        "recent review outputs",
+        "self-review artifacts"
+      ]
+    },
+    {
+      "hypothesis_id": "hyp-002",
+      "statement": "A small bounded slice can materially improve research quality without redesigning the entire harness.",
+      "expected_outcome": "The top recommendation will be a narrow implementation slice rather than a broad rewrite.",
+      "falsifiable_condition": "The system is so shallow structurally that only a larger redesign would meaningfully help."
+    }
+  ],
+  "required_sources": [
+    {
+      "title": "Local researcher-harness contracts and runtime docs",
+      "url": "local-repo://researcher-harness",
+      "note": "Primary implementation source."
+    },
+    {
+      "title": "Recent whole-system review outputs",
+      "url": "local-run://research-system-whole-review",
+      "note": "Primary evidence that the previous harsh review remained too shallow."
+    }
+  ],
+  "options": [
+    {
+      "option_id": "evidence-extraction-hardening",
+      "summary": "Strengthen evidence extraction and require findings to cite explicit extracted evidence before candidate ranking.",
+      "strengths": [
+        "improves real rigor",
+        "directly addresses shallow synthesis"
+      ],
+      "risks": [
+        "may require richer runtime artifacts"
+      ],
+      "score": 5
+    },
+    {
+      "option_id": "self-review-hardening",
+      "summary": "Strengthen the self-review layer so weak evidence and shallow conclusions are called out more aggressively.",
+      "strengths": [
+        "improves detection of weak runs",
+        "bounded change surface"
+      ],
+      "risks": [
+        "may diagnose weakness without fixing core evidence generation"
+      ],
+      "score": 4
+    },
+    {
+      "option_id": "plugin-execution-expansion",
+      "summary": "Add more study-design or domain-plugin behavior before tightening evidence quality.",
+      "strengths": [
+        "expands capability surface"
+      ],
+      "risks": [
+        "likely increases complexity before the core research quality problem is solved"
+      ],
+      "score": 2
+    }
+  ],
+  "created_at": "2026-05-12T17:03:29Z",
+  "updated_at": "2026-05-12T17:03:29Z",
+  "source_path": "/mnt/c/Users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap/.agent/research-question-seeds/researcher-harness-harsh-review.json"
+}

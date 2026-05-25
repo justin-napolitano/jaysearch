@@ -1,0 +1,119 @@
+{
+  "packet_type": "design_review_request_packet",
+  "packet_version": "v1",
+  "packet_id": "design-review-request-question-evidence-research-handoff-v1",
+  "created_at": "2026-05-21T00:00:00Z",
+  "producer": "agent/codex",
+  "review_id": "design-review-question-evidence-research-handoff-v1",
+  "system_scope": "platform-template-bootstrap",
+  "artifact_refs": [
+    "docs/question-tool-v1.md",
+    "docs/evidence-search-tool-v1.md",
+    "docs/research-tool-v1.md",
+    "docs/core-contract-spec-v1.md",
+    "docs/system-flow-mermaid.md"
+  ],
+  "requested_review_modes": [
+    "question_research_handoff_review",
+    "evidence_backed_claim_review",
+    "self_loop_review"
+  ],
+  "requested_outputs": [
+    "design_findings_packet",
+    "design_gap_packet[]",
+    "next_question_candidate_packet[]"
+  ],
+  "focus_areas": [
+    "question-to-evidence handoff contract sufficiency",
+    "evidence-to-research handoff contract sufficiency",
+    "whether the current runner needs a dedicated question-research handoff review mode"
+  ],
+  "review_inputs": {
+    "evidence_problem_id": "question-evidence-research-handoff-claims",
+    "source_records": [
+      {
+        "source_id": "self-refine-paper",
+        "title": "Self-Refine: Iterative Refinement with Self-Feedback",
+        "authors": [
+          "Madaan et al."
+        ],
+        "published_at": "2023-03-30",
+        "source_type": "paper",
+        "uri": "https://arxiv.org/abs/2303.17651",
+        "abstract": "Iterative self-feedback improves generated outputs.",
+        "artifact_refs": [
+          "https://arxiv.org/abs/2303.17651"
+        ]
+      },
+      {
+        "source_id": "reflexion-paper",
+        "title": "Reflexion: Language Agents with Verbal Reinforcement Learning",
+        "authors": [
+          "Shinn et al."
+        ],
+        "published_at": "2023-03-20",
+        "source_type": "paper",
+        "uri": "https://arxiv.org/abs/2303.11366",
+        "abstract": "Feedback and memory improve agent performance.",
+        "artifact_refs": [
+          "https://arxiv.org/abs/2303.11366"
+        ]
+      },
+      {
+        "source_id": "critic-paper",
+        "title": "CRITIC: Large Language Models Can Self-Correct with Tool-Interactive Critiquing",
+        "authors": [
+          "Gou et al."
+        ],
+        "published_at": "2023-05-19",
+        "source_type": "paper",
+        "uri": "https://arxiv.org/abs/2305.11738",
+        "abstract": "Tool-interactive critique improves over unsupported introspection.",
+        "artifact_refs": [
+          "https://arxiv.org/abs/2305.11738"
+        ]
+      }
+    ],
+    "claim_records": [
+      {
+        "claim_id": "claim-bounded-question-needed",
+        "source_id": "self-refine-paper",
+        "claim_text": "Iterative refinement works better when the input problem is bounded and specific enough for targeted feedback.",
+        "claim_type": "methodological",
+        "evidence_span_refs": [
+          "abstract"
+        ],
+        "metric_refs": []
+      },
+      {
+        "claim_id": "claim-feedback-and-memory-matter",
+        "source_id": "reflexion-paper",
+        "claim_text": "Feedback and retained context improve downstream decisions, which supports preserving explicit handoff context across question, evidence, and research stages.",
+        "claim_type": "methodological",
+        "evidence_span_refs": [
+          "abstract"
+        ],
+        "metric_refs": []
+      },
+      {
+        "claim_id": "claim-tool-assisted-critique-for-handoffs",
+        "source_id": "critic-paper",
+        "claim_text": "Tool-assisted critique should be used to check handoff sufficiency rather than relying on unsupported intuition about whether the contracts are enough.",
+        "claim_type": "methodological",
+        "evidence_span_refs": [
+          "abstract"
+        ],
+        "metric_refs": []
+      }
+    ],
+    "method_refs": [
+      "iterative self-feedback",
+      "verbal reinforcement",
+      "tool-assisted critique"
+    ],
+    "benchmark_refs": [
+      "question-to-evidence-to-research contract review"
+    ],
+    "evidence_summary_text": "Bounded evidence packet for reviewing the unresolved question-to-evidence-to-research handoff."
+  }
+}

@@ -1,0 +1,133 @@
+{
+  "api_version": "public-orchestration.v1",
+  "command": "orchestrate-plan-selection",
+  "status": "ok",
+  "ok": true,
+  "selected_scope_path": "artifacts/orchestration/research-plan-selection-runs/sss-20260520T184914Z/selected-solution-scope.packet.json",
+  "candidate_plan_paths": [
+    "artifacts/planner/examples/plan-selection-exercise/plan-a-structural.json",
+    "artifacts/planner/examples/plan-selection-exercise/plan-b-structural.json"
+  ],
+  "chosen_plan_ref": "artifacts/planner/examples/plan-selection-exercise/plan-a-structural.json",
+  "comparison_report": {
+    "command": "plan-quality-score",
+    "run_id": "pqs-20260520T184914Z",
+    "comparison_id": "pqs-20260520T184914Z:cmp",
+    "status": "ok",
+    "selected_solution_scope_ref": "selected-scope:plan-selection-real-artifact-exercise:candidate-top-level-planning-orchestration",
+    "candidate_plan_count": 2,
+    "qualified_plan_count": 2,
+    "disqualified_plan_count": 0,
+    "recommended_plan_ref": "artifacts/planner/examples/plan-selection-exercise/plan-a-structural.json",
+    "comparison_packet_path": "artifacts/orchestration/research-plan-selection-runs/pqs-20260520T184914Z/candidate-plan-comparison.packet.json",
+    "ranked_packet_path": "artifacts/orchestration/research-plan-selection-runs/pqs-20260520T184914Z/ranked-plan.packet.json",
+    "score_packet_paths": [
+      "artifacts/orchestration/research-plan-selection-runs/pqs-20260520T184914Z/plan-quality-score-01.packet.json",
+      "artifacts/orchestration/research-plan-selection-runs/pqs-20260520T184914Z/plan-quality-score-02.packet.json"
+    ],
+    "output_root": "artifacts/orchestration/research-plan-selection-runs/pqs-20260520T184914Z",
+    "policy_ref": "spec/plan-quality-scoring.yaml",
+    "blockers": [],
+    "ok": true
+  },
+  "execution_ready_plan_path": "artifacts/orchestration/research-plan-selection-runs/esm-20260520T184914Z/execution-ready-plan.packet.json",
+  "execution_packet_paths": [
+    "artifacts/orchestration/research-plan-selection-runs/esm-20260520T184914Z/execution-packet-01.packet.json",
+    "artifacts/orchestration/research-plan-selection-runs/esm-20260520T184914Z/execution-packet-02.packet.json",
+    "artifacts/orchestration/research-plan-selection-runs/esm-20260520T184914Z/execution-packet-03.packet.json",
+    "artifacts/orchestration/research-plan-selection-runs/esm-20260520T184914Z/execution-packet-04.packet.json"
+  ],
+  "governance_report": {
+    "api_version": "public-orchestration.v1",
+    "command": "governance-execution-intake",
+    "status": "ok",
+    "ok": true,
+    "run_id": "gei-20260520T184915Z",
+    "execution_ready_plan_path": "/mnt/c/Users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap/artifacts/orchestration/research-plan-selection-runs/esm-20260520T184914Z/execution-ready-plan.packet.json",
+    "execution_packet_paths": [
+      "/mnt/c/Users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap/artifacts/orchestration/research-plan-selection-runs/esm-20260520T184914Z/execution-packet-01.packet.json",
+      "/mnt/c/Users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap/artifacts/orchestration/research-plan-selection-runs/esm-20260520T184914Z/execution-packet-02.packet.json",
+      "/mnt/c/Users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap/artifacts/orchestration/research-plan-selection-runs/esm-20260520T184914Z/execution-packet-03.packet.json",
+      "/mnt/c/Users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap/artifacts/orchestration/research-plan-selection-runs/esm-20260520T184914Z/execution-packet-04.packet.json"
+    ],
+    "decision_packet_path": "artifacts/orchestration/research-plan-selection-runs/gei-20260520T184915Z/governance-decision.packet.json",
+    "blockers": [],
+    "warnings": []
+  },
+  "step_reports": [
+    {
+      "step": "plan_quality_score",
+      "status": "ok",
+      "ok": true,
+      "report": {
+        "command": "plan-quality-score",
+        "run_id": "pqs-20260520T184914Z",
+        "comparison_id": "pqs-20260520T184914Z:cmp",
+        "status": "ok",
+        "selected_solution_scope_ref": "selected-scope:plan-selection-real-artifact-exercise:candidate-top-level-planning-orchestration",
+        "candidate_plan_count": 2,
+        "qualified_plan_count": 2,
+        "disqualified_plan_count": 0,
+        "recommended_plan_ref": "artifacts/planner/examples/plan-selection-exercise/plan-a-structural.json",
+        "comparison_packet_path": "artifacts/orchestration/research-plan-selection-runs/pqs-20260520T184914Z/candidate-plan-comparison.packet.json",
+        "ranked_packet_path": "artifacts/orchestration/research-plan-selection-runs/pqs-20260520T184914Z/ranked-plan.packet.json",
+        "score_packet_paths": [
+          "artifacts/orchestration/research-plan-selection-runs/pqs-20260520T184914Z/plan-quality-score-01.packet.json",
+          "artifacts/orchestration/research-plan-selection-runs/pqs-20260520T184914Z/plan-quality-score-02.packet.json"
+        ],
+        "output_root": "artifacts/orchestration/research-plan-selection-runs/pqs-20260520T184914Z",
+        "policy_ref": "spec/plan-quality-scoring.yaml",
+        "blockers": [],
+        "ok": true
+      }
+    },
+    {
+      "step": "execution_slice_materialization",
+      "status": "ok",
+      "ok": true,
+      "report": {
+        "command": "execution-slice-materialization",
+        "run_id": "esm-20260520T184914Z",
+        "status": "ok",
+        "blockers": [],
+        "ok": true,
+        "selected_scope_ref": "selected-scope:plan-selection-real-artifact-exercise:candidate-top-level-planning-orchestration",
+        "chosen_structural_plan_ref": "artifacts/planner/examples/plan-selection-exercise/plan-a-structural.json",
+        "execution_ready_plan_path": "artifacts/orchestration/research-plan-selection-runs/esm-20260520T184914Z/execution-ready-plan.packet.json",
+        "execution_packet_paths": [
+          "artifacts/orchestration/research-plan-selection-runs/esm-20260520T184914Z/execution-packet-01.packet.json",
+          "artifacts/orchestration/research-plan-selection-runs/esm-20260520T184914Z/execution-packet-02.packet.json",
+          "artifacts/orchestration/research-plan-selection-runs/esm-20260520T184914Z/execution-packet-03.packet.json",
+          "artifacts/orchestration/research-plan-selection-runs/esm-20260520T184914Z/execution-packet-04.packet.json"
+        ],
+        "execution_slice_count": 4,
+        "materialization_warning_count": 0,
+        "materialization_warnings": [],
+        "output_root": "artifacts/orchestration/research-plan-selection-runs/esm-20260520T184914Z"
+      }
+    },
+    {
+      "step": "governance_execution_intake",
+      "status": "ok",
+      "ok": true,
+      "report": {
+        "api_version": "public-orchestration.v1",
+        "command": "governance-execution-intake",
+        "status": "ok",
+        "ok": true,
+        "run_id": "gei-20260520T184915Z",
+        "execution_ready_plan_path": "/mnt/c/Users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap/artifacts/orchestration/research-plan-selection-runs/esm-20260520T184914Z/execution-ready-plan.packet.json",
+        "execution_packet_paths": [
+          "/mnt/c/Users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap/artifacts/orchestration/research-plan-selection-runs/esm-20260520T184914Z/execution-packet-01.packet.json",
+          "/mnt/c/Users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap/artifacts/orchestration/research-plan-selection-runs/esm-20260520T184914Z/execution-packet-02.packet.json",
+          "/mnt/c/Users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap/artifacts/orchestration/research-plan-selection-runs/esm-20260520T184914Z/execution-packet-03.packet.json",
+          "/mnt/c/Users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap/artifacts/orchestration/research-plan-selection-runs/esm-20260520T184914Z/execution-packet-04.packet.json"
+        ],
+        "decision_packet_path": "artifacts/orchestration/research-plan-selection-runs/gei-20260520T184915Z/governance-decision.packet.json",
+        "blockers": [],
+        "warnings": []
+      }
+    }
+  ],
+  "blockers": []
+}

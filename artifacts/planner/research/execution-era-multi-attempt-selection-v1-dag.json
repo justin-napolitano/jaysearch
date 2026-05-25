@@ -1,0 +1,114 @@
+{
+  "graph_id": "execution-era-multi-attempt-selection-v1",
+  "graph_type": "implementation_dag",
+  "version": "v1",
+  "purpose": "Add deterministic attempt selection between evaluated implementation attempts and solution artifact emission.",
+  "source_artifacts": [
+    "docs/execution-era-multi-attempt-selection-research-v1.md",
+    ".agent/execplans/20260522-execution-era-multi-attempt-selection-v1-codex-01-execplan.md",
+    "docs/execution-era-loop-apply-integration-research-v1.md",
+    "docs/apply-solution-artifact-policy-v1.md"
+  ],
+  "nodes": [
+    {
+      "node_id": "define-selection-policy",
+      "title": "Define Selection Policy",
+      "node_type": "policy",
+      "status": "planned",
+      "goal": "Lock deterministic V1 scoring and anti-cheat rules.",
+      "owned_changes": [
+        "docs/execution-era-multi-attempt-selection-research-v1.md"
+      ],
+      "expected_outputs": [
+        "selection scoring rules",
+        "anti-cheat rules"
+      ]
+    },
+    {
+      "node_id": "define-attempt-selection-contract",
+      "title": "Define Attempt Selection Contract",
+      "node_type": "contract",
+      "status": "planned",
+      "goal": "Add attempt_selection as a first-class packet between attempt_evaluation and solution_artifact.",
+      "owned_changes": [
+        "spec/contracts/attempt-selection.schema.yaml",
+        "spec/contracts/packet-schema-registry.yaml"
+      ],
+      "expected_outputs": [
+        "attempt_selection schema",
+        "registry entry"
+      ]
+    },
+    {
+      "node_id": "implement-attempt-selector",
+      "title": "Implement Attempt Selector",
+      "node_type": "runtime",
+      "status": "planned",
+      "goal": "Score evaluated attempts and emit one selected attempt/evaluation pair.",
+      "owned_changes": [
+        "src/platform_tools/select_implementation_attempt.py",
+        "bin/select-implementation-attempt"
+      ],
+      "expected_outputs": [
+        "attempt selection packet",
+        "selection report"
+      ]
+    },
+    {
+      "node_id": "wire-multi-attempt-smoke-loop",
+      "title": "Wire Multi Attempt Smoke Loop",
+      "node_type": "runtime",
+      "status": "planned",
+      "goal": "Allow the execution ERA smoke runner to generate, evaluate, select, emit, and optionally apply multiple attempts.",
+      "owned_changes": [
+        "src/platform_tools/run_execution_era_loop_smoke.py"
+      ],
+      "expected_outputs": [
+        "multi-attempt smoke path",
+        "selection step report"
+      ]
+    },
+    {
+      "node_id": "test-selection-loop",
+      "title": "Test Selection Loop",
+      "node_type": "validation",
+      "status": "planned",
+      "goal": "Prove deterministic selection, blocked-attempt rejection, tie-breaking, and runner integration.",
+      "owned_changes": [
+        "tests/test_select_implementation_attempt.py",
+        "tests/test_attempt_selection_contracts.py",
+        "tests/test_run_execution_era_loop_smoke.py"
+      ],
+      "expected_outputs": [
+        "selector tests",
+        "runner integration tests"
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "edge_id": "e1",
+      "from_node_id": "define-attempt-selection-contract",
+      "to_node_id": "define-selection-policy",
+      "relation": "depends_on"
+    },
+    {
+      "edge_id": "e2",
+      "from_node_id": "implement-attempt-selector",
+      "to_node_id": "define-attempt-selection-contract",
+      "relation": "depends_on"
+    },
+    {
+      "edge_id": "e3",
+      "from_node_id": "wire-multi-attempt-smoke-loop",
+      "to_node_id": "implement-attempt-selector",
+      "relation": "depends_on"
+    },
+    {
+      "edge_id": "e4",
+      "from_node_id": "test-selection-loop",
+      "to_node_id": "wire-multi-attempt-smoke-loop",
+      "relation": "depends_on"
+    }
+  ]
+}

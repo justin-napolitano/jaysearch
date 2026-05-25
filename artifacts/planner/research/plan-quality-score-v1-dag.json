@@ -1,0 +1,250 @@
+{
+  "graph_id": "plan-quality-score-v1-20260520",
+  "created_at": "2026-05-20T00:00:00Z",
+  "ordering_policy": {
+    "ready_statuses": [
+      "ready"
+    ],
+    "ready_sort_fields": [
+      "ready_order",
+      "tie_breaker",
+      "node_id"
+    ],
+    "reorder_requires_explicit_action": true,
+    "board_projection_authority": "projection_only"
+  },
+  "queue_projection": {
+    "path": "docs/queued-execplans.md",
+    "projection_authority": "projection_only",
+    "last_reconciled_action_id": "act-pqs-001",
+    "ready_execplan_ids": [
+      "20260520-plan-quality-score-v1-codex-01"
+    ]
+  },
+  "graph_actions": [
+    {
+      "action_id": "act-pqs-001",
+      "action": "promote_ready",
+      "node_id": "pqs-rwg-001",
+      "rationale": "Plan-quality-score v1 planning slice is ready for governed review."
+    }
+  ],
+  "nodes": [
+    {
+      "node_id": "initiative-plan-quality-score-v1",
+      "title": "Initiative / Plan Quality Score V1",
+      "status": "ready",
+      "gating_class": "auto_runnable",
+      "conflict_domains": [
+        "plan-quality-score-v1"
+      ],
+      "target_execplan_id": "initiative:plan-quality-score-v1",
+      "goal_area": "planning-quality",
+      "initiative_branch": "initiative/plan-quality-score-v1",
+      "parent_initiative_node": "initiative-plan-quality-score-v1",
+      "ordering": {
+        "queue_position": 0,
+        "tie_breaker": "initiative:plan-quality-score-v1"
+      },
+      "action_state": {
+        "last_action_id": "act-pqs-001",
+        "last_action": "promote_ready",
+        "action_required": false,
+        "reorder_requires_human": false,
+        "reorder_blockers": []
+      }
+    },
+    {
+      "node_id": "pqs-rwg-001",
+      "title": "Lock plan-quality-score boundary and structural plan comparison policy",
+      "status": "ready",
+      "status_reason": "Plan model and plan-quality policy exist and are ready to be converted into a bounded structural-plan comparison tool.",
+      "gating_class": "auto_runnable",
+      "conflict_domains": [
+        "plan-quality-score-v1",
+        "planning-contracts"
+      ],
+      "target_execplan_id": "20260520-plan-quality-score-v1-codex-01",
+      "goal_area": "planning-quality",
+      "implementation_branch": "impl-execplan/20260520-plan-quality-score-v1-codex-01",
+      "initiative_branch": "initiative/plan-quality-score-v1",
+      "parent_initiative_node": "initiative-plan-quality-score-v1",
+      "integration_mode": "via_initiative",
+      "expected_artifacts": [
+        "docs/plan-quality-score-v1.md",
+        "artifacts/planner/research/plan-quality-score-v1-dag.json"
+      ],
+      "ordering": {
+        "queue_position": 1,
+        "ready_order": 1,
+        "tie_breaker": "20260520-plan-quality-score-v1-codex-01",
+        "source_action_id": "act-pqs-001"
+      },
+      "action_state": {
+        "last_action_id": "act-pqs-001",
+        "last_action": "promote_ready",
+        "action_required": false,
+        "reorder_requires_human": false,
+        "reorder_blockers": []
+      }
+    },
+    {
+      "node_id": "pqs-rwg-002",
+      "title": "Define candidate plan comparison packets and structural-versus-execution-ready plan boundary",
+      "status": "blocked",
+      "status_reason": "Comparison boundary should be reviewed first.",
+      "gating_class": "auto_runnable",
+      "conflict_domains": [
+        "planning-contracts",
+        "plan-quality-packets"
+      ],
+      "target_execplan_id": "plan-quality-score-phase1-contracts",
+      "goal_area": "planning-quality",
+      "initiative_branch": "initiative/plan-quality-score-v1",
+      "parent_initiative_node": "initiative-plan-quality-score-v1",
+      "integration_mode": "via_initiative",
+      "expected_artifacts": [
+        "spec/plan-model.schema.yaml",
+        "spec/plan-quality-comparison.schema.yaml",
+        "spec/plan-quality-scoring.yaml"
+      ],
+      "ordering": {
+        "queue_position": 2,
+        "tie_breaker": "plan-quality-score-phase1-contracts"
+      },
+      "action_state": {
+        "last_action_id": "act-pqs-001",
+        "last_action": "block",
+        "action_required": true,
+        "reorder_requires_human": false,
+        "reorder_blockers": []
+      }
+    },
+    {
+      "node_id": "pqs-rwg-003",
+      "title": "Implement hard-gate structural plan validity filtering",
+      "status": "blocked",
+      "status_reason": "Requires candidate-plan packet contract and explicit structural-versus-execution-ready plan semantics.",
+      "gating_class": "auto_runnable",
+      "conflict_domains": [
+        "plan-quality-score-v1",
+        "validity-filter"
+      ],
+      "target_execplan_id": "plan-quality-score-phase2-validity",
+      "goal_area": "planning-quality",
+      "initiative_branch": "initiative/plan-quality-score-v1",
+      "parent_initiative_node": "initiative-plan-quality-score-v1",
+      "integration_mode": "via_initiative",
+      "expected_artifacts": [
+        "src/platform_tools/plan_quality_score.py"
+      ],
+      "ordering": {
+        "queue_position": 3,
+        "tie_breaker": "plan-quality-score-phase2-validity"
+      },
+      "action_state": {
+        "last_action_id": "act-pqs-001",
+        "last_action": "block",
+        "action_required": true,
+        "reorder_requires_human": false,
+        "reorder_blockers": []
+      }
+    },
+    {
+      "node_id": "pqs-rwg-004",
+      "title": "Implement quality metric scoring, evidence adjustment, and ranked structural-plan output",
+      "status": "blocked",
+      "status_reason": "Requires validity gating, comparison packet contract, and explicit evidence-aware scoring inputs.",
+      "gating_class": "auto_runnable",
+      "conflict_domains": [
+        "plan-quality-score-v1",
+        "quality-scoring"
+      ],
+      "target_execplan_id": "plan-quality-score-phase2-ranking",
+      "goal_area": "planning-quality",
+      "initiative_branch": "initiative/plan-quality-score-v1",
+      "parent_initiative_node": "initiative-plan-quality-score-v1",
+      "integration_mode": "via_initiative",
+      "expected_artifacts": [
+        "src/platform_tools/plan_quality_score.py",
+        "tests/test_plan_quality_score.py",
+        "spec/plan-quality-comparison.schema.yaml"
+      ],
+      "ordering": {
+        "queue_position": 4,
+        "tie_breaker": "plan-quality-score-phase2-ranking"
+      },
+      "action_state": {
+        "last_action_id": "act-pqs-001",
+        "last_action": "block",
+        "action_required": true,
+        "reorder_requires_human": false,
+        "reorder_blockers": []
+      }
+    },
+    {
+      "node_id": "pqs-rwg-005",
+      "title": "Emit machine-readable tradeoff explanation and chosen structural-plan handoff",
+      "status": "blocked",
+      "status_reason": "Requires ranked structural-plan output and explicit downstream execution-slice materialization boundary.",
+      "gating_class": "auto_runnable",
+      "conflict_domains": [
+        "plan-quality-score-v1",
+        "runner-handoff"
+      ],
+      "target_execplan_id": "plan-quality-score-phase3-handoff",
+      "goal_area": "planning-quality",
+      "initiative_branch": "initiative/plan-quality-score-v1",
+      "parent_initiative_node": "initiative-plan-quality-score-v1",
+      "integration_mode": "via_initiative",
+      "expected_artifacts": [
+        "src/platform_tools/plan_quality_score.py",
+        "docs/plan-quality-score-v1.md",
+        "spec/plan-quality-comparison.schema.yaml"
+      ],
+      "ordering": {
+        "queue_position": 5,
+        "tie_breaker": "plan-quality-score-phase3-handoff"
+      },
+      "action_state": {
+        "last_action_id": "act-pqs-001",
+        "last_action": "block",
+        "action_required": true,
+        "reorder_requires_human": false,
+        "reorder_blockers": []
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "pqs-rwg-002",
+      "to": "pqs-rwg-001",
+      "relation": "depends_on"
+    },
+    {
+      "from": "pqs-rwg-003",
+      "to": "pqs-rwg-002",
+      "relation": "depends_on"
+    },
+    {
+      "from": "pqs-rwg-004",
+      "to": "pqs-rwg-002",
+      "relation": "depends_on"
+    },
+    {
+      "from": "pqs-rwg-004",
+      "to": "pqs-rwg-003",
+      "relation": "depends_on"
+    },
+    {
+      "from": "pqs-rwg-005",
+      "to": "pqs-rwg-004",
+      "relation": "depends_on"
+    },
+    {
+      "from": "pqs-rwg-005",
+      "to": "pqs-rwg-003",
+      "relation": "depends_on"
+    }
+  ]
+}

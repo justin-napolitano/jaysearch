@@ -1,0 +1,89 @@
+{
+  "graph_id": "execution-era-loop-apply-integration-v1",
+  "graph_type": "implementation_dag",
+  "version": "v1",
+  "purpose": "Add an optional apply phase to the execution ERA smoke loop while preserving solution_artifact and applied_solution as separate state transitions.",
+  "source_artifacts": [
+    "docs/execution-era-loop-apply-integration-research-v1.md",
+    "docs/apply-solution-artifact-policy-v1.md",
+    ".agent/execplans/20260522-execution-era-loop-apply-integration-v1-codex-01-execplan.md",
+    "artifacts/planner/research/apply-solution-artifact-v1-dag.json"
+  ],
+  "nodes": [
+    {
+      "node_id": "define-apply-integration-policy",
+      "title": "Define Apply Integration Policy",
+      "node_type": "policy",
+      "status": "planned",
+      "goal": "Lock optional apply semantics for the smoke runner.",
+      "owned_changes": [
+        "docs/execution-era-loop-apply-integration-research-v1.md"
+      ],
+      "expected_outputs": [
+        "opt-in apply rules",
+        "anti-drift rules"
+      ]
+    },
+    {
+      "node_id": "wire-optional-apply-step",
+      "title": "Wire Optional Apply Step",
+      "node_type": "runtime",
+      "status": "planned",
+      "goal": "Call apply_solution_artifact after solution emission when --apply-solution is provided.",
+      "owned_changes": [
+        "src/platform_tools/run_execution_era_loop_smoke.py"
+      ],
+      "expected_outputs": [
+        "apply step report",
+        "applied solution path"
+      ]
+    },
+    {
+      "node_id": "extend-smoke-packet",
+      "title": "Extend Smoke Packet",
+      "node_type": "contract",
+      "status": "planned",
+      "goal": "Record optional applied_solution refs without changing default smoke behavior.",
+      "owned_changes": [
+        "src/platform_tools/run_execution_era_loop_smoke.py"
+      ],
+      "expected_outputs": [
+        "applied_solution_ref field",
+        "apply validation mode"
+      ]
+    },
+    {
+      "node_id": "test-apply-integrated-loop",
+      "title": "Test Apply Integrated Loop",
+      "node_type": "validation",
+      "status": "planned",
+      "goal": "Prove default compatibility, successful apply, failed apply blockers, and source immutability.",
+      "owned_changes": [
+        "tests/test_run_execution_era_loop_smoke.py"
+      ],
+      "expected_outputs": [
+        "apply integration tests"
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "edge_id": "e1",
+      "from_node_id": "wire-optional-apply-step",
+      "to_node_id": "define-apply-integration-policy",
+      "relation": "depends_on"
+    },
+    {
+      "edge_id": "e2",
+      "from_node_id": "extend-smoke-packet",
+      "to_node_id": "wire-optional-apply-step",
+      "relation": "depends_on"
+    },
+    {
+      "edge_id": "e3",
+      "from_node_id": "test-apply-integrated-loop",
+      "to_node_id": "extend-smoke-packet",
+      "relation": "depends_on"
+    }
+  ]
+}

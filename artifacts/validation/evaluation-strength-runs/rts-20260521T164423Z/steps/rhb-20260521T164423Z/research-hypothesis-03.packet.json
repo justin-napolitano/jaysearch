@@ -1,0 +1,57 @@
+{
+  "packet_type": "research_hypothesis_packet",
+  "packet_version": "v1",
+  "packet_id": "research-problem:platform-template-bootstrap:evaluation-strength-contract-001:hypothesis:reuse_hybrid:packet",
+  "created_at": "2026-05-21T16:44:23Z",
+  "producer": "materialize-research-hypotheses",
+  "hypothesis_id": "research-problem:platform-template-bootstrap:evaluation-strength-contract-001:hypothesis:reuse_hybrid",
+  "problem_id": "research-problem:platform-template-bootstrap:evaluation-strength-contract-001",
+  "hypothesis_family": "reuse_hybrid",
+  "hypothesis_statement": "Combine reuse with new adaptation for: How should evaluation packets represent static-only versus execution-backed confidence without overclaiming readiness?",
+  "approach_outline": "Blend reusable structure with targeted new logic where direct reuse is insufficient.",
+  "evaluation_focus": [
+    "contract completeness",
+    "truthful confidence labeling",
+    "recommendation gate compatibility",
+    "selection gate compatibility"
+  ],
+  "evidence_refs": [
+    "/mnt/c/users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap/artifacts/planner/examples/evaluation-strength-and-evidence-search/evaluation-strength-evidence.packet.json"
+  ],
+  "branch_rank": 3,
+  "prune_conditions": [
+    "fails required validity checks",
+    "cannot satisfy evaluation criteria under constraints"
+  ],
+  "source_question_refs": [],
+  "source_problem_ref": "/mnt/c/users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap/artifacts/validation/evaluation-strength-runs/rts-20260521T164423Z/steps/qrpt-20260521T164423Z/research-problem.packet.json",
+  "risk_notes": [
+    "higher adaptation complexity",
+    "needs clear boundary management"
+  ],
+  "expected_advantages": [
+    "balances reuse with local adaptation",
+    "can preserve known-good structure"
+  ],
+  "expected_tradeoffs": [
+    "higher adaptation complexity",
+    "needs clear boundary management"
+  ],
+  "constraints": [
+    "local-first",
+    "typed packets",
+    "backward-compatible where possible",
+    "must not require planner artifacts before planner exists"
+  ],
+  "repo_context": {
+    "project_id": "platform-template-bootstrap",
+    "decision_target": "whether to add evaluation_strength and evaluation_method semantics to research_evaluation_packet and downstream recommendation gates",
+    "decision_consequence": "changes whether static candidate evaluation can be distinguished from execution-backed validation before planner entry",
+    "blocked_work_if_unanswered": "planner and code-generation scopes may overtrust static evaluations and drift into unsupported quality claims"
+  },
+  "reference_implementations": [
+    "https://arxiv.org/abs/2310.06770",
+    "https://arxiv.org/abs/2305.11738",
+    "https://www.w3.org/TR/prov-overview/"
+  ]
+}

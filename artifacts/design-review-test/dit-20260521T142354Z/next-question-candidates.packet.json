@@ -1,0 +1,36 @@
+{
+  "packet_type": "next_question_candidate_packet_bundle",
+  "packet_version": "v1",
+  "run_id": "dit-20260521T142354Z",
+  "candidate_count": 2,
+  "candidates": [
+    {
+      "packet_type": "next_question_candidate_packet",
+      "packet_version": "v1",
+      "question_candidate_id": "nqc-001",
+      "source_gap_id": "gap-001",
+      "title": "Resolve gap-001",
+      "question": "What is the minimal contract or workflow change needed to satisfy invariant 'node inputs must be satisfiable'?",
+      "decision_target": "shared-contract-and-workflow-design",
+      "downstream_value": "unblock_implementation",
+      "why_now": "Node 'dra-001' requires input 'design_review_request_packet' with no producing predecessor.",
+      "artifact_refs": [
+        "artifacts/planner/research/design-iteration-tool-dag-v1.json"
+      ]
+    },
+    {
+      "packet_type": "next_question_candidate_packet",
+      "packet_version": "v1",
+      "question_candidate_id": "nqc-002",
+      "source_gap_id": "gap-002",
+      "title": "Resolve gap-002",
+      "question": "What is the minimal contract or workflow change needed to satisfy invariant 'workflow and implementation graph link must be canonical'?",
+      "decision_target": "shared-contract-and-workflow-design",
+      "downstream_value": "unblock_implementation",
+      "why_now": "Workflow DAG does not declare a canonical implementation graph link.",
+      "artifact_refs": [
+        "artifacts/planner/research/design-iteration-tool-dag-v1.json"
+      ]
+    }
+  ]
+}

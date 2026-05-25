@@ -1,0 +1,30 @@
+version: v1
+contract_name: attempt_selection
+contract_kind: packet
+owner: implementation-orchestrator
+description: >
+  Deterministic selection record for choosing one evaluated implementation
+  attempt from a set of candidate attempts.
+required_fields:
+  - packet_type
+  - packet_version
+  - packet_id
+  - created_at
+  - producer
+  - selection_id
+  - source_execution_unit_ref
+  - selected_attempt_ref
+  - selected_evaluation_ref
+  - rejected_attempt_refs
+  - rejected_evaluation_refs
+  - candidate_score_breakdown
+  - selection_policy_ref
+  - evidence_refs
+  - blockers
+properties:
+  packet_type:
+    const: attempt_selection
+invariants:
+  - attempt_selection_must_preserve_rejected_refs
+  - attempt_selection_must_not_use_attempt_self_reported_score
+  - blocked_evaluations_are_ineligible

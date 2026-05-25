@@ -1,0 +1,81 @@
+{
+  "graph_id": "research-hypothesis-branching-v1",
+  "graph_type": "workflow_dag",
+  "version": "v1",
+  "purpose": "Materialize explicit research hypothesis branches from a canonical research problem.",
+  "implementation_graph_ref": "artifacts/planner/research/design-review-automation-v1-implementation-graph.json",
+  "nodes": [
+    {
+      "node_id": "load-research-problem",
+      "title": "Load Research Problem",
+      "node_type": "tool_call",
+      "status": "ready",
+      "goal": "Load and validate the source research problem packet.",
+      "owned_changes": [
+        "artifacts/planner/examples/question-research-handoff/research-problem.packet.json"
+      ],
+      "expected_outputs": [
+        "validated_research_problem"
+      ],
+      "validation_targets": [
+        "research problem contract satisfied"
+      ],
+      "completion_evidence_requirements": [
+        "problem validation report"
+      ]
+    },
+    {
+      "node_id": "materialize-hypotheses",
+      "title": "Materialize Hypotheses",
+      "node_type": "materialization",
+      "status": "ready",
+      "goal": "Emit a bounded set of explicit research hypotheses.",
+      "owned_changes": [
+        "src/platform_tools/materialize_research_hypotheses.py"
+      ],
+      "expected_outputs": [
+        "research_hypothesis_packet[]"
+      ],
+      "validation_targets": [
+        "at least two materially distinct branches emitted",
+        "branch family types recorded"
+      ],
+      "completion_evidence_requirements": [
+        "hypothesis packet artifacts"
+      ]
+    },
+    {
+      "node_id": "emit-branching-report",
+      "title": "Emit Branching Report",
+      "node_type": "materialization",
+      "status": "ready",
+      "goal": "Emit the runtime report for the hypothesis branching slice.",
+      "owned_changes": [
+        "artifacts/research-hypotheses/"
+      ],
+      "expected_outputs": [
+        "research_hypothesis_branching_report"
+      ],
+      "validation_targets": [
+        "report references emitted hypothesis packets"
+      ],
+      "completion_evidence_requirements": [
+        "branching report"
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "edge_id": "e1",
+      "from_node_id": "materialize-hypotheses",
+      "to_node_id": "load-research-problem",
+      "relation": "depends_on"
+    },
+    {
+      "edge_id": "e2",
+      "from_node_id": "emit-branching-report",
+      "to_node_id": "materialize-hypotheses",
+      "relation": "depends_on"
+    }
+  ]
+}

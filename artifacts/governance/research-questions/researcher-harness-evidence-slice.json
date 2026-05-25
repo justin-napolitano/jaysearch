@@ -1,0 +1,101 @@
+{
+  "question_id": "researcher-harness-evidence-slice",
+  "title": "Smallest evidence-hardening slice for researcher-harness",
+  "topic": "Identify the smallest governed implementation slice that would materially improve evidence extraction and evidence-backed ranking in researcher-harness.",
+  "question": "What is the smallest bounded implementation slice that would make researcher-harness less dependent on option metadata and more dependent on explicit extracted evidence when producing findings and ranked candidates?",
+  "question_origin": "user",
+  "status": "queued",
+  "priority": "high",
+  "requested_by": "jay.napolitano@adventhealth.com",
+  "decision_deadline": "",
+  "success_condition": "Produce one clearly bounded next implementation slice for researcher-harness, explain why it is the smallest useful intervention, and rank it above broader alternatives only if it directly improves evidence-backed research quality.",
+  "study_design_hint": "option-comparison",
+  "artifact_contract_hint": "",
+  "self_review_focus": "Prefer concrete runtime changes over abstract aspirations. Penalize broad rewrites, vague hooks, and proposals that still leave findings primarily driven by input option framing.",
+  "target_repos": [
+    "researcher-harness"
+  ],
+  "target_systems": [
+    "researcher-runtime",
+    "evidence-extraction",
+    "research-quality"
+  ],
+  "constraints": [
+    "The slice must be bounded enough to implement and test in one governed branch.",
+    "Favor changes that alter runtime behavior or output contracts in a way that increases evidence traceability.",
+    "Do not propose a broad redesign unless no smaller slice would materially help.",
+    "A good answer must identify where in the current flow the evidence weakness should be corrected."
+  ],
+  "domain_plugins": [
+    "governed-research-ops"
+  ],
+  "improvement_targets": [
+    "researcher-harness"
+  ],
+  "hypotheses": [
+    {
+      "hypothesis_id": "hyp-001",
+      "statement": "The smallest effective slice is likely one that requires explicit evidence artifacts or evidence-linked findings before ranking candidates.",
+      "expected_outcome": "The top recommendation will be a narrow runtime or artifact-contract change, not a generalized plugin expansion.",
+      "falsifiable_condition": "No bounded runtime or contract change would materially improve evidence quality without a larger redesign.",
+      "evidence_required": [
+        "current runtime contract behavior",
+        "current evidence note generation",
+        "current candidate ranking outputs",
+        "recent harsh-review outputs"
+      ]
+    }
+  ],
+  "required_sources": [
+    {
+      "title": "Local researcher-harness contracts and runtime docs",
+      "url": "local-repo://researcher-harness",
+      "note": "Primary implementation source."
+    },
+    {
+      "title": "Recent researcher-harness harsh review outputs",
+      "url": "local-run://researcher-harness-harsh-review",
+      "note": "Primary evidence that evidence extraction remains too weak."
+    }
+  ],
+  "options": [
+    {
+      "option_id": "evidence-linked-findings-gate",
+      "summary": "Require findings and candidate generation to reference explicit extracted evidence entries before promotion-quality outputs are emitted.",
+      "strengths": [
+        "directly improves rigor",
+        "changes behavior at the decision point",
+        "bounded runtime and contract surface"
+      ],
+      "risks": [
+        "may require a new evidence artifact shape"
+      ],
+      "score": 5
+    },
+    {
+      "option_id": "self-review-expansion-only",
+      "summary": "Make self-review harsher without changing the evidence-generation path.",
+      "strengths": [
+        "small change surface"
+      ],
+      "risks": [
+        "may only diagnose weakness without fixing rankings"
+      ],
+      "score": 3
+    },
+    {
+      "option_id": "study-plugin-expansion",
+      "summary": "Add more plugin behavior before hardening evidence requirements.",
+      "strengths": [
+        "may broaden capability"
+      ],
+      "risks": [
+        "adds complexity before solving the core weakness"
+      ],
+      "score": 2
+    }
+  ],
+  "created_at": "2026-05-12T18:08:08Z",
+  "updated_at": "2026-05-12T18:08:08Z",
+  "source_path": "/mnt/c/Users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap/.agent/research-question-seeds/researcher-harness-evidence-slice.json"
+}

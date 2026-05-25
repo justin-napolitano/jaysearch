@@ -1,0 +1,50 @@
+version: v1
+contract_name: problem_node
+contract_kind: packet
+owner: planner-tool
+description: >
+  A manageable project problem node that can be researched, expanded into
+  options, ranked, and eventually materialized into an execution unit.
+required_fields:
+  - packet_type
+  - packet_version
+  - packet_id
+  - created_at
+  - producer
+  - node_id
+  - node_version
+  - project_id
+  - title
+  - node_type
+  - goal
+  - problem_statement
+  - inputs
+  - expected_outputs
+  - constraints
+  - dependencies
+  - evidence_refs
+  - option_refs
+  - selected_option_ref
+  - readiness_state
+  - missing_fields
+  - evaluation_criteria
+  - feedback_refs
+properties:
+  packet_type:
+    const: problem_node
+  readiness_state:
+    enum:
+      - draft
+      - research_ready
+      - option_generation_ready
+      - selection_ready
+      - planning_ready
+      - implementation_ready
+      - evaluation_ready
+      - complete
+      - blocked
+invariants:
+  - problem_nodes_are_not_directly_executable
+  - readiness_state_controls_allowed_next_tools
+  - missing_fields_must_explain_why_node_is_not_ready
+  - evidence_and_feedback_refs_preserve_provenance

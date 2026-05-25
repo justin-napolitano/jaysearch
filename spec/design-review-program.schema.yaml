@@ -1,0 +1,171 @@
+version: v1
+updated_at: 2026-05-20
+title: Design Review Automation Schema
+type: object
+packet_families:
+  design_review_request_packet:
+    type: object
+    required:
+      - packet_type
+      - packet_version
+      - review_id
+      - system_scope
+      - artifact_refs
+      - requested_review_modes
+      - requested_outputs
+    properties:
+      packet_type:
+        const: design_review_request_packet
+      packet_version:
+        type: string
+      review_id:
+        type: string
+      system_scope:
+        type: string
+      artifact_refs:
+        type: array
+        items:
+          type: string
+      requested_review_modes:
+        type: array
+        items:
+          type: string
+      requested_outputs:
+        type: array
+        items:
+          type: string
+      focus_areas:
+        type: array
+        items:
+          type: string
+      evidence_expectations:
+        type: array
+        items:
+          type: string
+      known_blockers:
+        type: array
+        items:
+          type: string
+      time_budget_seconds:
+        type: integer
+  design_review_program_packet:
+    type: object
+    required:
+      - packet_type
+      - packet_version
+      - review_id
+      - review_request_ref
+      - review_nodes
+      - stop_conditions
+    properties:
+      packet_type:
+        const: design_review_program_packet
+      packet_version:
+        type: string
+      review_id:
+        type: string
+      review_request_ref:
+        type: string
+      review_nodes:
+        type: array
+        items:
+          type: object
+      stop_conditions:
+        type: object
+      evidence_policy_ref:
+        type: string
+      tool_call_budget:
+        type: integer
+      priority_order:
+        type: array
+        items:
+          type: string
+  tool_call_request_packet:
+    type: object
+    required:
+      - packet_type
+      - packet_version
+      - call_id
+      - run_id
+      - requester
+      - target_tool
+      - operation_name
+      - input_packet_refs
+      - policy_ref
+    properties:
+      packet_type:
+        const: tool_call_request_packet
+      packet_version:
+        type: string
+      call_id:
+        type: string
+      run_id:
+        type: string
+      requester:
+        type: string
+      target_tool:
+        type: string
+      operation_name:
+        type: string
+      input_packet_refs:
+        type: array
+        items:
+          type: string
+      policy_ref:
+        type: string
+      reason:
+        type: string
+      expected_output_packet_types:
+        type: array
+        items:
+          type: string
+      deadline:
+        type: string
+      retry_policy_override:
+        type: object
+  tool_call_result_packet:
+    type: object
+    required:
+      - packet_type
+      - packet_version
+      - call_id
+      - run_id
+      - target_tool
+      - operation_name
+      - outcome
+      - output_packet_refs
+      - event_refs
+    properties:
+      packet_type:
+        const: tool_call_result_packet
+      packet_version:
+        type: string
+      call_id:
+        type: string
+      run_id:
+        type: string
+      target_tool:
+        type: string
+      operation_name:
+        type: string
+      outcome:
+        type: string
+      output_packet_refs:
+        type: array
+        items:
+          type: string
+      event_refs:
+        type: array
+        items:
+          type: string
+      failure_ref:
+        type: string
+      timing_summary:
+        type: object
+      warnings:
+        type: array
+        items:
+          type: string
+notes:
+  - design review automation should request bounded tool calls through the orchestration runner
+  - design iteration owns critique semantics while the runner owns execution of tool requests

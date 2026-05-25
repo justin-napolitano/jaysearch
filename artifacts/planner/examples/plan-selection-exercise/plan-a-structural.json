@@ -1,0 +1,132 @@
+{
+  "plan_id": "plan-selection-exercise-a",
+  "selected_solution_scope_ref": "selected-scope:plan-selection-real-artifact-exercise:candidate-top-level-planning-orchestration",
+  "graph_id": "plan-selection-exercise-a-graph",
+  "plan_type": "implementation_plan",
+  "plan_readiness": "candidate",
+  "status": "ready",
+  "purpose": "Build a thin orchestration path that directly chains plan comparison, materialization, and governance intake.",
+  "assumptions": [
+    "a thin orchestration command is enough for the first real exercise",
+    "governance intake remains a terminal validation step"
+  ],
+  "risks": [
+    "insufficient observability if step reports are too shallow"
+  ],
+  "nodes": [
+    {
+      "node_id": "n1",
+      "title": "Normalize orchestration inputs",
+      "node_type": "task",
+      "status": "ready",
+      "goal": "Normalize selected scope, candidate plan refs, and policy refs into one runner-facing invocation shape.",
+      "owned_changes": [
+        "src/platform_tools/orchestrate_plan_selection.py"
+      ],
+      "conflict_domains": [
+        "orchestration"
+      ],
+      "expected_outputs": [
+        "normalized orchestration input contract"
+      ],
+      "validation_targets": [
+        "unit tests for orchestration argument handling"
+      ],
+      "completion_evidence_requirements": [
+        "passing orchestration input tests"
+      ]
+    },
+    {
+      "node_id": "n2",
+      "title": "Run plan quality comparison",
+      "node_type": "task",
+      "status": "ready",
+      "goal": "Invoke plan-quality-score and persist a ranked-plan decision artifact.",
+      "owned_changes": [
+        "src/platform_tools/plan_quality_score.py"
+      ],
+      "conflict_domains": [
+        "plan-quality"
+      ],
+      "expected_outputs": [
+        "ranked plan packet",
+        "comparison report"
+      ],
+      "validation_targets": [
+        "ranked plan packet emitted",
+        "hard-gate failures disqualify invalid plans"
+      ],
+      "completion_evidence_requirements": [
+        "passing plan-quality tests"
+      ]
+    },
+    {
+      "node_id": "n3",
+      "title": "Materialize execution-ready plan",
+      "node_type": "task",
+      "status": "ready",
+      "goal": "Convert the chosen structural plan into execution slices and execution packets.",
+      "owned_changes": [
+        "src/platform_tools/execution_slice_materialization.py"
+      ],
+      "conflict_domains": [
+        "planner-materialization"
+      ],
+      "expected_outputs": [
+        "execution_ready_plan_packet",
+        "execution_packet[]"
+      ],
+      "validation_targets": [
+        "execution slices emitted deterministically",
+        "execution-ready packet matches contract"
+      ],
+      "completion_evidence_requirements": [
+        "passing materialization tests"
+      ]
+    },
+    {
+      "node_id": "n4",
+      "title": "Validate governance intake",
+      "node_type": "task",
+      "status": "ready",
+      "goal": "Validate the execution-ready handoff and emit a governance decision packet.",
+      "owned_changes": [
+        "src/platform_tools/governance_execution_intake.py"
+      ],
+      "conflict_domains": [
+        "governance-intake"
+      ],
+      "expected_outputs": [
+        "governance_decision_packet",
+        "governance intake report"
+      ],
+      "validation_targets": [
+        "valid handoffs approve",
+        "incomplete handoffs block with explicit blockers"
+      ],
+      "completion_evidence_requirements": [
+        "passing governance-intake tests"
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "edge_id": "e1",
+      "from_node_id": "n2",
+      "to_node_id": "n1",
+      "relation": "depends_on"
+    },
+    {
+      "edge_id": "e2",
+      "from_node_id": "n3",
+      "to_node_id": "n2",
+      "relation": "depends_on"
+    },
+    {
+      "edge_id": "e3",
+      "from_node_id": "n4",
+      "to_node_id": "n3",
+      "relation": "depends_on"
+    }
+  ]
+}

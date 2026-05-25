@@ -1,0 +1,14 @@
+{
+  "api_version": "public-orchestration.v1",
+  "command": "orchestrate-design-review",
+  "status": "blocked",
+  "ok": false,
+  "run_id": "qrh-20260521T145607Z",
+  "report_packet_path": "artifacts/orchestration/design-review-runs/qrh-20260521T145607Z/question-research-handoff-review.packet.json",
+  "blockers": [
+    "question_to_research_problem_transform_surface_missing",
+    "research_problem_packet_example_missing",
+    "research_question_packet_example_missing"
+  ],
+  "warnings": []
+}

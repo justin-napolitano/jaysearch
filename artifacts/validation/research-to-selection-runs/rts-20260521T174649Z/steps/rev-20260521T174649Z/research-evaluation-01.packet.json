@@ -1,0 +1,51 @@
+{
+  "packet_type": "research_evaluation_packet",
+  "packet_version": "v1",
+  "packet_id": "research-problem:platform-template-bootstrap:evaluation-strength-contract-001:hypothesis:baseline_reference:candidate:001:evaluation:001",
+  "created_at": "2026-05-21T17:46:49Z",
+  "producer": "materialize-research-evaluations",
+  "evaluation_id": "research-problem:platform-template-bootstrap:evaluation-strength-contract-001:hypothesis:baseline_reference:candidate:001:evaluation:001",
+  "problem_id": "research-problem:platform-template-bootstrap:evaluation-strength-contract-001",
+  "candidate_id": "research-problem:platform-template-bootstrap:evaluation-strength-contract-001:hypothesis:baseline_reference:candidate:001",
+  "source_hypothesis_id": "research-problem:platform-template-bootstrap:evaluation-strength-contract-001:hypothesis:baseline_reference",
+  "evaluation_method": "bounded_static_candidate_evaluation_v1",
+  "metrics": {
+    "contract_completeness": {
+      "value": 1.0,
+      "basis": "required field presence"
+    },
+    "traceability": {
+      "value": 1.0,
+      "basis": "source_hypothesis_id presence"
+    },
+    "evidence_support": {
+      "value": 1.0,
+      "basis": "evidence_refs presence"
+    },
+    "feasibility": {
+      "value": 0.95,
+      "basis": "feasibility_priors"
+    },
+    "artifact_readiness": {
+      "value": 0.5,
+      "basis": "artifact refs or proposed changes"
+    },
+    "risk_penalty": {
+      "value": 0.2,
+      "basis": "risk notes and feasibility priors"
+    },
+    "total_score": {
+      "value": 0.877,
+      "basis": "weighted static evaluation"
+    }
+  },
+  "failures": [],
+  "warnings": [
+    "candidate_has_no_materialized_artifacts"
+  ],
+  "artifact_refs": [],
+  "evidence_refs": [
+    "/mnt/c/users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap/artifacts/planner/examples/evaluation-strength-and-evidence-search/evaluation-strength-evidence.packet.json"
+  ],
+  "promotion_status": "promoted"
+}

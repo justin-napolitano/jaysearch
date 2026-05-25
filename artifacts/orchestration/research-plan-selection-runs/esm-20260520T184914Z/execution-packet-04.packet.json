@@ -1,0 +1,41 @@
+{
+  "packet_type": "execution_packet",
+  "packet_version": "v1",
+  "packet_id": "exec:n4",
+  "created_at": "2026-05-20T18:49:14Z",
+  "producer": "execution-slice-materialization",
+  "execution_id": "exec:n4",
+  "node_id": "n4",
+  "work_item_id": "n4",
+  "graph_id": "plan-selection-exercise-a-graph",
+  "task_summary": "Validate governance intake",
+  "required_inputs": [
+    "output:n3"
+  ],
+  "expected_outputs": [
+    "governance_decision_packet",
+    "governance intake report"
+  ],
+  "validation_targets": [
+    "valid handoffs approve",
+    "incomplete handoffs block with explicit blockers"
+  ],
+  "blocking_dependencies": [
+    "exec:n3"
+  ],
+  "declared_ready_inputs": [
+    "output:n3"
+  ],
+  "conflict_domains": [
+    "governance-intake"
+  ],
+  "required_approvals": [],
+  "completion_evidence_requirements": [
+    "passing governance-intake tests"
+  ],
+  "runnable_preconditions": [
+    "selected_scope:selected-scope:plan-selection-real-artifact-exercise:candidate-top-level-planning-orchestration",
+    "dependency_complete:n3"
+  ],
+  "source_structural_plan_ref": "artifacts/planner/examples/plan-selection-exercise/plan-a-structural.json"
+}

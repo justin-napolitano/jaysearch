@@ -1,0 +1,29 @@
+{
+  "packet_type": "design_findings_packet",
+  "packet_version": "v1",
+  "run_id": "dit-20260521T144611Z",
+  "generated_at": "2026-05-21T14:46:12Z",
+  "finding_count": 0,
+  "blocking_finding_count": 0,
+  "findings": [],
+  "artifact_refs": [
+    "spec/contracts/packet-schema-registry.yaml",
+    "spec/contracts/design-iteration-checks.yaml",
+    "artifacts/planner/research/design-iteration-tool-dag-v1.json",
+    "spec/plan-quality-scoring.yaml",
+    "artifacts/planner/graphs/pg-ps-20260310165535-runtime-smoke.json",
+    "artifacts/planner/graphs/pg-ps-20260310173928-smoke-test.json",
+    "artifacts/planner/graphs/pg-ps-20260310174548-smoke-test.json",
+    "artifacts/planner/graphs/pg-ps-20260310174635-smoke-test.json",
+    "artifacts/planner/research/design-review-automation-v1-dag.json",
+    "artifacts/planner/research/era-research-runtime-bootstrap-dag.json",
+    "artifacts/planner/research/execution-slice-materialization-v1-dag.json",
+    "artifacts/planner/research/plan-quality-score-v1-dag.json",
+    "artifacts/planner/research/remaining-work-graph.json"
+  ],
+  "evidence_refs": [
+    "https://arxiv.org/abs/2303.17651",
+    "https://arxiv.org/abs/2303.11366",
+    "https://arxiv.org/abs/2305.11738"
+  ]
+}

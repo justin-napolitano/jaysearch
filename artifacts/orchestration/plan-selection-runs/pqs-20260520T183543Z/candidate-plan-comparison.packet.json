@@ -1,0 +1,12 @@
+{
+  "packet_type": "candidate_plan_comparison_packet",
+  "packet_version": "v1",
+  "comparison_id": "pqs-20260520T183543Z:cmp",
+  "selected_solution_scope_ref": "selected-scope-plan-selection-exercise",
+  "candidate_plan_refs": [
+    "artifacts/planner/examples/plan-selection-exercise/plan-a-structural.json",
+    "artifacts/planner/examples/plan-selection-exercise/plan-b-structural.json"
+  ],
+  "plan_quality_policy_ref": "spec/plan-quality-scoring.yaml",
+  "evidence_packet_refs": []
+}

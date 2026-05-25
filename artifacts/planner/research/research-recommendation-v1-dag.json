@@ -1,0 +1,85 @@
+{
+  "graph_id": "research-recommendation-v1",
+  "graph_type": "workflow_dag",
+  "version": "v1",
+  "purpose": "Emit evaluation-backed research recommendations from evaluated candidate packets.",
+  "implementation_graph_ref": "artifacts/planner/research/design-review-automation-v1-implementation-graph.json",
+  "nodes": [
+    {
+      "node_id": "load-evaluated-candidates",
+      "title": "Load Evaluated Candidates",
+      "node_type": "tool_call",
+      "status": "ready",
+      "goal": "Load candidate packets, evaluation packets, and the evaluation summary.",
+      "owned_changes": [
+        "artifacts/research-candidate-tree/",
+        "artifacts/research-evaluations/"
+      ],
+      "expected_outputs": [
+        "evaluated_candidate_inventory"
+      ],
+      "validation_targets": [
+        "each candidate has evaluation record",
+        "evaluation summary exists"
+      ],
+      "completion_evidence_requirements": [
+        "evaluated candidate inventory"
+      ]
+    },
+    {
+      "node_id": "rank-evaluated-candidates",
+      "title": "Rank Evaluated Candidates",
+      "node_type": "tool_call",
+      "status": "ready",
+      "goal": "Rank candidates using evaluation-backed scores.",
+      "owned_changes": [
+        "ranked_candidate_packet[]"
+      ],
+      "expected_outputs": [
+        "ranked_candidate_packet[]"
+      ],
+      "validation_targets": [
+        "ranked candidates include evaluation refs",
+        "promoted candidates outrank blocked candidates"
+      ],
+      "completion_evidence_requirements": [
+        "ranked candidate packets"
+      ]
+    },
+    {
+      "node_id": "emit-recommendation",
+      "title": "Emit Recommendation",
+      "node_type": "materialization",
+      "status": "ready",
+      "goal": "Emit the evaluation-backed research recommendation packet.",
+      "owned_changes": [
+        "research_recommendation_packet"
+      ],
+      "expected_outputs": [
+        "research_recommendation_packet"
+      ],
+      "validation_targets": [
+        "recommendation has evaluation summary ref",
+        "recommendation records rejected alternatives",
+        "recommendation has recommended candidate id"
+      ],
+      "completion_evidence_requirements": [
+        "research recommendation packet"
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "edge_id": "e1",
+      "from_node_id": "rank-evaluated-candidates",
+      "to_node_id": "load-evaluated-candidates",
+      "relation": "depends_on"
+    },
+    {
+      "edge_id": "e2",
+      "from_node_id": "emit-recommendation",
+      "to_node_id": "rank-evaluated-candidates",
+      "relation": "depends_on"
+    }
+  ]
+}

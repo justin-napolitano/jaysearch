@@ -1,0 +1,81 @@
+{
+  "graph_id": "research-system-improvement-v1",
+  "graph_type": "workflow_dag",
+  "version": "v1",
+  "purpose": "Plan the next bounded section for improving the research system before broader planner and governance hardening.",
+  "implementation_graph_ref": "artifacts/planner/research/design-review-automation-v1-implementation-graph.json",
+  "nodes": [
+    {
+      "node_id": "review-current-research-design",
+      "title": "Review Current Research Design",
+      "node_type": "tool_call",
+      "status": "ready",
+      "goal": "Identify the strongest current and missing properties of the research system.",
+      "owned_changes": [
+        "docs/research-tool-v1.md",
+        "docs/research-tool-v1-ranking-and-search.md"
+      ],
+      "expected_outputs": [
+        "research_design_gap_inventory"
+      ],
+      "validation_targets": [
+        "research weaknesses are explicit"
+      ],
+      "completion_evidence_requirements": [
+        "design review report"
+      ]
+    },
+    {
+      "node_id": "define-improvement-goals",
+      "title": "Define Improvement Goals",
+      "node_type": "materialization",
+      "status": "ready",
+      "goal": "Lock the bounded goals for improving the research system.",
+      "owned_changes": [
+        "docs/research-system-improvement-plan-v1.md"
+      ],
+      "expected_outputs": [
+        "research_improvement_goal_set"
+      ],
+      "validation_targets": [
+        "goals are bounded and actionable"
+      ],
+      "completion_evidence_requirements": [
+        "improvement plan doc"
+      ]
+    },
+    {
+      "node_id": "choose-first-slice",
+      "title": "Choose First Slice",
+      "node_type": "decision",
+      "status": "ready",
+      "goal": "Select the first concrete research-improvement build slice.",
+      "owned_changes": [
+        "artifacts/planner/research/research-system-improvement-v1-dag.json"
+      ],
+      "expected_outputs": [
+        "chosen_research_improvement_slice"
+      ],
+      "validation_targets": [
+        "first slice is explicit"
+      ],
+      "completion_evidence_requirements": [
+        "chosen slice note"
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "edge_id": "e1",
+      "from_node_id": "define-improvement-goals",
+      "to_node_id": "review-current-research-design",
+      "relation": "depends_on"
+    },
+    {
+      "edge_id": "e2",
+      "from_node_id": "choose-first-slice",
+      "to_node_id": "define-improvement-goals",
+      "relation": "depends_on"
+    }
+  ]
+}

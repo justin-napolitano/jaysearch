@@ -87,6 +87,34 @@
       "link": "https://github.com/bytedance/deer-flow"
     },
     {
+      "id": "src-self-refine-2023",
+      "type": "source",
+      "label": "Self-Refine 2023",
+      "title": "Self-Refine: Iterative Refinement with Self-Feedback",
+      "link": "https://arxiv.org/abs/2303.17651"
+    },
+    {
+      "id": "src-reflexion-2023",
+      "type": "source",
+      "label": "Reflexion 2023",
+      "title": "Reflexion: Language Agents with Verbal Reinforcement Learning",
+      "link": "https://arxiv.org/abs/2303.11366"
+    },
+    {
+      "id": "src-critic-2023",
+      "type": "source",
+      "label": "CRITIC 2023",
+      "title": "CRITIC: Large Language Models Can Self-Correct with Tool-Interactive Critiquing",
+      "link": "https://arxiv.org/abs/2305.11738"
+    },
+    {
+      "id": "src-swe-bench-2023",
+      "type": "source",
+      "label": "SWE-bench 2023",
+      "title": "SWE-bench: Can Language Models Resolve Real-World GitHub Issues?",
+      "link": "https://arxiv.org/abs/2310.06770"
+    },
+    {
       "id": "concept-mechanism-design",
       "type": "concept",
       "label": "Mechanism Design",
@@ -115,6 +143,24 @@
       "type": "concept",
       "label": "Inspection",
       "title": "Adversarial review and verification discipline"
+    },
+    {
+      "id": "concept-agent-feedback-loop",
+      "type": "concept",
+      "label": "Agent Feedback Loop",
+      "title": "Explicit feedback and memory improve iterative agent work"
+    },
+    {
+      "id": "concept-tool-grounded-critique",
+      "type": "concept",
+      "label": "Tool-Grounded Critique",
+      "title": "Critique should use external tools, artifacts, and validation results"
+    },
+    {
+      "id": "concept-task-grounded-software-evaluation",
+      "type": "concept",
+      "label": "Task-Grounded Evaluation",
+      "title": "Software candidates should be evaluated against task-grounded evidence"
     },
     {
       "id": "claim-planning-implementation-game",
@@ -163,6 +209,24 @@
       "type": "claim",
       "label": "Harness Layering",
       "title": "A DeerFlow-inspired direction should layer runtime capabilities above the current governed kernel"
+    },
+    {
+      "id": "claim-design-review-should-be-tool-assisted",
+      "type": "claim",
+      "label": "Tool-Assisted Review",
+      "title": "Design review should route critique through artifacts, tools, and evidence rather than unsupported self-reflection"
+    },
+    {
+      "id": "claim-research-candidates-need-evaluations",
+      "type": "claim",
+      "label": "Candidate Evaluations Required",
+      "title": "Research candidates should have explicit evaluation packets before ranking or recommendation"
+    },
+    {
+      "id": "claim-recommendations-need-ranked-alternatives",
+      "type": "claim",
+      "label": "Ranked Alternatives Required",
+      "title": "Research recommendations should preserve the winner, rejected alternatives, evidence, and evaluation refs"
     },
     {
       "id": "artifact-planner-game-model",
@@ -301,6 +365,36 @@
       "type": "artifact",
       "label": "Harness Research",
       "title": "docs/governed-super-agent-harness-research.md"
+    },
+    {
+      "id": "artifact-current-research-bibliography",
+      "type": "artifact",
+      "label": "Current Research Bibliography",
+      "title": "docs/current-research-bibliography.md"
+    },
+    {
+      "id": "artifact-design-review-automation-v1",
+      "type": "artifact",
+      "label": "Design Review Automation V1",
+      "title": "docs/design-review-automation-v1.md"
+    },
+    {
+      "id": "artifact-research-candidate-tree-search-v1",
+      "type": "artifact",
+      "label": "Research Candidate Tree Search V1",
+      "title": "docs/research-candidate-tree-search-v1.md"
+    },
+    {
+      "id": "artifact-research-candidate-evaluation-v1",
+      "type": "artifact",
+      "label": "Research Candidate Evaluation V1",
+      "title": "docs/research-candidate-evaluation-v1.md"
+    },
+    {
+      "id": "artifact-research-recommendation-v1",
+      "type": "artifact",
+      "label": "Research Recommendation V1",
+      "title": "docs/research-recommendation-v1.md"
     }
   ],
   "edges": [
@@ -334,8 +428,18 @@
     { "from": "concept-inspection", "to": "claim-remaining-work-graph", "relation": "informs" },
     { "from": "src-deerflow-readme-20260323", "to": "claim-deerflow-runtime-profile", "relation": "supports" },
     { "from": "src-deerflow-readme-20260323", "to": "claim-governed-super-agent-harness-layering", "relation": "informs" },
+    { "from": "src-self-refine-2023", "to": "concept-agent-feedback-loop", "relation": "supports" },
+    { "from": "src-reflexion-2023", "to": "concept-agent-feedback-loop", "relation": "supports" },
+    { "from": "src-critic-2023", "to": "concept-tool-grounded-critique", "relation": "supports" },
+    { "from": "src-swe-bench-2023", "to": "concept-task-grounded-software-evaluation", "relation": "supports" },
     { "from": "concept-provenance", "to": "claim-governed-super-agent-harness-layering", "relation": "supports" },
     { "from": "concept-state-transitions", "to": "claim-governed-super-agent-harness-layering", "relation": "supports" },
+    { "from": "concept-agent-feedback-loop", "to": "claim-design-review-should-be-tool-assisted", "relation": "informs" },
+    { "from": "concept-tool-grounded-critique", "to": "claim-design-review-should-be-tool-assisted", "relation": "supports" },
+    { "from": "concept-tool-grounded-critique", "to": "claim-research-candidates-need-evaluations", "relation": "supports" },
+    { "from": "concept-task-grounded-software-evaluation", "to": "claim-research-candidates-need-evaluations", "relation": "supports" },
+    { "from": "concept-provenance", "to": "claim-recommendations-need-ranked-alternatives", "relation": "supports" },
+    { "from": "concept-task-grounded-software-evaluation", "to": "claim-recommendations-need-ranked-alternatives", "relation": "supports" },
     { "from": "claim-planning-implementation-game", "to": "artifact-planner-game-model", "relation": "cited_in" },
     { "from": "claim-planning-implementation-game", "to": "artifact-implementation-game-model", "relation": "cited_in" },
     { "from": "claim-canonical-graph", "to": "artifact-transition-spec", "relation": "cited_in" },
@@ -359,6 +463,13 @@
     { "from": "claim-remaining-work-graph", "to": "artifact-queued-execplans", "relation": "cited_in" },
     { "from": "claim-deerflow-runtime-profile", "to": "artifact-governed-super-agent-harness-research", "relation": "cited_in" },
     { "from": "claim-governed-super-agent-harness-layering", "to": "artifact-governed-super-agent-harness-research", "relation": "cited_in" },
+    { "from": "claim-design-review-should-be-tool-assisted", "to": "artifact-current-research-bibliography", "relation": "cited_in" },
+    { "from": "claim-research-candidates-need-evaluations", "to": "artifact-current-research-bibliography", "relation": "cited_in" },
+    { "from": "claim-recommendations-need-ranked-alternatives", "to": "artifact-current-research-bibliography", "relation": "cited_in" },
+    { "from": "claim-design-review-should-be-tool-assisted", "to": "artifact-design-review-automation-v1", "relation": "cited_in" },
+    { "from": "claim-design-review-should-be-tool-assisted", "to": "artifact-research-candidate-tree-search-v1", "relation": "cited_in" },
+    { "from": "claim-research-candidates-need-evaluations", "to": "artifact-research-candidate-evaluation-v1", "relation": "cited_in" },
+    { "from": "claim-recommendations-need-ranked-alternatives", "to": "artifact-research-recommendation-v1", "relation": "cited_in" },
     { "from": "concept-mechanism-design", "to": "artifact-scoring-spec", "relation": "informs" },
     { "from": "concept-inspection", "to": "artifact-scoring-spec", "relation": "informs" },
     { "from": "artifact-assumptions-doc", "to": "claim-planning-implementation-game", "relation": "classified_as" },

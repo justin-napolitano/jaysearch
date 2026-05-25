@@ -1,0 +1,59 @@
+{
+  "packet_type": "research_recommendation_packet",
+  "packet_version": "v1",
+  "packet_id": "research-rec-plan-selection-exercise",
+  "created_at": "2026-05-20T00:00:00Z",
+  "producer": "agent/codex",
+  "problem_id": "plan-selection-real-artifact-exercise",
+  "ranked_candidates": [
+    {
+      "candidate_id": "candidate-top-level-planning-orchestration",
+      "rank": 1,
+      "total_score": 4.7,
+      "score_breakdown": {
+        "feasibility": 4.8,
+        "clarity": 4.6
+      },
+      "summary": "Bridge research selection directly into the repo-local planning pipeline and validate the planning-to-governance path end to end.",
+      "strengths": [
+        "selected scope can feed the planning pipeline immediately",
+        "keeps the bridge local and machine-readable"
+      ],
+      "weaknesses": [
+        "does not yet integrate the full question/evidence loop"
+      ],
+      "assumptions": [
+        "planning contracts are stable enough for upstream selection"
+      ]
+    },
+    {
+      "candidate_id": "candidate-delay-bridge",
+      "rank": 2,
+      "total_score": 4.1,
+      "score_breakdown": {
+        "feasibility": 4.0,
+        "clarity": 4.2
+      },
+      "summary": "Delay the upstream bridge and continue with hand-authored selected-scope packets.",
+      "strengths": [
+        "keeps immediate changes smaller"
+      ],
+      "weaknesses": [
+        "leaves a manual gap between research and planning"
+      ]
+    }
+  ],
+  "recommended_candidate_id": "candidate-top-level-planning-orchestration",
+  "recommendation_reason": "The direct bridge from research recommendation to selected solution scope has the highest downstream value and unlocks real end-to-end orchestration.",
+  "open_questions": [
+    "How much scope metadata should be filled automatically versus supplied by selection policy?"
+  ],
+  "artifact_refs": [
+    "artifacts/planner/examples/plan-selection-exercise/plan-a-structural.json",
+    "artifacts/planner/examples/plan-selection-exercise/plan-b-structural.json"
+  ],
+  "evidence_refs": [
+    "docs/system-flow-mermaid.md",
+    "docs/plan-quality-score-v1.md"
+  ]
+}

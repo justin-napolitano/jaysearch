@@ -1,0 +1,60 @@
+{
+  "packet_type": "research_hypothesis_packet",
+  "packet_version": "v1",
+  "packet_id": "research-problem:platform-template-bootstrap:evidence-search-runtime-001:hypothesis:novel_synthesized:packet",
+  "created_at": "2026-05-21T16:44:22Z",
+  "producer": "materialize-research-hypotheses",
+  "hypothesis_id": "research-problem:platform-template-bootstrap:evidence-search-runtime-001:hypothesis:novel_synthesized",
+  "problem_id": "research-problem:platform-template-bootstrap:evidence-search-runtime-001",
+  "hypothesis_family": "novel_synthesized",
+  "hypothesis_statement": "Synthesize a novel approach for: What contract and runtime should convert a research problem into ranked evidence packets with source quality and rejection traceability?",
+  "approach_outline": "Generate a fresh approach under the stated constraints for comparison against reuse paths.",
+  "evaluation_focus": [
+    "source provenance",
+    "ranking explainability",
+    "rejected source traceability",
+    "evidence packet compatibility",
+    "bounded runtime behavior"
+  ],
+  "evidence_refs": [
+    "/mnt/c/users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap/artifacts/planner/examples/evaluation-strength-and-evidence-search/evidence-search-runtime-evidence.packet.json"
+  ],
+  "branch_rank": 4,
+  "prune_conditions": [
+    "fails required validity checks",
+    "cannot satisfy evaluation criteria under constraints"
+  ],
+  "source_question_refs": [],
+  "source_problem_ref": "/mnt/c/users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap/artifacts/validation/evidence-search-runtime-runs/rts-20260521T164422Z/steps/qrpt-20260521T164422Z/research-problem.packet.json",
+  "risk_notes": [
+    "higher execution risk",
+    "weaker prior validation"
+  ],
+  "expected_advantages": [
+    "highest flexibility",
+    "can avoid reuse mismatch"
+  ],
+  "expected_tradeoffs": [
+    "higher execution risk",
+    "weaker prior validation"
+  ],
+  "constraints": [
+    "local-first report artifacts",
+    "primary sources preferred",
+    "ranked source records",
+    "rejected source traceability",
+    "bounded query count"
+  ],
+  "repo_context": {
+    "project_id": "platform-template-bootstrap",
+    "decision_target": "whether to build evidence-search-tool v1 as a bounded source discovery, normalization, ranking, and evidence packet materialization runtime",
+    "decision_consequence": "changes whether research begins with live source discovery rather than hand-seeded evidence packets",
+    "blocked_work_if_unanswered": "research quality remains limited by manually supplied evidence packets and cannot validate source discovery behavior"
+  },
+  "reference_implementations": [
+    "https://arxiv.org/abs/2005.11401",
+    "https://arxiv.org/abs/2305.11738",
+    "https://www.w3.org/TR/prov-overview/",
+    "https://arxiv.org/abs/2310.06770"
+  ]
+}

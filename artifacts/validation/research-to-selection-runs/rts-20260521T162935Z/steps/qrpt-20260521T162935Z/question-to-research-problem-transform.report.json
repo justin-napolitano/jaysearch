@@ -1,0 +1,12 @@
+{
+  "api_version": "public-orchestration.v1",
+  "command": "question-to-research-problem-transform",
+  "status": "ok",
+  "ok": true,
+  "run_id": "qrpt-20260521T162935Z",
+  "research_question_path": "/mnt/c/users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap/artifacts/planner/examples/question-research-handoff/research-question.packet.json",
+  "evidence_packet_path": "/mnt/c/users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap/artifacts/planner/examples/question-research-handoff/evidence.packet.json",
+  "research_problem_path": "artifacts/validation/research-to-selection-runs/rts-20260521T162935Z/steps/qrpt-20260521T162935Z/research-problem.packet.json",
+  "transform_packet_path": "artifacts/validation/research-to-selection-runs/rts-20260521T162935Z/steps/qrpt-20260521T162935Z/question-to-research-problem-transform.packet.json",
+  "blockers": []
+}

@@ -1,0 +1,19 @@
+{
+  "packet_type": "tool_call_request_packet",
+  "packet_version": "v1",
+  "packet_id": "odr-20260521T143121Z:odr-20260521T143121Z:review-plan-quality:request",
+  "created_at": "2026-05-21T14:31:21Z",
+  "producer": "orchestrate-design-review",
+  "call_id": "odr-20260521T143121Z:review-plan-quality",
+  "run_id": "odr-20260521T143121Z",
+  "requester": "design-iteration-tool",
+  "target_tool": "plan-quality-score",
+  "operation_name": "compare_plans",
+  "input_packet_refs": [
+    "artifacts/orchestration/research-plan-selection-runs/sss-20260520T184914Z/selected-solution-scope.packet.json",
+    "artifacts/planner/examples/plan-selection-exercise/plan-a-structural.json",
+    "artifacts/planner/examples/plan-selection-exercise/plan-b-structural.json"
+  ],
+  "policy_ref": "spec/plan-quality-scoring.yaml",
+  "reason": "Compare candidate structural plans during design review."
+}

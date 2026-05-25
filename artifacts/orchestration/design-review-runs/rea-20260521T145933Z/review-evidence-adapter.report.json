@@ -1,0 +1,12 @@
+{
+  "api_version": "public-orchestration.v1",
+  "command": "review-evidence-adapter",
+  "status": "ok",
+  "ok": true,
+  "run_id": "rea-20260521T145933Z",
+  "request_path": "/mnt/c/users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap/artifacts/orchestration/examples/question-evidence-research-handoff-review-request.packet.json",
+  "evidence_packet_path": "artifacts/orchestration/design-review-runs/rea-20260521T145933Z/evidence.packet.json",
+  "source_count": 3,
+  "claim_count": 3,
+  "blockers": []
+}

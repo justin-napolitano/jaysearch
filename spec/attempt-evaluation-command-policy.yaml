@@ -1,0 +1,24 @@
+version: v1
+policy_id: attempt-evaluation-command-policy-v1
+description: >
+  Policy for optional validation command execution inside
+  evaluate-implementation-attempt. Command execution is disabled unless the
+  caller opts in.
+default_timeout_seconds: 60
+max_output_chars: 12000
+require_declared_command: true
+allowed_command_prefixes:
+  - "uv run pytest"
+  - "python3 -m py_compile"
+  - "python3 -m json.tool"
+  - "bin/"
+forbidden_shell_tokens:
+  - ">"
+  - ">>"
+  - "<"
+  - "|"
+  - "&&"
+  - "||"
+  - ";"
+  - "$("
+  - "`"

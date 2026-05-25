@@ -1,0 +1,151 @@
+{
+  "graph_id": "node-based-project-plan-v1",
+  "graph_type": "project_strategy_dag",
+  "version": "v1",
+  "purpose": "Make problem nodes and execution units the canonical substrate for major project planning and execution.",
+  "implementation_graph_ref": "artifacts/planner/research/design-review-automation-v1-implementation-graph.json",
+  "nodes": [
+    {
+      "node_id": "define-problem-node-contract",
+      "title": "Define Problem Node Contract",
+      "node_type": "contract",
+      "status": "ready",
+      "goal": "Define a manageable project problem node with readiness state, options, evidence, and feedback refs.",
+      "owned_changes": [
+        "spec/contracts/problem-node.schema.yaml",
+        "docs/core-contract-spec-v1.md"
+      ],
+      "expected_outputs": [
+        "problem_node contract"
+      ],
+      "validation_targets": [
+        "required node readiness fields defined",
+        "node can be linked in project DAG"
+      ],
+      "completion_evidence_requirements": [
+        "contract schema",
+        "contract registry entry"
+      ]
+    },
+    {
+      "node_id": "define-node-option-contract",
+      "title": "Define Node Option Contract",
+      "node_type": "contract",
+      "status": "ready",
+      "goal": "Define candidate options for solving or advancing problem nodes.",
+      "owned_changes": [
+        "spec/contracts/node-option.schema.yaml",
+        "docs/core-contract-spec-v1.md"
+      ],
+      "expected_outputs": [
+        "node_option contract"
+      ],
+      "validation_targets": [
+        "option has implementation intent",
+        "option has evidence and evaluation refs"
+      ],
+      "completion_evidence_requirements": [
+        "contract schema",
+        "contract registry entry"
+      ]
+    },
+    {
+      "node_id": "define-execution-unit-contract",
+      "title": "Define Execution Unit Contract",
+      "node_type": "contract",
+      "status": "ready",
+      "goal": "Define the buildable/evaluable unit emitted from selected node options.",
+      "owned_changes": [
+        "spec/contracts/execution-unit.schema.yaml",
+        "docs/core-contract-spec-v1.md"
+      ],
+      "expected_outputs": [
+        "execution_unit contract"
+      ],
+      "validation_targets": [
+        "execution unit has owned changes",
+        "execution unit has validation commands",
+        "execution unit has rollback plan"
+      ],
+      "completion_evidence_requirements": [
+        "contract schema",
+        "contract registry entry"
+      ]
+    },
+    {
+      "node_id": "define-node-ranking-policy",
+      "title": "Define Node Ranking Policy",
+      "node_type": "policy",
+      "status": "ready",
+      "goal": "Define how planner ranks problem nodes before expansion or materialization.",
+      "owned_changes": [
+        "spec/problem-node-ranking-policy.yaml"
+      ],
+      "expected_outputs": [
+        "node ranking policy"
+      ],
+      "validation_targets": [
+        "ranking includes expected value",
+        "ranking includes dependency unlocks",
+        "ranking includes readiness and risk"
+      ],
+      "completion_evidence_requirements": [
+        "ranking policy"
+      ]
+    },
+    {
+      "node_id": "materialize-execution-units",
+      "title": "Materialize Execution Units",
+      "node_type": "runtime",
+      "status": "pending",
+      "goal": "Convert selected node options into buildable execution units.",
+      "owned_changes": [
+        "src/platform_tools/materialize_execution_unit.py",
+        "tests/test_materialize_execution_unit.py"
+      ],
+      "expected_outputs": [
+        "execution_unit packet"
+      ],
+      "validation_targets": [
+        "generic selected scopes do not become implementation-ready",
+        "implementation intent required"
+      ],
+      "completion_evidence_requirements": [
+        "unit tests",
+        "real A/B materialization run"
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "edge_id": "e1",
+      "from_node_id": "define-node-option-contract",
+      "to_node_id": "define-problem-node-contract",
+      "relation": "depends_on"
+    },
+    {
+      "edge_id": "e2",
+      "from_node_id": "define-execution-unit-contract",
+      "to_node_id": "define-node-option-contract",
+      "relation": "depends_on"
+    },
+    {
+      "edge_id": "e3",
+      "from_node_id": "define-node-ranking-policy",
+      "to_node_id": "define-problem-node-contract",
+      "relation": "depends_on"
+    },
+    {
+      "edge_id": "e4",
+      "from_node_id": "materialize-execution-units",
+      "to_node_id": "define-execution-unit-contract",
+      "relation": "depends_on"
+    },
+    {
+      "edge_id": "e5",
+      "from_node_id": "materialize-execution-units",
+      "to_node_id": "define-node-ranking-policy",
+      "relation": "depends_on"
+    }
+  ]
+}

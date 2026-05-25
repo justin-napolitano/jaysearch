@@ -1,0 +1,133 @@
+{
+  "graph_id": "apply-solution-artifact-v1",
+  "graph_type": "implementation_dag",
+  "version": "v1",
+  "purpose": "Govern the first mutating transition from promoted solution_artifact to applied_solution using isolated patch application and post-apply validation.",
+  "source_artifacts": [
+    "docs/apply-solution-artifact-policy-v1.md",
+    ".agent/execplans/20260522-apply-solution-artifact-v1-codex-01-execplan.md",
+    "docs/patch-producing-attempts-research-v1.md",
+    "docs/patch-aware-attempt-evaluation-research-v1.md",
+    "spec/contracts/solution-artifact.schema.yaml"
+  ],
+  "nodes": [
+    {
+      "node_id": "define-apply-policy",
+      "title": "Define Apply Policy",
+      "node_type": "policy",
+      "status": "planned",
+      "goal": "Lock the rules for the first mutating execution boundary.",
+      "owned_changes": [
+        "docs/apply-solution-artifact-policy-v1.md"
+      ],
+      "expected_outputs": [
+        "apply gates",
+        "state transition",
+        "anti-drift rules"
+      ]
+    },
+    {
+      "node_id": "define-applied-solution-contract",
+      "title": "Define Applied Solution Contract",
+      "node_type": "contract",
+      "status": "planned",
+      "goal": "Specify the packet emitted after successful isolated apply and validation.",
+      "owned_changes": [
+        "spec/contracts/applied-solution.schema.yaml",
+        "spec/contracts/packet-schema-registry.yaml"
+      ],
+      "expected_outputs": [
+        "applied_solution schema",
+        "registry entry"
+      ]
+    },
+    {
+      "node_id": "implement-isolated-apply-runner",
+      "title": "Implement Isolated Apply Runner",
+      "node_type": "runtime",
+      "status": "planned",
+      "goal": "Create a non-current-worktree apply executor that re-checks and applies the patch in an isolated target.",
+      "owned_changes": [
+        "src/platform_tools/apply_solution_artifact.py",
+        "bin/apply-solution-artifact"
+      ],
+      "expected_outputs": [
+        "apply result artifact",
+        "applied solution artifact"
+      ]
+    },
+    {
+      "node_id": "enforce-owned-change-boundary",
+      "title": "Enforce Owned Change Boundary",
+      "node_type": "policy_gate",
+      "status": "planned",
+      "goal": "Reject patches that modify files outside execution_unit.owned_changes before applying.",
+      "owned_changes": [
+        "src/platform_tools/apply_solution_artifact.py"
+      ],
+      "expected_outputs": [
+        "outside owned changes blockers"
+      ]
+    },
+    {
+      "node_id": "run-post-apply-validation",
+      "title": "Run Post Apply Validation",
+      "node_type": "validation",
+      "status": "planned",
+      "goal": "Run execution-unit validation commands after applying the patch in the isolated target.",
+      "owned_changes": [
+        "src/platform_tools/apply_solution_artifact.py"
+      ],
+      "expected_outputs": [
+        "post-apply validation result refs"
+      ]
+    },
+    {
+      "node_id": "test-apply-solution-artifact",
+      "title": "Test Apply Solution Artifact",
+      "node_type": "validation",
+      "status": "planned",
+      "goal": "Prove success and blocker cases for the governed isolated apply transition.",
+      "owned_changes": [
+        "tests/test_apply_solution_artifact.py",
+        "tests/test_applied_solution_contracts.py"
+      ],
+      "expected_outputs": [
+        "apply runner tests",
+        "contract tests"
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "edge_id": "e1",
+      "from_node_id": "define-applied-solution-contract",
+      "to_node_id": "define-apply-policy",
+      "relation": "depends_on"
+    },
+    {
+      "edge_id": "e2",
+      "from_node_id": "implement-isolated-apply-runner",
+      "to_node_id": "define-applied-solution-contract",
+      "relation": "depends_on"
+    },
+    {
+      "edge_id": "e3",
+      "from_node_id": "enforce-owned-change-boundary",
+      "to_node_id": "implement-isolated-apply-runner",
+      "relation": "depends_on"
+    },
+    {
+      "edge_id": "e4",
+      "from_node_id": "run-post-apply-validation",
+      "to_node_id": "enforce-owned-change-boundary",
+      "relation": "depends_on"
+    },
+    {
+      "edge_id": "e5",
+      "from_node_id": "test-apply-solution-artifact",
+      "to_node_id": "run-post-apply-validation",
+      "relation": "depends_on"
+    }
+  ]
+}

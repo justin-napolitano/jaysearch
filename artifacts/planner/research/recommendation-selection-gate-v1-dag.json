@@ -1,0 +1,88 @@
+{
+  "graph_id": "recommendation-selection-gate-v1",
+  "graph_type": "workflow_dag",
+  "version": "v1",
+  "purpose": "Materialize selected_solution_scope only from evaluation-backed research recommendations.",
+  "implementation_graph_ref": "artifacts/planner/research/design-review-automation-v1-implementation-graph.json",
+  "nodes": [
+    {
+      "node_id": "load-recommendation",
+      "title": "Load Recommendation",
+      "node_type": "tool_call",
+      "status": "ready",
+      "goal": "Load and validate the research recommendation packet.",
+      "owned_changes": [
+        "research_recommendation_packet"
+      ],
+      "expected_outputs": [
+        "recommendation_inventory"
+      ],
+      "validation_targets": [
+        "packet_type is research_recommendation_packet",
+        "problem_id exists",
+        "recommended candidate exists"
+      ],
+      "completion_evidence_requirements": [
+        "loaded recommendation metadata"
+      ]
+    },
+    {
+      "node_id": "apply-selection-policy",
+      "title": "Apply Selection Policy",
+      "node_type": "policy_gate",
+      "status": "ready",
+      "goal": "Require evaluation-backed, promoted, ranked candidate before selection.",
+      "owned_changes": [
+        "selection_policy"
+      ],
+      "expected_outputs": [
+        "selection decision"
+      ],
+      "validation_targets": [
+        "evaluation summary ref exists",
+        "evaluation refs exist",
+        "selected candidate is ranked",
+        "selected candidate is promoted",
+        "selected candidate has evaluation ref"
+      ],
+      "completion_evidence_requirements": [
+        "selection gate decision"
+      ]
+    },
+    {
+      "node_id": "emit-selected-scope",
+      "title": "Emit Selected Scope",
+      "node_type": "materialization",
+      "status": "ready",
+      "goal": "Emit selected_solution_scope for planner consumption.",
+      "owned_changes": [
+        "selected_solution_scope"
+      ],
+      "expected_outputs": [
+        "selected_solution_scope"
+      ],
+      "validation_targets": [
+        "scope records selected candidate",
+        "scope records selection policy",
+        "scope preserves evidence refs"
+      ],
+      "completion_evidence_requirements": [
+        "selected solution scope packet"
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "edge_id": "e1",
+      "from_node_id": "apply-selection-policy",
+      "to_node_id": "load-recommendation",
+      "relation": "depends_on"
+    },
+    {
+      "edge_id": "e2",
+      "from_node_id": "emit-selected-scope",
+      "to_node_id": "apply-selection-policy",
+      "relation": "depends_on"
+    }
+  ]
+}
