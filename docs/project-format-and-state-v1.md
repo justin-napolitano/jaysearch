@@ -36,6 +36,10 @@ Implemented:
 - attempt selection contract
 - deterministic multi-attempt selector
 - execution ERA smoke loop through multi-attempt selection
+- candidate patch manifest contract
+- deterministic multi-patch manifest materializer
+- manifest-backed implementation attempt generation
+- manifest-backed execution ERA smoke loop
 
 Partially implemented:
 
@@ -45,7 +49,6 @@ Partially implemented:
 - design-iteration review mode
 - plan-quality scoring
 - research-to-selection validation
-- multi-attempt candidate generation with deterministic patch sources
 
 Planned next:
 
@@ -102,6 +105,7 @@ project
   -> problem_node[]
   -> node_option[]
   -> execution_unit[]
+  -> candidate_patch_manifest[]
   -> implementation_attempt[]
   -> attempt_evaluation[]
   -> attempt_selection[]
@@ -235,6 +239,33 @@ Buildability:
 - generated inside an execution-unit boundary
 - may carry a patch artifact in `patch_ref`
 
+### `candidate_patch_manifest`
+
+Owner:
+
+- implementation orchestrator
+- future patch synthesis tools
+
+Purpose:
+
+- carry multiple artifact-backed candidate patches for one execution unit before attempt generation
+
+Status:
+
+- implemented
+
+Required concepts:
+
+- source execution unit ref
+- candidate patch refs
+- candidate ids
+- candidate families
+- source labels
+- expected changed artifact refs
+- validation refs
+- candidate blockers
+- manifest blockers
+
 ### `attempt_evaluation`
 
 Owner:
@@ -321,7 +352,7 @@ Purpose:
 
 Status:
 
-- planned
+- implemented
 
 Required concepts:
 
@@ -348,7 +379,8 @@ flowchart TD
   Options --> OptionEval[option evaluation]
   OptionEval --> SelectedOption[selected node_option]
   SelectedOption --> ExecutionUnit[execution_unit]
-  ExecutionUnit --> Attempts[implementation_attempt candidates]
+  ExecutionUnit --> CandidatePatchManifest[candidate_patch_manifest]
+  CandidatePatchManifest --> Attempts[implementation_attempt candidates]
   Attempts --> AttemptEval[attempt_evaluation]
   AttemptEval --> AttemptSelection[attempt_selection]
   AttemptSelection --> Solution[solution_artifact]
@@ -469,6 +501,7 @@ The following are hard rules:
 - governance validates and blocks; it does not repair missing semantics.
 - executor selects implementation attempts through evaluation, not narrative preference.
 - attempt selection is evidence-backed and deterministic; blocked evaluations are ineligible.
+- candidate diversity must be artifact-backed before selection can claim candidate search value.
 - applying a solution artifact is a separate governed transition after solution emission.
 - default apply mode must use an isolated target and post-apply validation.
 
@@ -609,6 +642,23 @@ Status:
 
 - implemented
 
+### Step 8: Candidate Patch Manifest
+
+Goal:
+
+- provide deterministic multi-patch candidate ingestion before implementation attempt generation
+
+Outputs:
+
+- `candidate_patch_manifest` contract
+- materializer CLI
+- manifest-backed attempt generation
+- manifest-backed smoke-loop integration
+
+Status:
+
+- implemented
+
 ## Source Basis
 
 Current source-backed design claims are grounded in:
@@ -625,10 +675,10 @@ The biggest remaining drift risk is apply-state drift.
 
 The system can now generate implementation-specific candidates, select a scope, validate readiness, materialize an execution unit, generate patch-bearing attempts, evaluate one or more attempts, select among attempts, emit solution artifacts, and apply selected solutions in isolated targets.
 
-The next missing boundary is richer candidate generation:
+The next missing boundary is autonomous candidate generation:
 
 - synthesized patch attempts
 - diverse candidate families
 - larger tree search over options
 
-Without that boundary, multi-attempt selection can only rank supplied or duplicated patch artifacts, not genuinely different generated solutions.
+The system can now rank genuinely different supplied patch artifacts. Without the next boundary, candidate diversity still depends on humans or external tools supplying patch candidates rather than platform-generated patches.

@@ -96,6 +96,7 @@ def run_execution_era_loop_smoke(
     validate_patch_ref: bool = False,
     apply_solution: bool = False,
     max_attempts: int = 1,
+    candidate_patch_manifest_path: str = "",
 ) -> tuple[int, dict[str, Any]]:
     repo_root = Path(root)
     run_id = _run_id()
@@ -111,6 +112,7 @@ def run_execution_era_loop_smoke(
         patch_source_path=patch_source_path,
         validate_patch=validate_patch,
         max_attempts=max_attempts,
+        candidate_patch_manifest_path=candidate_patch_manifest_path,
     )
     step_reports.append(_step_record("generate_implementation_attempt", attempt_code, attempt_report))
     if attempt_code != 0:
@@ -136,7 +138,7 @@ def run_execution_era_loop_smoke(
             step_reports=step_reports,
             blockers=["generate_implementation_attempt:attempt_packet_paths_missing"],
         )
-    multi_attempt = max_attempts > 1
+    multi_attempt = len(attempt_paths) > 1
     attempt_path = str(attempt_paths[0])
     evaluation_path = ""
     evaluation_paths: list[str] = []
@@ -283,9 +285,10 @@ def run_execution_era_loop_smoke(
 
     explicitly_not_validated = [
         "autonomous code editing",
-        "multi-attempt ranking",
         "project node completion",
     ]
+    if not multi_attempt:
+        explicitly_not_validated.append("multi-attempt ranking")
     if not execute_validation_commands:
         explicitly_not_validated.append("direct validation command execution")
     if not validate_patch_ref:
@@ -309,6 +312,7 @@ def run_execution_era_loop_smoke(
         "attempt_packet_ref": attempt_path,
         "attempt_evaluation_ref": evaluation_path,
         "attempt_selection_ref": attempt_selection_path,
+        "candidate_patch_manifest_ref": candidate_patch_manifest_path,
         "solution_artifact_ref": solution_path,
         "applied_solution_ref": applied_solution_path,
         "step_reports": step_reports,
@@ -330,6 +334,7 @@ def run_execution_era_loop_smoke(
             "attempt_evaluation_path": evaluation_path,
             "attempt_evaluation_paths": evaluation_paths,
             "attempt_selection_path": attempt_selection_path,
+            "candidate_patch_manifest_path": candidate_patch_manifest_path,
             "solution_artifact_path": solution_path,
             "applied_solution_path": applied_solution_path,
             "smoke_packet_path": smoke_packet_path.as_posix(),
@@ -356,6 +361,7 @@ def main() -> int:
     parser.add_argument("--validate-patch-ref", action="store_true")
     parser.add_argument("--apply-solution", action="store_true")
     parser.add_argument("--max-attempts", type=int, default=1)
+    parser.add_argument("--candidate-patch-manifest-path", default="")
     args = parser.parse_args()
     try:
         code, report = run_execution_era_loop_smoke(
@@ -371,6 +377,7 @@ def main() -> int:
             validate_patch_ref=args.validate_patch_ref,
             apply_solution=args.apply_solution,
             max_attempts=args.max_attempts,
+            candidate_patch_manifest_path=args.candidate_patch_manifest_path,
         )
     except (FileNotFoundError, PermissionError, ValueError, json.JSONDecodeError) as exc:
         report = envelope(

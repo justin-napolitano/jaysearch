@@ -662,6 +662,32 @@ contract_families:
     downstream_consumers:
       - governance-tool
       - design-iteration-tool
+  - contract_name: candidate_patch_manifest
+    contract_kind: packet
+    owner: implementation-orchestrator
+    current_version: v1
+    compatibility_policy: additive_minor_breaking_major
+    status: active
+    schema_ref: spec/contracts/candidate-patch-manifest.schema.yaml
+    required_fields:
+      - packet_type
+      - packet_version
+      - packet_id
+      - created_at
+      - producer
+      - manifest_id
+      - source_execution_unit_ref
+      - candidate_patches
+      - validation_policy
+      - evidence_refs
+      - blockers
+    upstream_producers:
+      - implementation-orchestrator
+      - research-tool
+    downstream_consumers:
+      - implementation-orchestrator
+      - governance-tool
+      - design-iteration-tool
   - contract_name: attempt_evaluation
     contract_kind: packet
     owner: governance-tool
