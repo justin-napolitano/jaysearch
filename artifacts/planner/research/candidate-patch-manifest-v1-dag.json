@@ -1,0 +1,133 @@
+{
+  "graph_id": "candidate-patch-manifest-v1",
+  "graph_type": "implementation_dag",
+  "version": "v1",
+  "purpose": "Add deterministic multi-patch candidate ingestion before implementation attempt generation.",
+  "source_artifacts": [
+    "docs/candidate-patch-manifest-research-v1.md",
+    ".agent/execplans/20260525-candidate-patch-manifest-v1-codex-01-execplan.md",
+    "docs/execution-era-multi-attempt-selection-research-v1.md",
+    "docs/patch-producing-attempts-research-v1.md"
+  ],
+  "nodes": [
+    {
+      "node_id": "define-candidate-patch-policy",
+      "title": "Define Candidate Patch Policy",
+      "node_type": "policy",
+      "status": "planned",
+      "goal": "Lock deterministic multi-patch ingestion and anti-drift rules.",
+      "owned_changes": [
+        "docs/candidate-patch-manifest-research-v1.md"
+      ],
+      "expected_outputs": [
+        "manifest policy",
+        "candidate item rules"
+      ]
+    },
+    {
+      "node_id": "define-candidate-patch-contract",
+      "title": "Define Candidate Patch Contract",
+      "node_type": "contract",
+      "status": "planned",
+      "goal": "Add candidate_patch_manifest as a first-class packet before attempt generation.",
+      "owned_changes": [
+        "spec/contracts/candidate-patch-manifest.schema.yaml",
+        "spec/contracts/packet-schema-registry.yaml"
+      ],
+      "expected_outputs": [
+        "manifest schema",
+        "registry entry"
+      ]
+    },
+    {
+      "node_id": "implement-manifest-materializer",
+      "title": "Implement Manifest Materializer",
+      "node_type": "runtime",
+      "status": "planned",
+      "goal": "Materialize multiple supplied patch refs into a candidate_patch_manifest packet.",
+      "owned_changes": [
+        "src/platform_tools/materialize_candidate_patch_manifest.py",
+        "bin/materialize-candidate-patch-manifest"
+      ],
+      "expected_outputs": [
+        "candidate patch manifest packet",
+        "manifest report"
+      ]
+    },
+    {
+      "node_id": "integrate-manifest-attempt-generation",
+      "title": "Integrate Manifest Attempt Generation",
+      "node_type": "runtime",
+      "status": "planned",
+      "goal": "Allow generate_implementation_attempt to create one attempt per manifest candidate.",
+      "owned_changes": [
+        "src/platform_tools/generate_implementation_attempt.py",
+        "tests/test_generate_implementation_attempt.py"
+      ],
+      "expected_outputs": [
+        "manifest-backed attempts"
+      ]
+    },
+    {
+      "node_id": "wire-smoke-runner-manifest-path",
+      "title": "Wire Smoke Runner Manifest Path",
+      "node_type": "runtime",
+      "status": "planned",
+      "goal": "Allow execution ERA smoke runner to consume candidate patch manifests.",
+      "owned_changes": [
+        "src/platform_tools/run_execution_era_loop_smoke.py",
+        "tests/test_run_execution_era_loop_smoke.py"
+      ],
+      "expected_outputs": [
+        "manifest-backed multi-attempt smoke test"
+      ]
+    },
+    {
+      "node_id": "test-candidate-patch-manifest",
+      "title": "Test Candidate Patch Manifest",
+      "node_type": "validation",
+      "status": "planned",
+      "goal": "Prove manifest contract, patch validation, invalid candidate preservation, and runner integration.",
+      "owned_changes": [
+        "tests/test_candidate_patch_manifest_contracts.py",
+        "tests/test_materialize_candidate_patch_manifest.py"
+      ],
+      "expected_outputs": [
+        "manifest tests",
+        "integration tests"
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "edge_id": "e1",
+      "from_node_id": "define-candidate-patch-contract",
+      "to_node_id": "define-candidate-patch-policy",
+      "relation": "depends_on"
+    },
+    {
+      "edge_id": "e2",
+      "from_node_id": "implement-manifest-materializer",
+      "to_node_id": "define-candidate-patch-contract",
+      "relation": "depends_on"
+    },
+    {
+      "edge_id": "e3",
+      "from_node_id": "integrate-manifest-attempt-generation",
+      "to_node_id": "implement-manifest-materializer",
+      "relation": "depends_on"
+    },
+    {
+      "edge_id": "e4",
+      "from_node_id": "wire-smoke-runner-manifest-path",
+      "to_node_id": "integrate-manifest-attempt-generation",
+      "relation": "depends_on"
+    },
+    {
+      "edge_id": "e5",
+      "from_node_id": "test-candidate-patch-manifest",
+      "to_node_id": "wire-smoke-runner-manifest-path",
+      "relation": "depends_on"
+    }
+  ]
+}

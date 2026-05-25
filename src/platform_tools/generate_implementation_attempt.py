@@ -83,9 +83,11 @@ def generate_implementation_attempt(
     max_attempts: int = 1,
     patch_source_path: str = "",
     validate_patch: bool = False,
+    candidate_patch_manifest_path: str = "",
 ) -> tuple[int, dict[str, Any]]:
     repo_root = Path(root)
     execution_unit = _load_json(repo_root / execution_unit_path)
+    candidate_patch_manifest: dict[str, Any] | None = None
     run_id = _run_id()
     run_root = repo_root / output_root / run_id
     run_root.mkdir(parents=True, exist_ok=True)
@@ -95,6 +97,8 @@ def generate_implementation_attempt(
         blockers.append("execution_unit_packet_type_invalid")
     if max_attempts < 1:
         blockers.append("max_attempts_invalid")
+    if patch_source_path and candidate_patch_manifest_path:
+        blockers.append("patch_source_and_candidate_manifest_mutually_exclusive")
     patch_source: Path | None = None
     if patch_source_path:
         patch_source = repo_root / patch_source_path
@@ -102,6 +106,10 @@ def generate_implementation_attempt(
             blockers.append("patch_source_path_missing")
         elif not patch_source.is_file():
             blockers.append("patch_source_path_not_file")
+    if candidate_patch_manifest_path:
+        candidate_patch_manifest = _load_json(repo_root / candidate_patch_manifest_path)
+        if str(candidate_patch_manifest.get("packet_type", "")).strip() != "candidate_patch_manifest":
+            blockers.append("candidate_patch_manifest_packet_type_invalid")
 
     required = [
         "execution_unit_id",
@@ -138,11 +146,73 @@ def generate_implementation_attempt(
 
     execution_unit_id = str(execution_unit["execution_unit_id"]).strip()
     source_ref = str((repo_root / execution_unit_path).resolve())
+    if candidate_patch_manifest is not None:
+        if str(candidate_patch_manifest.get("source_execution_unit_ref", "")).strip() != source_ref:
+            blockers.append("candidate_patch_manifest_source_execution_unit_ref_mismatch")
+        manifest_blockers = _string_list(candidate_patch_manifest.get("blockers", []))
+        blockers.extend(f"candidate_patch_manifest_blocker:{item}" for item in manifest_blockers)
+        if blockers:
+            report = envelope(
+                command=COMMAND,
+                status="blocked",
+                ok=False,
+                payload={
+                    "run_id": run_id,
+                    "execution_unit_path": source_ref,
+                    "attempt_packet_paths": [],
+                    "patch_validation_refs": [],
+                    "blockers": sorted(set(blockers)),
+                },
+            )
+            write_json(run_root / "implementation-attempt-generation.report.json", report)
+            return 1, report
+
     attempt_paths: list[str] = []
     patch_validation_refs: list[str] = []
-    for index in range(1, max_attempts + 1):
+    if candidate_patch_manifest is not None:
+        manifest_candidates = [
+            candidate
+            for candidate in candidate_patch_manifest.get("candidate_patches", [])
+            if isinstance(candidate, dict) and not _string_list(candidate.get("blockers", []))
+        ]
+        if not manifest_candidates:
+            blockers.append("candidate_patch_manifest_no_unblocked_candidates")
+            report = envelope(
+                command=COMMAND,
+                status="blocked",
+                ok=False,
+                payload={
+                    "run_id": run_id,
+                    "execution_unit_path": source_ref,
+                    "attempt_packet_paths": [],
+                    "patch_validation_refs": [],
+                    "blockers": sorted(set(blockers)),
+                },
+            )
+            write_json(run_root / "implementation-attempt-generation.report.json", report)
+            return 1, report
+    else:
+        manifest_candidates = [{} for _ in range(max_attempts)]
+
+    for index, manifest_candidate in enumerate(manifest_candidates, start=1):
         attempt_id = f"attempt:{_slug(execution_unit_id)}:{index:03d}"
         patch_ref = ""
+        attempt_family_value = attempt_family
+        candidate_metadata: dict[str, Any] = {}
+        if candidate_patch_manifest is not None:
+            source_patch_ref = str(manifest_candidate.get("patch_ref", "")).strip()
+            patch_source = Path(source_patch_ref)
+            if not patch_source.is_absolute():
+                patch_source = repo_root / source_patch_ref
+            if not patch_source.exists():
+                blockers.append(f"candidate_patch_source_missing:{source_patch_ref}")
+                continue
+            attempt_family_value = str(manifest_candidate.get("candidate_family", "")).strip() or attempt_family
+            candidate_metadata = {
+                "candidate_patch_id": str(manifest_candidate.get("candidate_id", "")).strip(),
+                "candidate_source_label": str(manifest_candidate.get("source_label", "")).strip(),
+                "candidate_patch_manifest_ref": str((repo_root / candidate_patch_manifest_path).resolve()),
+            }
         if patch_source is not None:
             patch_target = run_root / f"implementation-attempt-{index:02d}.patch"
             shutil.copyfile(patch_source, patch_target)
@@ -177,7 +247,7 @@ def generate_implementation_attempt(
             "producer": COMMAND,
             "attempt_id": attempt_id,
             "source_execution_unit_ref": source_ref,
-            "attempt_family": attempt_family,
+            "attempt_family": attempt_family_value,
             "implementation_summary": (
                 "Non-mutating implementation attempt scaffold generated from execution unit "
                 f"{execution_unit_id}."
@@ -190,6 +260,7 @@ def generate_implementation_attempt(
             "status": "draft",
             "created_by": COMMAND,
         }
+        attempt.update({key: value for key, value in candidate_metadata.items() if value})
         attempt_path = write_json(
             run_root / f"implementation-attempt-{index:02d}.packet.json",
             attempt,
@@ -222,6 +293,7 @@ def main() -> int:
     parser.add_argument("--max-attempts", type=int, default=1)
     parser.add_argument("--patch-source-path", default="")
     parser.add_argument("--validate-patch", action="store_true")
+    parser.add_argument("--candidate-patch-manifest-path", default="")
     args = parser.parse_args()
     try:
         code, report = generate_implementation_attempt(
@@ -232,6 +304,7 @@ def main() -> int:
             max_attempts=args.max_attempts,
             patch_source_path=args.patch_source_path,
             validate_patch=args.validate_patch,
+            candidate_patch_manifest_path=args.candidate_patch_manifest_path,
         )
     except (FileNotFoundError, PermissionError, ValueError, json.JSONDecodeError) as exc:
         report = envelope(

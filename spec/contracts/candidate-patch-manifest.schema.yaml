@@ -1,0 +1,35 @@
+version: v1
+contract_name: candidate_patch_manifest
+contract_kind: packet
+owner: implementation-orchestrator
+description: >
+  Deterministic manifest of candidate patch artifacts for one execution_unit.
+  Later patch synthesis tools can emit this same contract.
+required_fields:
+  - packet_type
+  - packet_version
+  - packet_id
+  - created_at
+  - producer
+  - manifest_id
+  - source_execution_unit_ref
+  - candidate_patches
+  - validation_policy
+  - evidence_refs
+  - blockers
+properties:
+  packet_type:
+    const: candidate_patch_manifest
+candidate_patch_required_fields:
+  - candidate_id
+  - patch_ref
+  - candidate_family
+  - source_label
+  - producer_ref
+  - expected_changed_artifact_refs
+  - validation_refs
+  - blockers
+invariants:
+  - candidate_patch_manifests_do_not_select_winners
+  - candidate_patch_manifests_do_not_apply_patches
+  - invalid_candidate_patches_remain_visible

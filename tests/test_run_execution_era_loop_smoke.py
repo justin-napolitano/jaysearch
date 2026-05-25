@@ -74,6 +74,25 @@ def _write_valid_patch(path: Path) -> None:
     )
 
 
+def _write_patch_value(path: Path, value: str) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(
+        "\n".join(
+            [
+                "diff --git a/src/platform_tools/example.py b/src/platform_tools/example.py",
+                "index 43b23da..5a2f16f 100644",
+                "--- a/src/platform_tools/example.py",
+                "+++ b/src/platform_tools/example.py",
+                "@@ -1 +1 @@",
+                "-VALUE = 1",
+                f"+VALUE = {value}",
+                "",
+            ]
+        ),
+        encoding="utf-8",
+    )
+
+
 def test_run_execution_era_loop_smoke_reaches_solution_artifact(tmp_path: Path) -> None:
     execution_unit_path = _write_json(
         tmp_path / "artifacts" / "execution-unit.packet.json",
@@ -354,3 +373,78 @@ def test_run_execution_era_loop_smoke_selects_from_multiple_attempts(
     assert solution["rejected_attempt_refs"] == selection["rejected_attempt_refs"]
     smoke_packet = json.loads(Path(report["smoke_packet_path"]).read_text(encoding="utf-8"))
     assert smoke_packet["attempt_selection_ref"] == report["attempt_selection_path"]
+
+
+def test_run_execution_era_loop_smoke_uses_candidate_patch_manifest(
+    tmp_path: Path,
+) -> None:
+    _write_example_source(tmp_path)
+    execution_unit_path = _write_json(
+        tmp_path / "artifacts" / "execution-unit.packet.json",
+        _execution_unit(),
+    )
+    execution_ref = str((tmp_path / execution_unit_path).resolve())
+    patch_a = tmp_path / "artifacts" / "candidate-a.patch"
+    patch_b = tmp_path / "artifacts" / "candidate-b.patch"
+    _write_patch_value(patch_a, "2")
+    _write_patch_value(patch_b, "3")
+    manifest_path = _write_json(
+        tmp_path / "artifacts" / "candidate-patch-manifest.packet.json",
+        {
+            "packet_type": "candidate_patch_manifest",
+            "packet_version": "v1",
+            "packet_id": "manifest:001",
+            "created_at": "2026-05-25T00:00:00Z",
+            "producer": "test",
+            "manifest_id": "manifest-1",
+            "source_execution_unit_ref": execution_ref,
+            "candidate_patches": [
+                {
+                    "candidate_id": "candidate-a",
+                    "patch_ref": patch_a.as_posix(),
+                    "candidate_family": "manual_a",
+                    "source_label": "a",
+                    "producer_ref": "test",
+                    "expected_changed_artifact_refs": ["src/platform_tools/example.py"],
+                    "validation_refs": [],
+                    "blockers": [],
+                },
+                {
+                    "candidate_id": "candidate-b",
+                    "patch_ref": patch_b.as_posix(),
+                    "candidate_family": "manual_b",
+                    "source_label": "b",
+                    "producer_ref": "test",
+                    "expected_changed_artifact_refs": ["src/platform_tools/example.py"],
+                    "validation_refs": [],
+                    "blockers": [],
+                },
+            ],
+            "validation_policy": {"validate_patches": False},
+            "evidence_refs": [],
+            "blockers": [],
+        },
+    )
+
+    code, report = run_execution_era_loop_smoke(
+        root=tmp_path.as_posix(),
+        execution_unit_path=execution_unit_path,
+        candidate_patch_manifest_path=manifest_path,
+        validate_patch=True,
+        validate_patch_ref=True,
+    )
+
+    assert code == 0
+    assert report["candidate_patch_manifest_path"] == manifest_path
+    assert len(report["attempt_packet_paths"]) == 2
+    assert report["attempt_selection_path"]
+    attempts = [
+        json.loads(Path(path).read_text(encoding="utf-8"))
+        for path in report["attempt_packet_paths"]
+    ]
+    assert [attempt["candidate_patch_id"] for attempt in attempts] == [
+        "candidate-a",
+        "candidate-b",
+    ]
+    smoke_packet = json.loads(Path(report["smoke_packet_path"]).read_text(encoding="utf-8"))
+    assert smoke_packet["candidate_patch_manifest_ref"] == manifest_path
