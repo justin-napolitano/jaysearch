@@ -1,0 +1,70 @@
+flowchart TD
+  %% Jaysearch toolchain node graph.
+  %% Edges show packet/object flow between governed tools.
+
+  UserGoal["User goal / unresolved problem"]
+  DesignTool["design tool\nclarify scope, critique graph, produce questions"]
+  QuestionTool["question tool\nturn uncertainty into research questions"]
+  ResearchTool["research tool\ncollect sources, evidence, candidates"]
+  PlannerTool["planner tool\nmanage problem DAG and options"]
+  GovernanceTool["governance tool\nvalidate contracts and legal transitions"]
+  Executor["executor / implementation orchestrator\nmaterialize attempts and run ERA loop"]
+
+  ProblemNode["problem_node\nmanageable project problem\nnot executable"]
+  ResearchQuestion["research_question_packet\nwhat must be answered"]
+  Evidence["evidence_refs / research packets\nsources and support"]
+  NodeOption["node_option[]\npossible approaches\nnot executable"]
+  SelectedOption["selected node_option\nchosen approach"]
+  ExecutionUnit["execution_unit\nfirst buildable work contract"]
+
+  CandidatePatchManifest["candidate_patch_manifest\nartifact-backed patch candidate set"]
+  CandidatePatch["candidate_patch[]\npatch_ref + metadata + candidate blockers"]
+  ImplementationAttempt["implementation_attempt[]\npatch-bearing candidate implementation"]
+  AttemptEvaluation["attempt_evaluation[]\ntool/evidence-backed attempt result"]
+  AttemptSelection["attempt_selection\ndeterministic winner selection"]
+  SolutionArtifact["solution_artifact\nselected attempt + completion evidence"]
+  AppliedSolution["applied_solution\nisolated apply + post-apply validation"]
+  Feedback["feedback / follow-up refs\nnew problems, risks, or next nodes"]
+
+  UserGoal --> DesignTool
+  DesignTool --> ProblemNode
+  ProblemNode --> QuestionTool
+  QuestionTool --> ResearchQuestion
+  ResearchQuestion --> ResearchTool
+  ResearchTool --> Evidence
+  Evidence --> PlannerTool
+  PlannerTool --> NodeOption
+  NodeOption --> SelectedOption
+  SelectedOption --> GovernanceTool
+  GovernanceTool --> ExecutionUnit
+
+  ExecutionUnit --> Executor
+  Executor --> CandidatePatchManifest
+  CandidatePatchManifest --> CandidatePatch
+  CandidatePatch --> ImplementationAttempt
+  ImplementationAttempt --> AttemptEvaluation
+  AttemptEvaluation --> AttemptSelection
+  AttemptSelection --> SolutionArtifact
+  SolutionArtifact --> AppliedSolution
+  AppliedSolution --> Feedback
+  Feedback --> ProblemNode
+
+  GovernanceTool -. "contract checks" .-> ProblemNode
+  GovernanceTool -. "readiness gates" .-> NodeOption
+  GovernanceTool -. "execution-unit legality" .-> ExecutionUnit
+  GovernanceTool -. "attempt/evaluation/selection contracts" .-> AttemptEvaluation
+  GovernanceTool -. "apply policy" .-> AppliedSolution
+
+  classDef problem fill:#f8f1dc,stroke:#8a6d1d,color:#1f1a10;
+  classDef research fill:#dff3ef,stroke:#287463,color:#0d241f;
+  classDef plan fill:#e4edff,stroke:#355d9e,color:#0c1c36;
+  classDef exec fill:#fce4df,stroke:#a04735,color:#32100b;
+  classDef gov fill:#eee5ff,stroke:#6543a6,color:#1d1038;
+  classDef terminal fill:#e8f5dc,stroke:#4f7d25,color:#14230a;
+
+  class UserGoal,ProblemNode,Feedback problem;
+  class QuestionTool,ResearchQuestion,ResearchTool,Evidence research;
+  class PlannerTool,NodeOption,SelectedOption,ExecutionUnit plan;
+  class Executor,CandidatePatchManifest,CandidatePatch,ImplementationAttempt,AttemptEvaluation,AttemptSelection,SolutionArtifact exec;
+  class DesignTool,GovernanceTool gov;
+  class AppliedSolution terminal;

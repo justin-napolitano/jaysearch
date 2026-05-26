@@ -1,85 +1,133 @@
-# Platform Template
+# Jaysearch
 
-Canonical template repository for Codex-operated projects.
+Jaysearch is a governed research, planning, and ERA-inspired execution toolkit.
 
-This repository is the baseline shape for a governed, plan-driven project. It is meant to be copied or used as a template when starting a new repository that should preserve ExecPlan-first execution, machine-readable validation, auditable branch workflow, and human-controlled finalization.
+It is currently a modular toolkit repo: contracts, docs, CLIs, artifacts, tests, and Python tools live together until the boundaries are stable enough to split into separate repos.
 
-## What This Template Gives You
+## What This Is
 
-- ExecPlan-driven work in `.agent/execplans/`
-- canonical governance and policy text in `policy/`
-- machine-readable workflow and rules in `spec/`
-- validation and orchestration entrypoints in `bin/`
-- Python implementation and repo tooling in `src/`
-- starter docs for onboarding, maintenance, and operating model in `docs/`
+Jaysearch turns project work into explicit graph nodes and packet handoffs.
 
-The intent is not to centralize every future project into one shared codebase. New repositories should start from this structure, then evolve independently unless you intentionally port template improvements across.
+The core idea:
 
-## Working Model
-
-The platform assumes this flow:
-
-`ExecPlan -> Graph/Queue State -> PR -> Human Finalization -> Reconciliation -> Metrics`
-
-In practice that means:
-
-- agents draft and execute bounded work on policy-compliant non-`main` branches
-- normal governed work uses an explicit branch hierarchy: `main` -> `initiative/*` -> `impl-execplan/*`
-- the `initiative/*` branch is the authoritative in-flight home for one governed initiative and its active ExecPlan
-- `impl-execplan/*` branches execute one bounded slice under that initiative and normally merge back by PR into the parent `initiative/*` branch
-- direct `impl-execplan/*` -> `main` integration is exception-only human-directed work, not the default path
-- validation commands emit deterministic, machine-readable outputs
-- review happens through pull requests rather than ad hoc local integration
-- humans retain final authority for approval and signed merge/finalization
-
-## Bootstrap A New Project
-
-If you are scaffolding from a local platform checkout:
-
-```bash
-bin/bootstrap-project /tmp --name my-codex-project --profile full
+```text
+research and planning define the work
+governance validates legal state transitions
+execution generates candidate artifacts
+evaluation scores evidence
+selection chooses a winner
+apply happens only through a governed boundary
 ```
 
-Recommended next steps:
+The current execution spine is:
 
-1. Clone or template this repository into the new project repository.
-2. Rename the repository and replace the top-level product docs.
-3. Install dependencies for the spawned project.
-4. Run the required platform checks:
-   `bin/bootstrap-profile-check`
-   `bin/governance-loader-check`
-   `bin/distribution-check`
-   `bin/run-local-ci`
-5. Create the first ExecPlan in `.agent/execplans/`.
-6. Create an `initiative/*` branch for the governed workstream and keep the active in-flight ExecPlan there.
-7. Cut `impl-execplan/*` worker branches from that initiative branch for bounded implementation slices.
+```text
+execution_unit
+  -> candidate_patch_manifest
+  -> implementation_attempt[]
+  -> attempt_evaluation[]
+  -> attempt_selection
+  -> solution_artifact
+  -> applied_solution
+```
+
+See the full node graph:
+
+- [docs/toolchain-node-graph.mmd](docs/toolchain-node-graph.mmd)
 
 ## Repository Map
 
-- `bin/`: operator-facing commands and validation wrappers
-- `docs/`: human-facing platform guides and design notes
-- `examples/`: templates and example artifacts
-- `policy/`: normative governance text
-- `spec/`: canonical machine-readable rules and workflow metadata
-- `src/`: Python implementation for platform tooling
-- `tests/`: automated coverage for the platform toolchain
+- `src/platform_tools/`: Python tools and materializers.
+- `bin/`: CLI wrappers for the tools.
+- `spec/contracts/`: packet contracts and registry.
+- `docs/`: research notes, policies, and design docs.
+- `artifacts/`: DAGs, validation packets, generated run artifacts.
+- `.agent/execplans/`: execution plans for build slices.
+- `tests/`: contract, tool, and flow tests.
 
-## Start Reading Here
+## Main Toolchain Nodes
 
-- [Getting Started](docs/getting-started.md)
-- [Platform Overview](docs/platform-overview.md)
-- [Template Maintenance](docs/template-maintenance.md)
-- [ExecPlans](docs/execplans.md)
+- `problem_node`: a manageable project problem. Not executable.
+- `node_option`: a candidate approach for a problem. Not executable.
+- `execution_unit`: the first buildable work contract.
+- `candidate_patch_manifest`: artifact-backed candidate patches for an execution unit.
+- `implementation_attempt`: one candidate implementation attempt, usually with a patch ref.
+- `attempt_evaluation`: evidence-backed evaluation of one attempt.
+- `attempt_selection`: deterministic selection among evaluated attempts.
+- `solution_artifact`: selected implementation result and completion evidence.
+- `applied_solution`: isolated applied result after post-apply validation.
 
-## Default Expectations For Spawned Repos
+## Full Smoke Path
 
-Repositories created from this template are expected to preserve:
+Given an execution unit and a candidate patch manifest:
 
-- ExecPlan-first execution
-- canonical graph-backed work state
-- local validation entrypoints in `bin/`
-- branch and governance enforcement
-- human-only finalization
-- machine-readable evidence and validation outputs
+```bash
+bin/run-execution-era-loop-smoke \
+  --root . \
+  --execution-unit-path artifacts/execution-unit.packet.json \
+  --candidate-patch-manifest-path artifacts/candidate-patch-manifest.packet.json \
+  --validate-patch \
+  --validate-patch-ref \
+  --apply-solution
+```
 
-Projects may customize product docs, application code, UI, assets, deployment configuration, and project-specific rules immediately, but they should not discard the governed operating model by accident.
+Given one patch file:
+
+```bash
+bin/run-execution-era-loop-smoke \
+  --root . \
+  --execution-unit-path artifacts/execution-unit.packet.json \
+  --patch-source-path artifacts/change.patch \
+  --validate-patch \
+  --validate-patch-ref \
+  --max-attempts 2 \
+  --apply-solution
+```
+
+## Candidate Patch Manifest
+
+Use this when you want multiple distinct candidate patches:
+
+```bash
+bin/materialize-candidate-patch-manifest \
+  --root . \
+  --execution-unit-path artifacts/execution-unit.packet.json \
+  --patch-source-path artifacts/candidate-a.patch \
+  --patch-source-path artifacts/candidate-b.patch \
+  --validate-patches
+```
+
+The manifest preserves valid and invalid candidates. Invalid candidates remain visible with blockers instead of disappearing from the trace.
+
+## Validation
+
+Run the current focused regression:
+
+```bash
+uv run pytest \
+  tests/test_candidate_patch_manifest_contracts.py \
+  tests/test_materialize_candidate_patch_manifest.py \
+  tests/test_select_implementation_attempt.py \
+  tests/test_attempt_selection_contracts.py \
+  tests/test_apply_solution_artifact.py \
+  tests/test_applied_solution_contracts.py \
+  tests/test_run_execution_era_loop_smoke.py \
+  tests/test_generate_implementation_attempt.py \
+  tests/test_evaluate_implementation_attempt.py \
+  tests/test_emit_solution_artifact.py \
+  tests/test_execution_era_contracts.py \
+  tests/test_materialize_execution_unit.py \
+  tests/test_validate_node_readiness.py
+```
+
+Run the design review:
+
+```bash
+bin/design-iteration --root .
+```
+
+## Current Boundary
+
+Jaysearch can now rank and apply supplied patch candidates in an isolated target.
+
+The next major boundary is autonomous candidate generation: tools that synthesize candidate patches while emitting the same `candidate_patch_manifest` contract.
