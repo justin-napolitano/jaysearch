@@ -1,0 +1,35 @@
+version: v1
+contract_name: candidate_dag_manifest
+contract_kind: packet
+owner: planner-tool
+description: >
+  Manifest of candidate DAG artifacts for one problem, selected scope, or
+  ExecPlan. DAG generation tools can emit this same contract later.
+required_fields:
+  - packet_type
+  - packet_version
+  - packet_id
+  - created_at
+  - producer
+  - manifest_id
+  - source_problem_ref
+  - source_execplan_ref
+  - candidate_dag_refs
+  - selection_policy_ref
+  - evidence_refs
+  - blockers
+properties:
+  packet_type:
+    const: candidate_dag_manifest
+candidate_dag_ref_required_fields:
+  - candidate_id
+  - dag_ref
+  - candidate_family
+  - source_label
+  - producer_ref
+  - evidence_refs
+  - blockers
+invariants:
+  - candidate_dag_manifests_do_not_select_winners
+  - invalid_candidate_dags_remain_visible
+  - candidate_dags_must_be_artifact_backed

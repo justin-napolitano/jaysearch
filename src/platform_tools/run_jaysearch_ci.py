@@ -17,6 +17,8 @@ class Check:
 
 
 CORE_TESTS = [
+    "tests/test_candidate_dag_contracts.py",
+    "tests/test_select_candidate_dag.py",
     "tests/test_candidate_patch_manifest_contracts.py",
     "tests/test_materialize_candidate_patch_manifest.py",
     "tests/test_select_implementation_attempt.py",

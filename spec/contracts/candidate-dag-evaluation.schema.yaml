@@ -1,0 +1,28 @@
+version: v1
+contract_name: candidate_dag_evaluation
+contract_kind: packet
+owner: planner-tool
+description: >
+  Hard-gate and quality evaluation for one candidate DAG.
+required_fields:
+  - packet_type
+  - packet_version
+  - packet_id
+  - created_at
+  - producer
+  - evaluation_id
+  - candidate_id
+  - candidate_dag_ref
+  - hard_gate_status
+  - hard_gate_blockers
+  - score_breakdown
+  - critical_path_summary
+  - evidence_refs
+  - promotion_status
+properties:
+  packet_type:
+    const: candidate_dag_evaluation
+invariants:
+  - failed_hard_gates_block_promotion
+  - score_breakdown_must_preserve_quality_dimensions
+  - evaluation_must_not_modify_candidate_dag
