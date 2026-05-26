@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Jaysearch</title>
+    <meta
+      name="description"
+      content="Governed research, planning, and ERA-inspired execution tooling for graph-based project work."
+    >
+    <link rel="stylesheet" href="./site.css">
+    <script type="module">
+      import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
+      mermaid.initialize({
+        startOnLoad: true,
+        securityLevel: "strict",
+        theme: "base",
+        themeVariables: {
+          fontFamily: "Georgia, 'Times New Roman', serif",
+          primaryColor: "#f8f1dc",
+          primaryBorderColor: "#8a6d1d",
+          primaryTextColor: "#1f1a10",
+          lineColor: "#5f6f52",
+          tertiaryColor: "#e4edff"
+        }
+      });
+    </script>
+  </head>
+  <body>
+    <main class="page">
+      <section class="hero" aria-labelledby="title">
+        <p class="eyebrow">Jaysearch</p>
+        <h1 id="title">Governed toolchain nodes for research, planning, and execution.</h1>
+        <p class="lede">
+          Jaysearch turns uncertain project work into explicit graph nodes, evidence packets,
+          governed contracts, ranked implementation attempts, and applied solutions.
+        </p>
+        <div class="actions">
+          <a href="https://github.com/justin-napolitano/jaysearch">GitHub Repository</a>
+          <a href="./toolchain-node-graph.mmd">Raw Mermaid Graph</a>
+          <a href="./current-research-bibliography.md">Research Bibliography</a>
+        </div>
+      </section>
+
+      <section class="grid" aria-label="Core capabilities">
+        <article>
+          <h2>Design</h2>
+          <p>
+            Capture unresolved problems, critique the workflow, and convert ambiguity
+            into explicit questions before implementation starts.
+          </p>
+        </article>
+        <article>
+          <h2>Research</h2>
+          <p>
+            Attach sources and evidence to questions, options, and scoring decisions so
+            the system can explain why a path was selected.
+          </p>
+        </article>
+        <article>
+          <h2>Plan</h2>
+          <p>
+            Represent work as problem nodes, options, and execution units that can be
+            ranked, reorganized, and linked into DAGs.
+          </p>
+        </article>
+        <article>
+          <h2>Execute</h2>
+          <p>
+            Run the ERA loop: candidate patches, attempts, evaluations, selection,
+            solution artifact emission, and governed application.
+          </p>
+        </article>
+      </section>
+
+      <section class="graph-panel" aria-labelledby="graph-title">
+        <div class="section-heading">
+          <p class="eyebrow">Node Graph</p>
+          <h2 id="graph-title">How the toolchain is supposed to work</h2>
+        </div>
+        <pre class="mermaid">
+flowchart TD
+  UserGoal["User goal / unresolved problem"]
+  DesignTool["design tool<br/>clarify scope, critique graph, produce questions"]
+  QuestionTool["question tool<br/>turn uncertainty into research questions"]
+  ResearchTool["research tool<br/>collect sources, evidence, candidates"]
+  PlannerTool["planner tool<br/>manage problem DAG and options"]
+  GovernanceTool["governance tool<br/>validate contracts and legal transitions"]
+  Executor["executor / implementation orchestrator<br/>materialize attempts and run ERA loop"]
+
+  ProblemNode["problem_node<br/>manageable project problem<br/>not executable"]
+  ResearchQuestion["research_question_packet<br/>what must be answered"]
+  Evidence["evidence_refs / research packets<br/>sources and support"]
+  NodeOption["node_option[]<br/>possible approaches<br/>not executable"]
+  SelectedOption["selected node_option<br/>chosen approach"]
+  ExecutionUnit["execution_unit<br/>first buildable work contract"]
+
+  CandidatePatchManifest["candidate_patch_manifest<br/>artifact-backed patch candidate set"]
+  CandidatePatch["candidate_patch[]<br/>patch_ref + metadata + candidate blockers"]
+  ImplementationAttempt["implementation_attempt[]<br/>patch-bearing candidate implementation"]
+  AttemptEvaluation["attempt_evaluation[]<br/>tool/evidence-backed attempt result"]
+  AttemptSelection["attempt_selection<br/>deterministic winner selection"]
+  SolutionArtifact["solution_artifact<br/>selected attempt + completion evidence"]
+  AppliedSolution["applied_solution<br/>isolated apply + post-apply validation"]
+  Feedback["feedback / follow-up refs<br/>new problems, risks, or next nodes"]
+
+  UserGoal --> DesignTool
+  DesignTool --> ProblemNode
+  ProblemNode --> QuestionTool
+  QuestionTool --> ResearchQuestion
+  ResearchQuestion --> ResearchTool
+  ResearchTool --> Evidence
+  Evidence --> PlannerTool
+  PlannerTool --> NodeOption
+  NodeOption --> SelectedOption
+  SelectedOption --> GovernanceTool
+  GovernanceTool --> ExecutionUnit
+
+  ExecutionUnit --> Executor
+  Executor --> CandidatePatchManifest
+  CandidatePatchManifest --> CandidatePatch
+  CandidatePatch --> ImplementationAttempt
+  ImplementationAttempt --> AttemptEvaluation
+  AttemptEvaluation --> AttemptSelection
+  AttemptSelection --> SolutionArtifact
+  SolutionArtifact --> AppliedSolution
+  AppliedSolution --> Feedback
+  Feedback --> ProblemNode
+
+  GovernanceTool -. "contract checks" .-> ProblemNode
+  GovernanceTool -. "readiness gates" .-> NodeOption
+  GovernanceTool -. "execution-unit legality" .-> ExecutionUnit
+  GovernanceTool -. "attempt/evaluation/selection contracts" .-> AttemptEvaluation
+  GovernanceTool -. "apply policy" .-> AppliedSolution
+        </pre>
+      </section>
+
+      <section class="status" aria-labelledby="status-title">
+        <div>
+          <p class="eyebrow">Current Boundary</p>
+          <h2 id="status-title">What works now</h2>
+        </div>
+        <p>
+          The repo can rank and apply supplied patch candidates in an isolated target.
+          The next major boundary is autonomous candidate generation that emits the same
+          <code>candidate_patch_manifest</code> contract.
+        </p>
+      </section>
+    </main>
+  </body>
+</html>
