@@ -1,0 +1,121 @@
+{
+  "graph_id": "selected-dag-execution-units-v1",
+  "graph_type": "implementation_dag",
+  "version": "v1",
+  "purpose": "Materialize execution units from a selected candidate DAG so the implementation loop can execute graph-selected work.",
+  "source_artifacts": [
+    "docs/selected-dag-execution-units-v1.md",
+    ".agent/execplans/20260526-selected-dag-execution-units-v1-codex-01-execplan.md",
+    "docs/candidate-dag-selection-v1.md",
+    "docs/problem-node-execution-unit-contract-v1.md",
+    "spec/contracts/execution-unit.schema.yaml"
+  ],
+  "nodes": [
+    {
+      "node_id": "define-dag-execution-unit-manifest-contract",
+      "title": "Define DAG Execution Unit Manifest Contract",
+      "node_type": "contract",
+      "status": "planned",
+      "goal": "Define the packet that groups execution units emitted from one selected DAG and preserves dependency edges.",
+      "owned_changes": [
+        "spec/contracts/dag-execution-unit-manifest.schema.yaml",
+        "spec/contracts/packet-schema-registry.yaml"
+      ],
+      "expected_outputs": [
+        "dag_execution_unit_manifest packet schema",
+        "packet registry entry"
+      ],
+      "validation_commands": [
+        "uv run pytest tests/test_dag_execution_unit_manifest_contracts.py"
+      ],
+      "evidence_refs": [
+        "docs/selected-dag-execution-units-v1.md",
+        "https://json-schema.org/understanding-json-schema/reference/object"
+      ]
+    },
+    {
+      "node_id": "implement-selected-dag-materializer",
+      "title": "Implement Selected DAG Materializer",
+      "node_type": "runtime",
+      "status": "planned",
+      "goal": "Consume candidate_dag_selection, load selected_dag_ref, validate DAG shape, and emit execution-unit packets.",
+      "owned_changes": [
+        "src/platform_tools/materialize_selected_dag_execution_units.py",
+        "bin/materialize-selected-dag-execution-units"
+      ],
+      "expected_outputs": [
+        "execution-unit packets",
+        "dag execution-unit manifest",
+        "materialization report"
+      ],
+      "validation_commands": [
+        "uv run pytest tests/test_materialize_selected_dag_execution_units.py"
+      ],
+      "evidence_refs": [
+        "docs/selected-dag-execution-units-v1.md",
+        "https://networkx.org/documentation/stable/reference/algorithms/dag.html"
+      ]
+    },
+    {
+      "node_id": "enforce-readiness-and-blockers",
+      "title": "Enforce Readiness And Blockers",
+      "node_type": "runtime",
+      "status": "planned",
+      "goal": "Reuse existing execution-unit readiness validation and fail closed for blocked selections or underspecified nodes.",
+      "owned_changes": [
+        "src/platform_tools/materialize_selected_dag_execution_units.py"
+      ],
+      "expected_outputs": [
+        "blocked reports for invalid selections",
+        "readiness-validated execution units"
+      ],
+      "validation_commands": [
+        "uv run pytest tests/test_materialize_selected_dag_execution_units.py"
+      ],
+      "evidence_refs": [
+        "docs/problem-node-execution-unit-contract-v1.md",
+        "spec/contracts/execution-unit.schema.yaml"
+      ]
+    },
+    {
+      "node_id": "wire-jaysearch-ci",
+      "title": "Wire Jaysearch CI",
+      "node_type": "validation",
+      "status": "planned",
+      "goal": "Add selected-DAG materializer tests to the Jaysearch CI boundary.",
+      "owned_changes": [
+        "src/platform_tools/run_jaysearch_ci.py",
+        "tests/test_run_jaysearch_ci.py"
+      ],
+      "expected_outputs": [
+        "CI invokes selected DAG execution-unit tests"
+      ],
+      "validation_commands": [
+        "bin/run-jaysearch-ci"
+      ],
+      "evidence_refs": [
+        "docs/jaysearch-runtime-ci-v1.md"
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "edge_id": "e1",
+      "from_node_id": "implement-selected-dag-materializer",
+      "to_node_id": "define-dag-execution-unit-manifest-contract",
+      "relation": "depends_on"
+    },
+    {
+      "edge_id": "e2",
+      "from_node_id": "enforce-readiness-and-blockers",
+      "to_node_id": "implement-selected-dag-materializer",
+      "relation": "depends_on"
+    },
+    {
+      "edge_id": "e3",
+      "from_node_id": "wire-jaysearch-ci",
+      "to_node_id": "enforce-readiness-and-blockers",
+      "relation": "depends_on"
+    }
+  ]
+}
