@@ -1,0 +1,112 @@
+{
+  "graph_id": "jaysearch-runtime-ci-v1",
+  "graph_type": "implementation_dag",
+  "version": "v1",
+  "purpose": "Separate Jaysearch runtime validation from inherited platform-template CI.",
+  "source_artifacts": [
+    "docs/jaysearch-runtime-ci-v1.md",
+    ".agent/execplans/20260526-jaysearch-runtime-ci-v1-codex-01-execplan.md",
+    "docs/execution-era-loop-v1.md",
+    "docs/candidate-patch-manifest-research-v1.md",
+    "docs/candidate-generation-request-result-v1.md",
+    "docs/design-iteration-tool-v1.md"
+  ],
+  "nodes": [
+    {
+      "node_id": "define-jaysearch-ci-boundary",
+      "title": "Define Jaysearch CI Boundary",
+      "node_type": "policy",
+      "status": "planned",
+      "goal": "Document which runtime checks define Jaysearch readiness and which legacy platform checks are excluded.",
+      "owned_changes": [
+        "docs/jaysearch-runtime-ci-v1.md"
+      ],
+      "expected_outputs": [
+        "runtime CI policy",
+        "legacy check boundary"
+      ]
+    },
+    {
+      "node_id": "implement-jaysearch-ci-command",
+      "title": "Implement Jaysearch CI Command",
+      "node_type": "runtime",
+      "status": "planned",
+      "goal": "Add a machine-readable CI runner for core Jaysearch tests and design iteration.",
+      "owned_changes": [
+        "src/platform_tools/run_jaysearch_ci.py",
+        "bin/run-jaysearch-ci",
+        "pyproject.toml"
+      ],
+      "expected_outputs": [
+        "run-jaysearch-ci JSON report"
+      ]
+    },
+    {
+      "node_id": "wire-github-actions",
+      "title": "Wire GitHub Actions",
+      "node_type": "runtime",
+      "status": "planned",
+      "goal": "Run Jaysearch CI on pushes and pull requests without invoking the full legacy platform suite.",
+      "owned_changes": [
+        ".github/workflows/jaysearch-ci.yml"
+      ],
+      "expected_outputs": [
+        "Jaysearch CI workflow"
+      ]
+    },
+    {
+      "node_id": "document-runtime-boundary",
+      "title": "Document Runtime Boundary",
+      "node_type": "documentation",
+      "status": "planned",
+      "goal": "Make README validation instructions match the Jaysearch project boundary.",
+      "owned_changes": [
+        "README.md"
+      ],
+      "expected_outputs": [
+        "README CI instructions"
+      ]
+    },
+    {
+      "node_id": "validate-jaysearch-ci",
+      "title": "Validate Jaysearch CI",
+      "node_type": "validation",
+      "status": "planned",
+      "goal": "Run the new CI profile and design iteration before merge.",
+      "owned_changes": [
+        "tests/test_run_jaysearch_ci.py",
+        "artifacts/design-iteration/runs/*"
+      ],
+      "expected_outputs": [
+        "passing run-jaysearch-ci",
+        "design iteration evidence"
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "edge_id": "e1",
+      "from_node_id": "implement-jaysearch-ci-command",
+      "to_node_id": "define-jaysearch-ci-boundary",
+      "relation": "depends_on"
+    },
+    {
+      "edge_id": "e2",
+      "from_node_id": "wire-github-actions",
+      "to_node_id": "implement-jaysearch-ci-command",
+      "relation": "depends_on"
+    },
+    {
+      "edge_id": "e3",
+      "from_node_id": "document-runtime-boundary",
+      "to_node_id": "define-jaysearch-ci-boundary",
+      "relation": "depends_on"
+    },
+    {
+      "edge_id": "e4",
+      "from_node_id": "validate-jaysearch-ci",
+      "to_node_id": "wire-github-actions",
+      "relation": "depends_on"
+    }
+  ]
+}
