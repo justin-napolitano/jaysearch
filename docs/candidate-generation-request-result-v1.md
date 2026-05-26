@@ -25,6 +25,7 @@ The goal is not broad autonomous repo mutation. The goal is a governed producer 
 Canonical local sources:
 
 - `docs/execution-era-loop-v1.md`
+- `docs/selected-dag-execution-units-v1.md`
 - `docs/candidate-patch-manifest-research-v1.md`
 - `docs/patch-producing-attempts-research-v1.md`
 - `docs/patch-aware-attempt-evaluation-research-v1.md`
@@ -48,6 +49,7 @@ Design implications:
 - CRITIC supports tool-grounded critique over unsupported self-correction.
 - PROV-DM supports preserving derivation between requests, producers, generated artifacts, and downstream selections.
 - `git apply --check` supports validating patch applicability without mutating the worktree.
+- The selected-DAG materializer now provides the immediate upstream source of execution units, so candidate generation should consume `execution_unit` packets and not planner DAG nodes directly.
 
 ## Core Boundary
 
@@ -71,6 +73,7 @@ It must not:
 - hide failed candidate generation attempts
 - mutate files outside an isolated output directory
 - treat model rationale as validation evidence
+- read unbounded repository context beyond the execution unit, allowed artifact refs, and explicit evidence refs
 
 ## Candidate Generation Request Packet
 
@@ -119,6 +122,8 @@ Required fields:
 - `requires_patch_validation`: boolean
 - `allow_unvalidated_candidates`: boolean
 - `preserve_invalid_candidates`: boolean
+- `owned_changes_enforced`: boolean
+- `max_patch_bytes`: integer
 
 ## Candidate Generation Result Packet
 
@@ -169,12 +174,33 @@ V1 should be intentionally conservative:
 
 1. Materialize a `candidate_generation_request` from an execution unit plus optional evidence refs.
 2. Support `collect_existing_patch` mode first.
-3. Optionally support `template_patch` for trivial fixture-backed smoke tests.
-4. Emit `candidate_generation_result`.
-5. Reuse `materialize-candidate-patch-manifest` semantics for the final candidate set.
-6. Wire the smoke runner so it can consume a generation result or its manifest ref.
+3. Validate patch applicability with `git apply --check` when requested.
+4. Enforce that patch paths stay inside `execution_unit.owned_changes` unless policy explicitly disables it.
+5. Optionally support `template_patch` only for trivial fixture-backed smoke tests.
+6. Emit `candidate_generation_result`.
+7. Reuse `materialize-candidate-patch-manifest` semantics for the final candidate set.
+8. Wire the smoke runner so it can consume a generation result or its manifest ref.
 
 This gives the system a real producer boundary without pretending autonomous synthesis is solved.
+
+## Updated End-To-End Position
+
+The current operational chain should become:
+
+```text
+candidate_dag_selection
+  -> dag_execution_unit_manifest
+  -> execution_unit
+  -> candidate_generation_request
+  -> candidate_generation_result
+  -> candidate_patch_manifest
+  -> implementation_attempt
+  -> attempt_evaluation
+  -> attempt_selection
+  -> solution_artifact
+```
+
+Candidate generation starts after execution units exist. It should not inspect or reinterpret the selected DAG except through provenance refs already present on the execution unit or manifest.
 
 ## Design Questions For Implementation
 
@@ -189,6 +215,16 @@ Recommended V1 answers:
 - Keep `llm_patch_proposal` contract-defined but disabled by default.
 - Require generated patches to stay within owned changes.
 - Consume evidence refs; do not perform open-ended research during generation.
+- Preserve both valid and invalid candidate runs in the result packet.
+- Keep `candidate_patch_manifest` as the handoff object into the existing evaluation/selection loop.
+
+## Harsh Review
+
+- Do not build prompt-driven autonomous code generation in this slice. That would expand scope before Jaysearch has prompt/provenance contracts.
+- Do not let `candidate_generation_result` become the selected candidate. Selection belongs to the ERA evaluator/selector.
+- Do not accept patch candidates that modify paths outside `execution_unit.owned_changes` in V1. That would weaken the execution-unit boundary we just built.
+- Do not treat `git apply --check` as semantic validation. It only proves syntactic/applicability compatibility; existing attempt evaluation still needs tests/review.
+- Do not make research calls inside the generation runner. Research must be upstream evidence, not hidden runtime behavior.
 
 ## Acceptance
 
@@ -201,6 +237,8 @@ V1 is acceptable when:
 - invalid generated candidates remain visible
 - smoke runner can run request/result-backed candidate generation through selection
 - design iteration reports no blockers
+- generated candidates are constrained to owned changes by default
+- patch applicability checks are recorded without mutating the source worktree
 
 ## Anti-Drift Rules
 
