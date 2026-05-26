@@ -6,6 +6,7 @@ readme = "README.md"
 requires-python = ">=3.14"
 dependencies = [
     "gitpython>=3.1.46",
+    "networkx>=3.6.1",
     "pyyaml>=6.0.3",
     "rich>=14.3.3",
     "typer>=0.24.1",
@@ -95,6 +96,7 @@ materialize-research-recommendation = "platform_tools.materialize_research_recom
 validate-research-to-selection-flow = "platform_tools.validate_research_to_selection_flow:main"
 validate-node-readiness = "platform_tools.validate_node_readiness:main"
 materialize-execution-unit = "platform_tools.materialize_execution_unit:main"
+select-candidate-dag = "platform_tools.select_candidate_dag:main"
 generate-implementation-attempt = "platform_tools.generate_implementation_attempt:main"
 evaluate-implementation-attempt = "platform_tools.evaluate_implementation_attempt:main"
 emit-solution-artifact = "platform_tools.emit_solution_artifact:main"
