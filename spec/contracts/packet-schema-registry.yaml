@@ -774,6 +774,34 @@ contract_families:
       - planner-tool
       - governance-tool
       - design-iteration-tool
+  - contract_name: dag_execution_unit_manifest
+    contract_kind: packet
+    owner: planner-tool
+    current_version: v1
+    compatibility_policy: additive_minor_breaking_major
+    status: active
+    schema_ref: spec/contracts/dag-execution-unit-manifest.schema.yaml
+    required_fields:
+      - packet_type
+      - packet_version
+      - packet_id
+      - created_at
+      - producer
+      - manifest_id
+      - source_selection_ref
+      - selected_dag_ref
+      - execution_unit_refs
+      - execution_dependencies
+      - non_buildable_node_refs
+      - topological_layers
+      - evidence_refs
+      - blockers
+    upstream_producers:
+      - planner-tool
+    downstream_consumers:
+      - implementation-orchestrator
+      - governance-tool
+      - design-iteration-tool
   - contract_name: attempt_evaluation
     contract_kind: packet
     owner: governance-tool
