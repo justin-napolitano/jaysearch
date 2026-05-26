@@ -35,6 +35,10 @@ See the full node graph:
 
 - [docs/toolchain-node-graph.mmd](docs/toolchain-node-graph.mmd)
 
+Public site:
+
+- <https://justin-napolitano.github.io/jaysearch/>
+
 ## Repository Map
 
 - `src/platform_tools/`: Python tools and materializers.
