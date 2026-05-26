@@ -1,0 +1,22 @@
+{
+  "api_version": "public-orchestration.v1",
+  "command": "materialize-research-hypotheses",
+  "status": "ok",
+  "ok": true,
+  "run_id": "rhb-20260526T160931Z",
+  "research_problem_path": "/mnt/c/users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap/artifacts/validation/research-to-selection-runs/rts-20260526T160930Z/steps/qrpt-20260526T160930Z/research-problem.packet.json",
+  "hypothesis_packet_paths": [
+    "artifacts/validation/research-to-selection-runs/rts-20260526T160930Z/steps/rhb-20260526T160931Z/research-hypothesis-01.packet.json",
+    "artifacts/validation/research-to-selection-runs/rts-20260526T160930Z/steps/rhb-20260526T160931Z/research-hypothesis-02.packet.json",
+    "artifacts/validation/research-to-selection-runs/rts-20260526T160930Z/steps/rhb-20260526T160931Z/research-hypothesis-03.packet.json",
+    "artifacts/validation/research-to-selection-runs/rts-20260526T160930Z/steps/rhb-20260526T160931Z/research-hypothesis-04.packet.json"
+  ],
+  "hypothesis_count": 4,
+  "families": [
+    "baseline_reference",
+    "reuse_direct",
+    "reuse_hybrid",
+    "novel_synthesized"
+  ],
+  "blockers": []
+}

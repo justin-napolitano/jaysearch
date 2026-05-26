@@ -105,23 +105,10 @@ The manifest preserves valid and invalid candidates. Invalid candidates remain v
 
 ## Validation
 
-Run the current focused regression:
+Run the Jaysearch readiness gate:
 
 ```bash
-uv run pytest \
-  tests/test_candidate_patch_manifest_contracts.py \
-  tests/test_materialize_candidate_patch_manifest.py \
-  tests/test_select_implementation_attempt.py \
-  tests/test_attempt_selection_contracts.py \
-  tests/test_apply_solution_artifact.py \
-  tests/test_applied_solution_contracts.py \
-  tests/test_run_execution_era_loop_smoke.py \
-  tests/test_generate_implementation_attempt.py \
-  tests/test_evaluate_implementation_attempt.py \
-  tests/test_emit_solution_artifact.py \
-  tests/test_execution_era_contracts.py \
-  tests/test_materialize_execution_unit.py \
-  tests/test_validate_node_readiness.py
+bin/run-jaysearch-ci
 ```
 
 Run the design review:
@@ -129,6 +116,8 @@ Run the design review:
 ```bash
 bin/design-iteration --root .
 ```
+
+`bin/run-local-ci` remains available for legacy platform-template compatibility checks, but it is not the default Jaysearch readiness gate.
 
 ## Current Boundary
 

@@ -1,0 +1,71 @@
+{
+  "packet_type": "research_problem_packet",
+  "packet_version": "v1",
+  "packet_id": "research-problem:jaysearch:candidate-dag-selection-v1:packet",
+  "created_at": "2026-05-26T16:09:30Z",
+  "producer": "question-to-research-problem-transform",
+  "problem_id": "research-problem:jaysearch:candidate-dag-selection-v1",
+  "title": "Research problem for candidate-dag-selection-v1",
+  "goal": "Validate the research basis for building candidate DAG selection as the next planner/runtime slice.",
+  "problem_statement": "Should Jaysearch build a conservative candidate DAG selector before autonomous DAG generation?",
+  "constraints": [
+    "local-first",
+    "schema-backed packets",
+    "do not generate DAGs autonomously in V1",
+    "preserve invalid candidates with blockers"
+  ],
+  "repo_context": {
+    "project_id": "jaysearch",
+    "decision_target": "authorize conservative candidate DAG selection before candidate DAG generation",
+    "decision_consequence": "determines whether Jaysearch should build a conservative supplied-DAG selector before autonomous DAG generation",
+    "blocked_work_if_unanswered": "cannot safely build DAG orchestration and selection without a scoped validation target"
+  },
+  "artifact_targets": [
+    "candidate_dag_manifest",
+    "candidate_dag_selection",
+    "candidate_dag_evaluation"
+  ],
+  "evaluation_criteria": [
+    "hard-gate validity",
+    "plan-quality scoring",
+    "selection provenance",
+    "invalid candidate preservation"
+  ],
+  "search_budget": {
+    "max_sources": 6,
+    "max_candidates": 3
+  },
+  "output_requirements": [
+    "research_candidate_packet[]",
+    "research_evaluation_packet[]",
+    "research_recommendation_packet"
+  ],
+  "evidence_packet_ref": "/mnt/c/users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap/artifacts/research-question-seeds/candidate-dag-selection-v1.evidence.packet.json",
+  "reference_implementations": [
+    "https://arxiv.org/abs/2506.13131",
+    "https://arxiv.org/abs/2310.06770",
+    "https://arxiv.org/abs/2305.11738",
+    "https://networkx.org/documentation/stable/reference/algorithms/dag.html",
+    "https://json-schema.org/understanding-json-schema/reference/object",
+    "https://www.w3.org/TR/prov-dm/"
+  ],
+  "baseline_artifact_refs": [
+    "SWE-bench repository-grounded software tasks"
+  ],
+  "allowed_tools": [
+    "evidence-search-tool",
+    "memory-tool",
+    "research-tool"
+  ],
+  "runtime_environment": "repo-local",
+  "language": "python",
+  "research_context": {
+    "method_refs": [
+      "bounded candidate tree search",
+      "hard-gate then quality-score selection",
+      "tool-grounded critique",
+      "provenance-preserving packet handoff"
+    ],
+    "evidence_summary": "Candidate DAG selection should be built as a bounded ingest/evaluate/select loop before autonomous DAG generation."
+  }
+}

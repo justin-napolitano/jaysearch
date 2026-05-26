@@ -1,0 +1,32 @@
+{
+  "artifact_targets": [
+    "candidate_dag_manifest",
+    "candidate_dag_selection",
+    "candidate_dag_evaluation"
+  ],
+  "blocked_work_if_unanswered": "cannot safely build DAG orchestration and selection without a scoped validation target",
+  "constraints": [
+    "local-first",
+    "schema-backed packets",
+    "do not generate DAGs autonomously in V1",
+    "preserve invalid candidates with blockers"
+  ],
+  "created_at": "2026-05-26T00:00:00Z",
+  "decision_consequence": "determines whether Jaysearch should build a conservative supplied-DAG selector before autonomous DAG generation",
+  "decision_target": "authorize conservative candidate DAG selection before candidate DAG generation",
+  "evaluation_targets": [
+    "hard-gate validity",
+    "plan-quality scoring",
+    "selection provenance",
+    "invalid candidate preservation"
+  ],
+  "goal": "Validate the research basis for building candidate DAG selection as the next planner/runtime slice.",
+  "packet_id": "candidate-dag-selection-v1-question-packet",
+  "packet_type": "research_question_packet",
+  "packet_version": "v1",
+  "producer": "agent/codex",
+  "project_id": "jaysearch",
+  "question_id": "candidate-dag-selection-v1",
+  "question_text": "Should Jaysearch build a conservative candidate DAG selector before autonomous DAG generation?",
+  "question_type": "architecture_decision"
+}
