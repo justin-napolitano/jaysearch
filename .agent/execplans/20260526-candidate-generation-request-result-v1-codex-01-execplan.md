@@ -56,11 +56,14 @@ tasks:
     priority: "P0"
 
 depends_on:
+  - "20260526-selected-dag-execution-units-v1-codex-01"
   - "20260525-candidate-patch-manifest-v1-codex-01"
   - "20260522-patch-aware-attempt-evaluation-v1-codex-01"
 source_artifacts:
   - docs/candidate-generation-request-result-v1.md
   - artifacts/planner/research/candidate-generation-request-result-v1-dag.json
+  - artifacts/planner/research/candidate-generation-request-result-v1-research-refresh.packet.json
+  - docs/selected-dag-execution-units-v1.md
   - docs/candidate-patch-manifest-research-v1.md
   - docs/research-candidate-tree-search-v1.md
   - docs/patch-producing-attempts-research-v1.md
@@ -74,6 +77,8 @@ Add the first governed candidate-generation producer boundary before candidate p
 
 This turns a buildable `execution_unit` plus evidence refs and generation policy into a `candidate_generation_request`, a `candidate_generation_result`, and a `candidate_patch_manifest` that the existing ERA loop can evaluate and select from.
 
+This slice now explicitly depends on selected DAG execution-unit materialization. Candidate generation consumes execution units, not planner DAG nodes.
+
 ## Scope
 
 In scope:
@@ -82,6 +87,8 @@ In scope:
 - add request materializer CLI
 - add conservative generation runner CLI
 - support `collect_existing_patch` as the first generation mode
+- enforce owned-change boundaries by default
+- record non-mutating patch applicability validation when requested
 - optionally support fixture/template-backed patch generation for smoke tests
 - preserve invalid generated candidates with blockers
 - hand generated patch refs into `candidate_patch_manifest`
@@ -104,6 +111,7 @@ Out of scope:
 - CRITIC supports tool-grounded critique instead of unsupported model self-correction.
 - W3C PROV-DM supports explicit provenance between requests, generated entities, and selected outputs.
 - Git `apply --check` supports non-mutating patch applicability validation.
+- The selected DAG execution-unit materializer provides the upstream bridge from planning graphs to buildable work packets, so this producer should consume `execution_unit` refs.
 
 ## Implementation Plan
 
@@ -111,10 +119,11 @@ Out of scope:
 2. Register both packet types in `spec/contracts/packet-schema-registry.yaml`.
 3. Implement `materialize-candidate-generation-request` from an execution unit plus evidence refs and generation policy flags.
 4. Implement `generate-candidate-patch-manifest` with `collect_existing_patch` first.
-5. Reuse candidate patch manifest validation semantics instead of creating a second patch validation path.
-6. Add smoke runner flags for request/result-backed candidate generation.
-7. Add tests for contracts, materialization, generation result emission, invalid candidate preservation, and end-to-end smoke flow.
-8. Run design iteration after implementation and preserve the generated evidence packet.
+5. Enforce patch paths are inside `execution_unit.owned_changes` by default.
+6. Reuse candidate patch manifest validation semantics instead of creating a second patch validation path.
+7. Add smoke runner flags for request/result-backed candidate generation.
+8. Add tests for contracts, materialization, generation result emission, invalid candidate preservation, and end-to-end smoke flow.
+9. Run design iteration after implementation and preserve the generated evidence packet.
 
 ## Acceptance
 
@@ -123,6 +132,8 @@ Out of scope:
 - generated manifest can drive existing implementation attempt generation
 - invalid generated candidates remain visible and do not become attempts
 - generation does not apply patches or mutate source files
+- patch candidates are constrained to owned changes by default
+- patch applicability checks are recorded as evidence but not treated as semantic validation
 - smoke runner can execute the generation-backed ERA path
 - design iteration reports no blockers
 
