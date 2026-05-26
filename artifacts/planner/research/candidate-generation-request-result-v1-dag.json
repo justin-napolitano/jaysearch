@@ -6,6 +6,8 @@
   "source_artifacts": [
     "docs/candidate-generation-request-result-v1.md",
     ".agent/execplans/20260526-candidate-generation-request-result-v1-codex-01-execplan.md",
+    "docs/selected-dag-execution-units-v1.md",
+    "artifacts/planner/research/candidate-generation-request-result-v1-research-refresh.packet.json",
     "docs/candidate-patch-manifest-research-v1.md",
     "docs/research-candidate-tree-search-v1.md",
     "docs/patch-producing-attempts-research-v1.md",
@@ -24,6 +26,15 @@
       "expected_outputs": [
         "candidate generation policy",
         "anti-drift rules"
+      ],
+      "validation_commands": [
+        "bin/design-iteration --root ."
+      ],
+      "evidence_refs": [
+        "docs/candidate-generation-request-result-v1.md",
+        "docs/selected-dag-execution-units-v1.md",
+        "https://arxiv.org/abs/2506.13131",
+        "https://arxiv.org/abs/2310.06770"
       ]
     },
     {
@@ -41,6 +52,13 @@
         "request schema",
         "result schema",
         "registry entries"
+      ],
+      "validation_commands": [
+        "uv run pytest tests/test_candidate_generation_contracts.py"
+      ],
+      "evidence_refs": [
+        "https://json-schema.org/understanding-json-schema/reference/object",
+        "https://www.w3.org/TR/prov-dm/"
       ]
     },
     {
@@ -56,6 +74,13 @@
       "expected_outputs": [
         "candidate generation request packet",
         "request materialization report"
+      ],
+      "validation_commands": [
+        "uv run pytest tests/test_materialize_candidate_generation_request.py"
+      ],
+      "evidence_refs": [
+        "docs/selected-dag-execution-units-v1.md",
+        "spec/contracts/execution-unit.schema.yaml"
       ]
     },
     {
@@ -72,6 +97,13 @@
         "candidate generation result packet",
         "candidate patch manifest packet",
         "generation run artifacts"
+      ],
+      "validation_commands": [
+        "uv run pytest tests/test_generate_candidate_patch_manifest.py"
+      ],
+      "evidence_refs": [
+        "https://git-scm.com/docs/git-apply",
+        "docs/candidate-patch-manifest-research-v1.md"
       ]
     },
     {
@@ -86,6 +118,12 @@
       ],
       "expected_outputs": [
         "generation-backed ERA smoke path"
+      ],
+      "validation_commands": [
+        "uv run pytest tests/test_run_execution_era_loop_smoke.py"
+      ],
+      "evidence_refs": [
+        "docs/execution-era-loop-v1.md"
       ]
     },
     {
@@ -105,6 +143,12 @@
         "materializer tests",
         "generation runner tests",
         "integration smoke tests"
+      ],
+      "validation_commands": [
+        "bin/run-jaysearch-ci"
+      ],
+      "evidence_refs": [
+        "docs/jaysearch-runtime-ci-v1.md"
       ]
     }
   ],
