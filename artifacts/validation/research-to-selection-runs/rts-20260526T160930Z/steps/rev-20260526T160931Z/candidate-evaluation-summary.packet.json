@@ -1,0 +1,34 @@
+{
+  "packet_type": "candidate_evaluation_summary_packet",
+  "packet_version": "v1",
+  "packet_id": "research-problem:jaysearch:candidate-dag-selection-v1:candidate-evaluation-summary",
+  "created_at": "2026-05-26T16:09:31Z",
+  "producer": "materialize-research-evaluations",
+  "problem_id": "research-problem:jaysearch:candidate-dag-selection-v1",
+  "candidate_search_tree_ref": "/mnt/c/users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap/artifacts/validation/research-to-selection-runs/rts-20260526T160930Z/steps/rct-20260526T160931Z/candidate-search-tree.packet.json",
+  "evaluation_packet_refs": [
+    "artifacts/validation/research-to-selection-runs/rts-20260526T160930Z/steps/rev-20260526T160931Z/research-evaluation-01.packet.json",
+    "artifacts/validation/research-to-selection-runs/rts-20260526T160930Z/steps/rev-20260526T160931Z/research-evaluation-02.packet.json",
+    "artifacts/validation/research-to-selection-runs/rts-20260526T160930Z/steps/rev-20260526T160931Z/research-evaluation-03.packet.json",
+    "artifacts/validation/research-to-selection-runs/rts-20260526T160930Z/steps/rev-20260526T160931Z/research-evaluation-04.packet.json"
+  ],
+  "promoted_candidate_ids": [
+    "research-problem:jaysearch:candidate-dag-selection-v1:hypothesis:baseline_reference:candidate:001",
+    "research-problem:jaysearch:candidate-dag-selection-v1:hypothesis:reuse_direct:candidate:001",
+    "research-problem:jaysearch:candidate-dag-selection-v1:hypothesis:reuse_hybrid:candidate:001",
+    "research-problem:jaysearch:candidate-dag-selection-v1:hypothesis:novel_synthesized:candidate:001"
+  ],
+  "blocked_candidate_ids": [],
+  "evaluation_policy": {
+    "method": "bounded_static_candidate_evaluation_v1",
+    "promotion_threshold": 0.65,
+    "dimensions": [
+      "contract_completeness",
+      "traceability",
+      "evidence_support",
+      "feasibility",
+      "artifact_readiness",
+      "risk_penalty"
+    ]
+  }
+}

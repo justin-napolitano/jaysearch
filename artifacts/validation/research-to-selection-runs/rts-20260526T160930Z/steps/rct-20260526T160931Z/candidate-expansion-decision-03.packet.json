@@ -1,0 +1,18 @@
+{
+  "packet_type": "candidate_expansion_decision_packet",
+  "packet_version": "v1",
+  "packet_id": "research-problem:jaysearch:candidate-dag-selection-v1:hypothesis:reuse_hybrid:expand:001:packet",
+  "created_at": "2026-05-26T16:09:31Z",
+  "producer": "materialize-research-candidate-tree",
+  "decision_id": "research-problem:jaysearch:candidate-dag-selection-v1:hypothesis:reuse_hybrid:expand:001",
+  "problem_id": "research-problem:jaysearch:candidate-dag-selection-v1",
+  "source_node_id": "research-problem:jaysearch:candidate-dag-selection-v1:hypothesis:reuse_hybrid:tree-node",
+  "decision": "expanded",
+  "reason": "V1 expands one bounded candidate for each viable hypothesis branch.",
+  "evidence_refs": [
+    "/mnt/c/users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap/artifacts/research-question-seeds/candidate-dag-selection-v1.evidence.packet.json"
+  ],
+  "resulting_node_refs": [
+    "research-problem:jaysearch:candidate-dag-selection-v1:hypothesis:reuse_hybrid:candidate:001:tree-node"
+  ]
+}

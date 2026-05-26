@@ -1,0 +1,512 @@
+{
+  "packet_type": "research_recommendation_packet",
+  "packet_version": "v1",
+  "packet_id": "research-problem:jaysearch:candidate-dag-selection-v1:research-recommendation",
+  "created_at": "2026-05-26T16:09:31Z",
+  "producer": "materialize-research-recommendation",
+  "problem_id": "research-problem:jaysearch:candidate-dag-selection-v1",
+  "candidate_search_tree_ref": "/mnt/c/users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap/artifacts/validation/research-to-selection-runs/rts-20260526T160930Z/steps/rct-20260526T160931Z/candidate-search-tree.packet.json",
+  "evaluation_summary_ref": "/mnt/c/users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap/artifacts/validation/research-to-selection-runs/rts-20260526T160930Z/steps/rev-20260526T160931Z/candidate-evaluation-summary.packet.json",
+  "evaluation_refs": [
+    "/mnt/c/users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap/artifacts/validation/research-to-selection-runs/rts-20260526T160930Z/steps/rev-20260526T160931Z/research-evaluation-01.packet.json",
+    "/mnt/c/users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap/artifacts/validation/research-to-selection-runs/rts-20260526T160930Z/steps/rev-20260526T160931Z/research-evaluation-02.packet.json",
+    "/mnt/c/users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap/artifacts/validation/research-to-selection-runs/rts-20260526T160930Z/steps/rev-20260526T160931Z/research-evaluation-03.packet.json",
+    "/mnt/c/users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap/artifacts/validation/research-to-selection-runs/rts-20260526T160930Z/steps/rev-20260526T160931Z/research-evaluation-04.packet.json"
+  ],
+  "ranked_candidates": [
+    {
+      "candidate_id": "research-problem:jaysearch:candidate-dag-selection-v1:hypothesis:baseline_reference:candidate:001",
+      "problem_id": "research-problem:jaysearch:candidate-dag-selection-v1",
+      "rank": 1,
+      "total_score": 0.877,
+      "score_breakdown": {
+        "contract_completeness": {
+          "value": 1.0,
+          "basis": "required field presence"
+        },
+        "traceability": {
+          "value": 1.0,
+          "basis": "source_hypothesis_id presence"
+        },
+        "evidence_support": {
+          "value": 1.0,
+          "basis": "evidence_refs presence"
+        },
+        "feasibility": {
+          "value": 0.95,
+          "basis": "feasibility_priors"
+        },
+        "artifact_readiness": {
+          "value": 0.5,
+          "basis": "artifact refs or proposed changes"
+        },
+        "risk_penalty": {
+          "value": 0.2,
+          "basis": "risk notes and feasibility priors"
+        }
+      },
+      "strengths": [
+        "evaluation_promoted_candidate",
+        "candidate_has_evidence_refs"
+      ],
+      "weaknesses": [
+        "candidate_has_no_materialized_artifacts"
+      ],
+      "promotion_status": "promoted",
+      "evaluation_ref": "artifacts/validation/research-to-selection-runs/rts-20260526T160930Z/steps/rev-20260526T160931Z/research-evaluation-01.packet.json",
+      "evidence_refs": [
+        "/mnt/c/users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap/artifacts/research-question-seeds/candidate-dag-selection-v1.evidence.packet.json"
+      ],
+      "source_hypothesis_id": "research-problem:jaysearch:candidate-dag-selection-v1:hypothesis:baseline_reference",
+      "approach_summary": "Baseline candidate derived from branch: Establish a simple baseline approach for: Should Jaysearch build a conservative candidate DAG selector before autonomous DAG generation?",
+      "implementation_intent": {
+        "summary": "Implementation-specific candidate intent for research-problem:jaysearch:candidate-dag-selection-v1.",
+        "contract_changes": [
+          "confirm no contract changes are required"
+        ],
+        "runtime_changes": [
+          "materialize artifact target candidate_dag_manifest",
+          "materialize artifact target candidate_dag_selection",
+          "materialize artifact target candidate_dag_evaluation"
+        ],
+        "validation_changes": [
+          "validate criterion: hard-gate validity",
+          "validate criterion: plan-quality scoring",
+          "validate criterion: selection provenance",
+          "validate criterion: invalid candidate preservation"
+        ],
+        "docs_changes": [
+          "document implementation intent and downstream handoff expectations"
+        ],
+        "handoff_requirements": [
+          "carry implementation intent into recommendation and selection packets"
+        ]
+      },
+      "contract_changes": [
+        "confirm no contract changes are required"
+      ],
+      "runtime_changes": [
+        "materialize artifact target candidate_dag_manifest",
+        "materialize artifact target candidate_dag_selection",
+        "materialize artifact target candidate_dag_evaluation"
+      ],
+      "validation_changes": [
+        "validate criterion: hard-gate validity",
+        "validate criterion: plan-quality scoring",
+        "validate criterion: selection provenance",
+        "validate criterion: invalid candidate preservation"
+      ],
+      "docs_changes": [
+        "document implementation intent and downstream handoff expectations"
+      ],
+      "expected_changes": [
+        "confirm no contract changes are required",
+        "materialize artifact target candidate_dag_manifest",
+        "materialize artifact target candidate_dag_selection",
+        "materialize artifact target candidate_dag_evaluation",
+        "validate criterion: hard-gate validity",
+        "validate criterion: plan-quality scoring",
+        "validate criterion: selection provenance",
+        "validate criterion: invalid candidate preservation",
+        "document implementation intent and downstream handoff expectations"
+      ],
+      "non_goals": [
+        "local-first",
+        "schema-backed packets",
+        "do not generate DAGs autonomously in V1",
+        "preserve invalid candidates with blockers"
+      ],
+      "assumptions": [
+        "local-first",
+        "schema-backed packets",
+        "do not generate DAGs autonomously in V1",
+        "preserve invalid candidates with blockers"
+      ],
+      "handoff_requirements": [
+        "carry implementation intent into recommendation and selection packets"
+      ],
+      "planner_entry_notes": [
+        "candidate intent must be preserved before selected scope or execution-unit planning"
+      ]
+    },
+    {
+      "candidate_id": "research-problem:jaysearch:candidate-dag-selection-v1:hypothesis:reuse_direct:candidate:001",
+      "problem_id": "research-problem:jaysearch:candidate-dag-selection-v1",
+      "rank": 2,
+      "total_score": 0.805,
+      "score_breakdown": {
+        "contract_completeness": {
+          "value": 1.0,
+          "basis": "required field presence"
+        },
+        "traceability": {
+          "value": 1.0,
+          "basis": "source_hypothesis_id presence"
+        },
+        "evidence_support": {
+          "value": 1.0,
+          "basis": "evidence_refs presence"
+        },
+        "feasibility": {
+          "value": 0.8,
+          "basis": "feasibility_priors"
+        },
+        "artifact_readiness": {
+          "value": 0.5,
+          "basis": "artifact refs or proposed changes"
+        },
+        "risk_penalty": {
+          "value": 0.45,
+          "basis": "risk notes and feasibility priors"
+        }
+      },
+      "strengths": [
+        "evaluation_promoted_candidate",
+        "candidate_has_evidence_refs"
+      ],
+      "weaknesses": [
+        "candidate_has_no_materialized_artifacts"
+      ],
+      "promotion_status": "promoted",
+      "evaluation_ref": "artifacts/validation/research-to-selection-runs/rts-20260526T160930Z/steps/rev-20260526T160931Z/research-evaluation-02.packet.json",
+      "evidence_refs": [
+        "/mnt/c/users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap/artifacts/research-question-seeds/candidate-dag-selection-v1.evidence.packet.json"
+      ],
+      "source_hypothesis_id": "research-problem:jaysearch:candidate-dag-selection-v1:hypothesis:reuse_direct",
+      "approach_summary": "Direct-reuse candidate derived from branch: Prefer direct reuse of known references for: Should Jaysearch build a conservative candidate DAG selector before autonomous DAG generation?",
+      "implementation_intent": {
+        "summary": "Implementation-specific candidate intent for research-problem:jaysearch:candidate-dag-selection-v1.",
+        "contract_changes": [
+          "confirm no contract changes are required"
+        ],
+        "runtime_changes": [
+          "materialize artifact target candidate_dag_manifest",
+          "materialize artifact target candidate_dag_selection",
+          "materialize artifact target candidate_dag_evaluation"
+        ],
+        "validation_changes": [
+          "validate criterion: hard-gate validity",
+          "validate criterion: plan-quality scoring",
+          "validate criterion: selection provenance",
+          "validate criterion: invalid candidate preservation"
+        ],
+        "docs_changes": [
+          "document implementation intent and downstream handoff expectations"
+        ],
+        "handoff_requirements": [
+          "carry implementation intent into recommendation and selection packets"
+        ]
+      },
+      "contract_changes": [
+        "confirm no contract changes are required"
+      ],
+      "runtime_changes": [
+        "materialize artifact target candidate_dag_manifest",
+        "materialize artifact target candidate_dag_selection",
+        "materialize artifact target candidate_dag_evaluation"
+      ],
+      "validation_changes": [
+        "validate criterion: hard-gate validity",
+        "validate criterion: plan-quality scoring",
+        "validate criterion: selection provenance",
+        "validate criterion: invalid candidate preservation"
+      ],
+      "docs_changes": [
+        "document implementation intent and downstream handoff expectations"
+      ],
+      "expected_changes": [
+        "confirm no contract changes are required",
+        "materialize artifact target candidate_dag_manifest",
+        "materialize artifact target candidate_dag_selection",
+        "materialize artifact target candidate_dag_evaluation",
+        "validate criterion: hard-gate validity",
+        "validate criterion: plan-quality scoring",
+        "validate criterion: selection provenance",
+        "validate criterion: invalid candidate preservation",
+        "document implementation intent and downstream handoff expectations"
+      ],
+      "non_goals": [
+        "local-first",
+        "schema-backed packets",
+        "do not generate DAGs autonomously in V1",
+        "preserve invalid candidates with blockers"
+      ],
+      "assumptions": [
+        "local-first",
+        "schema-backed packets",
+        "do not generate DAGs autonomously in V1",
+        "preserve invalid candidates with blockers"
+      ],
+      "handoff_requirements": [
+        "carry implementation intent into recommendation and selection packets"
+      ],
+      "planner_entry_notes": [
+        "candidate intent must be preserved before selected scope or execution-unit planning"
+      ]
+    },
+    {
+      "candidate_id": "research-problem:jaysearch:candidate-dag-selection-v1:hypothesis:reuse_hybrid:candidate:001",
+      "problem_id": "research-problem:jaysearch:candidate-dag-selection-v1",
+      "rank": 3,
+      "total_score": 0.782,
+      "score_breakdown": {
+        "contract_completeness": {
+          "value": 1.0,
+          "basis": "required field presence"
+        },
+        "traceability": {
+          "value": 1.0,
+          "basis": "source_hypothesis_id presence"
+        },
+        "evidence_support": {
+          "value": 1.0,
+          "basis": "evidence_refs presence"
+        },
+        "feasibility": {
+          "value": 0.65,
+          "basis": "feasibility_priors"
+        },
+        "artifact_readiness": {
+          "value": 0.5,
+          "basis": "artifact refs or proposed changes"
+        },
+        "risk_penalty": {
+          "value": 0.45,
+          "basis": "risk notes and feasibility priors"
+        }
+      },
+      "strengths": [
+        "evaluation_promoted_candidate",
+        "candidate_has_evidence_refs"
+      ],
+      "weaknesses": [
+        "candidate_has_no_materialized_artifacts"
+      ],
+      "promotion_status": "promoted",
+      "evaluation_ref": "artifacts/validation/research-to-selection-runs/rts-20260526T160930Z/steps/rev-20260526T160931Z/research-evaluation-03.packet.json",
+      "evidence_refs": [
+        "/mnt/c/users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap/artifacts/research-question-seeds/candidate-dag-selection-v1.evidence.packet.json"
+      ],
+      "source_hypothesis_id": "research-problem:jaysearch:candidate-dag-selection-v1:hypothesis:reuse_hybrid",
+      "approach_summary": "Hybrid-reuse candidate derived from branch: Combine reuse with new adaptation for: Should Jaysearch build a conservative candidate DAG selector before autonomous DAG generation?",
+      "implementation_intent": {
+        "summary": "Implementation-specific candidate intent for research-problem:jaysearch:candidate-dag-selection-v1.",
+        "contract_changes": [
+          "confirm no contract changes are required"
+        ],
+        "runtime_changes": [
+          "materialize artifact target candidate_dag_manifest",
+          "materialize artifact target candidate_dag_selection",
+          "materialize artifact target candidate_dag_evaluation"
+        ],
+        "validation_changes": [
+          "validate criterion: hard-gate validity",
+          "validate criterion: plan-quality scoring",
+          "validate criterion: selection provenance",
+          "validate criterion: invalid candidate preservation"
+        ],
+        "docs_changes": [
+          "document implementation intent and downstream handoff expectations"
+        ],
+        "handoff_requirements": [
+          "carry implementation intent into recommendation and selection packets"
+        ]
+      },
+      "contract_changes": [
+        "confirm no contract changes are required"
+      ],
+      "runtime_changes": [
+        "materialize artifact target candidate_dag_manifest",
+        "materialize artifact target candidate_dag_selection",
+        "materialize artifact target candidate_dag_evaluation"
+      ],
+      "validation_changes": [
+        "validate criterion: hard-gate validity",
+        "validate criterion: plan-quality scoring",
+        "validate criterion: selection provenance",
+        "validate criterion: invalid candidate preservation"
+      ],
+      "docs_changes": [
+        "document implementation intent and downstream handoff expectations"
+      ],
+      "expected_changes": [
+        "confirm no contract changes are required",
+        "materialize artifact target candidate_dag_manifest",
+        "materialize artifact target candidate_dag_selection",
+        "materialize artifact target candidate_dag_evaluation",
+        "validate criterion: hard-gate validity",
+        "validate criterion: plan-quality scoring",
+        "validate criterion: selection provenance",
+        "validate criterion: invalid candidate preservation",
+        "document implementation intent and downstream handoff expectations"
+      ],
+      "non_goals": [
+        "local-first",
+        "schema-backed packets",
+        "do not generate DAGs autonomously in V1",
+        "preserve invalid candidates with blockers"
+      ],
+      "assumptions": [
+        "local-first",
+        "schema-backed packets",
+        "do not generate DAGs autonomously in V1",
+        "preserve invalid candidates with blockers"
+      ],
+      "handoff_requirements": [
+        "carry implementation intent into recommendation and selection packets"
+      ],
+      "planner_entry_notes": [
+        "candidate intent must be preserved before selected scope or execution-unit planning"
+      ]
+    },
+    {
+      "candidate_id": "research-problem:jaysearch:candidate-dag-selection-v1:hypothesis:novel_synthesized:candidate:001",
+      "problem_id": "research-problem:jaysearch:candidate-dag-selection-v1",
+      "rank": 4,
+      "total_score": 0.692,
+      "score_breakdown": {
+        "contract_completeness": {
+          "value": 1.0,
+          "basis": "required field presence"
+        },
+        "traceability": {
+          "value": 1.0,
+          "basis": "source_hypothesis_id presence"
+        },
+        "evidence_support": {
+          "value": 1.0,
+          "basis": "evidence_refs presence"
+        },
+        "feasibility": {
+          "value": 0.25,
+          "basis": "feasibility_priors"
+        },
+        "artifact_readiness": {
+          "value": 0.5,
+          "basis": "artifact refs or proposed changes"
+        },
+        "risk_penalty": {
+          "value": 0.6,
+          "basis": "risk notes and feasibility priors"
+        }
+      },
+      "strengths": [
+        "evaluation_promoted_candidate",
+        "candidate_has_evidence_refs"
+      ],
+      "weaknesses": [
+        "candidate_has_no_materialized_artifacts",
+        "candidate_high_risk_priors"
+      ],
+      "promotion_status": "promoted",
+      "evaluation_ref": "artifacts/validation/research-to-selection-runs/rts-20260526T160930Z/steps/rev-20260526T160931Z/research-evaluation-04.packet.json",
+      "evidence_refs": [
+        "/mnt/c/users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap/artifacts/research-question-seeds/candidate-dag-selection-v1.evidence.packet.json"
+      ],
+      "source_hypothesis_id": "research-problem:jaysearch:candidate-dag-selection-v1:hypothesis:novel_synthesized",
+      "approach_summary": "Novel synthesized candidate derived from branch: Synthesize a novel approach for: Should Jaysearch build a conservative candidate DAG selector before autonomous DAG generation?",
+      "implementation_intent": {
+        "summary": "Implementation-specific candidate intent for research-problem:jaysearch:candidate-dag-selection-v1.",
+        "contract_changes": [
+          "confirm no contract changes are required"
+        ],
+        "runtime_changes": [
+          "materialize artifact target candidate_dag_manifest",
+          "materialize artifact target candidate_dag_selection",
+          "materialize artifact target candidate_dag_evaluation"
+        ],
+        "validation_changes": [
+          "validate criterion: hard-gate validity",
+          "validate criterion: plan-quality scoring",
+          "validate criterion: selection provenance",
+          "validate criterion: invalid candidate preservation"
+        ],
+        "docs_changes": [
+          "document implementation intent and downstream handoff expectations"
+        ],
+        "handoff_requirements": [
+          "carry implementation intent into recommendation and selection packets"
+        ]
+      },
+      "contract_changes": [
+        "confirm no contract changes are required"
+      ],
+      "runtime_changes": [
+        "materialize artifact target candidate_dag_manifest",
+        "materialize artifact target candidate_dag_selection",
+        "materialize artifact target candidate_dag_evaluation"
+      ],
+      "validation_changes": [
+        "validate criterion: hard-gate validity",
+        "validate criterion: plan-quality scoring",
+        "validate criterion: selection provenance",
+        "validate criterion: invalid candidate preservation"
+      ],
+      "docs_changes": [
+        "document implementation intent and downstream handoff expectations"
+      ],
+      "expected_changes": [
+        "confirm no contract changes are required",
+        "materialize artifact target candidate_dag_manifest",
+        "materialize artifact target candidate_dag_selection",
+        "materialize artifact target candidate_dag_evaluation",
+        "validate criterion: hard-gate validity",
+        "validate criterion: plan-quality scoring",
+        "validate criterion: selection provenance",
+        "validate criterion: invalid candidate preservation",
+        "document implementation intent and downstream handoff expectations"
+      ],
+      "non_goals": [
+        "local-first",
+        "schema-backed packets",
+        "do not generate DAGs autonomously in V1",
+        "preserve invalid candidates with blockers"
+      ],
+      "assumptions": [
+        "local-first",
+        "schema-backed packets",
+        "do not generate DAGs autonomously in V1",
+        "preserve invalid candidates with blockers"
+      ],
+      "handoff_requirements": [
+        "carry implementation intent into recommendation and selection packets"
+      ],
+      "planner_entry_notes": [
+        "candidate intent must be preserved before selected scope or execution-unit planning"
+      ]
+    }
+  ],
+  "recommended_candidate_id": "research-problem:jaysearch:candidate-dag-selection-v1:hypothesis:baseline_reference:candidate:001",
+  "recommendation_reason": "Top promoted candidate after evaluation-backed ranking by promotion status and total evaluation score.",
+  "winner_evidence_refs": [
+    "/mnt/c/users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap/artifacts/research-question-seeds/candidate-dag-selection-v1.evidence.packet.json"
+  ],
+  "rejected_candidate_summaries": [
+    {
+      "candidate_id": "research-problem:jaysearch:candidate-dag-selection-v1:hypothesis:reuse_direct:candidate:001",
+      "rank": 2,
+      "total_score": 0.805,
+      "promotion_status": "promoted",
+      "reason": "ranked_below_recommended_candidate"
+    },
+    {
+      "candidate_id": "research-problem:jaysearch:candidate-dag-selection-v1:hypothesis:reuse_hybrid:candidate:001",
+      "rank": 3,
+      "total_score": 0.782,
+      "promotion_status": "promoted",
+      "reason": "ranked_below_recommended_candidate"
+    },
+    {
+      "candidate_id": "research-problem:jaysearch:candidate-dag-selection-v1:hypothesis:novel_synthesized:candidate:001",
+      "rank": 4,
+      "total_score": 0.692,
+      "promotion_status": "promoted",
+      "reason": "ranked_below_recommended_candidate"
+    }
+  ],
+  "open_questions": [],
+  "artifact_refs": [],
+  "evidence_refs": [
+    "/mnt/c/users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap/artifacts/research-question-seeds/candidate-dag-selection-v1.evidence.packet.json"
+  ]
+}
