@@ -1,0 +1,60 @@
+{
+  "packet_type": "research_hypothesis_packet",
+  "packet_version": "v1",
+  "packet_id": "research-problem:jaysearch:candidate-dag-selection-v1:hypothesis:novel_synthesized:packet",
+  "created_at": "2026-05-26T16:09:31Z",
+  "producer": "materialize-research-hypotheses",
+  "hypothesis_id": "research-problem:jaysearch:candidate-dag-selection-v1:hypothesis:novel_synthesized",
+  "problem_id": "research-problem:jaysearch:candidate-dag-selection-v1",
+  "hypothesis_family": "novel_synthesized",
+  "hypothesis_statement": "Synthesize a novel approach for: Should Jaysearch build a conservative candidate DAG selector before autonomous DAG generation?",
+  "approach_outline": "Generate a fresh approach under the stated constraints for comparison against reuse paths.",
+  "evaluation_focus": [
+    "hard-gate validity",
+    "plan-quality scoring",
+    "selection provenance",
+    "invalid candidate preservation"
+  ],
+  "evidence_refs": [
+    "/mnt/c/users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap/artifacts/research-question-seeds/candidate-dag-selection-v1.evidence.packet.json"
+  ],
+  "branch_rank": 4,
+  "prune_conditions": [
+    "fails required validity checks",
+    "cannot satisfy evaluation criteria under constraints"
+  ],
+  "source_question_refs": [],
+  "source_problem_ref": "/mnt/c/users/jna31a/advent-repos/jna31a_ait/platform-template-bootstrap/artifacts/validation/research-to-selection-runs/rts-20260526T160930Z/steps/qrpt-20260526T160930Z/research-problem.packet.json",
+  "risk_notes": [
+    "higher execution risk",
+    "weaker prior validation"
+  ],
+  "expected_advantages": [
+    "highest flexibility",
+    "can avoid reuse mismatch"
+  ],
+  "expected_tradeoffs": [
+    "higher execution risk",
+    "weaker prior validation"
+  ],
+  "constraints": [
+    "local-first",
+    "schema-backed packets",
+    "do not generate DAGs autonomously in V1",
+    "preserve invalid candidates with blockers"
+  ],
+  "repo_context": {
+    "project_id": "jaysearch",
+    "decision_target": "authorize conservative candidate DAG selection before candidate DAG generation",
+    "decision_consequence": "determines whether Jaysearch should build a conservative supplied-DAG selector before autonomous DAG generation",
+    "blocked_work_if_unanswered": "cannot safely build DAG orchestration and selection without a scoped validation target"
+  },
+  "reference_implementations": [
+    "https://arxiv.org/abs/2506.13131",
+    "https://arxiv.org/abs/2310.06770",
+    "https://arxiv.org/abs/2305.11738",
+    "https://networkx.org/documentation/stable/reference/algorithms/dag.html",
+    "https://json-schema.org/understanding-json-schema/reference/object",
+    "https://www.w3.org/TR/prov-dm/"
+  ]
+}
