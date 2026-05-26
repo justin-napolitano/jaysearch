@@ -1,0 +1,30 @@
+version: v1
+contract_name: dag_execution_unit_manifest
+contract_kind: packet
+owner: planner-tool
+description: >
+  Manifest linking one selected candidate DAG to the execution-unit packets
+  materialized from its buildable nodes. The manifest preserves graph
+  dependencies so the implementation loop can execute units in dependency order.
+required_fields:
+  - packet_type
+  - packet_version
+  - packet_id
+  - created_at
+  - producer
+  - manifest_id
+  - source_selection_ref
+  - selected_dag_ref
+  - execution_unit_refs
+  - execution_dependencies
+  - non_buildable_node_refs
+  - topological_layers
+  - evidence_refs
+  - blockers
+properties:
+  packet_type:
+    const: dag_execution_unit_manifest
+invariants:
+  - manifest_does_not_replace_execution_unit_packets
+  - dependencies_preserve_selected_dag_edge_meaning
+  - blocked_materialization_must_report_blockers
