@@ -1,0 +1,33 @@
+{
+  "benchmark_refs": [
+    "SWE-bench repository-grounded software tasks"
+  ],
+  "claim_refs": [
+    "generate/evaluate/select loops need explicit evaluator feedback",
+    "software planning should preserve concrete artifact refs",
+    "tool-grounded critique is safer than unsupported self-correction",
+    "DAG selection requires acyclicity and dependency validity checks",
+    "schema-backed packets are easier to validate and update than prose"
+  ],
+  "created_at": "2026-05-26T00:00:00Z",
+  "evidence_summary": "Candidate DAG selection should be built as a bounded ingest/evaluate/select loop before autonomous DAG generation.",
+  "method_refs": [
+    "bounded candidate tree search",
+    "hard-gate then quality-score selection",
+    "tool-grounded critique",
+    "provenance-preserving packet handoff"
+  ],
+  "packet_id": "candidate-dag-selection-v1-evidence-packet",
+  "packet_type": "evidence_packet",
+  "packet_version": "v1",
+  "problem_id": "candidate-dag-selection-v1",
+  "producer": "agent/codex",
+  "source_refs": [
+    "https://arxiv.org/abs/2506.13131",
+    "https://arxiv.org/abs/2310.06770",
+    "https://arxiv.org/abs/2305.11738",
+    "https://networkx.org/documentation/stable/reference/algorithms/dag.html",
+    "https://json-schema.org/understanding-json-schema/reference/object",
+    "https://www.w3.org/TR/prov-dm/"
+  ]
+}

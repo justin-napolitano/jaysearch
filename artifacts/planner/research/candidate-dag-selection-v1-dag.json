@@ -1,0 +1,117 @@
+{
+  "graph_id": "candidate-dag-selection-v1",
+  "graph_type": "implementation_dag",
+  "version": "v1",
+  "purpose": "Select the best supplied candidate DAG before autonomous DAG generation exists.",
+  "source_artifacts": [
+    "docs/candidate-dag-selection-v1.md",
+    ".agent/execplans/20260526-candidate-dag-selection-v1-codex-01-execplan.md",
+    "docs/research-candidate-tree-search-v1.md",
+    "docs/research-to-selection-validation-v1.md",
+    "docs/plan-quality-metrics-v1.md",
+    "docs/plan-quality-score-v1.md"
+  ],
+  "nodes": [
+    {
+      "node_id": "define-candidate-dag-contracts",
+      "title": "Define Candidate DAG Contracts",
+      "node_type": "contract",
+      "status": "planned",
+      "goal": "Define candidate_dag_manifest, candidate_dag_evaluation, and candidate_dag_selection schemas.",
+      "owned_changes": [
+        "spec/contracts/candidate-dag-manifest.schema.yaml",
+        "spec/contracts/candidate-dag-evaluation.schema.yaml",
+        "spec/contracts/candidate-dag-selection.schema.yaml",
+        "spec/contracts/packet-schema-registry.yaml"
+      ],
+      "expected_outputs": [
+        "candidate DAG packet schemas",
+        "registry entries"
+      ]
+    },
+    {
+      "node_id": "implement-dag-hard-gates",
+      "title": "Implement DAG Hard Gates",
+      "node_type": "runtime",
+      "status": "planned",
+      "goal": "Validate DAG shape, acyclicity, node ids, edge endpoints, validation targets, scope ownership, and evidence refs.",
+      "owned_changes": [
+        "src/platform_tools/select_candidate_dag.py"
+      ],
+      "expected_outputs": [
+        "hard-gate blockers",
+        "eligible candidate DAG set"
+      ]
+    },
+    {
+      "node_id": "implement-dag-quality-scoring",
+      "title": "Implement DAG Quality Scoring",
+      "node_type": "runtime",
+      "status": "planned",
+      "goal": "Score valid DAGs using explicit plan-quality dimensions and anti-cheat rules.",
+      "owned_changes": [
+        "src/platform_tools/select_candidate_dag.py",
+        "spec/plan-quality-scoring.yaml"
+      ],
+      "expected_outputs": [
+        "candidate_dag_evaluation packets"
+      ]
+    },
+    {
+      "node_id": "emit-selected-dag-packet",
+      "title": "Emit Selected DAG Packet",
+      "node_type": "runtime",
+      "status": "planned",
+      "goal": "Select one valid DAG and preserve rejected DAG refs, blockers, evidence, and scoring policy.",
+      "owned_changes": [
+        "src/platform_tools/select_candidate_dag.py",
+        "bin/select-candidate-dag"
+      ],
+      "expected_outputs": [
+        "candidate_dag_selection packet",
+        "selection report"
+      ]
+    },
+    {
+      "node_id": "test-candidate-dag-selection",
+      "title": "Test Candidate DAG Selection",
+      "node_type": "validation",
+      "status": "planned",
+      "goal": "Prove valid DAG selection, invalid DAG preservation, hard-gate enforcement, and score explanations.",
+      "owned_changes": [
+        "tests/test_candidate_dag_contracts.py",
+        "tests/test_select_candidate_dag.py"
+      ],
+      "expected_outputs": [
+        "contract tests",
+        "selector tests"
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "edge_id": "e1",
+      "from_node_id": "implement-dag-hard-gates",
+      "to_node_id": "define-candidate-dag-contracts",
+      "relation": "depends_on"
+    },
+    {
+      "edge_id": "e2",
+      "from_node_id": "implement-dag-quality-scoring",
+      "to_node_id": "implement-dag-hard-gates",
+      "relation": "depends_on"
+    },
+    {
+      "edge_id": "e3",
+      "from_node_id": "emit-selected-dag-packet",
+      "to_node_id": "implement-dag-quality-scoring",
+      "relation": "depends_on"
+    },
+    {
+      "edge_id": "e4",
+      "from_node_id": "test-candidate-dag-selection",
+      "to_node_id": "emit-selected-dag-packet",
+      "relation": "depends_on"
+    }
+  ]
+}
