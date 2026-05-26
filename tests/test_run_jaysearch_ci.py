@@ -19,6 +19,7 @@ def test_jaysearch_ci_includes_core_execution_path() -> None:
     flattened = [part for command in commands for part in command]
 
     assert "tests/test_candidate_patch_manifest_contracts.py" in flattened
+    assert "tests/test_materialize_selected_dag_execution_units.py" in flattened
     assert "tests/test_run_execution_era_loop_smoke.py" in flattened
     assert "tests/test_design_iteration.py" in flattened
     assert ["bin/design-iteration", "--root", "."] in commands
