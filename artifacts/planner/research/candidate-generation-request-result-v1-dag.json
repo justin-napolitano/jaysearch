@@ -1,0 +1,143 @@
+{
+  "graph_id": "candidate-generation-request-result-v1",
+  "graph_type": "implementation_dag",
+  "version": "v1",
+  "purpose": "Add a governed candidate generation producer boundary before candidate patch manifest ingestion.",
+  "source_artifacts": [
+    "docs/candidate-generation-request-result-v1.md",
+    ".agent/execplans/20260526-candidate-generation-request-result-v1-codex-01-execplan.md",
+    "docs/candidate-patch-manifest-research-v1.md",
+    "docs/research-candidate-tree-search-v1.md",
+    "docs/patch-producing-attempts-research-v1.md",
+    "docs/patch-aware-attempt-evaluation-research-v1.md"
+  ],
+  "nodes": [
+    {
+      "node_id": "lock-generation-boundary",
+      "title": "Lock Candidate Generation Boundary",
+      "node_type": "policy",
+      "status": "planned",
+      "goal": "Document that candidate generation produces artifact-backed candidates but does not evaluate, select, apply, or claim completion.",
+      "owned_changes": [
+        "docs/candidate-generation-request-result-v1.md"
+      ],
+      "expected_outputs": [
+        "candidate generation policy",
+        "anti-drift rules"
+      ]
+    },
+    {
+      "node_id": "define-generation-contracts",
+      "title": "Define Candidate Generation Contracts",
+      "node_type": "contract",
+      "status": "planned",
+      "goal": "Add candidate_generation_request and candidate_generation_result schemas and registry entries.",
+      "owned_changes": [
+        "spec/contracts/candidate-generation-request.schema.yaml",
+        "spec/contracts/candidate-generation-result.schema.yaml",
+        "spec/contracts/packet-schema-registry.yaml"
+      ],
+      "expected_outputs": [
+        "request schema",
+        "result schema",
+        "registry entries"
+      ]
+    },
+    {
+      "node_id": "implement-request-materializer",
+      "title": "Implement Request Materializer",
+      "node_type": "runtime",
+      "status": "planned",
+      "goal": "Materialize candidate_generation_request packets from execution units, evidence refs, and generation policy.",
+      "owned_changes": [
+        "src/platform_tools/materialize_candidate_generation_request.py",
+        "bin/materialize-candidate-generation-request"
+      ],
+      "expected_outputs": [
+        "candidate generation request packet",
+        "request materialization report"
+      ]
+    },
+    {
+      "node_id": "implement-generation-runner",
+      "title": "Implement Candidate Generation Runner",
+      "node_type": "runtime",
+      "status": "planned",
+      "goal": "Collect or create bounded patch candidates and emit candidate_generation_result plus candidate_patch_manifest.",
+      "owned_changes": [
+        "src/platform_tools/generate_candidate_patch_manifest.py",
+        "bin/generate-candidate-patch-manifest"
+      ],
+      "expected_outputs": [
+        "candidate generation result packet",
+        "candidate patch manifest packet",
+        "generation run artifacts"
+      ]
+    },
+    {
+      "node_id": "wire-smoke-runner-generation-path",
+      "title": "Wire Smoke Runner Generation Path",
+      "node_type": "runtime",
+      "status": "planned",
+      "goal": "Allow execution ERA smoke runner to consume candidate generation requests/results before attempt evaluation and selection.",
+      "owned_changes": [
+        "src/platform_tools/run_execution_era_loop_smoke.py",
+        "bin/run-execution-era-loop-smoke"
+      ],
+      "expected_outputs": [
+        "generation-backed ERA smoke path"
+      ]
+    },
+    {
+      "node_id": "test-generation-boundary",
+      "title": "Test Candidate Generation Boundary",
+      "node_type": "validation",
+      "status": "planned",
+      "goal": "Prove contracts, request materialization, result emission, manifest handoff, invalid candidate preservation, and smoke runner integration.",
+      "owned_changes": [
+        "tests/test_candidate_generation_contracts.py",
+        "tests/test_materialize_candidate_generation_request.py",
+        "tests/test_generate_candidate_patch_manifest.py",
+        "tests/test_run_execution_era_loop_smoke.py"
+      ],
+      "expected_outputs": [
+        "contract tests",
+        "materializer tests",
+        "generation runner tests",
+        "integration smoke tests"
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "edge_id": "e1",
+      "from_node_id": "define-generation-contracts",
+      "to_node_id": "lock-generation-boundary",
+      "relation": "depends_on"
+    },
+    {
+      "edge_id": "e2",
+      "from_node_id": "implement-request-materializer",
+      "to_node_id": "define-generation-contracts",
+      "relation": "depends_on"
+    },
+    {
+      "edge_id": "e3",
+      "from_node_id": "implement-generation-runner",
+      "to_node_id": "implement-request-materializer",
+      "relation": "depends_on"
+    },
+    {
+      "edge_id": "e4",
+      "from_node_id": "wire-smoke-runner-generation-path",
+      "to_node_id": "implement-generation-runner",
+      "relation": "depends_on"
+    },
+    {
+      "edge_id": "e5",
+      "from_node_id": "test-generation-boundary",
+      "to_node_id": "wire-smoke-runner-generation-path",
+      "relation": "depends_on"
+    }
+  ]
+}
