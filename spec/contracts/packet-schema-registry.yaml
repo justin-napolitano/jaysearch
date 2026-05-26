@@ -688,6 +688,92 @@ contract_families:
       - implementation-orchestrator
       - governance-tool
       - design-iteration-tool
+  - contract_name: candidate_dag_manifest
+    contract_kind: packet
+    owner: planner-tool
+    current_version: v1
+    compatibility_policy: additive_minor_breaking_major
+    status: active
+    schema_ref: spec/contracts/candidate-dag-manifest.schema.yaml
+    required_fields:
+      - packet_type
+      - packet_version
+      - packet_id
+      - created_at
+      - producer
+      - manifest_id
+      - source_problem_ref
+      - source_execplan_ref
+      - candidate_dag_refs
+      - selection_policy_ref
+      - evidence_refs
+      - blockers
+    upstream_producers:
+      - planner-tool
+      - research-tool
+    downstream_consumers:
+      - planner-tool
+      - plan-quality-score
+      - governance-tool
+      - design-iteration-tool
+  - contract_name: candidate_dag_evaluation
+    contract_kind: packet
+    owner: planner-tool
+    current_version: v1
+    compatibility_policy: additive_minor_breaking_major
+    status: active
+    schema_ref: spec/contracts/candidate-dag-evaluation.schema.yaml
+    required_fields:
+      - packet_type
+      - packet_version
+      - packet_id
+      - created_at
+      - producer
+      - evaluation_id
+      - candidate_id
+      - candidate_dag_ref
+      - hard_gate_status
+      - hard_gate_blockers
+      - score_breakdown
+      - critical_path_summary
+      - evidence_refs
+      - promotion_status
+    upstream_producers:
+      - planner-tool
+    downstream_consumers:
+      - planner-tool
+      - plan-quality-score
+      - governance-tool
+      - design-iteration-tool
+  - contract_name: candidate_dag_selection
+    contract_kind: packet
+    owner: planner-tool
+    current_version: v1
+    compatibility_policy: additive_minor_breaking_major
+    status: active
+    schema_ref: spec/contracts/candidate-dag-selection.schema.yaml
+    required_fields:
+      - packet_type
+      - packet_version
+      - packet_id
+      - created_at
+      - producer
+      - selection_id
+      - source_manifest_ref
+      - selected_dag_ref
+      - selected_evaluation_ref
+      - rejected_dag_refs
+      - rejected_evaluation_refs
+      - selection_policy
+      - score_summary
+      - evidence_refs
+      - blockers
+    upstream_producers:
+      - planner-tool
+    downstream_consumers:
+      - planner-tool
+      - governance-tool
+      - design-iteration-tool
   - contract_name: attempt_evaluation
     contract_kind: packet
     owner: governance-tool

@@ -1,0 +1,29 @@
+version: v1
+contract_name: candidate_dag_selection
+contract_kind: packet
+owner: planner-tool
+description: >
+  Deterministic selection record for choosing one evaluated candidate DAG.
+required_fields:
+  - packet_type
+  - packet_version
+  - packet_id
+  - created_at
+  - producer
+  - selection_id
+  - source_manifest_ref
+  - selected_dag_ref
+  - selected_evaluation_ref
+  - rejected_dag_refs
+  - rejected_evaluation_refs
+  - selection_policy
+  - score_summary
+  - evidence_refs
+  - blockers
+properties:
+  packet_type:
+    const: candidate_dag_selection
+invariants:
+  - candidate_dag_selection_must_preserve_rejected_refs
+  - invalid_candidate_dags_are_ineligible
+  - selection_uses_hard_gates_before_quality_scoring

@@ -93,6 +93,12 @@ Out of scope:
 - NetworkX DAG references support explicit acyclicity/topological reasoning.
 - JSON Schema supports machine validation of packet contracts.
 
+Implementation decision:
+
+- use NetworkX for DAG mechanics such as acyclicity, topological ordering, and critical path analysis because Jaysearch is becoming graph-native and these primitives will recur across planner, selector, materializer, and orchestration tools
+- keep ranking policy local to Jaysearch because plan quality is a product decision, not a generic graph-library decision
+- use a hard-gate then multi-criteria scoring model, aligned with plan-quality metrics and multi-criteria decision analysis practice
+
 ## Acceptance
 
 - invalid candidate DAGs remain visible with blockers
