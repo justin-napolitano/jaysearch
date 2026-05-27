@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+set -euo pipefail
+PYTHONPATH="$(pwd)/src${PYTHONPATH:+:$PYTHONPATH}" uv run python -m platform_tools.run_jaysearch_question_dag_demo "$@"

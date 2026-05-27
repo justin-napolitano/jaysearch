@@ -69,6 +69,32 @@ artifacts/demo/runs/<run_id>/
 
 This is a technical demo, not a production autonomy claim. It does not synthesize code, apply patches to the source worktree, or complete arbitrary repo tasks.
 
+## Question To DAG Demo
+
+Run the interview-oriented question-to-DAG flow:
+
+```bash
+bin/run-jaysearch-question-dag-demo \
+  --root . \
+  --question "How should we build the candidate generation boundary?"
+```
+
+This emits:
+
+```text
+artifacts/demo/question-dag-runs/<run_id>/
+  question.packet.json
+  evidence.packet.json
+  candidate-dags/
+  selection/
+  execution-units/
+  question-dag-demo.report.json
+  question-dag-demo-summary.md
+  demo.html
+```
+
+The demo claim is intentionally bounded: Jaysearch can turn a problem/question into a traceable, evidence-backed DAG and execution-unit handoff. Autonomous development execution is the next production boundary.
+
 ## Repository Map
 
 - `src/platform_tools/`: Python tools and materializers.
