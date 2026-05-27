@@ -1,5 +1,13 @@
 # Remaining Work Graph
 
+## Jaysearch Workflow Status
+
+This graph is historical for the current Jaysearch repo workflow.
+
+Jaysearch preserves `artifacts/planner/research/remaining-work-graph.json` and its action history so prior platform-control-plane decisions remain inspectable. It is no longer the blocking authority for current pre-push development because the graph was inherited from the platform-template backlog and does not yet model the Jaysearch product DAG accurately.
+
+Current Jaysearch development should be gated by branch policy, governance lint, ExecPlan lint, runtime checks, public API checks, tests, and the product DAG artifacts being built under `artifacts/planner/research/`. A future slice should replace this historical backlog with a Jaysearch-native work graph that models product nodes such as question intake, research loops, candidate DAG generation, DAG selection, execution units, and implementation attempts.
+
 ## Objective
 
 The remaining platform work must be schedulable by Codex without collapsing into a vague list of "next steps." This graph makes the backlog canonical, dependency-aware, and safe for controlled parallel execution.

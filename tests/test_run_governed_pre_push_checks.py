@@ -151,6 +151,65 @@ def test_pre_push_checks_run_policy_compliance_for_impl_branch(monkeypatch, tmp_
     assert any(item["name"] == "policy_compliance_check" for item in report["checks"])
 
 
+def test_pre_push_checks_treat_legacy_graph_and_policy_as_advisory(monkeypatch, tmp_path: Path) -> None:
+    plan = tmp_path / ".agent" / "execplans" / "plan.md"
+    plan.parent.mkdir(parents=True, exist_ok=True)
+    plan.write_text("---\nid: \"plan-id\"\n---\n\n# Purpose / Big Picture\n", encoding="utf-8")
+
+    monkeypatch.setattr(
+        "platform_tools.run_governed_pre_push_checks.evaluate_branch_policy",
+        lambda *args, **kwargs: {"ok": True, "findings": []},
+    )
+    monkeypatch.setattr(
+        "platform_tools.run_governed_pre_push_checks.check_governance",
+        lambda: (0, {"findings": []}),
+    )
+    monkeypatch.setattr(
+        "platform_tools.run_governed_pre_push_checks.check_remaining_work_graph",
+        lambda **kwargs: (1, {"errors": ["legacy_graph_queue_stale"]}),
+    )
+    monkeypatch.setattr(
+        "platform_tools.run_governed_pre_push_checks.check_worker_runtime_artifacts",
+        lambda **kwargs: (0, {"errors": []}),
+    )
+    monkeypatch.setattr(
+        "platform_tools.run_governed_pre_push_checks.check_public_orchestration_api",
+        lambda **kwargs: (0, {"errors": []}),
+    )
+    monkeypatch.setattr(
+        "platform_tools.run_governed_pre_push_checks.discover_execplan",
+        lambda *args, **kwargs: (plan, [plan.as_posix()], "implementation_branch"),
+    )
+    monkeypatch.setattr(
+        "platform_tools.run_governed_pre_push_checks.validate_execplan",
+        lambda path: {"errors": [], "warnings": [], "plan": str(path)},
+    )
+    monkeypatch.setattr(
+        "platform_tools.run_governed_pre_push_checks._effective_base_ref",
+        lambda **kwargs: "initiative/example",
+    )
+    monkeypatch.setattr(
+        "platform_tools.run_governed_pre_push_checks._published_branch_rewrite_status",
+        lambda *args, **kwargs: {"published_ref_exists": True},
+    )
+    monkeypatch.setattr(
+        "platform_tools.run_governed_pre_push_checks.check_policy_compliance",
+        lambda **kwargs: (1, {"blockers": ["remaining_work_node_not_advancable:decision_gated"]}),
+    )
+
+    code, report = run_governed_pre_push_checks(root=tmp_path.as_posix(), branch="impl-execplan/test")
+
+    assert code == 0
+    assert report["status"] == "ok"
+    graph_check = next(item for item in report["checks"] if item["name"] == "remaining_work_graph_check")
+    policy_check = next(item for item in report["checks"] if item["name"] == "policy_compliance_check")
+    assert graph_check["ok"] is False
+    assert graph_check["blocking"] is False
+    assert policy_check["ok"] is False
+    assert policy_check["blocking"] is False
+    assert report["blockers"] == []
+
+
 def test_pre_push_checks_allow_initial_impl_branch_publish(monkeypatch, tmp_path: Path) -> None:
     plan = tmp_path / ".agent" / "execplans" / "plan.md"
     plan.parent.mkdir(parents=True, exist_ok=True)

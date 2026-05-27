@@ -40,6 +40,18 @@ def _command_signature(command: str) -> str:
     return str(command).strip().split()[0] if str(command).strip() else ""
 
 
+def _is_executable_validation_command(command: str) -> bool:
+    signature = _command_signature(command)
+    return signature.startswith(("bin/", "./bin/")) or signature in {
+        "uv",
+        "python",
+        "python3",
+        "pytest",
+        "npm",
+        "git",
+    }
+
+
 def _collect_execplan_tests() -> list[dict[str, Any]]:
     tests: list[dict[str, Any]] = []
     for path in list_execplans(tracked_only=True):
@@ -112,6 +124,8 @@ def check_governance() -> tuple[int, dict[str, Any]]:
         name = item["check_id"]
         command = item["command"]
         expected_exit = item["expected_exit"]
+        if not _is_executable_validation_command(command):
+            continue
         by_name.setdefault(name, set()).add(_command_signature(command))
         by_tuple.add((name, _command_signature(command), expected_exit))
         if raw_name and not pattern.match(name):
