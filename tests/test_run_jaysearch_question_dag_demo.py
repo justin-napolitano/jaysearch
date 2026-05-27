@@ -27,11 +27,20 @@ def test_question_dag_demo_emits_lineage_and_execution_units(tmp_path: Path) -> 
     }
     assert report["question_ref"].endswith("question.packet.json")
     assert report["evidence_ref"].endswith("evidence.packet.json")
+    assert report["research_problem_ref"].endswith("research-problem.packet.json")
+    assert report["question_research_transform_ref"].endswith(
+        "question-to-research-problem-transform.packet.json"
+    )
     assert report["candidate_dag_manifest_ref"]
     assert report["candidate_dag_selection_ref"]
     assert report["selected_dag_ref"]
     assert report["dag_execution_unit_manifest_ref"]
     assert len(report["execution_unit_refs"]) == 4
+    assert [step["step"] for step in report["step_reports"]] == [
+        "orchestrate_question_research_handoff",
+        "select_candidate_dag",
+        "materialize_selected_dag_execution_units",
+    ]
     assert "Autonomous candidate generation" in report["implementation_boundary"]
 
     summary = Path(report["demo_summary_path"]).read_text(encoding="utf-8")
@@ -42,7 +51,8 @@ def test_question_dag_demo_emits_lineage_and_execution_units(tmp_path: Path) -> 
     question_packet = json.loads(Path(report["question_ref"]).read_text(encoding="utf-8"))
     assert question_packet["packet_type"] == "research_question_packet"
     evidence_packet = json.loads(Path(report["evidence_ref"]).read_text(encoding="utf-8"))
-    assert evidence_packet["packet_type"] == "bounded_evidence_packet"
+    assert evidence_packet["packet_type"] == "evidence_packet"
+    assert evidence_packet["evidence_mode"] == "curated_fixture"
 
 
 def test_question_dag_demo_blocks_missing_question(tmp_path: Path) -> None:

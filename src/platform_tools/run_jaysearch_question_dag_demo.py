@@ -10,6 +10,9 @@ from typing import Any
 from platform_tools.materialize_selected_dag_execution_units import (
     materialize_selected_dag_execution_units,
 )
+from platform_tools.orchestrate_question_research_handoff import (
+    run_question_research_handoff_workflow,
+)
 from platform_tools.public_orchestration_api import envelope
 from platform_tools.research_questions import write_json
 from platform_tools.select_candidate_dag import select_candidate_dag
@@ -74,15 +77,45 @@ def _question_packet(*, question: str, topic: str, run_id: str) -> dict[str, Any
 
 def _evidence_packet(*, question_ref: str, topic: str, run_id: str) -> dict[str, Any]:
     return {
-        "packet_type": "bounded_evidence_packet",
+        "packet_type": "evidence_packet",
         "packet_version": "v1",
         "packet_id": f"bounded-evidence:{run_id}:packet",
         "created_at": _utc_now(),
         "producer": COMMAND,
         "evidence_id": f"bounded-evidence:{run_id}",
+        "problem_id": f"jaysearch-demo:{_slug(topic)}",
         "source_question_ref": question_ref,
         "topic": topic,
         "evidence_mode": "curated_fixture",
+        "source_refs": [
+            "docs/question-tool-v1.md",
+            "docs/research-tool-v1.md",
+            "docs/candidate-dag-selection-v1.md",
+            "docs/selected-dag-execution-units-v1.md",
+            "docs/question-to-dag-demo-v1.md",
+            "https://www.w3.org/TR/prov-dm/",
+            "https://json-schema.org/understanding-json-schema/reference/object",
+            "https://networkx.org/documentation/stable/reference/algorithms/dag.html",
+            "https://arxiv.org/abs/2310.06770",
+        ],
+        "claim_refs": [
+            "lineage-must-be-explicit",
+            "dag-plans-must-be-validated",
+            "implementation-boundary-must-be-honest",
+        ],
+        "method_refs": [
+            "contract-first packet handoff",
+            "DAG hard-gate validation",
+            "transparent heuristic candidate scoring",
+        ],
+        "benchmark_refs": [
+            "question-to-DAG demo emits selected graph and execution units",
+            "local CI validates graph contracts and design iteration",
+        ],
+        "evidence_summary": (
+            "Curated V1 evidence supports explicit provenance, schema-backed packet "
+            "handoffs, DAG validation, and an honest implementation boundary."
+        ),
         "evidence_refs": [
             "docs/question-tool-v1.md",
             "docs/research-tool-v1.md",
@@ -427,7 +460,8 @@ def _summary_markdown(report: dict[str, Any]) -> str:
             "## Flow",
             "",
             "- Research question packet emitted.",
-            "- Bounded evidence packet emitted.",
+            "- Contract-compatible evidence packet emitted in bounded fixture mode.",
+            "- Existing question-to-research handoff tool materialized a research problem packet.",
             "- Candidate DAGs generated from deterministic templates.",
             "- Existing DAG selector selected the best graph.",
             "- Existing materializer emitted execution units.",
@@ -437,6 +471,7 @@ def _summary_markdown(report: dict[str, Any]) -> str:
             "",
             f"- Selected DAG candidate: `{report.get('selected_candidate_id', '')}`",
             f"- Rejected DAG candidates: `{', '.join(report.get('rejected_candidate_ids', []))}`",
+            f"- Research problem packet: `{report.get('research_problem_ref', '')}`",
             f"- Execution units emitted: `{len(report.get('execution_unit_refs', []))}`",
             "",
             "## Implementation Boundary",
@@ -622,8 +657,11 @@ def run_jaysearch_question_dag_demo(
     manifest_path = ""
     selection_report: dict[str, Any] = {}
     materialization_report: dict[str, Any] = {}
+    handoff_report: dict[str, Any] = {}
     selection_code = 1
     materialization_code = 1
+    handoff_code = 1
+    step_reports: list[dict[str, Any]] = []
 
     if not blockers:
         question_packet_path = write_json(
@@ -640,6 +678,24 @@ def run_jaysearch_question_dag_demo(
             ),
         )
         evidence_path = evidence_packet_path.as_posix()
+        handoff_code, handoff_report = run_question_research_handoff_workflow(
+            root=repo_root.as_posix(),
+            research_question_path=question_packet_path.relative_to(repo_root).as_posix(),
+            evidence_packet_path=evidence_packet_path.relative_to(repo_root).as_posix(),
+            output_root=f"{output_root}/{run_id}/question-research-handoff",
+        )
+        step_reports.append(
+            {
+                "step": "orchestrate_question_research_handoff",
+                "status": str(handoff_report.get("status", "")).strip(),
+                "ok": handoff_report.get("ok") is True,
+                "report": handoff_report,
+            }
+        )
+        blockers.extend(
+            f"orchestrate_question_research_handoff:{item}"
+            for item in handoff_report.get("blockers", [])
+        )
         manifest_path = _write_candidate_dags(
             repo_root=repo_root,
             run_root=run_root,
@@ -652,12 +708,28 @@ def run_jaysearch_question_dag_demo(
             manifest_path=manifest_path,
             output_root=f"{output_root}/{run_id}/selection",
         )
+        step_reports.append(
+            {
+                "step": "select_candidate_dag",
+                "status": str(selection_report.get("status", "")).strip(),
+                "ok": selection_report.get("ok") is True,
+                "report": selection_report,
+            }
+        )
         blockers.extend(f"select_candidate_dag:{item}" for item in selection_report.get("blockers", []))
         if selection_code == 0:
             materialization_code, materialization_report = materialize_selected_dag_execution_units(
                 root=repo_root.as_posix(),
                 selection_path=str(selection_report.get("candidate_dag_selection_path", "")),
                 output_root=f"{output_root}/{run_id}/execution-units",
+            )
+            step_reports.append(
+                {
+                    "step": "materialize_selected_dag_execution_units",
+                    "status": str(materialization_report.get("status", "")).strip(),
+                    "ok": materialization_report.get("ok") is True,
+                    "report": materialization_report,
+                }
             )
             blockers.extend(
                 f"materialize_selected_dag_execution_units:{item}"
@@ -671,13 +743,17 @@ def run_jaysearch_question_dag_demo(
     )
     demo_report = {
         "command": COMMAND,
-        "status": "ok" if not blockers and selection_code == 0 and materialization_code == 0 else "blocked",
-        "ok": not blockers and selection_code == 0 and materialization_code == 0,
+        "status": "ok"
+        if not blockers and handoff_code == 0 and selection_code == 0 and materialization_code == 0
+        else "blocked",
+        "ok": not blockers and handoff_code == 0 and selection_code == 0 and materialization_code == 0,
         "run_id": run_id,
         "question": normalized_question,
         "topic": topic_value,
         "question_ref": question_path,
         "evidence_ref": evidence_path,
+        "research_problem_ref": str(handoff_report.get("research_problem_path", "")),
+        "question_research_transform_ref": str(handoff_report.get("transform_packet_path", "")),
         "candidate_dag_manifest_ref": str((repo_root / manifest_path).resolve()) if manifest_path else "",
         "candidate_dag_selection_ref": str(selection_report.get("candidate_dag_selection_path", "")),
         "selected_candidate_id": selected_candidate_id,
@@ -694,8 +770,9 @@ def run_jaysearch_question_dag_demo(
             "no live autonomous web research",
             "no autonomous code synthesis",
             "no patch application",
-            "bounded fixture evidence in V1",
+            "contract-compatible evidence packet uses bounded fixture sources in V1",
         ],
+        "step_reports": step_reports,
         "blockers": sorted(set(blockers)),
     }
     demo_report_path = write_json(run_root / "question-dag-demo.report.json", demo_report)
