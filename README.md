@@ -22,6 +22,9 @@ apply happens only through a governed boundary
 The current execution spine is:
 
 ```text
+candidate_dag_manifest
+  -> candidate_dag_selection
+  -> dag_execution_unit_manifest
 execution_unit
   -> candidate_patch_manifest
   -> implementation_attempt[]
@@ -38,6 +41,33 @@ See the full node graph:
 Public site:
 
 - <https://justin-napolitano.github.io/jaysearch/>
+
+## Fast Demo
+
+Run the fixture-backed demo:
+
+```bash
+bin/run-jaysearch-demo --root .
+```
+
+The demo proves the current graph-to-execution bridge:
+
+```text
+fixture candidate DAGs
+  -> selected DAG
+  -> execution units
+  -> ERA smoke report
+```
+
+Outputs are written to:
+
+```text
+artifacts/demo/runs/<run_id>/
+  demo-report.json
+  demo-summary.md
+```
+
+This is a technical demo, not a production autonomy claim. It does not synthesize code, apply patches to the source worktree, or complete arbitrary repo tasks.
 
 ## Repository Map
 
