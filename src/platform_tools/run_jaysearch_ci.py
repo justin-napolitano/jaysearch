@@ -17,6 +17,7 @@ class Check:
 
 
 CORE_TESTS = [
+    "tests/test_run_jaysearch_demo.py",
     "tests/test_dag_execution_unit_manifest_contracts.py",
     "tests/test_materialize_selected_dag_execution_units.py",
     "tests/test_candidate_dag_contracts.py",
