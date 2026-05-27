@@ -68,7 +68,8 @@
 flowchart LR
   Q["User question"]
   RQ["research_question_packet"]
-  EV["bounded evidence packet"]
+  EV["evidence_packet<br/>bounded fixture mode"]
+  RP["research_problem_packet"]
   CDM["candidate DAG manifest"]
   SEL["candidate DAG selection"]
   DAG["selected DAG"]
@@ -76,7 +77,7 @@ flowchart LR
   EU["execution_unit[]"]
   STOP["implementation boundary"]
 
-  Q --> RQ --> EV --> CDM --> SEL --> DAG --> EUM --> EU --> STOP
+  Q --> RQ --> EV --> RP --> CDM --> SEL --> DAG --> EUM --> EU --> STOP
         </pre>
       </section>
 
@@ -91,8 +92,9 @@ flowchart LR
         <article>
           <h2>Evidence</h2>
           <p>
-            V1 uses curated evidence refs so the demo is deterministic. The architecture
-            keeps source lineage visible for later live research integration.
+            V1 emits a contract-compatible evidence packet in bounded fixture mode so the
+            demo is deterministic. The architecture keeps source lineage visible for later
+            live research integration.
           </p>
         </article>
         <article>
