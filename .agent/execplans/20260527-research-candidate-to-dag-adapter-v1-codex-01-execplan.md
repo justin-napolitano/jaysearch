@@ -59,7 +59,7 @@ validation:
     - name: "jaysearch-ci"
       command: "bin/run-jaysearch-ci"
       expected_exit: 0
-    - name: "design-review"
+    - name: "design_review"
       command: "bin/design-iteration --root ."
       expected_exit: 0
     - name: "policy-compliance"
