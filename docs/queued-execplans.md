@@ -401,9 +401,15 @@ This document turns the remaining-work graph into an explicit near-term queue of
    - implementation branch: `impl-execplan/20260512-research-question-intake-codex-01`
    - gate: `authoritative ExecPlan is canonical; published implementation branch required before execution`
 
+72. `20260527-research-candidate-to-dag-adapter-v1-codex-01`
+   - status: `decision_gated`
+   - goal: Research Candidate To Candidate DAG Adapter V1
+   - implementation branch: `impl-execplan/research-candidate-to-dag-adapter-v1`
+   - gate: `authoritative ExecPlan required before execution`
+
 ## Mirror Metadata
 
-- canonical_last_graph_action_id: `rwg-action-20260512-001-unblock-rwg-071`
+- canonical_last_graph_action_id: `rwg-action-20260527-register-rwg-072`
 - canonical_ready_order: ``
 - projection_authority: `projection_only`
 

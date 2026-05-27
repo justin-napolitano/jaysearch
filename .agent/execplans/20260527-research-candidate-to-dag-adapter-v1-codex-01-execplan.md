@@ -5,7 +5,13 @@ owner: "agent/codex"
 created: "2026-05-27T00:00:00Z"
 status: draft
 base_branch: main
+initiative_branch: "initiative/research-candidate-to-dag-adapter-v1"
+initiative_node_id: "initiative-research-candidate-to-dag-adapter-v1"
 changes:
+  - .agent/execplans/20260527-research-candidate-to-dag-adapter-v1-codex-01-execplan.md
+  - artifacts/governance/board-action-events.jsonl
+  - artifacts/planner/research/remaining-work-graph.json
+  - docs/queued-execplans.md
   - docs/research-candidate-to-dag-adapter-v1.md
   - src/platform_tools/materialize_candidate_dags_from_research.py
   - bin/materialize-candidate-dags-from-research
@@ -19,6 +25,31 @@ reviewers:
 finalized_by: ""
 finalized_at: ""
 finalized_in_pr: ""
+graph_registration:
+  node_id: "rwg-072"
+  queue_position: 72
+  implementation_branch: "impl-execplan/research-candidate-to-dag-adapter-v1"
+  goal_area: "research-runtime"
+  integration_mode: "via_initiative"
+  conflict_domains:
+    - "research-runtime"
+    - "planner-runtime"
+    - "candidate-dag"
+    - "demo-runtime"
+  expected_artifacts:
+    - .agent/execplans/20260527-research-candidate-to-dag-adapter-v1-codex-01-execplan.md
+    - artifacts/governance/board-action-events.jsonl
+    - artifacts/planner/research/remaining-work-graph.json
+    - bin/materialize-candidate-dags-from-research
+    - docs/queued-execplans.md
+    - docs/research-candidate-to-dag-adapter-v1.md
+    - docs/question-dag-demo.html
+    - docs/question-to-dag-demo-v1.md
+    - src/platform_tools/materialize_candidate_dags_from_research.py
+    - src/platform_tools/run_jaysearch_ci.py
+    - src/platform_tools/run_jaysearch_question_dag_demo.py
+    - tests/test_materialize_candidate_dags_from_research.py
+    - tests/test_run_jaysearch_question_dag_demo.py
 
 validation:
   tests:
@@ -30,6 +61,9 @@ validation:
       expected_exit: 0
     - name: "design-review"
       command: "bin/design-iteration --root ."
+      expected_exit: 0
+    - name: "policy-compliance"
+      command: "bin/policy-compliance-check --execplan-path .agent/execplans/20260527-research-candidate-to-dag-adapter-v1-codex-01-execplan.md"
       expected_exit: 0
 
 tasks:
@@ -159,6 +193,7 @@ Validation commands:
 uv run pytest tests/test_materialize_candidate_dags_from_research.py tests/test_run_jaysearch_question_dag_demo.py
 bin/run-jaysearch-ci
 bin/design-iteration --root .
+bin/policy-compliance-check --execplan-path .agent/execplans/20260527-research-candidate-to-dag-adapter-v1-codex-01-execplan.md
 ```
 
 ## Non-Goals
