@@ -18,6 +18,7 @@ def test_jaysearch_ci_includes_core_execution_path() -> None:
     commands = [item.command for item in check_plan()]
     flattened = [part for command in commands for part in command]
 
+    assert "tests/test_run_jaysearch_question_dag_demo.py" in flattened
     assert "tests/test_run_jaysearch_demo.py" in flattened
     assert "tests/test_candidate_patch_manifest_contracts.py" in flattened
     assert "tests/test_materialize_selected_dag_execution_units.py" in flattened

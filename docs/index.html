@@ -89,6 +89,22 @@
         </p>
       </section>
 
+      <section class="status" aria-labelledby="question-demo-title">
+        <div>
+          <p class="eyebrow">Question To DAG</p>
+          <h2 id="question-demo-title">Turn a problem into a graph plan</h2>
+        </div>
+        <p>
+          The interview demo accepts a question, emits bounded evidence, creates candidate DAGs,
+          selects one, materializes execution units, and stops at the implementation boundary.
+        </p>
+        <pre><code>bin/run-jaysearch-question-dag-demo --root . --question "How should we build candidate generation?"</code></pre>
+        <p>
+          The emitted run includes machine-readable packets plus a local <code>demo.html</code>
+          presentation view. Live autonomous research and code generation remain explicit next slices.
+        </p>
+      </section>
+
       <section class="graph-panel" aria-labelledby="graph-title">
         <div class="section-heading">
           <p class="eyebrow">Node Graph</p>
