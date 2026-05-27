@@ -70,6 +70,9 @@ flowchart LR
   RQ["research_question_packet"]
   EV["evidence_packet<br/>bounded fixture mode"]
   RP["research_problem_packet"]
+  HY["research_hypothesis_packet[]"]
+  RC["research_candidate_packet[]"]
+  RR["research_recommendation_packet"]
   CDM["candidate DAG manifest"]
   SEL["candidate DAG selection"]
   DAG["selected DAG"]
@@ -77,7 +80,7 @@ flowchart LR
   EU["execution_unit[]"]
   STOP["implementation boundary"]
 
-  Q --> RQ --> EV --> RP --> CDM --> SEL --> DAG --> EUM --> EU --> STOP
+  Q --> RQ --> EV --> RP --> HY --> RC --> RR --> CDM --> SEL --> DAG --> EUM --> EU --> STOP
         </pre>
       </section>
 
@@ -100,8 +103,8 @@ flowchart LR
         <article>
           <h2>DAG</h2>
           <p>
-            Candidate graph plans are generated, invalid graphs stay visible, and the
-            selected DAG is recorded with rejected alternatives.
+            Candidate graph plans are adapted from ranked research candidates, rejected
+            alternatives stay visible, and the selected DAG is recorded with selection evidence.
           </p>
         </article>
         <article>

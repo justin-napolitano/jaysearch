@@ -1089,6 +1089,14 @@
       "rationale": "initiative_execplan_authorized derived deterministically from canonical branch and ExecPlan evidence",
       "evidence_ref": "branch:initiative/research-control-plane",
       "queue_reconciled": true
+    },
+    {
+      "action_id": "rwg-action-20260527-register-rwg-072",
+      "action": "block",
+      "node_id": "rwg-072",
+      "rationale": "node registered deterministically from ExecPlan graph_registration metadata",
+      "evidence_ref": ".agent/execplans/20260527-research-candidate-to-dag-adapter-v1-codex-01-execplan.md",
+      "queue_reconciled": true
     }
   ],
   "graph_id": "remaining-work-graph-20260311",
@@ -3790,6 +3798,69 @@
         "reorder_requires_human": false,
         "reorder_blockers": []
       }
+    },
+    {
+      "node_id": "initiative-research-candidate-to-dag-adapter-v1",
+      "title": "Initiative / research candidate to dag adapter v1",
+      "status": "ready",
+      "gating_class": "auto_runnable",
+      "conflict_domains": [
+        "candidate-dag",
+        "demo-runtime",
+        "planner-runtime",
+        "research-runtime"
+      ],
+      "target_execplan_id": "initiative:research-candidate-to-dag-adapter-v1",
+      "goal_area": "reference",
+      "initiative_branch": "initiative/research-candidate-to-dag-adapter-v1",
+      "parent_initiative_node": "initiative-research-candidate-to-dag-adapter-v1",
+      "ordering": {}
+    },
+    {
+      "node_id": "rwg-072",
+      "title": "Research Candidate To Candidate DAG Adapter V1",
+      "status": "decision_gated",
+      "status_reason": "registered from ExecPlan metadata; authoritative ExecPlan required before execution",
+      "gating_class": "decision_gated",
+      "conflict_domains": [
+        "candidate-dag",
+        "demo-runtime",
+        "planner-runtime",
+        "research-runtime"
+      ],
+      "target_execplan_id": "20260527-research-candidate-to-dag-adapter-v1-codex-01",
+      "goal_area": "research-runtime",
+      "implementation_branch": "impl-execplan/research-candidate-to-dag-adapter-v1",
+      "initiative_branch": "initiative/research-candidate-to-dag-adapter-v1",
+      "parent_initiative_node": "initiative-research-candidate-to-dag-adapter-v1",
+      "integration_mode": "via_initiative",
+      "expected_artifacts": [
+        ".agent/execplans/20260527-research-candidate-to-dag-adapter-v1-codex-01-execplan.md",
+        "artifacts/governance/board-action-events.jsonl",
+        "artifacts/planner/research/remaining-work-graph.json",
+        "bin/materialize-candidate-dags-from-research",
+        "docs/queued-execplans.md",
+        "docs/research-candidate-to-dag-adapter-v1.md",
+        "docs/question-dag-demo.html",
+        "docs/question-to-dag-demo-v1.md",
+        "src/platform_tools/materialize_candidate_dags_from_research.py",
+        "src/platform_tools/run_jaysearch_ci.py",
+        "src/platform_tools/run_jaysearch_question_dag_demo.py",
+        "tests/test_materialize_candidate_dags_from_research.py",
+        "tests/test_run_jaysearch_question_dag_demo.py"
+      ],
+      "ordering": {
+        "queue_position": 72,
+        "tie_breaker": "20260527-research-candidate-to-dag-adapter-v1-codex-01",
+        "source_action_id": "rwg-action-20260527-register-rwg-072"
+      },
+      "action_state": {
+        "last_action_id": "rwg-action-20260527-register-rwg-072",
+        "last_action": "block",
+        "action_required": false,
+        "reorder_requires_human": false,
+        "reorder_blockers": []
+      }
     }
   ],
   "ordering_policy": {
@@ -3805,7 +3876,7 @@
     "reorder_requires_explicit_action": true
   },
   "queue_projection": {
-    "last_reconciled_action_id": "rwg-action-20260512-001-unblock-rwg-071",
+    "last_reconciled_action_id": "rwg-action-20260527-register-rwg-072",
     "path": "docs/queued-execplans.md",
     "projection_authority": "projection_only",
     "ready_execplan_ids": []
