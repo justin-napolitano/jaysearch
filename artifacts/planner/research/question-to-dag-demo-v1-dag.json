@@ -1,0 +1,128 @@
+{
+  "graph_id": "question-to-dag-demo-v1",
+  "graph_type": "implementation_dag",
+  "version": "v1",
+  "purpose": "Build an interview-ready question-to-DAG demo that preserves packet and graph lineage before the implementation boundary.",
+  "source_artifacts": [
+    "docs/question-to-dag-demo-v1.md",
+    ".agent/execplans/20260527-question-to-dag-demo-v1-codex-01-execplan.md",
+    "artifacts/planner/research/question-to-dag-demo-v1-research-refresh.packet.json",
+    "docs/question-tool-v1.md",
+    "docs/research-tool-v1.md",
+    "docs/candidate-dag-selection-v1.md",
+    "docs/selected-dag-execution-units-v1.md"
+  ],
+  "nodes": [
+    {
+      "node_id": "define-question-dag-demo-boundary",
+      "title": "Define Question DAG Demo Boundary",
+      "node_type": "documentation",
+      "status": "planned",
+      "goal": "Document the honest problem/question to DAG to execution-unit demo boundary.",
+      "owned_changes": [
+        "docs/question-to-dag-demo-v1.md",
+        ".agent/execplans/20260527-question-to-dag-demo-v1-codex-01-execplan.md"
+      ],
+      "expected_outputs": [
+        "demo boundary",
+        "non-claims",
+        "lineage requirements"
+      ],
+      "validation_commands": [
+        "bin/design-iteration --root ."
+      ],
+      "evidence_refs": [
+        "https://www.w3.org/TR/prov-dm/",
+        "docs/core-contract-spec-v1.md"
+      ]
+    },
+    {
+      "node_id": "build-question-dag-cli",
+      "title": "Build Question DAG CLI",
+      "node_type": "runtime",
+      "status": "planned",
+      "goal": "Implement a deterministic CLI that turns a question into bounded evidence, candidate DAGs, selected DAG, and execution units.",
+      "owned_changes": [
+        "src/platform_tools/run_jaysearch_question_dag_demo.py",
+        "bin/run-jaysearch-question-dag-demo"
+      ],
+      "expected_outputs": [
+        "question packet",
+        "evidence packet",
+        "candidate DAG manifest",
+        "selected DAG",
+        "execution units",
+        "demo report"
+      ],
+      "validation_commands": [
+        "uv run pytest tests/test_run_jaysearch_question_dag_demo.py"
+      ],
+      "evidence_refs": [
+        "https://networkx.org/documentation/stable/reference/algorithms/dag.html",
+        "docs/candidate-dag-selection-v1.md"
+      ]
+    },
+    {
+      "node_id": "build-run-local-ui",
+      "title": "Build Run Local UI",
+      "node_type": "documentation",
+      "status": "planned",
+      "goal": "Emit a local HTML run summary from the same packet artifacts.",
+      "owned_changes": [
+        "src/platform_tools/run_jaysearch_question_dag_demo.py",
+        "README.md",
+        "docs/index.html"
+      ],
+      "expected_outputs": [
+        "demo.html",
+        "presentation instructions"
+      ],
+      "validation_commands": [
+        "uv run pytest tests/test_run_jaysearch_question_dag_demo.py"
+      ],
+      "evidence_refs": [
+        "docs/jaysearch-demo-runner-v1.md"
+      ]
+    },
+    {
+      "node_id": "wire-demo-ci",
+      "title": "Wire Demo CI",
+      "node_type": "validation",
+      "status": "planned",
+      "goal": "Add the question-to-DAG demo tests to the local Jaysearch readiness gate.",
+      "owned_changes": [
+        "src/platform_tools/run_jaysearch_ci.py",
+        "tests/test_run_jaysearch_ci.py"
+      ],
+      "expected_outputs": [
+        "local CI protects demo flow"
+      ],
+      "validation_commands": [
+        "bin/run-jaysearch-ci"
+      ],
+      "evidence_refs": [
+        "docs/jaysearch-runtime-ci-v1.md"
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "edge_id": "e1",
+      "from_node_id": "build-question-dag-cli",
+      "to_node_id": "define-question-dag-demo-boundary",
+      "relation": "depends_on"
+    },
+    {
+      "edge_id": "e2",
+      "from_node_id": "build-run-local-ui",
+      "to_node_id": "build-question-dag-cli",
+      "relation": "depends_on"
+    },
+    {
+      "edge_id": "e3",
+      "from_node_id": "wire-demo-ci",
+      "to_node_id": "build-run-local-ui",
+      "relation": "depends_on"
+    }
+  ]
+}
