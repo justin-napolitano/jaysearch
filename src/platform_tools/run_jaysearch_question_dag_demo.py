@@ -7,6 +7,13 @@ import json
 from pathlib import Path
 from typing import Any
 
+from platform_tools.materialize_candidate_dags_from_research import (
+    materialize_candidate_dags_from_research,
+)
+from platform_tools.materialize_research_candidate_tree import materialize_research_candidate_tree
+from platform_tools.materialize_research_evaluations import materialize_research_evaluations
+from platform_tools.materialize_research_hypotheses import materialize_research_hypotheses
+from platform_tools.materialize_research_recommendation import materialize_research_recommendation
 from platform_tools.materialize_selected_dag_execution_units import (
     materialize_selected_dag_execution_units,
 )
@@ -462,7 +469,8 @@ def _summary_markdown(report: dict[str, Any]) -> str:
             "- Research question packet emitted.",
             "- Contract-compatible evidence packet emitted in bounded fixture mode.",
             "- Existing question-to-research handoff tool materialized a research problem packet.",
-            "- Candidate DAGs generated from deterministic templates.",
+            "- Existing research tools generated hypotheses, research candidates, evaluations, and a recommendation.",
+            "- Research candidate intent was adapted into candidate DAG artifacts.",
             "- Existing DAG selector selected the best graph.",
             "- Existing materializer emitted execution units.",
             "- Demo stops at the implementation boundary.",
@@ -472,6 +480,7 @@ def _summary_markdown(report: dict[str, Any]) -> str:
             f"- Selected DAG candidate: `{report.get('selected_candidate_id', '')}`",
             f"- Rejected DAG candidates: `{', '.join(report.get('rejected_candidate_ids', []))}`",
             f"- Research problem packet: `{report.get('research_problem_ref', '')}`",
+            f"- Research candidates emitted: `{len(report.get('research_candidate_refs', []))}`",
             f"- Execution units emitted: `{len(report.get('execution_unit_refs', []))}`",
             "",
             "## Implementation Boundary",
@@ -658,9 +667,19 @@ def run_jaysearch_question_dag_demo(
     selection_report: dict[str, Any] = {}
     materialization_report: dict[str, Any] = {}
     handoff_report: dict[str, Any] = {}
+    hypotheses_report: dict[str, Any] = {}
+    candidate_tree_report: dict[str, Any] = {}
+    evaluation_report: dict[str, Any] = {}
+    recommendation_report: dict[str, Any] = {}
+    candidate_dag_adapter_report: dict[str, Any] = {}
     selection_code = 1
     materialization_code = 1
     handoff_code = 1
+    hypotheses_code = 1
+    candidate_tree_code = 1
+    evaluation_code = 1
+    recommendation_code = 1
+    candidate_dag_adapter_code = 1
     step_reports: list[dict[str, Any]] = []
 
     if not blockers:
@@ -696,27 +715,158 @@ def run_jaysearch_question_dag_demo(
             f"orchestrate_question_research_handoff:{item}"
             for item in handoff_report.get("blockers", [])
         )
-        manifest_path = _write_candidate_dags(
-            repo_root=repo_root,
-            run_root=run_root,
-            question_ref=question_packet_path.as_posix(),
-            evidence_ref=evidence_packet_path.as_posix(),
-            topic_slug=topic_slug,
-        )
-        selection_code, selection_report = select_candidate_dag(
-            root=repo_root.as_posix(),
-            manifest_path=manifest_path,
-            output_root=f"{output_root}/{run_id}/selection",
-        )
-        step_reports.append(
-            {
-                "step": "select_candidate_dag",
-                "status": str(selection_report.get("status", "")).strip(),
-                "ok": selection_report.get("ok") is True,
-                "report": selection_report,
-            }
-        )
-        blockers.extend(f"select_candidate_dag:{item}" for item in selection_report.get("blockers", []))
+
+        if handoff_code == 0:
+            research_problem_path = str(handoff_report.get("research_problem_path", "")).strip()
+            hypotheses_code, hypotheses_report = materialize_research_hypotheses(
+                root=repo_root.as_posix(),
+                research_problem_path=research_problem_path,
+                output_root=f"{output_root}/{run_id}/research",
+            )
+            step_reports.append(
+                {
+                    "step": "materialize_research_hypotheses",
+                    "status": str(hypotheses_report.get("status", "")).strip(),
+                    "ok": hypotheses_report.get("ok") is True,
+                    "report": hypotheses_report,
+                }
+            )
+            blockers.extend(
+                f"materialize_research_hypotheses:{item}"
+                for item in hypotheses_report.get("blockers", [])
+            )
+
+        if hypotheses_code == 0:
+            hypothesis_paths = [
+                str(path)
+                for path in hypotheses_report.get("hypothesis_packet_paths", [])
+                if str(path).strip()
+            ]
+            candidate_tree_code, candidate_tree_report = materialize_research_candidate_tree(
+                root=repo_root.as_posix(),
+                research_problem_path=str(handoff_report.get("research_problem_path", "")).strip(),
+                hypothesis_paths=hypothesis_paths,
+                output_root=f"{output_root}/{run_id}/research",
+                max_candidates=4,
+            )
+            step_reports.append(
+                {
+                    "step": "materialize_research_candidate_tree",
+                    "status": str(candidate_tree_report.get("status", "")).strip(),
+                    "ok": candidate_tree_report.get("ok") is True,
+                    "report": candidate_tree_report,
+                }
+            )
+            blockers.extend(
+                f"materialize_research_candidate_tree:{item}"
+                for item in candidate_tree_report.get("blockers", [])
+            )
+
+        if candidate_tree_code == 0:
+            candidate_paths = [
+                str(path)
+                for path in candidate_tree_report.get("candidate_packet_paths", [])
+                if str(path).strip()
+            ]
+            evaluation_code, evaluation_report = materialize_research_evaluations(
+                root=repo_root.as_posix(),
+                candidate_search_tree_path=str(candidate_tree_report.get("candidate_search_tree_path", "")).strip(),
+                candidate_paths=candidate_paths,
+                output_root=f"{output_root}/{run_id}/research",
+            )
+            step_reports.append(
+                {
+                    "step": "materialize_research_evaluations",
+                    "status": str(evaluation_report.get("status", "")).strip(),
+                    "ok": evaluation_report.get("ok") is True,
+                    "report": evaluation_report,
+                }
+            )
+            blockers.extend(
+                f"materialize_research_evaluations:{item}"
+                for item in evaluation_report.get("blockers", [])
+            )
+
+        if evaluation_code == 0:
+            candidate_paths = [
+                str(path)
+                for path in candidate_tree_report.get("candidate_packet_paths", [])
+                if str(path).strip()
+            ]
+            evaluation_paths = [
+                str(path)
+                for path in evaluation_report.get("evaluation_packet_paths", [])
+                if str(path).strip()
+            ]
+            recommendation_code, recommendation_report = materialize_research_recommendation(
+                root=repo_root.as_posix(),
+                candidate_search_tree_path=str(candidate_tree_report.get("candidate_search_tree_path", "")).strip(),
+                candidate_paths=candidate_paths,
+                evaluation_paths=evaluation_paths,
+                evaluation_summary_path=str(evaluation_report.get("evaluation_summary_packet_path", "")).strip(),
+                output_root=f"{output_root}/{run_id}/research",
+            )
+            step_reports.append(
+                {
+                    "step": "materialize_research_recommendation",
+                    "status": str(recommendation_report.get("status", "")).strip(),
+                    "ok": recommendation_report.get("ok") is True,
+                    "report": recommendation_report,
+                }
+            )
+            blockers.extend(
+                f"materialize_research_recommendation:{item}"
+                for item in recommendation_report.get("blockers", [])
+            )
+
+        if recommendation_code == 0:
+            candidate_paths = [
+                str(path)
+                for path in candidate_tree_report.get("candidate_packet_paths", [])
+                if str(path).strip()
+            ]
+            candidate_dag_adapter_code, candidate_dag_adapter_report = (
+                materialize_candidate_dags_from_research(
+                    root=repo_root.as_posix(),
+                    research_recommendation_path=str(
+                        recommendation_report.get("recommendation_packet_path", "")
+                    ).strip(),
+                    candidate_paths=candidate_paths,
+                    evidence_packet_path=evidence_packet_path.relative_to(repo_root).as_posix(),
+                    output_root=f"{output_root}/{run_id}/candidate-dags",
+                    max_dags=3,
+                )
+            )
+            step_reports.append(
+                {
+                    "step": "materialize_candidate_dags_from_research",
+                    "status": str(candidate_dag_adapter_report.get("status", "")).strip(),
+                    "ok": candidate_dag_adapter_report.get("ok") is True,
+                    "report": candidate_dag_adapter_report,
+                }
+            )
+            blockers.extend(
+                f"materialize_candidate_dags_from_research:{item}"
+                for item in candidate_dag_adapter_report.get("blockers", [])
+            )
+            manifest_path = str(candidate_dag_adapter_report.get("candidate_dag_manifest_path", "")).strip()
+
+        if candidate_dag_adapter_code == 0:
+            selection_code, selection_report = select_candidate_dag(
+                root=repo_root.as_posix(),
+                manifest_path=manifest_path,
+                output_root=f"{output_root}/{run_id}/selection",
+            )
+            step_reports.append(
+                {
+                    "step": "select_candidate_dag",
+                    "status": str(selection_report.get("status", "")).strip(),
+                    "ok": selection_report.get("ok") is True,
+                    "report": selection_report,
+                }
+            )
+            blockers.extend(f"select_candidate_dag:{item}" for item in selection_report.get("blockers", []))
+
         if selection_code == 0:
             materialization_code, materialization_report = materialize_selected_dag_execution_units(
                 root=repo_root.as_posix(),
@@ -744,9 +894,25 @@ def run_jaysearch_question_dag_demo(
     demo_report = {
         "command": COMMAND,
         "status": "ok"
-        if not blockers and handoff_code == 0 and selection_code == 0 and materialization_code == 0
+        if not blockers
+        and handoff_code == 0
+        and hypotheses_code == 0
+        and candidate_tree_code == 0
+        and evaluation_code == 0
+        and recommendation_code == 0
+        and candidate_dag_adapter_code == 0
+        and selection_code == 0
+        and materialization_code == 0
         else "blocked",
-        "ok": not blockers and handoff_code == 0 and selection_code == 0 and materialization_code == 0,
+        "ok": not blockers
+        and handoff_code == 0
+        and hypotheses_code == 0
+        and candidate_tree_code == 0
+        and evaluation_code == 0
+        and recommendation_code == 0
+        and candidate_dag_adapter_code == 0
+        and selection_code == 0
+        and materialization_code == 0,
         "run_id": run_id,
         "question": normalized_question,
         "topic": topic_value,
@@ -754,6 +920,17 @@ def run_jaysearch_question_dag_demo(
         "evidence_ref": evidence_path,
         "research_problem_ref": str(handoff_report.get("research_problem_path", "")),
         "question_research_transform_ref": str(handoff_report.get("transform_packet_path", "")),
+        "research_hypothesis_refs": [
+            str(path) for path in hypotheses_report.get("hypothesis_packet_paths", [])
+        ],
+        "candidate_search_tree_ref": str(candidate_tree_report.get("candidate_search_tree_path", "")),
+        "research_candidate_refs": [
+            str(path) for path in candidate_tree_report.get("candidate_packet_paths", [])
+        ],
+        "research_evaluation_refs": [
+            str(path) for path in evaluation_report.get("evaluation_packet_paths", [])
+        ],
+        "research_recommendation_ref": str(recommendation_report.get("recommendation_packet_path", "")),
         "candidate_dag_manifest_ref": str((repo_root / manifest_path).resolve()) if manifest_path else "",
         "candidate_dag_selection_ref": str(selection_report.get("candidate_dag_selection_path", "")),
         "selected_candidate_id": selected_candidate_id,
