@@ -1,0 +1,190 @@
+{
+  "graph_id": "evidence-source-ingest-v1",
+  "graph_type": "implementation_dag",
+  "version": "v1",
+  "purpose": "Plan bounded URL-to-evidence ingestion so fresh external sources can feed the Jaysearch research candidate loop.",
+  "source_artifacts": [
+    "docs/evidence-source-ingest-v1.md",
+    "docs/evidence-search-tool-v1.md",
+    ".agent/execplans/20260527-evidence-source-ingest-v1-codex-01-execplan.md",
+    "docs/research-tool-v1.md",
+    "docs/current-research-bibliography.md",
+    "docs/question-to-dag-demo-v1.md"
+  ],
+  "nodes": [
+    {
+      "node_id": "define-ingest-boundary",
+      "title": "Define Evidence Ingest Boundary",
+      "node_type": "documentation",
+      "status": "planned",
+      "goal": "Document the bounded question plus URL to source records, claim records, and evidence packet flow.",
+      "owned_changes": [
+        "docs/evidence-source-ingest-v1.md",
+        ".agent/execplans/20260527-evidence-source-ingest-v1-codex-01-execplan.md"
+      ],
+      "expected_outputs": [
+        "non-crawler scope",
+        "packet responsibilities",
+        "research-loop handoff semantics"
+      ],
+      "validation_commands": [
+        "bin/execplan-validate .agent/execplans/20260527-evidence-source-ingest-v1-codex-01-execplan.md",
+        "bin/design-iteration --root ."
+      ],
+      "evidence_refs": [
+        "docs/evidence-search-tool-v1.md",
+        "https://www.w3.org/TR/prov-dm/"
+      ]
+    },
+    {
+      "node_id": "define-packet-contracts",
+      "title": "Define Source And Claim Packet Contracts",
+      "node_type": "contract",
+      "status": "planned",
+      "goal": "Register source_record, claim_record, and evidence packet shapes or map them to existing contracts.",
+      "owned_changes": [
+        "spec/contracts/packet-schema-registry.yaml",
+        "docs/core-contract-spec-v1.md",
+        "docs/evidence-source-ingest-v1.md"
+      ],
+      "expected_outputs": [
+        "source_record contract",
+        "claim_record contract",
+        "evidence_packet handoff contract"
+      ],
+      "validation_commands": [
+        "uv run pytest tests/test_ingest_evidence_sources.py"
+      ],
+      "evidence_refs": [
+        "docs/evidence-search-tool-v1.md",
+        "docs/current-research-bibliography.md"
+      ]
+    },
+    {
+      "node_id": "implement-url-ingest-cli",
+      "title": "Implement URL Ingest CLI",
+      "node_type": "runtime",
+      "status": "planned",
+      "goal": "Build a deterministic CLI that accepts a question and explicit URLs, fetches or reads source content, and emits source records.",
+      "owned_changes": [
+        "src/platform_tools/ingest_evidence_sources.py",
+        "bin/ingest-evidence-sources"
+      ],
+      "expected_outputs": [
+        "source-record-XX.packet.json",
+        "ingest.report.json"
+      ],
+      "validation_commands": [
+        "uv run pytest tests/test_ingest_evidence_sources.py"
+      ],
+      "evidence_refs": [
+        "https://airflow.apache.org/docs/apache-airflow/2.10.3/core-concepts/dags.html",
+        "https://networkx.org/documentation/stable/reference/algorithms/dag.html"
+      ]
+    },
+    {
+      "node_id": "implement-claim-extraction",
+      "title": "Implement Conservative Claim Extraction",
+      "node_type": "runtime",
+      "status": "planned",
+      "goal": "Extract bounded claims from accepted sources without inventing unsupported findings.",
+      "owned_changes": [
+        "src/platform_tools/ingest_evidence_sources.py",
+        "tests/test_ingest_evidence_sources.py"
+      ],
+      "expected_outputs": [
+        "claim-records.packet.json",
+        "source limitations",
+        "claim extraction statuses"
+      ],
+      "validation_commands": [
+        "uv run pytest tests/test_ingest_evidence_sources.py"
+      ],
+      "evidence_refs": [
+        "https://www.w3.org/TR/prov-dm/",
+        "docs/evidence-source-ingest-v1.md"
+      ]
+    },
+    {
+      "node_id": "assemble-evidence-packet",
+      "title": "Assemble Evidence Packet",
+      "node_type": "runtime",
+      "status": "planned",
+      "goal": "Emit one evidence packet that references accepted and rejected source records plus extracted claim records.",
+      "owned_changes": [
+        "src/platform_tools/ingest_evidence_sources.py",
+        "tests/test_ingest_evidence_sources.py"
+      ],
+      "expected_outputs": [
+        "evidence.packet.json",
+        "accepted source refs",
+        "rejected source refs",
+        "claim refs",
+        "limitations"
+      ],
+      "validation_commands": [
+        "uv run pytest tests/test_ingest_evidence_sources.py"
+      ],
+      "evidence_refs": [
+        "docs/evidence-search-tool-v1.md",
+        "docs/research-candidate-evaluation-v1.md"
+      ]
+    },
+    {
+      "node_id": "wire-research-loop-smoke",
+      "title": "Wire Research Loop Smoke Path",
+      "node_type": "validation",
+      "status": "planned",
+      "goal": "Prove an evidence packet can be passed into the existing research candidate/evaluation/recommendation loop.",
+      "owned_changes": [
+        "tests/test_ingest_evidence_sources.py",
+        "tests/test_run_jaysearch_question_dag_demo.py",
+        "src/platform_tools/run_jaysearch_question_dag_demo.py"
+      ],
+      "expected_outputs": [
+        "question plus URL evidence smoke path",
+        "research recommendation with evidence refs"
+      ],
+      "validation_commands": [
+        "uv run pytest tests/test_ingest_evidence_sources.py tests/test_run_jaysearch_question_dag_demo.py",
+        "bin/run-jaysearch-ci"
+      ],
+      "evidence_refs": [
+        "docs/question-to-dag-demo-v1.md",
+        "docs/research-recommendation-v1.md"
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "edge_id": "e1",
+      "from_node_id": "define-packet-contracts",
+      "to_node_id": "define-ingest-boundary",
+      "relation": "depends_on"
+    },
+    {
+      "edge_id": "e2",
+      "from_node_id": "implement-url-ingest-cli",
+      "to_node_id": "define-packet-contracts",
+      "relation": "depends_on"
+    },
+    {
+      "edge_id": "e3",
+      "from_node_id": "implement-claim-extraction",
+      "to_node_id": "implement-url-ingest-cli",
+      "relation": "depends_on"
+    },
+    {
+      "edge_id": "e4",
+      "from_node_id": "assemble-evidence-packet",
+      "to_node_id": "implement-claim-extraction",
+      "relation": "depends_on"
+    },
+    {
+      "edge_id": "e5",
+      "from_node_id": "wire-research-loop-smoke",
+      "to_node_id": "assemble-evidence-packet",
+      "relation": "depends_on"
+    }
+  ]
+}
