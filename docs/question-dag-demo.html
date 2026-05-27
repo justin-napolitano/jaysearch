@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Jaysearch Question To DAG Demo</title>
+    <meta
+      name="description"
+      content="A Jaysearch demo showing how a problem becomes evidence-backed graph plans and execution units."
+    >
+    <link rel="stylesheet" href="./site.css">
+    <script type="module">
+      import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
+      mermaid.initialize({
+        startOnLoad: true,
+        securityLevel: "strict",
+        theme: "base",
+        themeVariables: {
+          fontFamily: "Georgia, 'Times New Roman', serif",
+          primaryColor: "#f8f1dc",
+          primaryBorderColor: "#8a6d1d",
+          primaryTextColor: "#1f1a10",
+          lineColor: "#5f6f52",
+          tertiaryColor: "#e4edff"
+        }
+      });
+    </script>
+  </head>
+  <body>
+    <main class="page">
+      <section class="hero" aria-labelledby="title">
+        <p class="eyebrow">Question To DAG Demo</p>
+        <h1 id="title">Turn an ambiguous problem into a buildable graph plan.</h1>
+        <p class="lede">
+          Jaysearch accepts a question, emits bounded evidence, creates candidate DAGs,
+          selects the strongest graph, and materializes execution units. Development
+          automation starts after this boundary.
+        </p>
+        <div class="actions">
+          <a href="https://github.com/justin-napolitano/jaysearch">GitHub Repository</a>
+          <a href="./index.html">Project Overview</a>
+          <a href="./question-to-dag-demo-v1.md">Design Note</a>
+        </div>
+      </section>
+
+      <section class="status" aria-labelledby="run-title">
+        <div>
+          <p class="eyebrow">Run It</p>
+          <h2 id="run-title">One command produces the demo artifacts</h2>
+        </div>
+        <div>
+          <pre><code>bin/run-jaysearch-question-dag-demo \
+  --root . \
+  --question "How should we build candidate generation?"</code></pre>
+          <p>
+            Each run writes packet artifacts and a local <code>demo.html</code> view under
+            <code>artifacts/demo/question-dag-runs/&lt;run_id&gt;/</code>.
+          </p>
+        </div>
+      </section>
+
+      <section class="graph-panel" aria-labelledby="flow-title">
+        <div class="section-heading">
+          <p class="eyebrow">Flow</p>
+          <h2 id="flow-title">The lineage stays inspectable</h2>
+        </div>
+        <pre class="mermaid">
+flowchart LR
+  Q["User question"]
+  RQ["research_question_packet"]
+  EV["bounded evidence packet"]
+  CDM["candidate DAG manifest"]
+  SEL["candidate DAG selection"]
+  DAG["selected DAG"]
+  EUM["execution-unit manifest"]
+  EU["execution_unit[]"]
+  STOP["implementation boundary"]
+
+  Q --> RQ --> EV --> CDM --> SEL --> DAG --> EUM --> EU --> STOP
+        </pre>
+      </section>
+
+      <section class="grid" aria-label="Demo outputs">
+        <article>
+          <h2>Question</h2>
+          <p>
+            The user goal becomes a bounded research question packet with decision target,
+            constraints, evaluation targets, and artifact targets.
+          </p>
+        </article>
+        <article>
+          <h2>Evidence</h2>
+          <p>
+            V1 uses curated evidence refs so the demo is deterministic. The architecture
+            keeps source lineage visible for later live research integration.
+          </p>
+        </article>
+        <article>
+          <h2>DAG</h2>
+          <p>
+            Candidate graph plans are generated, invalid graphs stay visible, and the
+            selected DAG is recorded with rejected alternatives.
+          </p>
+        </article>
+        <article>
+          <h2>Units</h2>
+          <p>
+            The selected DAG becomes execution-unit packets. That is the handoff point
+            for implementation planning and future autonomous development.
+          </p>
+        </article>
+      </section>
+
+      <section class="status" aria-labelledby="boundary-title">
+        <div>
+          <p class="eyebrow">Honest Boundary</p>
+          <h2 id="boundary-title">What this does not claim yet</h2>
+        </div>
+        <p>
+          This demo does not perform live autonomous web research, code synthesis, patch
+          application, or production execution. Those are explicit next slices. The current
+          claim is narrower and useful: Jaysearch can turn a problem into a traceable,
+          evidence-backed graph plan and execution-unit handoff.
+        </p>
+      </section>
+    </main>
+  </body>
+</html>
