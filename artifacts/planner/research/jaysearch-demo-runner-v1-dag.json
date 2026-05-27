@@ -1,0 +1,119 @@
+{
+  "graph_id": "jaysearch-demo-runner-v1",
+  "graph_type": "implementation_dag",
+  "version": "v1",
+  "purpose": "Create a repeatable demo command for graph selection to execution-unit materialization and ERA smoke reporting.",
+  "source_artifacts": [
+    "docs/jaysearch-demo-runner-v1.md",
+    ".agent/execplans/20260527-jaysearch-demo-runner-v1-codex-01-execplan.md",
+    "docs/candidate-dag-selection-v1.md",
+    "docs/selected-dag-execution-units-v1.md",
+    "docs/execution-era-loop-v1.md"
+  ],
+  "nodes": [
+    {
+      "node_id": "define-demo-scope",
+      "title": "Define Demo Scope",
+      "node_type": "documentation",
+      "status": "planned",
+      "goal": "Document what the demo proves and what it explicitly does not prove.",
+      "owned_changes": [
+        "docs/jaysearch-demo-runner-v1.md",
+        ".agent/execplans/20260527-jaysearch-demo-runner-v1-codex-01-execplan.md"
+      ],
+      "expected_outputs": [
+        "demo scope document",
+        "demo execution plan"
+      ],
+      "validation_commands": [
+        "bin/design-iteration --root ."
+      ],
+      "evidence_refs": [
+        "docs/candidate-dag-selection-v1.md",
+        "docs/selected-dag-execution-units-v1.md"
+      ]
+    },
+    {
+      "node_id": "implement-demo-runner",
+      "title": "Implement Demo Runner",
+      "node_type": "runtime",
+      "status": "planned",
+      "goal": "Compose existing Jaysearch tools into a single fixture-backed demo command.",
+      "owned_changes": [
+        "src/platform_tools/run_jaysearch_demo.py",
+        "bin/run-jaysearch-demo"
+      ],
+      "expected_outputs": [
+        "demo report",
+        "demo summary"
+      ],
+      "validation_commands": [
+        "uv run pytest tests/test_run_jaysearch_demo.py"
+      ],
+      "evidence_refs": [
+        "docs/jaysearch-demo-runner-v1.md"
+      ]
+    },
+    {
+      "node_id": "document-demo",
+      "title": "Document Demo",
+      "node_type": "documentation",
+      "status": "planned",
+      "goal": "Expose the demo command and narrative in README and GitHub Pages.",
+      "owned_changes": [
+        "README.md",
+        "docs/index.html"
+      ],
+      "expected_outputs": [
+        "operator demo instructions",
+        "public site demo narrative"
+      ],
+      "validation_commands": [
+        "uv run pytest tests/test_run_jaysearch_demo.py"
+      ],
+      "evidence_refs": [
+        "docs/jaysearch-demo-runner-v1.md"
+      ]
+    },
+    {
+      "node_id": "wire-ci",
+      "title": "Wire CI",
+      "node_type": "validation",
+      "status": "planned",
+      "goal": "Add the demo test to the Jaysearch CI boundary.",
+      "owned_changes": [
+        "src/platform_tools/run_jaysearch_ci.py",
+        "tests/test_run_jaysearch_ci.py"
+      ],
+      "expected_outputs": [
+        "CI runs demo test"
+      ],
+      "validation_commands": [
+        "bin/run-jaysearch-ci"
+      ],
+      "evidence_refs": [
+        "docs/jaysearch-runtime-ci-v1.md"
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "edge_id": "e1",
+      "from_node_id": "implement-demo-runner",
+      "to_node_id": "define-demo-scope",
+      "relation": "depends_on"
+    },
+    {
+      "edge_id": "e2",
+      "from_node_id": "document-demo",
+      "to_node_id": "implement-demo-runner",
+      "relation": "depends_on"
+    },
+    {
+      "edge_id": "e3",
+      "from_node_id": "wire-ci",
+      "to_node_id": "document-demo",
+      "relation": "depends_on"
+    }
+  ]
+}

@@ -73,6 +73,22 @@
         </article>
       </section>
 
+      <section class="status" aria-labelledby="demo-title">
+        <div>
+          <p class="eyebrow">Demo Path</p>
+          <h2 id="demo-title">Run the graph-to-execution demo</h2>
+        </div>
+        <p>
+          The current demo uses fixture candidate DAGs, selects the best graph,
+          materializes execution units, and runs one metadata-only ERA smoke path.
+        </p>
+        <pre><code>bin/run-jaysearch-demo --root .</code></pre>
+        <p>
+          This proves the orchestration bridge. It does not claim autonomous code
+          synthesis or production task completion yet.
+        </p>
+      </section>
+
       <section class="graph-panel" aria-labelledby="graph-title">
         <div class="section-heading">
           <p class="eyebrow">Node Graph</p>
@@ -115,6 +131,15 @@ flowchart TD
   NodeOption --> SelectedOption
   SelectedOption --> GovernanceTool
   GovernanceTool --> ExecutionUnit
+
+  CandidateDagManifest["candidate_dag_manifest<br/>competing graph plans"]
+  CandidateDagSelection["candidate_dag_selection<br/>selected graph + rejected refs"]
+  DagExecutionUnitManifest["dag_execution_unit_manifest<br/>selected DAG materialized into units"]
+
+  PlannerTool --> CandidateDagManifest
+  CandidateDagManifest --> CandidateDagSelection
+  CandidateDagSelection --> DagExecutionUnitManifest
+  DagExecutionUnitManifest --> ExecutionUnit
 
   ExecutionUnit --> Executor
   Executor --> CandidatePatchManifest
