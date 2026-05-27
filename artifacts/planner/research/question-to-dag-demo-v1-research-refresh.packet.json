@@ -1,0 +1,45 @@
+{
+  "packet_type": "research_refresh",
+  "packet_version": "v1",
+  "packet_id": "research-refresh:question-to-dag-demo-v1:20260527",
+  "created_at": "2026-05-27T00:00:00Z",
+  "producer": "codex",
+  "research_id": "question-to-dag-demo-v1-refresh",
+  "scope": "question-to-DAG interview demo planning",
+  "claims": [
+    {
+      "claim_id": "lineage-required",
+      "claim": "Question, evidence, candidate DAG, selected DAG, and execution-unit artifacts need explicit provenance links.",
+      "evidence_refs": [
+        "https://www.w3.org/TR/prov-dm/",
+        "docs/core-contract-spec-v1.md"
+      ]
+    },
+    {
+      "claim_id": "machine-readable-contracts",
+      "claim": "Demo artifacts should remain machine-readable packet contracts, not only prose summaries.",
+      "evidence_refs": [
+        "https://json-schema.org/understanding-json-schema/reference/object",
+        "spec/contracts/packet-schema-registry.yaml"
+      ]
+    },
+    {
+      "claim_id": "dag-primitives",
+      "claim": "Candidate graph plans should be represented as DAGs so acyclicity and topological execution order can be validated.",
+      "evidence_refs": [
+        "https://networkx.org/documentation/stable/reference/algorithms/dag.html",
+        "docs/candidate-dag-selection-v1.md"
+      ]
+    },
+    {
+      "claim_id": "artifact-grounded-software-work",
+      "claim": "The implementation boundary should preserve concrete task artifacts and avoid prose-only handoff.",
+      "evidence_refs": [
+        "https://arxiv.org/abs/2310.06770",
+        "docs/selected-dag-execution-units-v1.md"
+      ]
+    }
+  ],
+  "decision": "Build the question-to-DAG demo in two slices: a deterministic CLI artifact flow first, then a local HTML presentation view over the same artifacts.",
+  "blockers": []
+}
