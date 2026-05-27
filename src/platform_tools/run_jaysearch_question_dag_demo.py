@@ -386,6 +386,35 @@ def _selected_candidate_id(selection_report: dict[str, Any]) -> tuple[str, list[
     return selected, rejected
 
 
+def _relative_label(path: str) -> str:
+    if not path:
+        return ""
+    return Path(path).name or path
+
+
+def _artifact_link(path: str, label: str = "") -> str:
+    if not path:
+        return "<span class=\"muted\">not emitted</span>"
+    escaped_path = html.escape(path)
+    escaped_label = html.escape(label or _relative_label(path))
+    return f"<a href=\"{escaped_path}\">{escaped_label}</a>"
+
+
+def _mermaid_graph(report: dict[str, Any]) -> str:
+    return """flowchart LR
+  Q["User question"]
+  RQ["research_question_packet"]
+  EV["bounded evidence"]
+  CDM["candidate DAG manifest"]
+  SEL["selected DAG"]
+  EUM["execution-unit manifest"]
+  EU["execution units"]
+  BOUND["implementation boundary"]
+
+  Q --> RQ --> EV --> CDM --> SEL --> EUM --> EU --> BOUND
+"""
+
+
 def _summary_markdown(report: dict[str, Any]) -> str:
     return "\n".join(
         [
@@ -420,8 +449,18 @@ def _summary_markdown(report: dict[str, Any]) -> str:
 
 def _html_page(report: dict[str, Any]) -> str:
     units = "\n".join(
-        f"<li><code>{html.escape(Path(path).name)}</code></li>"
+        "<article class=\"unit-card\">"
+        f"<strong>{html.escape(Path(path).stem.replace('execution-unit-', '').replace('-', ' ').title())}</strong>"
+        f"<p>{_artifact_link(path, Path(path).name)}</p>"
+        "</article>"
         for path in report.get("execution_unit_refs", [])
+    )
+    rejected = "\n".join(
+        f"<li><code>{html.escape(candidate)}</code></li>"
+        for candidate in report.get("rejected_candidate_ids", [])
+    )
+    non_claims = "\n".join(
+        f"<li>{html.escape(item)}</li>" for item in report.get("explicit_non_claims", [])
     )
     return f"""<!doctype html>
 <html lang=\"en\">
@@ -429,32 +468,132 @@ def _html_page(report: dict[str, Any]) -> str:
     <meta charset=\"utf-8\">
     <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">
     <title>Jaysearch Question To DAG Demo</title>
+    <script type=\"module\">
+      import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
+      mermaid.initialize({{ startOnLoad: true, securityLevel: "strict", theme: "base" }});
+    </script>
     <style>
-      body {{ font-family: Georgia, serif; margin: 2rem; max-width: 960px; line-height: 1.55; color: #211b12; background: #fbf7ea; }}
-      code {{ background: #efe5c7; padding: 0.1rem 0.25rem; border-radius: 0.25rem; }}
-      section {{ border: 1px solid #d7c99d; background: #fffaf0; padding: 1rem; margin: 1rem 0; border-radius: 0.75rem; }}
-      .boundary {{ border-color: #9a5c2e; background: #fff2df; }}
+      :root {{
+        --ink: #1f1a10;
+        --muted: #675d4a;
+        --paper: #fffaf0;
+        --field: #f6ecd2;
+        --line: #d8c79a;
+        --accent: #1f6f5b;
+        --warn: #9a5c2e;
+        --shadow: 0 22px 60px rgba(37, 31, 17, 0.14);
+      }}
+      * {{ box-sizing: border-box; }}
+      body {{
+        margin: 0;
+        color: var(--ink);
+        background:
+          radial-gradient(circle at top left, rgba(31, 111, 91, 0.18), transparent 34rem),
+          linear-gradient(135deg, #fbf7ea 0%, #efe3bf 100%);
+        font-family: Georgia, 'Times New Roman', serif;
+        line-height: 1.55;
+      }}
+      main {{ width: min(1120px, calc(100% - 2rem)); margin: 0 auto; padding: 3rem 0; }}
+      a {{ color: #124d41; font-weight: 700; }}
+      code {{ background: #eadfbd; padding: 0.1rem 0.3rem; border-radius: 0.3rem; }}
+      .hero {{
+        padding: 2.5rem;
+        border: 1px solid rgba(106, 86, 38, 0.35);
+        border-radius: 1.5rem;
+        background: rgba(255, 250, 240, 0.88);
+        box-shadow: var(--shadow);
+      }}
+      .eyebrow {{ color: var(--accent); font-size: 0.78rem; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; }}
+      h1 {{ font-size: clamp(2.2rem, 7vw, 5.5rem); line-height: 0.95; margin: 0.2rem 0 1rem; max-width: 900px; }}
+      h2 {{ font-size: clamp(1.4rem, 3vw, 2.4rem); margin: 0 0 0.75rem; }}
+      .lede {{ font-size: 1.25rem; max-width: 760px; color: var(--muted); }}
+      .grid {{ display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; margin: 1rem 0; }}
+      section, .card {{
+        border: 1px solid var(--line);
+        background: rgba(255, 250, 240, 0.9);
+        padding: 1.25rem;
+        border-radius: 1rem;
+      }}
+      .flow {{ margin: 1rem 0; }}
+      .mermaid {{ background: #fffdf6; border-radius: 1rem; padding: 1rem; overflow-x: auto; }}
+      .unit-grid {{ display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.85rem; }}
+      .unit-card {{ background: var(--field); border: 1px solid var(--line); border-radius: 0.85rem; padding: 1rem; }}
+      .boundary {{ border-color: #bf7d3e; background: #fff1db; }}
+      .artifact-list {{ columns: 2; padding-left: 1.2rem; }}
+      .muted {{ color: var(--muted); }}
+      @media (max-width: 760px) {{
+        main {{ padding: 1rem 0; }}
+        .hero {{ padding: 1.25rem; }}
+        .grid, .unit-grid {{ grid-template-columns: 1fr; }}
+        .artifact-list {{ columns: 1; }}
+      }}
     </style>
   </head>
   <body>
-    <h1>Jaysearch Question To DAG Demo</h1>
-    <section>
-      <h2>User Question</h2>
-      <p>{html.escape(str(report.get("question", "")))}</p>
-    </section>
-    <section>
-      <h2>Selected DAG</h2>
-      <p>Selected candidate: <code>{html.escape(str(report.get("selected_candidate_id", "")))}</code></p>
-      <p>Rejected candidates: <code>{html.escape(", ".join(report.get("rejected_candidate_ids", [])))}</code></p>
-    </section>
-    <section>
-      <h2>Execution Units</h2>
-      <ul>{units}</ul>
-    </section>
-    <section class=\"boundary\">
-      <h2>Implementation Boundary</h2>
-      <p>{html.escape(str(report.get("implementation_boundary", "")))}</p>
-    </section>
+    <main>
+      <header class=\"hero\">
+        <p class=\"eyebrow\">Jaysearch Demo</p>
+        <h1>From question to evidence-backed DAG.</h1>
+        <p class=\"lede\">
+          Jaysearch turns an ambiguous problem into traceable packets, evaluates candidate graph plans,
+          selects a DAG, and materializes execution units for development.
+        </p>
+      </header>
+
+      <section>
+        <p class=\"eyebrow\">Input</p>
+        <h2>User Question</h2>
+        <p>{html.escape(str(report.get("question", "")))}</p>
+      </section>
+
+      <section class=\"flow\">
+        <p class=\"eyebrow\">Lineage</p>
+        <h2>Packet Flow</h2>
+        <pre class=\"mermaid\">{html.escape(_mermaid_graph(report))}</pre>
+      </section>
+
+      <div class=\"grid\">
+        <section>
+          <p class=\"eyebrow\">Research</p>
+          <h2>Bounded Evidence</h2>
+          <p>The V1 demo uses curated evidence refs so the interview flow is deterministic and inspectable.</p>
+          <p>{_artifact_link(str(report.get("evidence_ref", "")), "Open evidence.packet.json")}</p>
+        </section>
+        <section>
+          <p class=\"eyebrow\">Selection</p>
+          <h2>Selected DAG</h2>
+          <p>Selected candidate: <code>{html.escape(str(report.get("selected_candidate_id", "")))}</code></p>
+          <p>Rejected candidates:</p>
+          <ul>{rejected}</ul>
+        </section>
+      </div>
+
+      <section>
+        <p class=\"eyebrow\">Execution Boundary</p>
+        <h2>Execution Units</h2>
+        <div class=\"unit-grid\">{units}</div>
+      </section>
+
+      <section class=\"boundary\">
+        <p class=\"eyebrow\">Honest Boundary</p>
+        <h2>What Is Still In Progress</h2>
+        <p>{html.escape(str(report.get("implementation_boundary", "")))}</p>
+        <ul>{non_claims}</ul>
+      </section>
+
+      <section>
+        <p class=\"eyebrow\">Raw Artifacts</p>
+        <h2>Inspect The Lineage</h2>
+        <ul class=\"artifact-list\">
+          <li>{_artifact_link(str(report.get("question_ref", "")), "question.packet.json")}</li>
+          <li>{_artifact_link(str(report.get("evidence_ref", "")), "evidence.packet.json")}</li>
+          <li>{_artifact_link(str(report.get("candidate_dag_manifest_ref", "")), "candidate-dag-manifest.packet.json")}</li>
+          <li>{_artifact_link(str(report.get("candidate_dag_selection_ref", "")), "candidate-dag-selection.packet.json")}</li>
+          <li>{_artifact_link(str(report.get("dag_execution_unit_manifest_ref", "")), "dag-execution-unit-manifest.packet.json")}</li>
+          <li>{_artifact_link(str(report.get("demo_report_path", "")), "question-dag-demo.report.json")}</li>
+        </ul>
+      </section>
+    </main>
   </body>
 </html>
 """
@@ -560,6 +699,7 @@ def run_jaysearch_question_dag_demo(
         "blockers": sorted(set(blockers)),
     }
     demo_report_path = write_json(run_root / "question-dag-demo.report.json", demo_report)
+    demo_report["demo_report_path"] = demo_report_path.as_posix()
     summary_path = run_root / "question-dag-demo-summary.md"
     summary_path.write_text(_summary_markdown(demo_report), encoding="utf-8")
     html_path = run_root / "demo.html"
