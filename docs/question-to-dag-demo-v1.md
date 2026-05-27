@@ -11,6 +11,10 @@ user question
   -> research_question_packet
   -> evidence_packet in bounded fixture mode
   -> research_problem_packet
+  -> research_hypothesis_packet[]
+  -> research_candidate_packet[]
+  -> research_evaluation_packet[]
+  -> research_recommendation_packet
   -> candidate DAG manifest
   -> selected DAG
   -> execution units
@@ -44,7 +48,8 @@ The demo proves:
 - Jaysearch can accept an ambiguous problem/question.
 - Jaysearch can produce bounded research questions and evidence refs.
 - Jaysearch can use the existing question-to-research handoff to materialize a research problem packet.
-- Jaysearch can synthesize or fixture-generate a candidate DAG that preserves lineage.
+- Jaysearch can use the existing research candidate loop to generate, evaluate, and recommend candidate approaches.
+- Jaysearch can adapt research candidate intent into candidate DAGs that preserve lineage.
 - Jaysearch can select a DAG using the existing DAG selector.
 - Jaysearch can materialize execution units from the selected DAG.
 - Jaysearch can stop at the implementation boundary without overclaiming.
@@ -72,6 +77,10 @@ Outputs:
 
 - `question.packet.json`
 - `evidence.packet.json`
+- `research-hypothesis-*.packet.json`
+- `research-candidate-*.packet.json`
+- `research-evaluation-*.packet.json`
+- `research-recommendation.packet.json`
 - `candidate-dag-manifest.packet.json`
 - `candidate-dag-selection.packet.json`
 - `dag-execution-unit-manifest.packet.json`
@@ -84,7 +93,8 @@ Implementation notes:
 - Use bounded fixture evidence first.
 - Emit the registered `evidence_packet` contract, with fixture mode recorded as metadata.
 - Reuse `orchestrate_question_research_handoff`.
-- Generate 2-3 candidate DAGs from deterministic templates.
+- Reuse the existing research hypothesis, candidate tree, evaluation, and recommendation tools.
+- Use `materialize-candidate-dags-from-research` to adapt ranked research candidates into candidate DAGs.
 - Preserve lineage refs on every packet.
 - Reuse `select_candidate_dag`.
 - Reuse `materialize_selected_dag_execution_units`.
