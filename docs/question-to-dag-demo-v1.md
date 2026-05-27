@@ -9,7 +9,8 @@ This is the intended demo boundary:
 ```text
 user question
   -> research_question_packet
-  -> bounded evidence packet
+  -> evidence_packet in bounded fixture mode
+  -> research_problem_packet
   -> candidate DAG manifest
   -> selected DAG
   -> execution units
@@ -42,6 +43,7 @@ The demo proves:
 
 - Jaysearch can accept an ambiguous problem/question.
 - Jaysearch can produce bounded research questions and evidence refs.
+- Jaysearch can use the existing question-to-research handoff to materialize a research problem packet.
 - Jaysearch can synthesize or fixture-generate a candidate DAG that preserves lineage.
 - Jaysearch can select a DAG using the existing DAG selector.
 - Jaysearch can materialize execution units from the selected DAG.
@@ -80,6 +82,8 @@ Outputs:
 Implementation notes:
 
 - Use bounded fixture evidence first.
+- Emit the registered `evidence_packet` contract, with fixture mode recorded as metadata.
+- Reuse `orchestrate_question_research_handoff`.
 - Generate 2-3 candidate DAGs from deterministic templates.
 - Preserve lineage refs on every packet.
 - Reuse `select_candidate_dag`.
