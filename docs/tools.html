@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Jaysearch Tools</title>
+    <meta
+      name="description"
+      content="A concise map of the Jaysearch tools and the ERA execution loop."
+    >
+    <link rel="stylesheet" href="./site.css">
+  </head>
+  <body>
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">Platform documentation portal</p>
+        <h1>Jaysearch</h1>
+      </div>
+      <nav>
+        <a href="./index.html">Overview</a>
+        <a href="./tools.html">Tools</a>
+        <a href="./question-dag-demo.html">Question DAG</a>
+        <a href="./graph.html">Node Graph</a>
+        <a href="./bibliography.html">Bibliography</a>
+      </nav>
+    </header>
+
+    <main class="page">
+      <section class="landing-hero">
+        <p class="eyebrow">Tool inventory</p>
+        <h1>Research, planning, governance, and ERA execution tools.</h1>
+        <p class="lede">
+          Jaysearch is currently a combined platform toolkit. The boundaries are still being
+          stabilized, but the working product is clear: a graph-first system for turning
+          uncertain work into governed execution artifacts.
+        </p>
+      </section>
+
+      <section class="grid" aria-label="Tool groups">
+        <article>
+          <h2>Research</h2>
+          <p>
+            Intake questions, create research problem packets, branch hypotheses, evaluate
+            candidates, and produce recommendations with evidence.
+          </p>
+        </article>
+        <article>
+          <h2>Planning</h2>
+          <p>
+            Convert recommendations into candidate DAGs, select a graph, and materialize
+            execution units for implementation.
+          </p>
+        </article>
+        <article>
+          <h2>Governance</h2>
+          <p>
+            Validate execplans, rule graphs, readiness gates, merge readiness, state transitions,
+            and branch/workflow policy.
+          </p>
+        </article>
+        <article>
+          <h2>ERA Execution</h2>
+          <p>
+            Generate attempts, evaluate attempts, select a solution artifact, and apply selected
+            changes through a governed boundary.
+          </p>
+        </article>
+      </section>
+
+      <section class="table-panel">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Command surface</p>
+            <h2>Representative tools</h2>
+          </div>
+        </div>
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th>Area</th>
+                <th>Commands</th>
+                <th>What they do</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Demo</td>
+                <td><code>bin/run-jaysearch-demo</code><br><code>bin/run-jaysearch-question-dag-demo</code></td>
+                <td>Run fixture-backed demos for graph selection, execution-unit materialization, and question-to-DAG handoff.</td>
+              </tr>
+              <tr>
+                <td>Research</td>
+                <td><code>bin/intake-research-question</code><br><code>bin/materialize-research-recommendation</code><br><code>bin/validate-research-to-selection-flow</code></td>
+                <td>Move from question intake to evidence-backed recommendation and validate the research-to-selection bridge.</td>
+              </tr>
+              <tr>
+                <td>DAG planning</td>
+                <td><code>bin/materialize-candidate-dags-from-research</code><br><code>bin/select-candidate-dag</code><br><code>bin/materialize-selected-dag-execution-units</code></td>
+                <td>Create candidate graph plans, select one, and emit execution-unit packets.</td>
+              </tr>
+              <tr>
+                <td>ERA loop</td>
+                <td><code>bin/materialize-candidate-patch-manifest</code><br><code>bin/generate-implementation-attempt</code><br><code>bin/evaluate-implementation-attempt</code><br><code>bin/emit-solution-artifact</code><br><code>bin/apply-solution-artifact</code></td>
+                <td>Represent candidate patches, produce attempts, evaluate them, select solution artifacts, and apply governed changes.</td>
+              </tr>
+              <tr>
+                <td>Validation</td>
+                <td><code>bin/run-jaysearch-ci</code><br><code>bin/design-iteration</code><br><code>bin/run-governed-pre-push-checks</code></td>
+                <td>Run readiness, design review, and governed pre-push checks.</td>
+              </tr>
+              <tr>
+                <td>Governance</td>
+                <td><code>bin/execplan-validate</code><br><code>bin/rule-graph-check</code><br><code>bin/merge-readiness-check</code></td>
+                <td>Validate plans, rule graph consistency, and merge readiness.</td>
+              </tr>
+              <tr>
+                <td>Worker orchestration</td>
+                <td><code>bin/orchestrate-governed-slice</code><br><code>bin/next-worker-slice</code><br><code>bin/get-worker-status</code></td>
+                <td>Coordinate governed worker slices and inspect orchestration state.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="status">
+        <div>
+          <p class="eyebrow">Naming reality</p>
+          <h2>Naming and repo reality</h2>
+        </div>
+        <p>
+          The repo still carries mixed history in branch names, remotes, and folder names, but the
+          active toolchain you are working with is Jaysearch. The clean future state is to keep
+          the reusable Jaysearch research/planning/governance/ERA loop here and move
+          project-specific products into separate repos.
+        </p>
+      </section>
+    </main>
+  </body>
+</html>

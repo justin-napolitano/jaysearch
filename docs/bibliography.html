@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Jaysearch Research Bibliography</title>
+    <meta
+      name="description"
+      content="Rendered bibliography for Jaysearch research, planning, governance, and ERA execution design."
+    >
+    <link rel="stylesheet" href="./site.css">
+  </head>
+  <body>
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">Platform documentation portal</p>
+        <h1>Jaysearch</h1>
+      </div>
+      <nav>
+        <a href="./index.html">Overview</a>
+        <a href="./tools.html">Tools</a>
+        <a href="./question-dag-demo.html">Question DAG</a>
+        <a href="./graph.html">Node Graph</a>
+        <a href="./bibliography.html">Bibliography</a>
+      </nav>
+    </header>
+
+    <main class="page">
+      <section class="landing-hero">
+        <p class="eyebrow">Research bibliography</p>
+        <h1>Sources behind the Jaysearch ERA loop.</h1>
+        <p class="lede">
+          These sources support the research, design-review, candidate-evaluation, provenance,
+          and recommendation loop. They justify design pressure, not every exact implementation
+          choice or scoring weight.
+        </p>
+        <div class="actions">
+          <a href="./current-research-bibliography.md">Open raw markdown</a>
+          <a href="./research-assumptions.md">Research assumptions</a>
+          <a href="./references.md">Full references</a>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Agent feedback and critique</p>
+            <h2>Iterative review should be explicit and tool-grounded</h2>
+          </div>
+        </div>
+        <div class="source-grid">
+          <article class="source-card">
+            <h3>Self-Refine: Iterative Refinement with Self-Feedback</h3>
+            <a class="source-link" href="https://arxiv.org/abs/2303.17651">arxiv.org/abs/2303.17651</a>
+            <ul>
+              <li>Supports explicit iterative feedback loops.</li>
+              <li>Informs design iteration and candidate refinement.</li>
+              <li>Does not justify trusting unsupported self-critique by itself.</li>
+            </ul>
+          </article>
+          <article class="source-card">
+            <h3>Reflexion: Language Agents with Verbal Reinforcement Learning</h3>
+            <a class="source-link" href="https://arxiv.org/abs/2303.11366">arxiv.org/abs/2303.11366</a>
+            <ul>
+              <li>Supports feedback plus retained context for agent improvement.</li>
+              <li>Informs memory-aware review and iteration loops.</li>
+              <li>Does not replace external validation or governance gates.</li>
+            </ul>
+          </article>
+          <article class="source-card">
+            <h3>CRITIC: Tool-Interactive Critiquing</h3>
+            <a class="source-link" href="https://arxiv.org/abs/2305.11738">arxiv.org/abs/2305.11738</a>
+            <ul>
+              <li>Supports tool-grounded critique over unsupported introspection.</li>
+              <li>Informs design-review automation and evidence-backed review.</li>
+              <li>Motivates critique through artifacts, packets, validators, and tests.</li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Software evaluation</p>
+            <h2>Candidate quality should be task-grounded</h2>
+          </div>
+        </div>
+        <div class="source-grid">
+          <article class="source-card">
+            <h3>SWE-bench: Can Language Models Resolve Real-World GitHub Issues?</h3>
+            <a class="source-link" href="https://arxiv.org/abs/2310.06770">arxiv.org/abs/2310.06770</a>
+            <ul>
+              <li>Supports task-grounded software evaluation over plausibility-only scoring.</li>
+              <li>Informs evaluation and recommendation packets.</li>
+              <li>Motivates requiring evaluation records before recommendation.</li>
+            </ul>
+          </article>
+          <article class="source-card">
+            <h3>AlphaEvolve: A coding agent for scientific and algorithmic discovery</h3>
+            <a class="source-link" href="https://arxiv.org/abs/2506.13131">arxiv.org/abs/2506.13131</a>
+            <ul>
+              <li>Supports evolutionary generate/evaluate/select loops for code candidates.</li>
+              <li>Motivates separating implementation attempts from selected artifacts.</li>
+              <li>Does not solve decomposition, governance, or provenance by itself.</li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Governance foundations</p>
+            <h2>Rules, incentives, and stopping conditions need structure</h2>
+          </div>
+        </div>
+        <div class="source-grid">
+          <article class="source-card">
+            <h3>Nash: Equilibrium Points in N-Person Games</h3>
+            <a class="source-link" href="https://pubmed.ncbi.nlm.nih.gov/16588946/">pubmed.ncbi.nlm.nih.gov/16588946</a>
+            <ul>
+              <li>Informs the platform's game framing.</li>
+              <li>Does not determine platform payoffs or scoring weights directly.</li>
+            </ul>
+          </article>
+          <article class="source-card">
+            <h3>Maskin: Mechanism Design</h3>
+            <a class="source-link" href="https://www.nobelprize.org/prizes/economic-sciences/2007/maskin/lecture/">nobelprize.org/maskin/lecture</a>
+            <ul>
+              <li>Supports explicit rule and incentive design.</li>
+              <li>Informs anti-cheat and governance framing.</li>
+            </ul>
+          </article>
+          <article class="source-card">
+            <h3>Myerson: Perspectives on Mechanism Design</h3>
+            <a class="source-link" href="https://www.nobelprize.org/prizes/economic-sciences/2007/myerson/lecture/">nobelprize.org/myerson/lecture</a>
+            <ul>
+              <li>Supports mechanism-design framing.</li>
+              <li>Informs separation between outcomes, rules, and allowed moves.</li>
+            </ul>
+          </article>
+          <article class="source-card">
+            <h3>Simon: A Behavioral Model of Rational Choice</h3>
+            <a class="source-link" href="https://academic.oup.com/qje/article/69/1/99/1919737">academic.oup.com/qje/article/69/1/99/1919737</a>
+            <ul>
+              <li>Supports bounded-rationality assumptions.</li>
+              <li>Informs bounded search budgets and explicit stopping rules.</li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Provenance, state, and inspection</p>
+            <h2>Traceability and review are first-class constraints</h2>
+          </div>
+        </div>
+        <div class="source-grid">
+          <article class="source-card">
+            <h3>W3C PROV-Overview</h3>
+            <a class="source-link" href="https://www.w3.org/TR/2013/NOTE-prov-overview-20130430/">w3.org/TR/prov-overview</a>
+            <ul>
+              <li>Supports provenance-first packet and artifact references.</li>
+              <li>Informs traceable DAG and handoff contracts.</li>
+            </ul>
+          </article>
+          <article class="source-card">
+            <h3>W3C PROV-DM: The PROV Data Model</h3>
+            <a class="source-link" href="https://dvcs.w3.org/hg/prov/raw-file/default/model/prov-dm.html">w3.org/prov-dm</a>
+            <ul>
+              <li>Supports structured provenance modeling.</li>
+              <li>Informs source refs, artifact refs, and graph relationships.</li>
+            </ul>
+          </article>
+          <article class="source-card">
+            <h3>Harel: Statecharts</h3>
+            <a class="source-link" href="https://www.sciencedirect.com/science/article/pii/0167642387900359">sciencedirect.com/science/article/pii/0167642387900359</a>
+            <ul>
+              <li>Supports explicit state and transition modeling.</li>
+              <li>Informs governance transition legality and orchestration state.</li>
+            </ul>
+          </article>
+          <article class="source-card">
+            <h3>Fagan and Myers: Software inspections</h3>
+            <a class="source-link" href="https://research.ibm.com/publications/advances-in-software-inspections">research.ibm.com/software-inspections</a>
+            <ul>
+              <li>Support structured inspection and review discipline.</li>
+              <li>Inform keeping review, validation, and execution evidence separate.</li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <section class="source-note">
+        <p>
+          The bibliography supports design choices but does not make the platform's exact scoring
+          weights, DAG boundaries, or tool contracts mathematically inevitable. Those remain
+          Jaysearch design decisions and should be labeled as design inferences when they extend
+          beyond the cited sources.
+        </p>
+      </section>
+    </main>
+  </body>
+</html>

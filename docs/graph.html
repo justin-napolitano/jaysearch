@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Jaysearch Node Graph</title>
+    <meta
+      name="description"
+      content="Rendered Jaysearch node graph for research, planning, governance, and ERA execution."
+    >
+    <link rel="stylesheet" href="./site.css">
+    <script type="module">
+      import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
+      mermaid.initialize({
+        startOnLoad: true,
+        securityLevel: "strict",
+        theme: "base",
+        themeVariables: {
+          fontFamily: '"Segoe UI", "Helvetica Neue", Arial, sans-serif',
+          primaryColor: "#ffffff",
+          primaryBorderColor: "#d9dfda",
+          primaryTextColor: "#1f2523",
+          lineColor: "#24594c",
+          tertiaryColor: "#edf1ed"
+        }
+      });
+    </script>
+  </head>
+  <body>
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">Platform documentation portal</p>
+        <h1>Jaysearch</h1>
+      </div>
+      <nav>
+        <a href="./index.html">Overview</a>
+        <a href="./tools.html">Tools</a>
+        <a href="./question-dag-demo.html">Question DAG</a>
+        <a href="./graph.html">Node Graph</a>
+        <a href="./bibliography.html">Bibliography</a>
+      </nav>
+    </header>
+
+    <main class="page">
+      <section class="landing-hero">
+        <p class="eyebrow">Rendered graph</p>
+        <h1>Jaysearch research, planning, governance, and ERA loop.</h1>
+        <p class="lede">
+          This graph shows the packet/object flow between governed tools. It starts with an
+          unresolved problem, moves through research and DAG planning, and ends with selected
+          solution application plus follow-up capture.
+        </p>
+        <div class="actions">
+          <a href="./toolchain-node-graph.mmd">Open raw Mermaid source</a>
+          <a href="./tools.html">Open tool inventory</a>
+        </div>
+      </section>
+
+      <section class="graph-panel" aria-labelledby="graph-title">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Node graph</p>
+            <h2 id="graph-title">Toolchain flow</h2>
+          </div>
+        </div>
+        <pre class="mermaid">
+flowchart TD
+  UserGoal["User goal / unresolved problem"]
+  DesignTool["design tool<br/>clarify scope, critique graph, produce questions"]
+  QuestionTool["question tool<br/>turn uncertainty into research questions"]
+  ResearchTool["research tool<br/>collect sources, evidence, candidates"]
+  PlannerTool["planner tool<br/>manage problem DAG and options"]
+  GovernanceTool["governance tool<br/>validate contracts and legal transitions"]
+  Executor["executor / implementation orchestrator<br/>materialize attempts and run ERA loop"]
+
+  ProblemNode["problem_node<br/>manageable project problem<br/>not executable"]
+  ResearchQuestion["research_question_packet<br/>what must be answered"]
+  Evidence["evidence_refs / research packets<br/>sources and support"]
+  NodeOption["node_option[]<br/>possible approaches<br/>not executable"]
+  SelectedOption["selected node_option<br/>chosen approach"]
+  ExecutionUnit["execution_unit<br/>first buildable work contract"]
+
+  CandidatePatchManifest["candidate_patch_manifest<br/>artifact-backed patch candidate set"]
+  CandidatePatch["candidate_patch[]<br/>patch_ref + metadata + candidate blockers"]
+  ImplementationAttempt["implementation_attempt[]<br/>patch-bearing candidate implementation"]
+  AttemptEvaluation["attempt_evaluation[]<br/>tool/evidence-backed attempt result"]
+  AttemptSelection["attempt_selection<br/>deterministic winner selection"]
+  SolutionArtifact["solution_artifact<br/>selected attempt + completion evidence"]
+  AppliedSolution["applied_solution<br/>isolated apply + post-apply validation"]
+  Feedback["feedback / follow-up refs<br/>new problems, risks, or next nodes"]
+
+  UserGoal --> DesignTool
+  DesignTool --> ProblemNode
+  ProblemNode --> QuestionTool
+  QuestionTool --> ResearchQuestion
+  ResearchQuestion --> ResearchTool
+  ResearchTool --> Evidence
+  Evidence --> PlannerTool
+  PlannerTool --> NodeOption
+  NodeOption --> SelectedOption
+  SelectedOption --> GovernanceTool
+  GovernanceTool --> ExecutionUnit
+
+  ExecutionUnit --> Executor
+  Executor --> CandidatePatchManifest
+  CandidatePatchManifest --> CandidatePatch
+  CandidatePatch --> ImplementationAttempt
+  ImplementationAttempt --> AttemptEvaluation
+  AttemptEvaluation --> AttemptSelection
+  AttemptSelection --> SolutionArtifact
+  SolutionArtifact --> AppliedSolution
+  AppliedSolution --> Feedback
+  Feedback --> ProblemNode
+
+  GovernanceTool -. "contract checks" .-> ProblemNode
+  GovernanceTool -. "readiness gates" .-> NodeOption
+  GovernanceTool -. "execution-unit legality" .-> ExecutionUnit
+  GovernanceTool -. "attempt/evaluation/selection contracts" .-> AttemptEvaluation
+  GovernanceTool -. "apply policy" .-> AppliedSolution
+
+  classDef problem fill:#f8f1dc,stroke:#8a6d1d,color:#1f1a10;
+  classDef research fill:#dff3ef,stroke:#287463,color:#0d241f;
+  classDef plan fill:#e4edff,stroke:#355d9e,color:#0c1c36;
+  classDef exec fill:#fce4df,stroke:#a04735,color:#32100b;
+  classDef gov fill:#eee5ff,stroke:#6543a6,color:#1d1038;
+  classDef terminal fill:#e8f5dc,stroke:#4f7d25,color:#14230a;
+
+  class UserGoal,ProblemNode,Feedback problem;
+  class QuestionTool,ResearchQuestion,ResearchTool,Evidence research;
+  class PlannerTool,NodeOption,SelectedOption,ExecutionUnit plan;
+  class Executor,CandidatePatchManifest,CandidatePatch,ImplementationAttempt,AttemptEvaluation,AttemptSelection,SolutionArtifact exec;
+  class DesignTool,GovernanceTool gov;
+  class AppliedSolution terminal;
+        </pre>
+      </section>
+    </main>
+  </body>
+</html>

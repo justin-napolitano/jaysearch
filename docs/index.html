@@ -27,8 +27,22 @@
     </script>
   </head>
   <body>
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">Platform documentation portal</p>
+        <h1>Jaysearch</h1>
+      </div>
+      <nav>
+        <a href="./index.html">Overview</a>
+        <a href="./tools.html">Tools</a>
+        <a href="./question-dag-demo.html">Question DAG</a>
+        <a href="./graph.html">Node Graph</a>
+        <a href="./bibliography.html">Bibliography</a>
+      </nav>
+    </header>
+
     <main class="page">
-      <section class="hero" aria-labelledby="title">
+      <section class="landing-hero" aria-labelledby="title">
         <p class="eyebrow">Jaysearch</p>
         <h1 id="title">Governed toolchain nodes for research, planning, and execution.</h1>
         <p class="lede">
@@ -36,10 +50,10 @@
           governed contracts, ranked implementation attempts, and applied solutions.
         </p>
         <div class="actions">
-          <a href="https://github.com/justin-napolitano/jaysearch">GitHub Repository</a>
+          <a href="./tools.html">Platform Tools</a>
           <a href="./question-dag-demo.html">Question To DAG Demo</a>
-          <a href="./toolchain-node-graph.mmd">Raw Mermaid Graph</a>
-          <a href="./current-research-bibliography.md">Research Bibliography</a>
+          <a href="./graph.html">Rendered Node Graph</a>
+          <a href="./bibliography.html">Research Bibliography</a>
         </div>
       </section>
 
@@ -106,6 +120,64 @@
         </p>
         <p>
           <a href="./question-dag-demo.html">Open the public demo narrative</a>
+        </p>
+      </section>
+
+      <section class="status" aria-labelledby="era-loop-title">
+        <div>
+          <p class="eyebrow">ERA Loop</p>
+          <h2 id="era-loop-title">How execution is governed</h2>
+        </div>
+        <div>
+          <p>
+            The execution loop is deliberately packet-based. Research and planning produce a
+            selected graph and execution units. The executor then materializes candidate patches,
+            evaluates attempts, selects a winner, emits a solution artifact, and applies only
+            through a governed boundary.
+          </p>
+          <ol class="pipeline-list">
+            <li>
+              <strong>Candidate graph selection.</strong>
+              Competing DAG plans remain visible; the chosen graph records rejected alternatives
+              and selection evidence.
+            </li>
+            <li>
+              <strong>Execution-unit materialization.</strong>
+              A selected DAG becomes concrete execution-unit packets with inputs, outputs,
+              validation gates, and completion evidence requirements.
+            </li>
+            <li>
+              <strong>Candidate patch production.</strong>
+              Patch candidates are represented explicitly with patch refs, metadata, and blockers
+              instead of being hidden inside prose.
+            </li>
+            <li>
+              <strong>Attempt evaluation and selection.</strong>
+              Attempts are scored from command results and evidence, then a deterministic selection
+              step chooses the solution artifact.
+            </li>
+            <li>
+              <strong>Governed apply.</strong>
+              Applying a solution is a separate state transition with post-apply validation and
+              follow-up problem capture.
+            </li>
+          </ol>
+        </div>
+      </section>
+
+      <section class="status" aria-labelledby="tooling-boundary-title">
+        <div>
+          <p class="eyebrow">Operating Boundary</p>
+          <h2 id="tooling-boundary-title">What this repo does and does not claim</h2>
+        </div>
+        <p>
+          The repo can turn bounded questions into graph plans, materialize execution units,
+          rank supplied patch candidates, evaluate attempts, and apply selected solutions in an
+          isolated target. It does not yet claim unconstrained autonomous code synthesis or
+          production task completion without human governance.
+        </p>
+        <p>
+          <a href="./tools.html">Open the platform tool inventory</a>
         </p>
       </section>
 
