@@ -60,6 +60,14 @@ a {
   border-radius: 999px;
 }
 
+.compact-hero {
+  padding: clamp(28px, 5vw, 58px);
+}
+
+.compact-hero h1 {
+  font-size: clamp(2.6rem, 7vw, 5.6rem);
+}
+
 .eyebrow {
   margin: 0 0 12px;
   color: var(--warm);
@@ -159,6 +167,52 @@ h2 {
   padding: 28px;
 }
 
+.table-panel {
+  margin-top: 28px;
+  overflow: hidden;
+  padding: 28px;
+  border: 1px solid var(--line);
+  border-radius: 28px;
+  background: rgb(255 253 245 / 82%);
+  box-shadow: 0 18px 48px rgb(52 43 23 / 10%);
+}
+
+.table-scroll {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 980px;
+  font-size: 0.92rem;
+}
+
+th,
+td {
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--line);
+  text-align: left;
+  vertical-align: top;
+}
+
+th {
+  color: var(--accent-strong);
+  font-family: "Courier New", monospace;
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+td {
+  color: var(--muted);
+}
+
+td a {
+  color: var(--accent-strong);
+  font-weight: 700;
+}
+
 .section-heading {
   display: flex;
   align-items: end;
@@ -184,6 +238,60 @@ h2 {
   padding: 32px;
 }
 
+.pipeline-list {
+  margin: 18px 0 0;
+  padding-left: 1.25rem;
+  color: var(--muted);
+  font-size: 1.02rem;
+  line-height: 1.55;
+}
+
+.pipeline-list li + li {
+  margin-top: 12px;
+}
+
+.pipeline-list strong {
+  color: var(--ink);
+}
+
+.metric-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.metric-grid article {
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: #fffaf0;
+}
+
+.metric-grid span {
+  display: block;
+  color: var(--muted);
+  font-family: "Courier New", monospace;
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.metric-grid strong {
+  display: block;
+  margin-top: 8px;
+  color: var(--ink);
+  font-size: clamp(1.3rem, 2vw, 2rem);
+  line-height: 1;
+}
+
+.artifact-list {
+  margin: 0;
+  padding-left: 1.15rem;
+  color: var(--muted);
+  line-height: 1.8;
+}
+
 code {
   padding: 0.08em 0.28em;
   border: 1px solid rgb(71 98 79 / 22%);
@@ -195,7 +303,8 @@ code {
 
 @media (max-width: 900px) {
   .grid,
-  .status {
+  .status,
+  .metric-grid {
     grid-template-columns: 1fr;
   }
 
