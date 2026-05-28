@@ -30,12 +30,12 @@
     <header class="topbar">
       <div>
         <p class="eyebrow">Platform documentation portal</p>
-        <h1>Codex Platform</h1>
+        <h1>Jaysearch</h1>
       </div>
       <nav>
         <a href="./index.html">Overview</a>
+        <a href="./tools.html">Tools</a>
         <a href="./question-dag-demo.html">Question DAG</a>
-        <a href="./registry-portfolio.html">Registry Coverage</a>
         <a href="./toolchain-node-graph.mmd">Node Graph</a>
         <a href="./current-research-bibliography.md">Bibliography</a>
       </nav>
@@ -50,7 +50,7 @@
           governed contracts, ranked implementation attempts, and applied solutions.
         </p>
         <div class="actions">
-          <a href="./registry-portfolio.html">Registry Portfolio</a>
+          <a href="./tools.html">Platform Tools</a>
           <a href="./question-dag-demo.html">Question To DAG Demo</a>
           <a href="./toolchain-node-graph.mmd">Raw Mermaid Graph</a>
           <a href="./current-research-bibliography.md">Research Bibliography</a>
@@ -123,68 +123,61 @@
         </p>
       </section>
 
-      <section class="status" aria-labelledby="registry-pipeline-title">
+      <section class="status" aria-labelledby="era-loop-title">
         <div>
-          <p class="eyebrow">Registry Data Product</p>
-          <h2 id="registry-pipeline-title">What each registry pipeline generates</h2>
+          <p class="eyebrow">ERA Loop</p>
+          <h2 id="era-loop-title">How execution is governed</h2>
         </div>
         <div>
           <p>
-            Each registry run starts from raw source files and produces a governed artifact bundle
-            that can be reviewed before Snowflake or ADF execution. The runtime is metadata-first:
-            it discovers source units, records lineage, prepares upload packs, emits Snowflake SQL,
-            and generates validation inputs without hardcoding table lists in orchestration code.
+            The execution loop is deliberately packet-based. Research and planning produce a
+            selected graph and execution units. The executor then materializes candidate patches,
+            evaluates attempts, selects a winner, emits a solution artifact, and applies only
+            through a governed boundary.
           </p>
           <ol class="pipeline-list">
             <li>
-              <strong>Inventory and manifest raw sources.</strong>
-              The runtime scans the registry source root, creates a raw manifest, records file paths,
-              checksums, row counts, source table/sheet names, partition or version hints, and source
-              unit identifiers.
+              <strong>Candidate graph selection.</strong>
+              Competing DAG plans remain visible; the chosen graph records rejected alternatives
+              and selection evidence.
             </li>
             <li>
-              <strong>Prepare Snowflake stage upload artifacts.</strong>
-              The run emits normalized upload packs and an upload manifest so operators can review
-              exactly which files would be copied to a Snowflake stage.
+              <strong>Execution-unit materialization.</strong>
+              A selected DAG becomes concrete execution-unit packets with inputs, outputs,
+              validation gates, and completion evidence requirements.
             </li>
             <li>
-              <strong>Generate bronze contracts.</strong>
-              Bronze describes landed raw-shape tables: table names, columns, nullable behavior,
-              metadata columns, source lineage, and load expectations.
+              <strong>Candidate patch production.</strong>
+              Patch candidates are represented explicitly with patch refs, metadata, and blockers
+              instead of being hidden inside prose.
             </li>
             <li>
-              <strong>Generate silver and gold metadata contracts.</strong>
-              Silver maps source-version columns into canonical registry fields. Gold defines the
-              publishable flat-table contract for reporting, review, and later business logic.
+              <strong>Attempt evaluation and selection.</strong>
+              Attempts are scored from command results and evidence, then a deterministic selection
+              step chooses the solution artifact.
             </li>
             <li>
-              <strong>Emit SQL and orchestration metadata.</strong>
-              The bundle includes Snowflake load SQL, validation object SQL, validation run SQL,
-              and machine-readable metadata that ADF can consume when building pipelines.
-            </li>
-            <li>
-              <strong>Validate the landing contract.</strong>
-              Validation inputs capture expected row counts and target tables, then SQL checks can
-              compare staged or landed data against the manifest before promotion.
+              <strong>Governed apply.</strong>
+              Applying a solution is a separate state transition with post-apply validation and
+              follow-up problem capture.
             </li>
           </ol>
         </div>
       </section>
 
-      <section class="status" aria-labelledby="registry-boundary-title">
+      <section class="status" aria-labelledby="tooling-boundary-title">
         <div>
           <p class="eyebrow">Operating Boundary</p>
-          <h2 id="registry-boundary-title">What is generated vs. what runs in production</h2>
+          <h2 id="tooling-boundary-title">What this repo does and does not claim</h2>
         </div>
         <p>
-          The current runtime generates the artifacts needed for governed deployment: manifests,
-          metadata contracts, upload plans, Snowflake SQL, and validation SQL. It does not directly
-          deploy ADF or mutate production data in this demo. The intended production flow is to review
-          generated artifacts, approve contracts, deploy the SQL and ADF assets, run bronze ingestion,
-          validate row/table parity, then allow silver and gold jobs to run from approved metadata.
+          The repo can turn bounded questions into graph plans, materialize execution units,
+          rank supplied patch candidates, evaluate attempts, and apply selected solutions in an
+          isolated target. It does not yet claim unconstrained autonomous code synthesis or
+          production task completion without human governance.
         </p>
         <p>
-          <a href="./registry-portfolio.html">Open the registry portfolio and object review pages</a>
+          <a href="./tools.html">Open the platform tool inventory</a>
         </p>
       </section>
 
