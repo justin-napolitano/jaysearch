@@ -308,10 +308,52 @@ td a {
   padding-left: 1.15rem;
 }
 
+.source-grid {
+  display: grid;
+  gap: 14px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.source-card {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 20px;
+}
+
+.source-card h3 {
+  font-size: 1.12rem;
+  letter-spacing: -0.02em;
+  margin: 0 0 10px;
+}
+
+.source-card .source-link {
+  display: inline-flex;
+  margin-bottom: 12px;
+}
+
+.source-card ul {
+  margin: 0;
+  padding-left: 1.15rem;
+}
+
+.source-card li + li {
+  margin-top: 8px;
+}
+
+.source-note {
+  background: var(--soft);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  margin-top: 28px;
+  padding: 20px;
+}
+
 @media (max-width: 900px) {
   .grid,
   .status,
-  .metric-grid {
+  .metric-grid,
+  .source-grid {
     grid-template-columns: 1fr;
   }
 
