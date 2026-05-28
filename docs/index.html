@@ -37,6 +37,7 @@
         </p>
         <div class="actions">
           <a href="https://github.com/justin-napolitano/jaysearch">GitHub Repository</a>
+          <a href="./registry-portfolio.html">Registry Portfolio</a>
           <a href="./question-dag-demo.html">Question To DAG Demo</a>
           <a href="./toolchain-node-graph.mmd">Raw Mermaid Graph</a>
           <a href="./current-research-bibliography.md">Research Bibliography</a>
@@ -106,6 +107,71 @@
         </p>
         <p>
           <a href="./question-dag-demo.html">Open the public demo narrative</a>
+        </p>
+      </section>
+
+      <section class="status" aria-labelledby="registry-pipeline-title">
+        <div>
+          <p class="eyebrow">Registry Data Product</p>
+          <h2 id="registry-pipeline-title">What each registry pipeline generates</h2>
+        </div>
+        <div>
+          <p>
+            Each registry run starts from raw source files and produces a governed artifact bundle
+            that can be reviewed before Snowflake or ADF execution. The runtime is metadata-first:
+            it discovers source units, records lineage, prepares upload packs, emits Snowflake SQL,
+            and generates validation inputs without hardcoding table lists in orchestration code.
+          </p>
+          <ol class="pipeline-list">
+            <li>
+              <strong>Inventory and manifest raw sources.</strong>
+              The runtime scans the registry source root, creates a raw manifest, records file paths,
+              checksums, row counts, source table/sheet names, partition or version hints, and source
+              unit identifiers.
+            </li>
+            <li>
+              <strong>Prepare Snowflake stage upload artifacts.</strong>
+              The run emits normalized upload packs and an upload manifest so operators can review
+              exactly which files would be copied to a Snowflake stage.
+            </li>
+            <li>
+              <strong>Generate bronze contracts.</strong>
+              Bronze describes landed raw-shape tables: table names, columns, nullable behavior,
+              metadata columns, source lineage, and load expectations.
+            </li>
+            <li>
+              <strong>Generate silver and gold metadata contracts.</strong>
+              Silver maps source-version columns into canonical registry fields. Gold defines the
+              publishable flat-table contract for reporting, review, and later business logic.
+            </li>
+            <li>
+              <strong>Emit SQL and orchestration metadata.</strong>
+              The bundle includes Snowflake load SQL, validation object SQL, validation run SQL,
+              and machine-readable metadata that ADF can consume when building pipelines.
+            </li>
+            <li>
+              <strong>Validate the landing contract.</strong>
+              Validation inputs capture expected row counts and target tables, then SQL checks can
+              compare staged or landed data against the manifest before promotion.
+            </li>
+          </ol>
+        </div>
+      </section>
+
+      <section class="status" aria-labelledby="registry-boundary-title">
+        <div>
+          <p class="eyebrow">Operating Boundary</p>
+          <h2 id="registry-boundary-title">What is generated vs. what runs in production</h2>
+        </div>
+        <p>
+          The current runtime generates the artifacts needed for governed deployment: manifests,
+          metadata contracts, upload plans, Snowflake SQL, and validation SQL. It does not directly
+          deploy ADF or mutate production data in this demo. The intended production flow is to review
+          generated artifacts, approve contracts, deploy the SQL and ADF assets, run bronze ingestion,
+          validate row/table parity, then allow silver and gold jobs to run from approved metadata.
+        </p>
+        <p>
+          <a href="./registry-portfolio.html">Open the registry portfolio and object review pages</a>
         </p>
       </section>
 
