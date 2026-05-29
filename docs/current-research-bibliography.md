@@ -57,9 +57,38 @@ It complements:
    - motivates keeping implementation attempts separate from selected solution artifacts
    - does not by itself solve project decomposition, governance, or provenance requirements
 
+## ERA And Computational Discovery
+
+6. Google Research. `Empirical Research Assistance (ERA): From Nature publication to catalyzing Computational Discovery`.
+   Link: https://research.google/blog/empirical-research-assistance-era-from-nature-publication-to-catalyzing-computational-discovery/
+
+   Current use:
+
+   - supports the design relevance of an empirical coding loop that searches literature, writes code, explores solutions, combines techniques, and evaluates results
+   - informs Jaysearch's explicit separation between research intake, candidate generation, evaluation, and selected solution artifacts
+   - does not imply Jaysearch has equivalent scientific benchmark performance or Gemini-backed capabilities
+
+7. Aygun et al. `An AI system to help scientists write expert-level empirical software`.
+   Link: https://www.nature.com/articles/s41586-026-10658-6
+
+   Current use:
+
+   - supports the ERA framing of expert-level empirical software generation driven by a quality metric
+   - informs the generate/evaluate/select pattern and the value of tree-search-like exploration over candidate implementations
+   - motivates explicit evidence and metric capture for implementation attempts
+
+8. Google Research. `ERA code and experiments`.
+   Link: https://github.com/google-research/era/tree/main/era_applications
+
+   Current use:
+
+   - provides a concrete public artifact surface for ERA applications and experiments
+   - motivates keeping code, experiments, manuscripts, and evaluation evidence linkable from the bibliography
+   - supports Jaysearch's preference for source-backed artifact references over prose-only claims
+
 ## Platform Governance Foundations
 
-6. Nash. `Equilibrium Points in N-Person Games`.
+9. Nash. `Equilibrium Points in N-Person Games`.
    Link: https://pubmed.ncbi.nlm.nih.gov/16588946/
 
    Current use:
@@ -67,7 +96,7 @@ It complements:
    - informs the platform's game framing
    - does not determine platform payoffs or scoring weights directly
 
-7. Maskin. `Mechanism Design: How to Implement Social Goals`.
+10. Maskin. `Mechanism Design: How to Implement Social Goals`.
    Link: https://www.nobelprize.org/prizes/economic-sciences/2007/maskin/lecture/
 
    Current use:
@@ -75,7 +104,7 @@ It complements:
    - supports explicit rule and incentive design
    - informs anti-cheat and governance framing
 
-8. Myerson. `Perspectives on Mechanism Design in Economic Theory`.
+11. Myerson. `Perspectives on Mechanism Design in Economic Theory`.
    Link: https://www.nobelprize.org/prizes/economic-sciences/2007/myerson/lecture/
 
    Current use:
@@ -83,7 +112,7 @@ It complements:
    - supports mechanism-design framing
    - informs separation between desired outcomes, rules, and allowed moves
 
-9. Simon. `A Behavioral Model of Rational Choice`.
+12. Simon. `A Behavioral Model of Rational Choice`.
    Link: https://academic.oup.com/qje/article/69/1/99/1919737
 
    Current use:
@@ -93,7 +122,7 @@ It complements:
 
 ## Provenance, State, And Inspection
 
-10. W3C. `PROV-Overview`.
+13. W3C. `PROV-Overview`.
    Link: https://www.w3.org/TR/2013/NOTE-prov-overview-20130430/
 
    Current use:
@@ -101,7 +130,7 @@ It complements:
    - supports provenance-first packet and artifact references
    - informs traceable DAG and handoff contracts
 
-11. W3C. `PROV-DM: The PROV Data Model`.
+14. W3C. `PROV-DM: The PROV Data Model`.
     Link: https://dvcs.w3.org/hg/prov/raw-file/default/model/prov-dm.html
 
     Current use:
@@ -109,7 +138,7 @@ It complements:
     - supports structured provenance modeling
     - informs source refs, artifact refs, and graph relationships
 
-12. Harel. `Statecharts: a visual formalism for complex systems`.
+15. Harel. `Statecharts: a visual formalism for complex systems`.
     Link: https://www.sciencedirect.com/science/article/pii/0167642387900359
 
     Current use:
@@ -117,7 +146,7 @@ It complements:
     - supports explicit state and transition modeling
     - informs governance transition legality and orchestration state
 
-13. Fagan. `Advances in Software Inspections`.
+16. Fagan. `Advances in Software Inspections`.
     Link: https://research.ibm.com/publications/advances-in-software-inspections
 
     Current use:
@@ -125,7 +154,7 @@ It complements:
     - supports structured inspection and review discipline
     - informs critical review gates
 
-14. Myers. `A Controlled Experiment in Program Testing and Code Walkthroughs/Inspections`.
+17. Myers. `A Controlled Experiment in Program Testing and Code Walkthroughs/Inspections`.
     Link: https://research.ibm.com/publications/a-controlled-experiment-in-program-testing-and-code-walkthroughsinspections
 
     Current use:
