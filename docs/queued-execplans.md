@@ -408,15 +408,14 @@ This document turns the remaining-work graph into an explicit near-term queue of
    - gate: `authoritative ExecPlan required before execution`
 
 74. `20261022-unified-brand-codex-01-execplan`
-   - status: `decision_gated`
+   - status: `ready`
    - goal: Apply restrained identity to Jaysearch toolkit documentation
    - implementation branch: `impl-execplan/unified-brand-20261022`
-   - gate: `authoritative ExecPlan required before execution`
 
 ## Mirror Metadata
 
-- canonical_last_graph_action_id: `rwg-action-20261022-register-jaysearch-brand-20261022`
-- canonical_ready_order: ``
+- canonical_last_graph_action_id: `rwg-action-20261022-002-promote_ready-jaysearch-brand-20261022`
+- canonical_ready_order: `20261022-unified-brand-codex-01-execplan`
 - projection_authority: `projection_only`
 
 ## Queue Discipline
