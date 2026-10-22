@@ -1105,6 +1105,22 @@
       "rationale": "node registered deterministically from ExecPlan graph_registration metadata",
       "evidence_ref": ".agent/execplans/20261022-unified-brand-codex-01-execplan.md",
       "queue_reconciled": true
+    },
+    {
+      "action_id": "rwg-action-20261022-001-unblock-jaysearch-brand-20261022",
+      "action": "unblock",
+      "node_id": "jaysearch-brand-20261022",
+      "rationale": "initiative_execplan_authorized derived deterministically from canonical branch and ExecPlan evidence",
+      "evidence_ref": "branch:initiative/unified-brand-20261022",
+      "queue_reconciled": true
+    },
+    {
+      "action_id": "rwg-action-20261022-002-promote_ready-jaysearch-brand-20261022",
+      "action": "promote_ready",
+      "node_id": "jaysearch-brand-20261022",
+      "rationale": "implementation_branch_publish derived deterministically from canonical branch and ExecPlan evidence",
+      "evidence_ref": "branch:origin/impl-execplan/unified-brand-20261022",
+      "queue_reconciled": true
     }
   ],
   "graph_id": "remaining-work-graph-20260311",
@@ -3887,9 +3903,9 @@
     {
       "node_id": "jaysearch-brand-20261022",
       "title": "Apply restrained identity to Jaysearch toolkit documentation",
-      "status": "decision_gated",
-      "status_reason": "registered from ExecPlan metadata; authoritative ExecPlan required before execution",
-      "gating_class": "decision_gated",
+      "status": "ready",
+      "status_reason": "",
+      "gating_class": "auto_runnable",
       "conflict_domains": [
         "docs-presentation"
       ],
@@ -3906,11 +3922,12 @@
       "ordering": {
         "queue_position": 74,
         "tie_breaker": "20261022-unified-brand-codex-01-execplan",
-        "source_action_id": "rwg-action-20261022-register-jaysearch-brand-20261022"
+        "source_action_id": "rwg-action-20261022-002-promote_ready-jaysearch-brand-20261022",
+        "ready_order": 1
       },
       "action_state": {
-        "last_action_id": "rwg-action-20261022-register-jaysearch-brand-20261022",
-        "last_action": "block",
+        "last_action_id": "rwg-action-20261022-002-promote_ready-jaysearch-brand-20261022",
+        "last_action": "promote_ready",
         "action_required": false,
         "reorder_requires_human": false,
         "reorder_blockers": []
@@ -3930,9 +3947,11 @@
     "reorder_requires_explicit_action": true
   },
   "queue_projection": {
-    "last_reconciled_action_id": "rwg-action-20261022-register-jaysearch-brand-20261022",
+    "last_reconciled_action_id": "rwg-action-20261022-002-promote_ready-jaysearch-brand-20261022",
     "path": "docs/queued-execplans.md",
     "projection_authority": "projection_only",
-    "ready_execplan_ids": []
+    "ready_execplan_ids": [
+      "20261022-unified-brand-codex-01-execplan"
+    ]
   }
 }
