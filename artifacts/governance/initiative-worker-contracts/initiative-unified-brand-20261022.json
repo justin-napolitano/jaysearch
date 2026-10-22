@@ -1,0 +1,31 @@
+{
+  "initiative_branch": "initiative/unified-brand-20261022",
+  "contracts": [
+    {
+      "contract_id": "jaysearch-brand-20261022:docs-style",
+      "worker_id": "unified-brand-20261022",
+      "branch": "impl-execplan/unified-brand-20261022",
+      "initiative_branch": "initiative/unified-brand-20261022",
+      "merge_target": "initiative/unified-brand-20261022",
+      "execplan_id": "20261022-unified-brand-codex-01-execplan",
+      "node_id": "jaysearch-brand-20261022",
+      "status": "ready",
+      "title": "Jaysearch documentation visual alignment",
+      "scope": {
+        "owned_surfaces": [
+          "docs/site.css",
+          "docs/fonts/",
+          "design-qa.md"
+        ],
+        "non_goals": [
+          "No runtime tool, data, script, domain, deployment or governance-control changes"
+        ],
+        "validations": [
+          "npm run build",
+          "git diff --check",
+          "rendered visual and interaction review"
+        ]
+      }
+    }
+  ]
+}
