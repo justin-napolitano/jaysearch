@@ -202,11 +202,14 @@ def check_public_orchestration_api(
     checks.append({"name": "run_worker_contract", "ok": code in {0, 1} and not check_errors, "errors": check_errors})
     errors.extend(f"run_worker_contract:{item}" for item in check_errors)
 
+    # Exercise the existing fail-closed missing-remote path, as above for
+    # run_worker_contract. A health check must never launch a ready worker:
+    # coordinator bootstrap invokes this check again and would recurse.
     code, report = start_next_worker(
         root=base.as_posix(),
         initiative_branch=resolved_initiative or None,
         executor="local_clone",
-        push_mode="staging",
+        push_mode="github",
     )
     check_errors = []
     _validate_response(schema=schema, response_def="response_start_next_worker", report=report, errors=check_errors)
