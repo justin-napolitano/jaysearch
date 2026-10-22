@@ -24,7 +24,7 @@ changes:
 validation:
   tests:
     - name: policy_compliance_check
-      command: bin/policy-compliance-check --execplan-path .agent/execplans/20261022-unified-brand-codex-01-execplan.md --base-ref initiative/unified-brand-20261022
+      command: bin/policy-compliance-check --execplan-path .agent/execplans/20261022-unified-brand-codex-01-execplan.md
       expected_exit: 0
 approve_policy: codeowners
 reviewers: [github:justin-napolitano]
