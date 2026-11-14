@@ -1,14 +1,21 @@
+@font-face {
+  font-family: Inter;
+  src: url('./fonts/Inter-Variable.ttf') format('truetype');
+  font-weight: 100 900;
+  font-display: swap;
+}
+
 :root {
-  --bg: #f7f7f4;
-  --panel: #ffffff;
-  --ink: #1f2523;
-  --muted: #64706b;
-  --line: #d9dfda;
-  --soft: #edf1ed;
-  --accent: #24594c;
-  --accent-strong: #24594c;
-  --warm: #9a6a2f;
-  --code: #f1f4f2;
+  --bg: #f4f0e8;
+  --panel: #f4f0e8;
+  --ink: #25251f;
+  --muted: #62625c;
+  --line: #cbc8bf;
+  --soft: #eeeae1;
+  --accent: #25251f;
+  --accent-strong: #25251f;
+  --warm: #62625c;
+  --code: #eeeae1;
 }
 
 * {
@@ -18,8 +25,8 @@
 html {
   background: var(--bg);
   color: var(--ink);
-  font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
-  scroll-behavior: smooth;
+  font-family: Inter, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  scroll-behavior: auto;
 }
 
 body {
@@ -29,7 +36,7 @@ body {
 
 a {
   color: var(--accent);
-  font-weight: 650;
+  font-weight: 500;
 }
 
 .topbar {
@@ -44,7 +51,7 @@ a {
 }
 
 .topbar h1 {
-  font-size: clamp(1.9rem, 4vw, 3.4rem);
+  font-size: 24px;
   letter-spacing: -0.045em;
   margin: 4px 0 0;
 }
@@ -62,12 +69,12 @@ nav a,
 .actions a {
   background: var(--soft);
   border: 1px solid var(--line);
-  border-radius: 999px;
+  border-radius: 0;
   color: var(--ink);
   display: inline-flex;
   font-size: 0.88rem;
-  font-weight: 750;
-  min-height: 38px;
+  font-weight: 500;
+  min-height: 44px;
   padding: 8px 12px;
   text-decoration: none;
 }
@@ -90,9 +97,9 @@ nav a,
 
 .landing-hero,
 .hero {
-  background: linear-gradient(135deg, #ffffff 0%, #eef4ef 100%);
+  background: var(--bg);
   border: 1px solid var(--line);
-  border-radius: 18px;
+  border-radius: 0;
   padding: clamp(28px, 5vw, 56px);
 }
 
@@ -103,7 +110,7 @@ nav a,
 .eyebrow {
   color: var(--warm);
   font-size: 0.78rem;
-  font-weight: 800;
+  font-weight: 500;
   letter-spacing: 0.12em;
   margin: 0 0 12px;
   text-transform: uppercase;
@@ -112,17 +119,17 @@ nav a,
 h1,
 h2 {
   letter-spacing: -0.045em;
-  line-height: 0.98;
+  line-height: 1.35;
   margin: 0;
 }
 
 h1 {
-  font-size: clamp(2rem, 5vw, 4rem);
+  font-size: 28px;
   max-width: 940px;
 }
 
 h2 {
-  font-size: clamp(1.5rem, 3vw, 2.35rem);
+  font-size: 24px;
 }
 
 .lede {
@@ -160,7 +167,7 @@ td {
 .metric-grid article {
   background: var(--panel);
   border: 1px solid var(--line);
-  border-radius: 14px;
+  border-radius: 0;
 }
 
 .grid article {
@@ -201,7 +208,7 @@ td {
 pre {
   background: var(--code);
   border: 1px solid var(--line);
-  border-radius: 14px;
+  border-radius: 0;
   margin: 0;
   overflow-x: auto;
   padding: 18px;
@@ -210,7 +217,7 @@ pre {
 code {
   background: var(--code);
   border: 1px solid var(--line);
-  border-radius: 8px;
+  border-radius: 0;
   color: #23312c;
   font-family: "Cascadia Mono", "Courier New", monospace;
   font-size: 0.88rem;
@@ -270,7 +277,7 @@ th {
 
 td a {
   color: var(--accent-strong);
-  font-weight: 750;
+  font-weight: 500;
 }
 
 .metric-grid {
@@ -288,7 +295,7 @@ td a {
   color: var(--muted);
   display: block;
   font-size: 0.74rem;
-  font-weight: 800;
+  font-weight: 500;
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
@@ -296,7 +303,7 @@ td a {
 .metric-grid strong {
   color: var(--ink);
   display: block;
-  font-size: clamp(1.3rem, 2vw, 2rem);
+  font-size: 24px;
   line-height: 1;
   margin-top: 8px;
 }
@@ -317,7 +324,7 @@ td a {
 .source-card {
   background: var(--panel);
   border: 1px solid var(--line);
-  border-radius: 14px;
+  border-radius: 0;
   padding: 20px;
 }
 
@@ -344,7 +351,7 @@ td a {
 .source-note {
   background: var(--soft);
   border: 1px solid var(--line);
-  border-radius: 14px;
+  border-radius: 0;
   margin-top: 28px;
   padding: 20px;
 }
@@ -380,3 +387,22 @@ td a {
     padding: 20px;
   }
 }
+
+/* Approved Index / Simplified chrome; functional graph colors stay semantic. */
+body { font-size: 16px; line-height: 1.6; }
+h1, h2, h3 { font-weight: 500; letter-spacing: -0.02em; }
+a { text-underline-offset: 0.3em; }
+a:focus-visible, button:focus-visible, summary:focus-visible { outline: 2px solid #64758a; outline-offset: 4px; }
+.topbar { position: static; padding: 24px max(24px, calc((100% - 1124px) / 2)); }
+.topbar h1 { font-weight: 600; }
+nav a { background: transparent; border-color: transparent; padding: 8px 0; }
+nav { gap: 8px 24px; }
+nav a:hover { text-decoration: underline; text-decoration-color: #64758a; }
+.eyebrow { font-weight: 500; letter-spacing: 0; text-transform: none; }
+.landing-hero, .hero { padding: 28px 0; border-width: 0 0 1px; }
+.grid article, .source-card, .source-note { border-width: 1px 0 0; padding: 20px 0; }
+.section-heading { align-items: start; }
+.graph-panel, .table-panel { min-width: 0; }
+pre, .mermaid, .table-scroll { max-width: 100%; }
+@media (max-width: 560px) { .landing-hero, .hero { padding: 20px 0; } .topbar h1 { font-size: 22px; } h1 { font-size: 26px; } }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; } }
